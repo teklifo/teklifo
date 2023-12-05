@@ -10,19 +10,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -30,15 +35,185 @@ model Account {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String                 @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?                @unique
   emailVerified DateTime?
   image         String?
+  userImage     UserImage?
   accounts      Account[]
+  role          Role
+  companies     CompanyMembers[]
+  companyRole   UsersAndCompanyRoles[]
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+}
+
+model CompanyRole {
+  id           String                 @id @default(cuid())
+  name         String
+  companyAdmin Boolean
+  company      Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId    String
+  users        UsersAndCompanyRoles[]
+  stocks       AvailableStocks[]
+  priceTypes   AvailablePriceTypes[]
+}
+
+model UsersAndCompanyRoles {
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  companyRoleType   CompanyRole @relation(fields: [companyRoleTypeId], references: [id], onDelete: Cascade)
+  companyRoleTypeId String
+
+  @@id([userId, companyRoleTypeId])
 }
 
 model Company {
-  id String @id @default(uuid())
-  name String
+  id            String           @id @default(cuid())
+  name          String           @unique
+  tin           String           @unique
+  image         CompanyImage?
+  imageId       String
+  description   String
+  descriptionRu String?
+  slogan        String?
+  sloganRu      String?
+  contacts      Json?
+  socials       Json?
+  users         CompanyMembers[]
+  products      Product[]
+  priceTypes    PriceType[]
+  stocks        Stock[]
+  companyRoles  CompanyRole[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model CompanyMembers {
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+
+  @@id([userId, companyId])
+}
+
+model Brand {
+  id       String    @id @default(cuid())
+  name     String
+  products Product[]
+}
+
+model Product {
+  id          String          @id @default(cuid())
+  externalId  String
+  name        String
+  number      String
+  category    ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  String
+  brand       Brand           @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  brandId     String
+  brandNumber String
+  unit        String
+  description String
+  visible     Boolean
+  images      ProductImage[]
+  company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId   String
+  stock       StockBalance[]
+  prices      Price[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model ProductCategory {
+  id            String            @id @default(cuid())
+  name          String
+  parentId      String?
+  parent        ProductCategory?  @relation("SubCategories", fields: [parentId], references: [id])
+  subCategories ProductCategory[] @relation("SubCategories")
+  products      Product[]
+}
+
+model Stock {
+  id           String            @id @default(cuid())
+  name         String
+  company      Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId    String
+  products     StockBalance[]
+  companyRoles AvailableStocks[]
+}
+
+model StockBalance {
+  stock     Stock    @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  stockId   String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  quantity  Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([stockId, productId])
+}
+
+model PriceType {
+  id           String                @id @default(cuid())
+  name         String
+  currency     String
+  company      Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId    String
+  prices       Price[]
+  companyRoles AvailablePriceTypes[]
+}
+
+model Price {
+  priceType   PriceType @relation(fields: [priceTypeId], references: [id], onDelete: Cascade)
+  priceTypeId String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String
+  price       Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@id([priceTypeId, productId])
+}
+
+model AvailableStocks {
+  companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
+  companyRoleId String
+  stock         Stock       @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  stockId       String
+
+  @@id([companyRoleId, stockId])
+}
+
+model AvailablePriceTypes {
+  companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
+  companyRoleId String
+  priceType     PriceType   @relation(fields: [priceTypeId], references: [id], onDelete: Cascade)
+  priceTypeId   String
+
+  @@id([companyRoleId, priceTypeId])
+}
+
+model ProductImage {
+  id        String  @id
+  url       String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+}
+
+model CompanyImage {
+  id        String  @id
+  url       String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String  @unique
+}
+
+model UserImage {
+  id     String @id
+  url    String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
 }
