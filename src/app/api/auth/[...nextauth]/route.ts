@@ -44,7 +44,7 @@ const authOptions: AuthOptions = {
   ],
   pages: {
     signIn: "/login",
-    verifyRequest: "/verify_email",
+    verifyRequest: "/verify-email",
   },
   debug: process.env.NODE_ENV === "development",
   session: {
