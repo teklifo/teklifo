@@ -49,6 +49,14 @@ model User {
   updatedAt     DateTime               @updatedAt
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model CompanyRole {
   id           String                 @id @default(cuid())
   name         String

@@ -18,7 +18,7 @@ export default async function emailTemplate(
   let html = (await fs.promises.readFile(filePath, "utf-8")).toString();
 
   Object.keys(context).forEach((key) => {
-    html = html.replace(key, context[key]);
+    html = html.replaceAll(key, context[key]);
   });
 
   return {
