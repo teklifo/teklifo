@@ -42,7 +42,7 @@ model User {
   image         String?
   userImage     UserImage?
   accounts      Account[]
-  role          Role
+  role          Role                   @default(USER)
   companies     CompanyMembers[]
   companyRole   UsersAndCompanyRoles[]
   createdAt     DateTime               @default(now())

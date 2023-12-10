@@ -45,7 +45,7 @@ const Login = () => {
           <h1 className="text-4xl font-bold tracking-tight text-foreground">
             {t("slogan")}
           </h1>
-          <h4 className="text-lg font-bold tracking-tight text-muted-foreground max-w-md">
+          <h4 className="text-lg tracking-tight text-muted-foreground max-w-md">
             {t("sloganDescription")}
           </h4>
         </div>

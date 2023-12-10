@@ -35,7 +35,7 @@ const sendVerificationRequest = async ({
   });
 };
 
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db),
   providers: [
     EmailProvider({
