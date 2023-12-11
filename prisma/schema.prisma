@@ -87,8 +87,6 @@ model Company {
   descriptionRu String?
   slogan        String?
   sloganRu      String?
-  contacts      Json?
-  socials       Json?
   users         CompanyMembers[]
   products      Product[]
   priceTypes    PriceType[]

@@ -2,17 +2,7 @@ import { cookies } from "next/headers";
 import getCurrentUser from "@/app/actions/get-current-user";
 import { NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
-import * as z from "zod";
-
-const schema = z.object({
-  name: z.string().min(1),
-  tin: z.string().length(10),
-  imageId: z.string(),
-  description: z.string().min(1),
-  descriptionRu: z.string(),
-  slogan: z.string(),
-  sloganRu: z.string(),
-});
+import { getCompanySchema } from "@/lib/schemas";
 
 export async function POST(request: Request) {
   const cookieStore = cookies();
@@ -32,7 +22,11 @@ export async function POST(request: Request) {
 
   const body = await request.json();
 
-  const test = schema.safeParse(body);
+  const st = await getTranslations({
+    locale,
+    namespace: "Schemas.companySchema",
+  });
+  const test = getCompanySchema(t).safeParse(body);
   if (!test.success) {
     return NextResponse.json(
       {
