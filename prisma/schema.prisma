@@ -44,7 +44,6 @@ model User {
   accounts      Account[]
   role          Role                   @default(USER)
   companies     CompanyMembers[]
-  companyRole   UsersAndCompanyRoles[]
   createdAt     DateTime               @default(now())
   updatedAt     DateTime               @updatedAt
 }
@@ -60,21 +59,12 @@ model VerificationToken {
 model CompanyRole {
   id           String                 @id @default(cuid())
   name         String
-  companyAdmin Boolean
+  default      Boolean
   company      Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId    String
-  users        UsersAndCompanyRoles[]
+  users        CompanyMembers[]
   stocks       AvailableStocks[]
   priceTypes   AvailablePriceTypes[]
-}
-
-model UsersAndCompanyRoles {
-  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String
-  companyRoleType   CompanyRole @relation(fields: [companyRoleTypeId], references: [id], onDelete: Cascade)
-  companyRoleTypeId String
-
-  @@id([userId, companyRoleTypeId])
 }
 
 model Company {
@@ -101,8 +91,10 @@ model CompanyMembers {
   userId    String
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId String
+  companyRole      CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
+  companyRoleId    String
 
-  @@id([userId, companyId])
+  @@id([userId, companyId, companyRoleId])
 }
 
 model Brand {

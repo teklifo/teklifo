@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, useMessages } from "next-intl";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
           <main className="relative flex flex-col min-h-screen">
             <div className="flex-grow flex-1">{children}</div>
           </main>
+          <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import db from "@/lib/db";
 import getCurrentUser from "@/app/actions/get-current-user";
 import { NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
     locale,
     namespace: "Schemas.companySchema",
   });
-  const test = getCompanySchema(t).safeParse(body);
+  const test = getCompanySchema(st).safeParse(body);
   if (!test.success) {
     return NextResponse.json(
       {
@@ -37,5 +38,45 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ name: "hello world" });
+  const { name, tin, description, descriptionRu, slogan, sloganRu } = test.data;
+
+  // Create a new company.
+  const newCompany = await db.company.create({
+    data: {
+      name,
+      tin,
+      description,
+      imageId: "",
+      descriptionRu,
+      slogan,
+      sloganRu,
+    },
+  });
+
+  // Create a default role 'Full access' and give it to a creator of a company.
+  const company = await db.company.update({
+    where: {
+      id: newCompany.id,
+    },
+    data: {
+      users: {
+        create: {
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+          companyRole: {
+            create: {
+              companyId: newCompany.id,
+              default: true,
+              name: "Full access",
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return NextResponse.json(company);
 }

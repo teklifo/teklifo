@@ -1,10 +1,14 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Company as CompanyType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { getCompanySchema } from "@/lib/schemas";
+import request from "@/lib/request";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,9 +22,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 
 const NewCompany = () => {
   const t = useTranslations("NewCompany");
+
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const st = useTranslations("Schemas.companySchema");
   const companySchema = getCompanySchema(st);
@@ -28,6 +37,7 @@ const NewCompany = () => {
     resolver: zodResolver(companySchema),
     defaultValues: {
       name: "",
+      imageId: "",
       tin: "",
       description: "",
       descriptionRu: "",
@@ -36,9 +46,39 @@ const NewCompany = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof companySchema>) {
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof companySchema>) => {
+    setIsLoading(true);
+
+    const config = {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    };
+
+    try {
+      const company = await request<CompanyType>("/api/company", config);
+
+      toast({
+        title: t("newCompanyIsCreated"),
+        description: t("newCompanyHint"),
+      });
+
+      router.push("/");
+    } catch (error) {
+      let message = "";
+      if (error instanceof Error) message = error.message;
+      else message = String(error);
+      toast({
+        title: t("error"),
+        description: message,
+        variant: "destructive",
+      });
+    }
+
+    setIsLoading(false);
+  };
 
   return (
     <MaxWidthWrapper className="my-8">
@@ -139,7 +179,9 @@ const NewCompany = () => {
               />
             </TabsContent>
           </Tabs>
-          <Button type="submit">{t("create")}</Button>
+          <Button type="submit" disabled={isLoading}>
+            {t("create")}
+          </Button>
         </form>
       </Form>
     </MaxWidthWrapper>

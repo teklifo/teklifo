@@ -1,5 +1,12 @@
+import { ZodIssue } from "zod";
+
 export type EmailType = "email-verification";
 
-export interface EmailContextType {
+export type EmailContextType = {
   [key: string]: string;
-}
+};
+
+export type ApiError = {
+  message: string;
+  errors: ZodIssue[];
+};
