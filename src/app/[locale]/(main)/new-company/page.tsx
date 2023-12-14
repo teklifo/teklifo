@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Company as CompanyType } from "@prisma/client";
 import { useForm } from "react-hook-form";
@@ -53,6 +54,7 @@ const NewCompany = () => {
       method: "post",
       headers: {
         "Content-Type": "application/json",
+        "Accept-Language": getCookie("NEXT_LOCALE"),
       },
       body: JSON.stringify(values),
     };

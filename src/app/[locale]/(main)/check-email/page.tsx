@@ -10,16 +10,16 @@ type Props = {
   params: { locale: string };
 };
 
-export async function generateMetadata({
+export const generateMetadata = async ({
   params: { locale },
-}: Props): Promise<Metadata> {
+}: Props): Promise<Metadata> => {
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
     title: t("checkEmailTitle"),
     description: t("checkEmailDescription"),
   };
-}
+};
 
 const CheckEmail = () => {
   const t = useTranslations("CheckEmail");

@@ -8,16 +8,16 @@ type Props = {
   params: { locale: string };
 };
 
-export async function generateMetadata({
+const generateMetadata = async ({
   params: { locale },
-}: Props): Promise<Metadata> {
+}: Props): Promise<Metadata> => {
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
     title: t("loginTitle"),
     description: t("loginDescription"),
   };
-}
+};
 
 const Login = () => {
   const t = useTranslations("Login");

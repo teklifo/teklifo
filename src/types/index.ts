@@ -10,3 +10,9 @@ export type ApiError = {
   message: string;
   errors: ZodIssue[];
 };
+
+export type PaginationType = {
+  skipped: number;
+  current: number;
+  total: number;
+};

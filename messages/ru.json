@@ -1,13 +1,19 @@
 {
   "Metadata": {
-    "loginTitle": "Вход на Kraft",
-    "loginDescription": "Войдите в свое аккаунт на Kraft",
-    "checkEmailTitle": "Проверьте ваш почтовый ящик",
-    "checkEmailDescription": "Перейдите по ссылке в письме, чтобы завершить вход на Kraft"
+    "loginTitle": "Вход | Kraft",
+    "loginDescription": "Войдите в свой аккаунт на Kraft",
+    "checkEmailTitle": "Проверьте ваш почтовый ящик | Kraft",
+    "checkEmailDescription": "Перейдите по ссылке в письме, чтобы завершить вход на Kraft",
+    "myCompaniesTitle": "Мои организации | Kraft",
+    "myCompaniesDescription": "Список организаций, в которых вы состоите"
   },
   "API": {
-    "notAuthorized": "Необходимо авторизоваться",
-    "invalidRequest": "Некорректный запрос"
+    "company": {
+      "notAuthorized": "Необходимо авторизоваться",
+      "invalidRequest": "Некорректный запрос",
+      "pageAndlimitAreRequired": "Необходимо указать параметры page и limit",
+      "serverError": "Ошибка сервера"
+    }
   },
   "Layout": {
     "login": "Войти",
@@ -29,6 +35,8 @@
     "home": "Вернуться на главную страницу"
   },
   "MyCompanies": {
+    "title": "Мои организации",
+    "subtitle": "Список организаций, в которых вы состоите",
     "newCompany": "Создать организацию"
   },
   "NewCompany": {
@@ -44,6 +52,10 @@
     "newCompanyHint": "Теперь вы можете перейти к дополнительным настройкам организации",
     "error": "Не удалось создать организацию"
   },
+  "Company": {
+    "more": "Подробнее"
+  },
+
   "Schemas": {
     "companySchema": {
       "invalidName": "Укажите наименование организации",
