@@ -1,19 +1,23 @@
 {
   "Metadata": {
-    "loginTitle": "Вход | Kraft",
+    "projectName": "Kraft",
+    "loginTitle": "Вход",
     "loginDescription": "Войдите в свой аккаунт на Kraft",
-    "checkEmailTitle": "Проверьте ваш почтовый ящик | Kraft",
+    "checkEmailTitle": "Проверьте ваш почтовый ящик",
     "checkEmailDescription": "Перейдите по ссылке в письме, чтобы завершить вход на Kraft",
-    "myCompaniesTitle": "Мои организации | Kraft",
-    "myCompaniesDescription": "Список организаций, в которых вы состоите"
+    "myCompaniesTitle": "Мои организации",
+    "myCompaniesDescription": "Список организаций, в которых вы состоите",
+    "stocksTitle": "Склады организации",
+    "stocksDescription": "Список складов организации"
   },
   "API": {
-    "company": {
-      "notAuthorized": "Необходимо авторизоваться",
-      "invalidRequest": "Некорректный запрос",
-      "pageAndlimitAreRequired": "Необходимо указать параметры page и limit",
-      "serverError": "Ошибка сервера"
-    }
+    "notAuthorized": "Необходимо авторизоваться",
+    "invalidRequest": "Некорректный запрос",
+    "pageAndlimitAreRequired": "Необходимо указать параметры page и limit",
+    "invalidCompanyId": "Организация не найдена",
+    "serverError": "Ошибка сервера",
+    "userIsNotAMember": "Пользователь не является участником организации",
+    "notAllowed": "Не достаточно прав"
   },
   "Layout": {
     "login": "Войти",
@@ -42,6 +46,7 @@
   "NewCompany": {
     "title": "Новая организация",
     "name": "Название организации",
+    "id": "Идентификатор организации",
     "tin": "ИНН",
     "description": "Описание",
     "slogan": "Слоган",
@@ -53,15 +58,40 @@
     "error": "Не удалось создать организацию"
   },
   "Company": {
-    "more": "Подробнее"
+    "more": "Подробнее",
+    "edit": "Редактировать",
+    "main": "Основное",
+    "roles": "Роли",
+    "members": "Участники",
+    "stocks": "Склады",
+    "priceTypes": "Виды цен"
   },
-
+  "Stock": {
+    "title": "Склады",
+    "subtitle": "Список складов организации",
+    "newStockIsCreated": "Создан новый склад",
+    "newStockHint": "Теперь вы можете загрузить товары на новый склад",
+    "error": "Не удалось создать склад",
+    "name": "Наименование склада",
+    "new": "Новый склад",
+    "create": "Создать",
+    "newStockTitle": "Новый склад",
+    "newStockSubtitle": "Создайте новый склад организации",
+    "id": "Идентификатор",
+    "openMenu": "Открыть меню",
+    "edit": "Изменить",
+    "delete": "Удалить"
+  },
   "Schemas": {
     "companySchema": {
+      "invalidId": "Укажите идентификатор организации",
       "invalidName": "Укажите наименование организации",
       "invalidTin": "ИНН должен состоять из 10 символов",
       "numericTin": "ИНН должен содержать только цифры",
       "invalidDescription": "Описание должно содержать не менее 50 символов"
+    },
+    "stockSchema": {
+      "invalidName": "Укажите наименование склада"
     }
   }
 }

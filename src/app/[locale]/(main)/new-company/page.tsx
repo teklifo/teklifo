@@ -37,6 +37,7 @@ const NewCompany = () => {
   const form = useForm<z.infer<typeof companySchema>>({
     resolver: zodResolver(companySchema),
     defaultValues: {
+      id: "",
       name: "",
       imageId: "",
       tin: "",
@@ -67,7 +68,7 @@ const NewCompany = () => {
         description: t("newCompanyHint"),
       });
 
-      router.push("/");
+      router.push(`/company/${company.id}`);
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;
@@ -87,6 +88,20 @@ const NewCompany = () => {
       <h1 className="text-4xl font-bold tracking-tight mb-4">{t("title")}</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* ID */}
+          <FormField
+            control={form.control}
+            name="id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("id")}</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           {/* Name */}
           <FormField
             control={form.control}

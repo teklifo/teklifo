@@ -35,17 +35,17 @@ model Account {
 }
 
 model User {
-  id            String                 @id @default(cuid())
+  id            String           @id @default(cuid())
   name          String?
-  email         String?                @unique
+  email         String?          @unique
   emailVerified DateTime?
   image         String?
   userImage     UserImage?
   accounts      Account[]
-  role          Role                   @default(USER)
+  role          Role             @default(USER)
   companies     CompanyMembers[]
-  createdAt     DateTime               @default(now())
-  updatedAt     DateTime               @updatedAt
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 }
 
 model VerificationToken {
@@ -57,18 +57,28 @@ model VerificationToken {
 }
 
 model CompanyRole {
-  id           String                 @id @default(cuid())
-  name         String
-  default      Boolean
-  company      Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId    String
-  users        CompanyMembers[]
-  stocks       AvailableStocks[]
-  priceTypes   AvailablePriceTypes[]
+  id            String           @id @default(cuid())
+  name          String
+  default       Boolean
+  company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId     String
+  users         CompanyMembers[]
+  availableData AvailableData[]
+}
+
+model AvailableData {
+  stock         Stock       @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  stockId       String
+  priceType     PriceType   @relation(fields: [priceTypeId], references: [id], onDelete: Cascade)
+  priceTypeId   String
+  companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
+  companyRoleId String
+
+  @@id([stockId, priceTypeId, companyRoleId])
 }
 
 model Company {
-  id            String           @id @default(cuid())
+  id            String           @id
   name          String           @unique
   tin           String           @unique
   image         CompanyImage?
@@ -87,12 +97,12 @@ model Company {
 }
 
 model CompanyMembers {
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId String
-  companyRole      CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
-  companyRoleId    String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  company       Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId     String
+  companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
+  companyRoleId String
 
   @@id([userId, companyId, companyRoleId])
 }
@@ -135,12 +145,12 @@ model ProductCategory {
 }
 
 model Stock {
-  id           String            @id @default(cuid())
+  id           String          @id @default(cuid())
   name         String
-  company      Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId    String
   products     StockBalance[]
-  companyRoles AvailableStocks[]
+  companyRoles AvailableData[]
 }
 
 model StockBalance {
@@ -156,13 +166,13 @@ model StockBalance {
 }
 
 model PriceType {
-  id           String                @id @default(cuid())
+  id           String          @id @default(cuid())
   name         String
   currency     String
-  company      Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId    String
   prices       Price[]
-  companyRoles AvailablePriceTypes[]
+  companyRoles AvailableData[]
 }
 
 model Price {
@@ -175,24 +185,6 @@ model Price {
   updatedAt   DateTime  @updatedAt
 
   @@id([priceTypeId, productId])
-}
-
-model AvailableStocks {
-  companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
-  companyRoleId String
-  stock         Stock       @relation(fields: [stockId], references: [id], onDelete: Cascade)
-  stockId       String
-
-  @@id([companyRoleId, stockId])
-}
-
-model AvailablePriceTypes {
-  companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
-  companyRoleId String
-  priceType     PriceType   @relation(fields: [priceTypeId], references: [id], onDelete: Cascade)
-  priceTypeId   String
-
-  @@id([companyRoleId, priceTypeId])
 }
 
 model ProductImage {

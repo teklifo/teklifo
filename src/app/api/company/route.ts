@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     if (!user) {
       return NextResponse.json(
         {
-          message: t("company.notAuthorized"),
+          errors: [{ message: t("notAuthorized") }],
         },
         { status: 401 }
       );
@@ -32,19 +32,20 @@ export async function POST(request: NextRequest) {
     if (!test.success) {
       return NextResponse.json(
         {
-          message: t("company.invalidRequest"),
+          message: t("invalidRequest"),
           errors: test.error.issues,
         },
         { status: 400 }
       );
     }
 
-    const { name, tin, description, descriptionRu, slogan, sloganRu } =
+    const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
       test.data;
 
     // Create a new company.
     const newCompany = await db.company.create({
       data: {
+        id,
         name,
         tin,
         description,
@@ -82,8 +83,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(company);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
-      { message: t("company.serverError") },
+      { errors: [{ message: t("serverError") }] },
       { status: 500 }
     );
   }
@@ -107,7 +109,7 @@ export async function GET(request: NextRequest) {
 
     if (!page || !limit)
       return NextResponse.json({
-        message: t("company.pageAndlimitAreRequired"),
+        errors: [{ message: t("pageAndlimitAreRequired") }],
       });
 
     // Filters
@@ -141,8 +143,9 @@ export async function GET(request: NextRequest) {
       pagination,
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
-      { message: t("company.serverError") },
+      { errors: [{ message: t("serverError") }] },
       { status: 500 }
     );
   }

@@ -29,7 +29,7 @@ const CompanyCard = ({
   }
 
   return (
-    <Card className="w-[350px]">
+    <Card className="h-full w-full">
       <CardHeader>
         <CardTitle>{name}</CardTitle>
         <CardDescription>{description}</CardDescription>
