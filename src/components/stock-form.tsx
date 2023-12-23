@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Stock as StockType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Plus } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,16 +27,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { getStockSchema } from "@/lib/schemas";
 import request from "@/lib/request";
-import { useToast } from "@/components/ui/use-toast";
 
 type StockFormProps = {
   companyId: String;
+  stock?: StockType;
 };
 
-const StockForm = ({ companyId }: StockFormProps) => {
+const StockForm = ({ companyId, stock }: StockFormProps) => {
   const t = useTranslations("Stock");
+
+  const update = stock !== undefined;
 
   const router = useRouter();
   const { toast } = useToast();
@@ -49,7 +52,7 @@ const StockForm = ({ companyId }: StockFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: update ? stock.name : "",
     },
   });
 
@@ -57,7 +60,7 @@ const StockForm = ({ companyId }: StockFormProps) => {
     setLoading(true);
 
     const config = {
-      method: "post",
+      method: update ? "put" : "post",
       headers: {
         "Content-Type": "application/json",
         "Accept-Language": getCookie("NEXT_LOCALE"),
@@ -66,19 +69,30 @@ const StockForm = ({ companyId }: StockFormProps) => {
     };
 
     try {
-      await request<StockType>(`/api/company/${companyId}/stock`, config);
+      if (update) {
+        await request<StockType>(
+          `/api/company/${companyId}/stock/${stock.id}`,
+          config
+        );
 
-      toast({
-        title: t("newStockIsCreated"),
-        description: t("newStockHint"),
-      });
+        toast({
+          title: t("stockIdUpdated"),
+          description: t("stockIdUpdatedHint"),
+        });
+      } else {
+        await request<StockType>(`/api/company/${companyId}/stock`, config);
+
+        toast({
+          title: t("newStockIsCreated"),
+          description: t("newStockHint"),
+        });
+      }
 
       form.reset();
 
       setOpen(false);
 
       router.refresh();
-      router.push(`/company/${companyId}/stocks`);
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;
@@ -96,15 +110,26 @@ const StockForm = ({ companyId }: StockFormProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="space-x-2">
-          <Plus />
-          <span>{t("new")}</span>
-        </Button>
+        {update ? (
+          <Button variant="ghost">
+            <Pencil className="mr-2 h-4 w-4" />
+            <span>{t("edit")}</span>
+          </Button>
+        ) : (
+          <Button variant="default" className="space-x-2">
+            <Plus />
+            <span>{t("new")}</span>
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{t("newStockTitle")}</DialogTitle>
-          <DialogDescription>{t("newStockSubtitle")}</DialogDescription>
+          <DialogTitle>
+            {update ? t("updateStockTitle") : t("newStockTitle")}
+          </DialogTitle>
+          <DialogDescription>
+            {update ? t("updateStockSubtitle") : t("newStockSubtitle")}
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -122,7 +147,7 @@ const StockForm = ({ companyId }: StockFormProps) => {
               )}
             />
             <Button type="submit" className="w-full" disabled={loading}>
-              {t("create")}
+              {update ? t("update") : t("create")}
             </Button>
           </form>
         </Form>

@@ -48,7 +48,7 @@ const getUserCompanies = async (page: number) => {
       `/api/company?userId=${user.id}&page=${page}&limit=10`,
       {
         headers: { "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value },
-        cache: "no-cache",
+        next: { revalidate: 0 },
       }
     );
   } catch (error) {

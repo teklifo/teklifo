@@ -54,7 +54,7 @@ const getCompany = async (id: string) => {
         "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
         Cookie: cookie,
       },
-      cache: "no-cache",
+      next: { revalidate: 0 },
     });
   } catch (error) {
     return undefined;

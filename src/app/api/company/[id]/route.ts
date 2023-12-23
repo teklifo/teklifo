@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import db from "@/lib/db";
 import getCurrentUser from "@/app/actions/get-current-user";
-import getLocale from "@/lib/getLocale";
+import getLocale from "@/lib/get-locale";
 
 type Props = {
   params: { id: string };
@@ -31,9 +31,12 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // Company not found
     if (!company) {
-      return NextResponse.json({
-        errors: [{ message: t("invalidCompanyId") }],
-      });
+      return NextResponse.json(
+        {
+          errors: [{ message: t("invalidCompanyId") }],
+        },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(company);

@@ -17,7 +17,8 @@
     "invalidCompanyId": "Организация не найдена",
     "serverError": "Ошибка сервера",
     "userIsNotAMember": "Пользователь не является участником организации",
-    "notAllowed": "Не достаточно прав"
+    "notAllowed": "Не достаточно прав",
+    "stockDeleted": "Склад удален"
   },
   "Layout": {
     "login": "Войти",
@@ -80,7 +81,17 @@
     "id": "Идентификатор",
     "openMenu": "Открыть меню",
     "edit": "Изменить",
-    "delete": "Удалить"
+    "delete": "Удалить",
+    "stockDeleteTitle": "Вы точно уверены, что хотите удалить этот склад?",
+    "stockDeleteSubtitle": "Отменить это действие будет уже невозможно, а все связанные с этим складом данные также будут удалены",
+    "cancel": "Отмена",
+    "stockDeleted": "Склад удален",
+    "stockDeletedHint": "Все связанные с этим складом данные также удалены",
+    "update": "Сохранить",
+    "updateStockTitle": "Изменить склад",
+    "updateStockSubtitle": "Измените информацию о складе",
+    "stockIdUpdated": "Склад изменен",
+    "stockIdUpdatedHint": "Информация о складе успешно изменена"
   },
   "Schemas": {
     "companySchema": {

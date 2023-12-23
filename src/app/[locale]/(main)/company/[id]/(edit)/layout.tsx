@@ -45,7 +45,7 @@ const Layout = ({ params: { id }, children }: Props) => {
             <span>{t("priceTypes")}</span>
           </Link>
         </aside>
-        <div className="md:col-span-4">{children}</div>
+        <div className="col-span-5 md:col-span-4">{children}</div>
       </div>
     </div>
   );

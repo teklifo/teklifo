@@ -5,7 +5,7 @@ import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getPaginationData from "@/lib/pagination";
-import getLocale from "@/lib/getLocale";
+import getLocale from "@/lib/get-locale";
 
 export async function POST(request: NextRequest) {
   const locale = getLocale(request.headers);
