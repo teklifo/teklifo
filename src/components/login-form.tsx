@@ -17,11 +17,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 
 const LoginForm = () => {
   const t = useTranslations("Login");
 
   const router = useRouter();
+  const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +49,14 @@ const LoginForm = () => {
       });
       router.push("/check-email");
     } catch (error) {
-      // todo
+      let message = "";
+      if (error instanceof Error) message = error.message;
+      else message = String(error);
+      toast({
+        title: t("error"),
+        description: message,
+        variant: "destructive",
+      });
     }
 
     setLoading(false);

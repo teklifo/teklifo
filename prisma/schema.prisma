@@ -88,6 +88,7 @@ model Company {
   slogan        String?
   sloganRu      String?
   users         CompanyMembers[]
+  invitations   Invitation[]
   products      Product[]
   priceTypes    PriceType[]
   stocks        Stock[]
@@ -104,7 +105,15 @@ model CompanyMembers {
   companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
   companyRoleId String
 
-  @@id([userId, companyId, companyRoleId])
+  @@id([userId, companyId])
+}
+
+model Invitation {
+  id            String  @id @default(cuid())
+  email         String
+  companyRoleId String
+  company       Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId     String
 }
 
 model Brand {

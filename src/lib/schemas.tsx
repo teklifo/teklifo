@@ -23,3 +23,36 @@ export const getStockSchema = (t: (value: string) => string) => {
     name: z.string().min(1, t("invalidName")),
   });
 };
+
+export const getPriceTypeSchema = (t: (value: string) => string) => {
+  return z.object({
+    name: z.string().min(1, t("invalidName")),
+    currency: z.string().min(1, t("invalidCurrency")),
+  });
+};
+
+export const getMemberSchema = (t: (value: string) => string) => {
+  return z.object({
+    userId: z.string().min(1, t("invalidUserId")),
+    roleId: z.string().min(1, t("invalidRoleId")),
+  });
+};
+
+export const getInvitationSchema = (t: (value: string) => string) => {
+  return z.object({
+    email: z.string().email(t("invalidEmail")),
+    roleId: z.string().min(1, t("invalidRoleId")),
+  });
+};
+
+export const getRoleSchema = (t: (value: string) => string) => {
+  return z.object({
+    name: z.string().min(1, t("invalidName")),
+    availableData: z.array(
+      z.object({
+        stockId: z.string().min(1, t("invalidStockId")),
+        priceTypeId: z.string().min(1, t("invalidPriceTypeId")),
+      })
+    ),
+  });
+};

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Stock as StockType } from "@prisma/client";
+import type { PriceType as PriceTypeType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Plus, Pencil } from "lucide-react";
@@ -28,31 +28,32 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { getStockSchema } from "@/lib/schemas";
+import { getPriceTypeSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 
-type StockFormProps = {
+type PriceTypeFormProps = {
   companyId: String;
-  stock?: StockType;
+  priceType?: PriceTypeType;
 };
 
-const StockForm = ({ companyId, stock }: StockFormProps) => {
-  const t = useTranslations("Stock");
+const PriceTypeForm = ({ companyId, priceType }: PriceTypeFormProps) => {
+  const t = useTranslations("PriceType");
 
-  const update = stock !== undefined;
+  const update = priceType !== undefined;
 
   const router = useRouter();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const st = useTranslations("Schemas.stockSchema");
-  const formSchema = getStockSchema(st);
+  const st = useTranslations("Schemas.priceTypeSchema");
+  const formSchema = getPriceTypeSchema(st);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: update ? stock.name : "",
+      name: update ? priceType.name : "",
+      currency: update ? priceType.currency : "",
     },
   });
 
@@ -70,21 +71,24 @@ const StockForm = ({ companyId, stock }: StockFormProps) => {
 
     try {
       if (update) {
-        await request<StockType>(
-          `/api/company/${companyId}/stock/${stock.id}`,
+        await request<PriceTypeType>(
+          `/api/company/${companyId}/price-type/${priceType.id}`,
           config
         );
 
         toast({
-          title: t("stockIdUpdated"),
-          description: t("stockIdUpdatedHint"),
+          title: t("priceTypeIdUpdated"),
+          description: t("priceTypeIdUpdatedHint"),
         });
       } else {
-        await request<StockType>(`/api/company/${companyId}/stock`, config);
+        await request<PriceTypeType>(
+          `/api/company/${companyId}/price-type`,
+          config
+        );
 
         toast({
-          title: t("newStockIsCreated"),
-          description: t("newStockHint"),
+          title: t("newPriceTypeIsCreated"),
+          description: t("newPriceTypeHint"),
         });
       }
 
@@ -125,10 +129,10 @@ const StockForm = ({ companyId, stock }: StockFormProps) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {update ? t("updateStockTitle") : t("newStockTitle")}
+            {update ? t("updatePriceTypeTitle") : t("newPriceTypeTitle")}
           </DialogTitle>
           <DialogDescription>
-            {update ? t("updateStockSubtitle") : t("newStockSubtitle")}
+            {update ? t("updatePriceTypeSubtitle") : t("newPriceTypeSubtitle")}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -146,6 +150,19 @@ const StockForm = ({ companyId, stock }: StockFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="currency"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("currency")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" className="w-full" disabled={loading}>
               {update ? t("update") : t("create")}
             </Button>
@@ -156,4 +173,4 @@ const StockForm = ({ companyId, stock }: StockFormProps) => {
   );
 };
 
-export default StockForm;
+export default PriceTypeForm;

@@ -39,7 +39,7 @@ const Layout = ({ params: { id }, children }: Props) => {
             <span>{t("stocks")}</span>
           </Link>
           <Link
-            href={`/company/${id}/priceTypes`}
+            href={`/company/${id}/price-types`}
             className={buttonVariants({ variant: "link" })}
           >
             <span>{t("priceTypes")}</span>
