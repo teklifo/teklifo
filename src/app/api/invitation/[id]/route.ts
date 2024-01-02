@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         {
           errors: [{ message: t("noEmail") }],
         },
-        { status: 401 }
+        { status: 400 }
       );
     }
 
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
         {
           errors: [{ message: t("noEmail") }],
         },
-        { status: 401 }
+        { status: 400 }
       );
     }
 
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
-        { status: 404 }
+        { status: 400 }
       );
     }
 
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
         {
           errors: [{ message: t("invalidRoleId") }],
         },
-        { status: 404 }
+        { status: 400 }
       );
     }
 

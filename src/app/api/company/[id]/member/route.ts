@@ -27,9 +27,12 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     const startIndex = (page - 1) * limit;
 
     if (!page || !limit)
-      return NextResponse.json({
-        errors: [{ message: t("pageAndlimitAreRequired") }],
-      });
+      return NextResponse.json(
+        {
+          errors: [{ message: t("pageAndlimitAreRequired") }],
+        },
+        { status: 400 }
+      );
 
     // Find user
     const user = await getCurrentUser();
@@ -69,9 +72,12 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     // Check that user is a member of a company
     const member = company.users.find((e) => e.userId == user.id);
     if (!member) {
-      return NextResponse.json({
-        errors: [{ message: t("userIsNotAMember") }],
-      });
+      return NextResponse.json(
+        {
+          errors: [{ message: t("userIsNotAMember") }],
+        },
+        { status: 401 }
+      );
     }
 
     // Filters

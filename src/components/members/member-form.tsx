@@ -91,7 +91,6 @@ const MemberForm = ({ companyId, member }: MemberFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userId: member.userId,
       roleId: member.companyRoleId,
     },
   });
@@ -129,7 +128,7 @@ const MemberForm = ({ companyId, member }: MemberFormProps) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("error"),
+        title: t("updateError"),
         description: message,
         variant: "destructive",
       });

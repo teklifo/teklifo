@@ -59,7 +59,7 @@ const DeleteMember = ({ companyId, memberId }: Props) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("error"),
+        title: t("deleteError"),
         description: message,
         variant: "destructive",
       });

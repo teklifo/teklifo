@@ -33,7 +33,6 @@ export const getPriceTypeSchema = (t: (value: string) => string) => {
 
 export const getMemberSchema = (t: (value: string) => string) => {
   return z.object({
-    userId: z.string().min(1, t("invalidUserId")),
     roleId: z.string().min(1, t("invalidRoleId")),
   });
 };
@@ -51,7 +50,11 @@ export const getRoleSchema = (t: (value: string) => string) => {
     availableData: z.array(
       z.object({
         stockId: z.string().min(1, t("invalidStockId")),
-        priceTypeId: z.string().min(1, t("invalidPriceTypeId")),
+        priceTypes: z.array(
+          z.object({
+            priceTypeId: z.string().min(1, t("invalidPriceTypeId")),
+          })
+        ),
       })
     ),
   });

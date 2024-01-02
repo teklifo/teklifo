@@ -144,8 +144,8 @@ const InvitationForm = ({ companyId }: InvitationFormProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button variant="default" className="space-x-2">
+          <Plus />
           <span>{t("add")}</span>
         </Button>
       </DialogTrigger>

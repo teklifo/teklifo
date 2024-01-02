@@ -89,7 +89,7 @@ const PriceTypes = async ({
       </div>
       <div className="mt-4">
         {result.length > 0 && (
-          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
             {result.map((priceType) => (
               <Card key={priceType.id} className="h-full w-full">
                 <CardHeader>

@@ -6,7 +6,7 @@ import type { Stock as StockType } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Pagination from "@/components/ui/pagination";
-import StockForm from "@/components/stock-form";
+import StockForm from "@/components/stocks/stock-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +19,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import DeleteStock from "@/components/delete-stock";
+import DeleteStock from "@/components/stocks/delete-stock";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
 
@@ -86,7 +86,7 @@ const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
       </div>
       <div className="mt-4">
         {result.length > 0 && (
-          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
             {result.map((stock) => (
               <Card key={stock.id} className="h-full w-full">
                 <CardHeader>

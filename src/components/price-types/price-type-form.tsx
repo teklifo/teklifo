@@ -102,7 +102,7 @@ const PriceTypeForm = ({ companyId, priceType }: PriceTypeFormProps) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("error"),
+        title: update ? t("updateError") : t("error"),
         description: message,
         variant: "destructive",
       });
@@ -115,7 +115,7 @@ const PriceTypeForm = ({ companyId, priceType }: PriceTypeFormProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {update ? (
-          <Button variant="ghost">
+          <Button variant="ghost" className="justify-start">
             <Pencil className="mr-2 h-4 w-4" />
             <span>{t("edit")}</span>
           </Button>

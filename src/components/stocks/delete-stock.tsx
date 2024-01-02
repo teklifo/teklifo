@@ -22,18 +22,18 @@ import request from "@/lib/request";
 
 type Props = {
   companyId: string;
-  priceTypeId: string;
+  stockId: string;
 };
 
-const DeletePriceType = ({ companyId, priceTypeId }: Props) => {
-  const t = useTranslations("PriceType");
+const DeleteStock = ({ companyId, stockId }: Props) => {
+  const t = useTranslations("Stock");
 
   const router = useRouter();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const deletePriceType = async () => {
+  const deleteStock = async () => {
     setLoading(true);
 
     const config = {
@@ -44,14 +44,11 @@ const DeletePriceType = ({ companyId, priceTypeId }: Props) => {
     };
 
     try {
-      await request(
-        `/api/company/${companyId}/price-type/${priceTypeId}`,
-        config
-      );
+      await request(`/api/company/${companyId}/stock/${stockId}`, config);
 
       toast({
-        title: t("priceTypeDeleted"),
-        description: t("priceTypeDeletedHint"),
+        title: t("stockDeleted"),
+        description: t("stockDeletedHint"),
       });
 
       setOpen(false);
@@ -81,16 +78,16 @@ const DeletePriceType = ({ companyId, priceTypeId }: Props) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("priceTypeDeleteTitle")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("stockDeleteTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("priceTypeDeleteSubtitle")}
+            {t("stockDeleteSubtitle")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>
             {t("cancel")}
           </AlertDialogCancel>
-          <AlertDialogAction disabled={loading} onClick={deletePriceType}>
+          <AlertDialogAction disabled={loading} onClick={deleteStock}>
             {t("delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -99,4 +96,4 @@ const DeletePriceType = ({ companyId, priceTypeId }: Props) => {
   );
 };
 
-export default DeletePriceType;
+export default DeleteStock;

@@ -22,18 +22,18 @@ import request from "@/lib/request";
 
 type Props = {
   companyId: string;
-  stockId: string;
+  roleId: string;
 };
 
-const DeleteStock = ({ companyId, stockId }: Props) => {
-  const t = useTranslations("Stock");
+const DeleteRole = ({ companyId, roleId }: Props) => {
+  const t = useTranslations("Role");
 
   const router = useRouter();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const deleteStock = async () => {
+  const deleteRole = async () => {
     setLoading(true);
 
     const config = {
@@ -44,11 +44,11 @@ const DeleteStock = ({ companyId, stockId }: Props) => {
     };
 
     try {
-      await request(`/api/company/${companyId}/stock/${stockId}`, config);
+      await request(`/api/company/${companyId}/role/${roleId}`, config);
 
       toast({
-        title: t("stockDeleted"),
-        description: t("stockDeletedHint"),
+        title: t("roleDeleted"),
+        description: t("roleDeletedHint"),
       });
 
       setOpen(false);
@@ -59,7 +59,7 @@ const DeleteStock = ({ companyId, stockId }: Props) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("error"),
+        title: t("deleteError"),
         description: message,
         variant: "destructive",
       });
@@ -71,23 +71,23 @@ const DeleteStock = ({ companyId, stockId }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost">
+        <Button variant="ghost" className="justify-start">
           <Trash className="mr-2 h-4 w-4" />
           <span>{t("delete")}</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("stockDeleteTitle")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("roleDeleteTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("stockDeleteSubtitle")}
+            {t("roleDeleteSubtitle")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>
             {t("cancel")}
           </AlertDialogCancel>
-          <AlertDialogAction disabled={loading} onClick={deleteStock}>
+          <AlertDialogAction disabled={loading} onClick={deleteRole}>
             {t("delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -96,4 +96,4 @@ const DeleteStock = ({ companyId, stockId }: Props) => {
   );
 };
 
-export default DeleteStock;
+export default DeleteRole;

@@ -26,7 +26,7 @@ const CheckEmail = () => {
 
   return (
     <MaxWidthWrapper>
-      <div className="flex flex-col items-center justify-center h-screen space-y-12 lg:flex-row lg:space-y-0">
+      <div className="flex flex-col items-center justify-center h-[80vh] space-y-12 lg:flex-row lg:space-y-0">
         <div className="w-full flex justify-center items-center text-center">
           <div className="max-w-md space-y-8">
             <h1 className="text-4xl font-bold tracking-tight text-foreground">

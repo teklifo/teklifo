@@ -108,9 +108,12 @@ export async function GET(request: NextRequest) {
     const startIndex = (page - 1) * limit;
 
     if (!page || !limit)
-      return NextResponse.json({
-        errors: [{ message: t("pageAndlimitAreRequired") }],
-      });
+      return NextResponse.json(
+        {
+          errors: [{ message: t("pageAndlimitAreRequired") }],
+        },
+        { status: 400 }
+      );
 
     // Filters
     const filters: Prisma.CompanyWhereInput = {};

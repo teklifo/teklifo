@@ -14,7 +14,9 @@
     "membersTitle": "Участники организации",
     "membersDescription": "Список участников организации",
     "invitationTitle": "Приглашение в организацию",
-    "invitationDescription": "Подтверждение о вступлении в организацию"
+    "invitationDescription": "Подтверждение о вступлении в организацию",
+    "rolesTitle": "Роли организации",
+    "rolesDescription": "Список ролей организации"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -27,7 +29,10 @@
     "stockDeleted": "Склад удален",
     "priceTypeDeleted": "Вид цены удален",
     "invalidInvitationId": "Приглашение не найдено",
-    "noEmail": "Без указания адреса электронной почты пользователя принятие приглашения невозможно"
+    "noEmail": "Без указания адреса электронной почты пользователя принятие приглашения невозможно",
+    "invalidMemberId": "Участник не найден",
+    "memberDeleted": "Пользователь исключен из организации",
+    "cantDeleteLastAdmin": "{userName} остался единственным администратором организации {companyName}, поэтому его нельзя исключить из организации"
   },
   "Layout": {
     "login": "Войти",
@@ -100,7 +105,9 @@
     "updateStockTitle": "Изменить склад",
     "updateStockSubtitle": "Измените информацию о складе",
     "stockIdUpdated": "Склад изменен",
-    "stockIdUpdatedHint": "Информация о складе успешно обновлена"
+    "stockIdUpdatedHint": "Информация о складе успешно обновлена",
+    "deleteError": "Не удалось удалить склад",
+    "updateError": "Не удалось обновить склад"
   },
   "PriceType": {
     "title": "Виды цен",
@@ -127,7 +134,9 @@
     "updatePriceTypeTitle": "Изменить вид цен",
     "updatePriceTypeSubtitle": "Измените информацию о виде цен",
     "priceTypeIdUpdated": "Вид цен изменен",
-    "priceTypeIdUpdatedHint": "Информация о виде цен успешно обновлена"
+    "priceTypeIdUpdatedHint": "Информация о виде цен успешно обновлена",
+    "deleteError": "Не удалось удалить вид цен",
+    "updateError": "Не удалось обновить вид цен"
   },
   "Member": {
     "title": "Участники",
@@ -155,7 +164,51 @@
     "memberIdUpdated": "Роль участника изменена",
     "memberIdUpdatedHint": "Информация об участнике успешно обновлена",
     "selectARole": "Выберите роль",
-    "email": "Адрес электронной почты"
+    "email": "Адрес электронной почты",
+    "deleteError": "Не удалось исключить участника из организации",
+    "updateError": "Не удалось обновить участника"
+  },
+  "Role": {
+    "title": "Роли",
+    "subtitle": "Список ролей организации",
+    "newRoleIsCreated": "Создана новая роль",
+    "newRoleHint": "Теперь вы можете назначить эту роль участникам организации",
+    "error": "Не удалось создать роль",
+    "name": "Наименование роли",
+    "new": "Новая роль",
+    "create": "Создать",
+    "newRoleTitle": "Новая роль",
+    "newRoleSubtitle": "Создайте новую роль организации",
+    "id": "ID",
+    "openMenu": "Открыть меню",
+    "edit": "Изменить",
+    "delete": "Удалить",
+    "roleDeleteTitle": "Вы точно уверены, что хотите удалить эту роль?",
+    "roleDeleteSubtitle": "Отменить это действие будет уже невозможно",
+    "cancel": "Отмена",
+    "roleDeleted": "Роль удалена",
+    "roleDeletedHint": "Информация об этой роли удалена",
+    "update": "Сохранить",
+    "updateRoleTitle": "Изменить роль",
+    "updateRoleSubtitle": "Измените наименование и права роли",
+    "roleIdUpdated": "Роль изменена",
+    "roleIdUpdatedHint": "Информация о роле успешно обновлена",
+    "deleteError": "Не удалось удалить роль",
+    "updateError": "Не удалось обновить роль",
+    "stocks": "Склады",
+    "stock": "Склад",
+    "access": "Доступ",
+    "priceTypes": "Виды цен",
+    "selectStock": "Выберите склад",
+    "noStocks": "Не найдены склады",
+    "stockSearch": "Поиск по складам",
+    "addStock": "Добавить доступный склад",
+    "priceType": "Вид цены",
+    "selectPriceType": "Выберите вид цены",
+    "noPriceTypes": "Не найдены виды цен",
+    "priceTypeSearch": "Поиск по видам цен",
+    "addPriceType": "Добавить доступный вид цен",
+    "addAll": "Добавить все"
   },
   "Schemas": {
     "companySchema": {
@@ -180,10 +233,14 @@
     "roleSchema": {
       "invalidName": "Укажите наименование роли",
       "stockId": "Укажите склад",
-      "priceTypeId": "Укажите вид цен"
+      "priceTypeId": "Укажите вид цен",
+      "invalidStockId": "Укажите склад",
+      "invalidPriceTypeId": "Укажите вид цен"
     }
   },
   "Invitation": {
+    "title": "Вау! Вы получили приглашение от {companyName}",
+    "subtitle": "Организация {companyName} отправила вам приглашение на вступление в ряды ее участников. Если вы не хоите принять его, то просто проигнорируйте",
     "accept": "Принять приглашение",
     "invitationAccepted": "Вы подтвердили свое участие в организации {companyName}",
     "invitationAcceptedHint": "Теперь вы можете взаимодействовать с данными по этой организации"
