@@ -16,3 +16,5 @@ export type PaginationType = {
   current: number;
   total: number;
 };
+
+export type FlattenAvailableDataType = { stockId: string; priceTypeId: string };

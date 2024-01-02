@@ -102,7 +102,7 @@ model CompanyMembers {
   userId        String
   company       Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId     String
-  companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Cascade)
+  companyRole   CompanyRole @relation(fields: [companyRoleId], references: [id], onDelete: Restrict)
   companyRoleId String
 
   @@id([userId, companyId])
@@ -127,9 +127,9 @@ model Product {
   externalId  String
   name        String
   number      String
-  category    ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category    ProductCategory @relation(fields: [categoryId], references: [id], onDelete: SetDefault)
   categoryId  String
-  brand       Brand           @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  brand       Brand           @relation(fields: [brandId], references: [id], onDelete: Restrict)
   brandId     String
   brandNumber String
   unit        String
@@ -148,7 +148,7 @@ model ProductCategory {
   id            String            @id @default(cuid())
   name          String
   parentId      String?
-  parent        ProductCategory?  @relation("SubCategories", fields: [parentId], references: [id])
+  parent        ProductCategory?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: SetDefault)
   subCategories ProductCategory[] @relation("SubCategories")
   products      Product[]
 }

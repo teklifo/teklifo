@@ -16,7 +16,11 @@
     "invitationTitle": "Приглашение в организацию",
     "invitationDescription": "Подтверждение о вступлении в организацию",
     "rolesTitle": "Роли организации",
-    "rolesDescription": "Список ролей организации"
+    "rolesDescription": "Список ролей организации",
+    "newRoleTitle": "Новая роль организации {companyName}",
+    "newRoleDescription": "Создание новой роли для организации",
+    "editRoleTitle": "{roleName} | {companyName}",
+    "editRoleDescription": "Обновление роли организации"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -32,7 +36,9 @@
     "noEmail": "Без указания адреса электронной почты пользователя принятие приглашения невозможно",
     "invalidMemberId": "Участник не найден",
     "memberDeleted": "Пользователь исключен из организации",
-    "cantDeleteLastAdmin": "{userName} остался единственным администратором организации {companyName}, поэтому его нельзя исключить из организации"
+    "cantDeleteLastAdmin": "{userName} остался единственным администратором организации {companyName}, поэтому его нельзя исключить из организации",
+    "invalidRoleId": "Роль организации не найдена",
+    "roleIsBeingUsed": "Роль используется участниками организации, и поэтому не может быть удалена"
   },
   "Layout": {
     "login": "Войти",
@@ -177,7 +183,7 @@
     "name": "Наименование роли",
     "new": "Новая роль",
     "create": "Создать",
-    "newRoleTitle": "Новая роль",
+    "newRoleTitle": "Новая роль организации {companyName}",
     "newRoleSubtitle": "Создайте новую роль организации",
     "id": "ID",
     "openMenu": "Открыть меню",
@@ -189,10 +195,10 @@
     "roleDeleted": "Роль удалена",
     "roleDeletedHint": "Информация об этой роли удалена",
     "update": "Сохранить",
-    "updateRoleTitle": "Изменить роль",
+    "updateRoleTitle": "Изменить роль {roleName} организации {companyName}",
     "updateRoleSubtitle": "Измените наименование и права роли",
-    "roleIdUpdated": "Роль изменена",
-    "roleIdUpdatedHint": "Информация о роле успешно обновлена",
+    "roleIsUpdated": "Роль изменена",
+    "roleIsUpdatedHint": "Информация о роле успешно обновлена",
     "deleteError": "Не удалось удалить роль",
     "updateError": "Не удалось обновить роль",
     "stocks": "Склады",

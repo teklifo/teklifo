@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type {
+  Prisma,
   Stock as StockType,
   PriceType as PriceTypeType,
-  CompanyRole as RoleType,
 } from "@prisma/client";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
@@ -28,72 +28,59 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { getRoleSchema } from "@/lib/schemas";
 import request from "@/lib/request";
-import { PaginationType } from "@/types";
+
+type RoleType = Prisma.CompanyRoleGetPayload<{
+  include: { availableData: true; company: true };
+}>;
 
 type RoleFormProps = {
   companyId: string;
+  role?: RoleType;
+  stocks: StockType[];
+  priceTypes: PriceTypeType[];
 };
 
-type StockPaginatedData = {
-  result: StockType[];
-  pagination: PaginationType;
-};
-
-type PriceTypePaginatedData = {
-  result: PriceTypeType[];
-  pagination: PaginationType;
-};
-
-const RoleForm = ({ companyId }: RoleFormProps) => {
+const RoleForm = ({ companyId, role, stocks, priceTypes }: RoleFormProps) => {
   const t = useTranslations("Role");
+
+  const update = role !== undefined;
 
   const router = useRouter();
   const { toast } = useToast();
-  const [stocks, setStocks] = useState<StockType[]>([]);
-  const [priceTypes, setPriceTypes] = useState<PriceTypeType[]>([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const getStocksAndPriceTypes = async (companyId: string) => {
-      const config = {
-        method: "get",
-        headers: {
-          "Accept-Language": getCookie("NEXT_LOCALE"),
-        },
-        next: { revalidate: 0 },
-      };
-
-      try {
-        const results = await Promise.all([
-          await request<StockPaginatedData>(
-            `/api/company/${companyId}/stock?page=1&limit=100`,
-            config
-          ),
-
-          await request<PriceTypePaginatedData>(
-            `/api/company/${companyId}/price-type?page=1&limit=100`,
-            config
-          ),
-        ]);
-
-        setStocks(results[0].result);
-        setPriceTypes(results[1].result);
-      } catch (error) {
-        //
-      }
-    };
-
-    getStocksAndPriceTypes(companyId);
-  }, [companyId]);
 
   const st = useTranslations("Schemas.roleSchema");
   const formSchema = getRoleSchema(st);
 
+  const defaultAvailableData: {
+    stockId: string;
+    priceTypes: [{ priceTypeId: string }];
+  }[] = [];
+  if (role) {
+    role.availableData.forEach((data) => {
+      const object = defaultAvailableData.find(
+        (d) => d.stockId === data.stockId
+      );
+      if (object) {
+        object.priceTypes.push({ priceTypeId: data.priceTypeId });
+      } else {
+        defaultAvailableData.push({
+          stockId: data.stockId,
+          priceTypes: [
+            {
+              priceTypeId: data.priceTypeId,
+            },
+          ],
+        });
+      }
+    });
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      availableData: [],
+      name: update ? role.name : "",
+      availableData: defaultAvailableData,
     },
   });
 
@@ -106,7 +93,7 @@ const RoleForm = ({ companyId }: RoleFormProps) => {
     setLoading(true);
 
     const config = {
-      method: "post",
+      method: update ? "put" : "post",
       headers: {
         "Content-Type": "application/json",
         "Accept-Language": getCookie("NEXT_LOCALE"),
@@ -115,12 +102,24 @@ const RoleForm = ({ companyId }: RoleFormProps) => {
     };
 
     try {
-      await request<RoleType>(`/api/company/${companyId}/role/`, config);
+      if (update) {
+        await request<RoleType>(
+          `/api/company/${companyId}/role/${role.id}`,
+          config
+        );
 
-      toast({
-        title: t("newRoleIsCreated"),
-        description: t("newRoleHint"),
-      });
+        toast({
+          title: t("roleIsUpdated"),
+          description: t("roleIsUpdatedHint"),
+        });
+      } else {
+        await request<RoleType>(`/api/company/${companyId}/role/`, config);
+
+        toast({
+          title: t("newRoleIsCreated"),
+          description: t("newRoleHint"),
+        });
+      }
 
       form.reset();
 
@@ -130,7 +129,7 @@ const RoleForm = ({ companyId }: RoleFormProps) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("updateError"),
+        title: update ? t("updateError") : t("error"),
         description: message,
         variant: "destructive",
       });
@@ -217,7 +216,7 @@ const RoleForm = ({ companyId }: RoleFormProps) => {
             </Button>
           </div>
           <Button type="submit" disabled={loading}>
-            {t("update")}
+            {update ? t("update") : t("create")}
           </Button>
         </div>
       </form>
