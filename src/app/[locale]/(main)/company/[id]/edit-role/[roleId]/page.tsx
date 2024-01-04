@@ -10,7 +10,7 @@ import type {
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import EditRole from "@/components/roles/edit-role";
 import request from "@/lib/request";
-import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price0types";
+import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
 
 type RoleType = Prisma.CompanyRoleGetPayload<{
   include: { availableData: true; company: true };

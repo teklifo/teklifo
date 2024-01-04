@@ -20,7 +20,11 @@
     "newRoleTitle": "Новая роль организации {companyName}",
     "newRoleDescription": "Создание новой роли для организации",
     "editRoleTitle": "{roleName} | {companyName}",
-    "editRoleDescription": "Обновление роли организации"
+    "editRoleDescription": "Обновление роли организации",
+    "newCompanyTitle": "Новая организация",
+    "newCompanyDescription": "Создание новой организации на Kraft",
+    "updateCompanyTitle": "{companyName} | Редактирование организации",
+    "updateCompanyDescription": "Редактирование реквизитов организации"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -64,7 +68,7 @@
     "subtitle": "Список организаций, в которых вы состоите",
     "newCompany": "Создать организацию"
   },
-  "NewCompany": {
+  "CompanyForm": {
     "title": "Новая организация",
     "name": "Название организации",
     "id": "Идентификатор организации",
@@ -76,7 +80,11 @@
     "russian": "По-русски (опционально)",
     "newCompanyIsCreated": "Ура! Новая организация успешно создана",
     "newCompanyHint": "Теперь вы можете перейти к дополнительным настройкам организации",
-    "error": "Не удалось создать организацию"
+    "error": "Не удалось создать организацию",
+    "updateEror": "Не удалось обновить организацию",
+    "updateTitle": "Редактирование организации",
+    "updateSubtitle": "Обновите реквизиты организации",
+    "update": "Сохранить"
   },
   "Company": {
     "more": "Подробнее",

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -24,6 +25,8 @@ interface UserDropdownProps {
 const UserDropdown = ({ user }: UserDropdownProps) => {
   const t = useTranslations("Layout");
 
+  const [open, setOpen] = useState(false);
+
   const userName = user.name || user.email || "Kraft";
 
   let avatarFallback = "K";
@@ -33,11 +36,12 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
   }
 
   const logout = () => {
+    setOpen(false);
     signOut();
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="space-x-2">
           <Avatar>
@@ -53,7 +57,14 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <Building2 className="mr-2 h-4 w-4" />
-            <Link href="/my-companies">{t("myCompanies")}</Link>
+            <Link
+              href="/my-companies"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              {t("myCompanies")}
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>

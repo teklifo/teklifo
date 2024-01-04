@@ -14,7 +14,6 @@ const CompanyLinks = ({ id }: CompanyLinksProps) => {
   const t = useTranslations("Company");
 
   const pathname = usePathname();
-  console.log(pathname);
 
   const links = [
     {

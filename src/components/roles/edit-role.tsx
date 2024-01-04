@@ -40,6 +40,10 @@ type RoleFormProps = {
   priceTypes: PriceTypeType[];
 };
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const RoleForm = ({ companyId, role, stocks, priceTypes }: RoleFormProps) => {
   const t = useTranslations("Role");
 
@@ -121,8 +125,8 @@ const RoleForm = ({ companyId, role, stocks, priceTypes }: RoleFormProps) => {
         });
       }
 
-      form.reset();
-
+      router.refresh();
+      await sleep(1000);
       router.push(`/company/${companyId}/roles`);
     } catch (error) {
       let message = "";

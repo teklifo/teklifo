@@ -10,11 +10,15 @@ import type {
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import EditRole from "@/components/roles/edit-role";
 import request from "@/lib/request";
-import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price0types";
+import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
 
 type CompanyType = Prisma.CompanyGetPayload<{
   include: { users: true };
 }>;
+
+type Props = {
+  params: { locale: string; id: string };
+};
 
 export const generateMetadata = async ({
   params: { locale, id },
@@ -29,7 +33,7 @@ export const generateMetadata = async ({
     };
 
   return {
-    title: t("newRoleTitle", { rcompanyName: company.name }),
+    title: t("newRoleTitle", { companyName: company.name }),
     description: t("newRoleDescription"),
   };
 };
@@ -50,10 +54,6 @@ const getCompany = async (id: string) => {
   } catch (error) {
     return undefined;
   }
-};
-
-type Props = {
-  params: { locale: string; id: string };
 };
 
 const NewRole = async ({ params: { id } }: Props) => {

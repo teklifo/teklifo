@@ -222,6 +222,28 @@ export async function PUT(
       );
     }
 
+    // Check that this member is not the last admin of that company
+    if (!role.default) {
+      const admin = company.users.find(
+        (e) => e.companyRole.default && e.userId !== memberId
+      );
+      if (!admin) {
+        return NextResponse.json(
+          {
+            errors: [
+              {
+                message: t("cantDeleteLastAdmin", {
+                  userName: existingMember.name || existingMember.email,
+                  companyName: company.name,
+                }),
+              },
+            ],
+          },
+          { status: 404 }
+        );
+      }
+    }
+
     // Update a member
     const member = await db.companyMembers.update({
       where: {
