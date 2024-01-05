@@ -76,8 +76,8 @@ const StockForm = ({ companyId, stock }: StockFormProps) => {
         );
 
         toast({
-          title: t("stockIdUpdated"),
-          description: t("stockIdUpdatedHint"),
+          title: t("stockIsUpdated"),
+          description: t("stockIsUpdatedHint"),
         });
       } else {
         await request<StockType>(`/api/company/${companyId}/stock`, config);

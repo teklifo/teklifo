@@ -114,8 +114,8 @@ const MemberForm = ({ companyId, member }: MemberFormProps) => {
       );
 
       toast({
-        title: t("memberIdUpdated"),
-        description: t("memberIdUpdatedHint"),
+        title: t("memberIsUpdated"),
+        description: t("memberIsUpdatedHint"),
       });
 
       form.reset();

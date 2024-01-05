@@ -7,9 +7,10 @@ import { Prisma } from "@prisma/client";
 import { Pencil } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
+import getAllowedCompany from "@/app/actions/get-allowed-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import React from "react";
 
 type CompanyType = Prisma.CompanyGetPayload<{
   include: { users: true };
@@ -31,9 +32,11 @@ export const generateMetadata = async ({
       description: "",
     };
 
+  const localizedProperties = getLocalizedProperties(company, locale);
+
   return {
     title: `${company.name} | ${t("projectName")}`,
-    description: company.description,
+    description: localizedProperties.description,
   };
 };
 
@@ -55,7 +58,25 @@ const getCompany = async (id: string) => {
   }
 };
 
-const Company = async ({ params: { id } }: Props) => {
+const getLocalizedProperties = (company: CompanyType, locale: string) => {
+  switch (locale) {
+    case "ru":
+      return {
+        description: company.descriptionRu
+          ? company.descriptionRu
+          : company.description,
+        slogan: company.sloganRu ? company.sloganRu : company.slogan,
+      };
+    case "az":
+    default:
+      return {
+        description: company.description,
+        slogan: company.slogan,
+      };
+  }
+};
+
+const Company = async ({ params: { locale, id } }: Props) => {
   const t = await getTranslations("Company");
 
   const allowedCompany = await getAllowedCompany(id);
@@ -65,17 +86,29 @@ const Company = async ({ params: { id } }: Props) => {
 
   const isMember = allowedCompany !== null;
 
+  let { description, slogan } = getLocalizedProperties(company, locale);
+
   return (
     <MaxWidthWrapper className="mb-8 space-y-4">
-      {isMember && (
-        <Link
-          href={`/company/${company.id}/edit`}
-          className={cn("space-x-2", buttonVariants({ variant: "default" }))}
-        >
-          <Pencil />
-          <span>{t("edit")}</span>
-        </Link>
-      )}
+      <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight">{company.name}</h1>
+          {slogan && <p className="text-lg text-muted-foreground">{slogan}</p>}
+          <p className="text-lg text-muted-foreground">{`${t("tin")}: ${
+            company.tin
+          }`}</p>
+        </div>
+        {isMember && (
+          <Link
+            href={`/company/${company.id}/edit`}
+            className={cn("space-x-2", buttonVariants({ variant: "default" }))}
+          >
+            <Pencil />
+            <span>{t("edit")}</span>
+          </Link>
+        )}
+      </div>
+      <div className="whitespace-pre-line">{description}</div>
     </MaxWidthWrapper>
   );
 };

@@ -73,13 +73,16 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
   }
 }
 
-export async function PUT(request: NextRequest, { params: { id } }: Props) {
+export async function PUT(
+  request: NextRequest,
+  { params: { id: companyId } }: Props
+) {
   const locale = getLocale(request.headers);
   const t = await getTranslations({ locale, namespace: "API" });
 
   try {
     // Find company
-    const company = await getAllowedCompany(id);
+    const company = await getAllowedCompany(companyId);
     if (!company) {
       return NextResponse.json(
         {
@@ -107,14 +110,22 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    const { name } = test.data;
+    const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
+      test.data;
 
     const updatedCompany = await db.company.update({
       where: {
-        id,
+        id: companyId,
       },
       data: {
+        id,
         name,
+        tin,
+        description,
+        imageId: "",
+        descriptionRu,
+        slogan,
+        sloganRu,
       },
     });
 

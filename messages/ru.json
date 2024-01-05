@@ -86,7 +86,9 @@
     "updateError": "Не удалось обновить организацию",
     "updateTitle": "Редактирование организации",
     "updateSubtitle": "Обновите реквизиты организации",
-    "update": "Сохранить"
+    "update": "Сохранить",
+    "companyIsUpdated": "Организация успешно обновлена",
+    "companyIsUpdatedHint": "Теперь пользователи увидят обновленную информацию об организации"
   },
   "Company": {
     "more": "Подробнее",
@@ -95,7 +97,8 @@
     "roles": "Роли",
     "members": "Участники",
     "stocks": "Склады",
-    "priceTypes": "Виды цен"
+    "priceTypes": "Виды цен",
+    "tin": "ИНН"
   },
   "Stock": {
     "title": "Склады",
@@ -120,8 +123,8 @@
     "update": "Сохранить",
     "updateStockTitle": "Изменить склад",
     "updateStockSubtitle": "Измените информацию о складе",
-    "stockIdUpdated": "Склад изменен",
-    "stockIdUpdatedHint": "Информация о складе успешно обновлена",
+    "stockIsUpdated": "Склад изменен",
+    "stockIsUpdatedHint": "Информация о складе успешно обновлена",
     "deleteError": "Не удалось удалить склад",
     "updateError": "Не удалось обновить склад"
   },
@@ -149,8 +152,8 @@
     "update": "Сохранить",
     "updatePriceTypeTitle": "Изменить вид цен",
     "updatePriceTypeSubtitle": "Измените информацию о виде цен",
-    "priceTypeIdUpdated": "Вид цен изменен",
-    "priceTypeIdUpdatedHint": "Информация о виде цен успешно обновлена",
+    "priceTypeIsUpdated": "Вид цен изменен",
+    "priceTypeIsUpdatedHint": "Информация о виде цен успешно обновлена",
     "deleteError": "Не удалось удалить вид цен",
     "updateError": "Не удалось обновить вид цен"
   },
@@ -177,8 +180,8 @@
     "update": "Сохранить",
     "updateMemberTitle": "Изменить участника",
     "updateMemberSubtitle": "Измените права участника",
-    "memberIdUpdated": "Роль участника изменена",
-    "memberIdUpdatedHint": "Информация об участнике успешно обновлена",
+    "memberIsUpdated": "Роль участника изменена",
+    "memberIsUpdatedHint": "Информация об участнике успешно обновлена",
     "selectARole": "Выберите роль",
     "email": "Адрес электронной почты",
     "deleteError": "Не удалось исключить участника из организации",

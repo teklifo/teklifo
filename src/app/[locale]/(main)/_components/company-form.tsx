@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import sleep from "@/lib/sleep";
 
 type CompanyFormProps = {
   company?: CompanyType;
@@ -78,14 +79,19 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
 
     try {
       if (update) {
-        await request<CompanyType>(`/api/company/${company.id}`, config);
+        const updatedCompany = await request<CompanyType>(
+          `/api/company/${company.id}`,
+          config
+        );
 
         toast({
-          title: t("newCompanyIsCreated"),
-          description: t("newCompanyHint"),
+          title: t("companyIsUpdated"),
+          description: t("companyIsUpdatedHint"),
         });
 
-        router.push(`/company/${company.id}`);
+        router.refresh();
+        await sleep(1000);
+        router.push(`/company/${updatedCompany.id}`);
       } else {
         const newCompany = await request<CompanyType>("/api/company", config);
 

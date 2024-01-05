@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { getRoleSchema } from "@/lib/schemas";
 import request from "@/lib/request";
+import sleep from "@/lib/sleep";
 
 type RoleType = Prisma.CompanyRoleGetPayload<{
   include: { availableData: true; company: true };
@@ -39,10 +40,6 @@ type RoleFormProps = {
   stocks: StockType[];
   priceTypes: PriceTypeType[];
 };
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 const RoleForm = ({ companyId, role, stocks, priceTypes }: RoleFormProps) => {
   const t = useTranslations("Role");

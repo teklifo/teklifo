@@ -77,8 +77,8 @@ const PriceTypeForm = ({ companyId, priceType }: PriceTypeFormProps) => {
         );
 
         toast({
-          title: t("priceTypeIdUpdated"),
-          description: t("priceTypeIdUpdatedHint"),
+          title: t("priceTypeIsUpdated"),
+          description: t("priceTypeIsUpdatedHint"),
         });
       } else {
         await request<PriceTypeType>(

@@ -42,7 +42,7 @@ const CompanySwitch = ({ id, companies }: CompanySwitchProps) => {
           company.id === id ? null : (
             <Link
               key={company.id}
-              href={`/company/${company.id}/edit`}
+              href={`/company/${company.id}`}
               className={cn(
                 "w-full h-10 mx-4 my-2",
                 buttonVariants({ variant: "outline" })
