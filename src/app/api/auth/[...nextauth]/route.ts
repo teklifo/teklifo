@@ -5,7 +5,7 @@ import EmailProvider, {
 import { cookies } from "next/headers";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import db from "@/lib/db";
-import sendEmail from "@/nodemailer/sendEmail";
+import sendEmail from "@/lib/nodemailer/sendEmail";
 
 const getEmailSubject = (locale: string) => {
   switch (locale) {

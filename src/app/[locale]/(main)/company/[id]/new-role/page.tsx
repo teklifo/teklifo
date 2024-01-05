@@ -1,20 +1,14 @@
 import { Metadata } from "next";
-import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type {
-  Prisma,
   Stock as StockType,
   PriceType as PriceTypeType,
 } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import EditRole from "@/components/roles/edit-role";
-import request from "@/lib/request";
+import EditRole from "@/app/[locale]/(main)/company/[id]/(info)/roles/_components/edit-role";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
-
-type CompanyType = Prisma.CompanyGetPayload<{
-  include: { users: true };
-}>;
+import getAllowedCompany from "@/app/actions/get-allowed-company";
 
 type Props = {
   params: { locale: string; id: string };
@@ -25,7 +19,7 @@ export const generateMetadata = async ({
 }: Props): Promise<Metadata> => {
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
-  const company = await getCompany(id);
+  const company = await getAllowedCompany(id);
   if (!company)
     return {
       title: `${t("projectName")}`,
@@ -38,26 +32,8 @@ export const generateMetadata = async ({
   };
 };
 
-const getCompany = async (id: string) => {
-  try {
-    const cookieStore = cookies();
-    const headersList = headers();
-    const cookie = headersList.get("cookie");
-
-    return await request<CompanyType>(`/api/company/${id}`, {
-      headers: {
-        "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
-        Cookie: cookie,
-      },
-      next: { revalidate: 0 },
-    });
-  } catch (error) {
-    return undefined;
-  }
-};
-
 const NewRole = async ({ params: { id } }: Props) => {
-  const company = await getCompany(id);
+  const company = await getAllowedCompany(id);
   if (!company) return notFound();
 
   const result = await getStocksAndPriceTypes(id);

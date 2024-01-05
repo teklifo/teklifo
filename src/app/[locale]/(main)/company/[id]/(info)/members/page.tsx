@@ -4,11 +4,11 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
+import MemberForm from "./_components/member-form";
+import InvitationForm from "./_components/invitation-form";
+import DeleteMember from "./_components/delete-member";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Pagination from "@/components/ui/pagination";
-import MemberForm from "@/components/members/member-form";
-import InvitationForm from "@/components/members/invitation-form";
-import DeleteMember from "@/components/members/delete-member";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -81,7 +81,7 @@ const Members = async ({ params: { id }, searchParams: { page } }: Props) => {
   const t = await getTranslations("Member");
 
   return (
-    <MaxWidthWrapper>
+    <MaxWidthWrapper className="mb-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>

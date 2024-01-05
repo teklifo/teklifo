@@ -3,7 +3,7 @@ import createIntlMiddleware from "next-intl/middleware";
 import { locales, localePrefix } from "./navigation";
 import { NextRequest } from "next/server";
 
-const publicPages = ["/", "/login", "/check-email"];
+const publicPages = ["/", "/login", "/check-email", "/company/*"];
 
 const intlMiddleware = createIntlMiddleware({
   locales,
@@ -31,8 +31,8 @@ const authMiddleware = withAuth(
 export default function middleware(req: NextRequest) {
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join("|")}))?(${publicPages
-      .flatMap((p) => (p === "/" ? ["", "/"] : p))
-      .join("|")})/?$`,
+      .map((page) => page.replace(/\*/, ".*"))
+      .join("|")})?/?$`,
     "i"
   );
 

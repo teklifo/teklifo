@@ -17,7 +17,7 @@ const CompanyLinks = ({ id }: CompanyLinksProps) => {
 
   const links = [
     {
-      href: `/company/${id}/edit`,
+      href: `/company/${id}`,
       label: t("main"),
     },
     {

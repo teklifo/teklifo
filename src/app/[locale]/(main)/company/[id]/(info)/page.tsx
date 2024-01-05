@@ -2,15 +2,14 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
 import { Pencil } from "lucide-react";
-import getCurrentUser from "@/app/actions/get-current-user";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
+import getAllowedCompany from "@/app/actions/get-allowed-company";
 
 type CompanyType = Prisma.CompanyGetPayload<{
   include: { users: true };
@@ -18,11 +17,6 @@ type CompanyType = Prisma.CompanyGetPayload<{
 
 type Props = {
   params: { locale: string; id: string };
-};
-
-type CompanyContentProps = {
-  company: CompanyType;
-  isMember: boolean;
 };
 
 export const generateMetadata = async ({
@@ -62,23 +56,17 @@ const getCompany = async (id: string) => {
 };
 
 const Company = async ({ params: { id } }: Props) => {
+  const t = await getTranslations("Company");
+
+  const allowedCompany = await getAllowedCompany(id);
+
   const company = await getCompany(id);
   if (!company) return notFound();
 
-  const user = await getCurrentUser();
-  const isMember = user
-    ? (company.users?.filter((element) => element.userId === user.id) ?? [])
-        .length > 0 ?? false
-    : false;
-
-  return <CompanyContent company={company} isMember={isMember} />;
-};
-
-const CompanyContent = ({ company, isMember }: CompanyContentProps) => {
-  const t = useTranslations("Company");
+  const isMember = allowedCompany !== null;
 
   return (
-    <MaxWidthWrapper className="mt-8 space-y-4">
+    <MaxWidthWrapper className="mb-8 space-y-4">
       {isMember && (
         <Link
           href={`/company/${company.id}/edit`}

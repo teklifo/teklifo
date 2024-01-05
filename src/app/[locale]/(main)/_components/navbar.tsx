@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import UserDropdown from "./user-dropdown";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import UserDropdown from "@/components/user-dropdown";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentUser from "@/app/actions/get-current-user";
 

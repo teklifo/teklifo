@@ -1,13 +1,14 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Stock as StockType } from "@prisma/client";
-import { MoreHorizontal } from "lucide-react";
+import type { CompanyRole as RoleType } from "@prisma/client";
+import { MoreHorizontal, Plus, Pencil } from "lucide-react";
+import DeleteRole from "./_components/delete-role";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Pagination from "@/components/ui/pagination";
-import StockForm from "@/components/stocks/stock-form";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -19,8 +20,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import DeleteStock from "@/components/stocks/delete-stock";
 import request from "@/lib/request";
+import { cn } from "@/lib/utils";
 import { PaginationType } from "@/types";
 
 type Props = {
@@ -31,7 +32,7 @@ type Props = {
 };
 
 type PaginatedData = {
-  result: StockType[];
+  result: RoleType[];
   pagination: PaginationType;
 };
 
@@ -41,19 +42,19 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("stocksTitle"),
-    description: t("stocksDescription"),
+    title: t("rolesTitle"),
+    description: t("rolesDescription"),
   };
 };
 
-const getCompanyStocks = async (companyId: string, page: number) => {
+const getCompanyRoles = async (companyId: string, page: number) => {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/company/${companyId}/stock?page=${page}&limit=10`,
+      `/api/company/${companyId}/role?page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -67,31 +68,37 @@ const getCompanyStocks = async (companyId: string, page: number) => {
   }
 };
 
-const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
-  const data = await getCompanyStocks(id, page ?? 1);
+const Roles = async ({ params: { id }, searchParams: { page } }: Props) => {
+  const data = await getCompanyRoles(id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
 
-  const t = await getTranslations("Stock");
+  const t = await getTranslations("Role");
 
   return (
-    <MaxWidthWrapper>
+    <MaxWidthWrapper className="mb-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <StockForm companyId={id} />
+        <Link
+          href={`/company/${id}/new-role`}
+          className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
+        >
+          <Plus />
+          <span>{t("new")}</span>
+        </Link>
       </div>
       <div className="mt-4">
         {result.length > 0 && (
           <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
-            {result.map((stock) => (
-              <Card key={stock.id} className="h-full w-full">
+            {result.map((role) => (
+              <Card key={role.id} className="h-full w-full">
                 <CardHeader>
                   <div className="flex flex-row justify-between">
-                    <CardTitle>{stock.name}</CardTitle>
+                    <CardTitle>{role.name}</CardTitle>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -103,22 +110,28 @@ const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
                         align="end"
                         className="flex flex-col"
                       >
-                        <StockForm companyId={id} stock={stock} />
-                        <DeleteStock companyId={id} stockId={stock.id} />
+                        <Link
+                          href={`/company/${id}/edit-role/${role.id}`}
+                          className={buttonVariants({ variant: "ghost" })}
+                        >
+                          <Pencil className="mr-2 h-4 w-4" />
+                          <span>{t("edit")}</span>
+                        </Link>
+                        <DeleteRole companyId={id} roleId={role.id} />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <CardDescription>{`${t("id")}: ${stock.id}`}</CardDescription>
+                  <CardDescription>{`${t("id")}: ${role.id}`}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
           </div>
         )}
-        <Pagination href={`/${id}/stocks?page=`} pagination={pagination} />
+        <Pagination href={`/${id}/roles?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>
   );
 };
 
-export default Stocks;
+export default Roles;

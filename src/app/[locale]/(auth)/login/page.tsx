@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import LoginForm from "@/components/login-form";
+import LoginForm from "./_components/login-form";
 
 type Props = {
   params: { locale: string };

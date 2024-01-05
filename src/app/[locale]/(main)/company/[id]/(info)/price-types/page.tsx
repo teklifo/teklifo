@@ -3,10 +3,11 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { PriceType as PriceTypeType } from "@prisma/client";
+import PriceTypeForm from "./_components/price-type-form";
+import DeletePriceType from "./_components/delete-price-type";
 import { MoreHorizontal } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Pagination from "@/components/ui/pagination";
-import PriceTypeForm from "@/components/price-types/price-type-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +20,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import DeletePriceType from "@/components/price-types/delete-price-type";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
 
@@ -79,7 +79,7 @@ const PriceTypes = async ({
   const t = await getTranslations("PriceType");
 
   return (
-    <MaxWidthWrapper>
+    <MaxWidthWrapper className="mb-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>

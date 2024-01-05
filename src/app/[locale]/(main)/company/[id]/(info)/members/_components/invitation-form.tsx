@@ -38,7 +38,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { getInvitationSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
-import { Input } from "../ui/input";
+import { Input } from "../../../../../../../../components/ui/input";
 
 type InvitationFormProps = {
   companyId: string;

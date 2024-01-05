@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
+import getAllowedCompany from "@/app/actions/get-allowed-company";
 import db from "@/lib/db";
 import { getRoleSchema } from "@/lib/schemas";
-import getCurrentUser from "@/app/actions/get-current-user";
 import getLocale from "@/lib/get-locale";
 import { FlattenAvailableDataType } from "@/types";
 
@@ -18,45 +18,14 @@ export async function DELETE(
   const t = await getTranslations({ locale, namespace: "API" });
 
   try {
-    // Find user
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
-    }
-
     // Find company
-    const company = await db.company.findUnique({
-      where: { id },
-      include: {
-        users: {
-          include: {
-            companyRole: true,
-          },
-        },
-      },
-    });
+    const company = await getAllowedCompany(id);
     if (!company) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
         { status: 404 }
-      );
-    }
-
-    // Check that user is an admin member of a company
-    const member = company.users.find((e) => e.userId == user.id);
-    if (!member?.companyRole.default) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
       );
     }
 
@@ -75,6 +44,14 @@ export async function DELETE(
           errors: [{ message: t("invalidRoleId") }],
         },
         { status: 404 }
+      );
+    }
+    if (role.default) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("defaultRoleCantBeChanged") }],
+        },
+        { status: 400 }
       );
     }
     if (role.users.length > 0) {
@@ -111,45 +88,14 @@ export async function PUT(
   const t = await getTranslations({ locale, namespace: "API" });
 
   try {
-    // Find user
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
-    }
-
     // Find company
-    const company = await db.company.findUnique({
-      where: { id },
-      include: {
-        users: {
-          include: {
-            companyRole: true,
-          },
-        },
-      },
-    });
+    const company = await getAllowedCompany(id);
     if (!company) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
         { status: 404 }
-      );
-    }
-
-    // Check that user is an admin member of a company
-    const member = company.users.find((e) => e.userId == user.id);
-    if (!member?.companyRole.default) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
       );
     }
 
@@ -207,24 +153,27 @@ export async function PUT(
   }
 }
 
-export async function GET(request: NextRequest, { params: { roleId } }: Props) {
+export async function GET(
+  request: NextRequest,
+  { params: { id, roleId } }: Props
+) {
   const locale = getLocale(request.headers);
   const t = await getTranslations({ locale, namespace: "API" });
 
   try {
-    const user = await getCurrentUser();
-
-    if (!user) {
+    // Find company
+    const company = await getAllowedCompany(id);
+    if (!company) {
       return NextResponse.json(
         {
-          errors: [{ message: t("notAuthorized") }],
+          errors: [{ message: t("invalidCompanyId") }],
         },
-        { status: 401 }
+        { status: 404 }
       );
     }
 
     const role = await db.companyRole.findUnique({
-      where: { id: roleId },
+      where: { id: roleId, companyId: id },
       include: { availableData: true, company: true },
     });
 

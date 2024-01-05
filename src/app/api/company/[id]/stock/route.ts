@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
+import getCurrentUser from "@/app/actions/get-current-user";
+import getAllowedCompany from "@/app/actions/get-allowed-company";
 import db from "@/lib/db";
 import { getStockSchema } from "@/lib/schemas";
-import getCurrentUser from "@/app/actions/get-current-user";
 import getPaginationData from "@/lib/pagination";
 import getLocale from "@/lib/get-locale";
 
@@ -16,45 +17,14 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
   const t = await getTranslations({ locale, namespace: "API" });
 
   try {
-    // Find user
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
-    }
-
     // Find company
-    const company = await db.company.findUnique({
-      where: { id },
-      include: {
-        users: {
-          include: {
-            companyRole: true,
-          },
-        },
-      },
-    });
+    const company = await getAllowedCompany(id);
     if (!company) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
         { status: 404 }
-      );
-    }
-
-    // Check that user is an admin member of a company
-    const member = company.users.find((e) => e.userId == user.id);
-    if (!member?.companyRole.default) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
       );
     }
 

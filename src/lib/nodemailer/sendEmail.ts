@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import emailTemplate from "@/nodemailer/emailTemplate";
+import emailTemplate from "@/lib/nodemailer/emailTemplate";
 import { EmailType, EmailContextType } from "@/types";
 
 interface EmailParametersType {

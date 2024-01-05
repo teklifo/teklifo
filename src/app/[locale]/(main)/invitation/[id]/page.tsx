@@ -4,8 +4,8 @@ import { headers, cookies } from "next/headers";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
+import AcceptInvitation from "./_components/accept-invitation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import AcceptInvitation from "@/components/invitation/accept-invitation";
 import request from "@/lib/request";
 
 type Props = {
