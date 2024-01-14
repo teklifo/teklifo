@@ -41,7 +41,6 @@ const getInvitation = async (id: string) => {
       next: { revalidate: 0 },
     });
   } catch (error) {
-    console.log(error);
     return undefined;
   }
 };

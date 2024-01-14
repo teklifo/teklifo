@@ -5,7 +5,7 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import type { User as UserType } from "@prisma/client";
-import { Building2, LogOut } from "lucide-react";
+import { Building2, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -59,11 +59,24 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
             <Building2 className="mr-2 h-4 w-4" />
             <Link
               href="/my-companies"
+              className="w-full"
               onClick={() => {
                 setOpen(false);
               }}
             >
               {t("myCompanies")}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Settings className="mr-2 h-4 w-4" />
+            <Link
+              href="/settings"
+              className="w-full"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              {t("settings")}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

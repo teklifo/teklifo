@@ -12,7 +12,7 @@ export default async function emailTemplate(
 
   const filePath = path.join(
     process.cwd(),
-    `src/nodemailer/emails/${localeFolder}/${emailType}.html`
+    `src/lib/nodemailer/emails/${localeFolder}/${emailType}.html`
   );
 
   let html = (await fs.promises.readFile(filePath, "utf-8")).toString();

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { signIn } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,44 +18,50 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { getCredentialsSchema } from "@/lib/schemas";
 
-const LoginForm = () => {
+const LoginWithPasswordForm = () => {
   const t = useTranslations("Login");
 
+  const router = useRouter();
   const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
 
-  const formSchema = z.object({
-    email: z.string().email(t("invalidEmail")),
-  });
+  const st = useTranslations("Schemas.credentialsSchema");
+  const formSchema = getCredentialsSchema(st);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      password: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
 
-    const result = await signIn("email", {
+    const result = await signIn("credentials", {
       email: values.email,
-      redirect: true,
-      callbackUrl: "/",
+      password: values.password,
+      redirect: false,
     });
 
     if (result && result.error) {
       let message = "";
 
-      message = String(result.error);
+      if (result.error === "CredentialsSignin")
+        message = t("invalidCredentials");
+      else message = t("serverError");
 
       toast({
         title: t("error"),
         description: message,
         variant: "destructive",
       });
+    } else {
+      router.push("/");
     }
 
     setLoading(false);
@@ -62,7 +69,7 @@ const LoginForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -76,6 +83,19 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("password")}</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit" className="w-full" disabled={loading}>
           {t("next")}
         </Button>
@@ -84,4 +104,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default LoginWithPasswordForm;
