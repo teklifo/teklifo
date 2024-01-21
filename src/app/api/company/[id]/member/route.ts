@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
 import db from "@/lib/db";
-import getCurrentUser from "@/app/actions/get-current-user";
+import getAllowedCompany from "@/app/actions/get-allowed-company";
 import getPaginationData from "@/lib/pagination";
 import getLocale from "@/lib/get-locale";
 
@@ -34,49 +34,14 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         { status: 400 }
       );
 
-    // Find user
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
-    }
-
     // Find company
-    const company = await db.company.findUnique({
-      where: { id },
-      include: {
-        users: {
-          include: {
-            companyRole: {
-              include: {
-                availableData: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const company = await getAllowedCompany(id, false);
     if (!company) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
         { status: 404 }
-      );
-    }
-
-    // Check that user is a member of a company
-    const member = company.users.find((e) => e.userId == user.id);
-    if (!member) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("userIsNotAMember") }],
-        },
-        { status: 401 }
       );
     }
 

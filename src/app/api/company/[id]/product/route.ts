@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
-import getCurrentUser from "@/app/actions/get-current-user";
 import getAllowedCompany from "@/app/actions/get-allowed-company";
 import db from "@/lib/db";
-import { getStockSchema } from "@/lib/schemas";
+import { getProductsSchema } from "@/lib/schemas";
 import getPaginationData from "@/lib/pagination";
 import getLocale from "@/lib/get-locale";
 
@@ -12,13 +11,22 @@ type Props = {
   params: { id: string };
 };
 
-export async function POST(request: NextRequest, { params: { id } }: Props) {
+type UpsertResult = {
+  index: number;
+  id: number;
+  externalId: string;
+};
+
+export async function POST(
+  request: NextRequest,
+  { params: { id: companyId } }: Props
+) {
   const locale = getLocale(request.headers);
   const t = await getTranslations({ locale, namespace: "API" });
 
   try {
     // Find company
-    const company = await getAllowedCompany(id);
+    const company = await getAllowedCompany(companyId);
     if (!company) {
       return NextResponse.json(
         {
@@ -28,14 +36,14 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    // Create a new stock
+    // Create a new product
     const body = await request.json();
 
     const st = await getTranslations({
       locale,
-      namespace: "Schemas.stockSchema",
+      namespace: "Schemas.productSchema",
     });
-    const test = getStockSchema(st).safeParse(body);
+    const test = getProductsSchema(st).safeParse(body);
     if (!test.success) {
       return NextResponse.json(
         {
@@ -46,20 +54,55 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    const { name } = test.data;
+    const result: UpsertResult[] = [];
 
-    const stock = await db.stock.create({
-      data: {
-        name,
-        company: {
-          connect: {
-            id: company.id,
+    await Promise.all(
+      test.data.map(async (productData, index) => {
+        const {
+          id,
+          externalId,
+          name,
+          number,
+          brand,
+          brandNumber,
+          unit,
+          description,
+          archive,
+        } = productData;
+
+        const data = {
+          externalId,
+          name,
+          number,
+          brand,
+          brandNumber,
+          unit,
+          description,
+          archive,
+          company: {
+            connect: {
+              id: company.id,
+            },
           },
-        },
-      },
-    });
+        };
 
-    return NextResponse.json(stock);
+        const product = await db.product.upsert({
+          where: {
+            id: id ? id : 0,
+          },
+          create: data,
+          update: data,
+        });
+
+        result.push({
+          index,
+          id: product.id,
+          externalId: product.externalId,
+        });
+      })
+    );
+
+    return NextResponse.json(result);
   } catch (error) {
     console.log(error);
     return NextResponse.json(
@@ -105,17 +148,33 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     }
 
     // Filters
-    const filters: Prisma.StockWhereInput = {};
+    const filters: Prisma.ProductWhereInput = {};
     filters.companyId = company.id;
-    if (!company.users[0].companyRole.default)
-      filters.id = {
-        in: company.users[0].companyRole.availableData.map((e) => e.stockId),
+    if (!company.users[0].companyRole.default) {
+      filters.prices = {
+        some: {
+          priceTypeId: {
+            in: company.users[0].companyRole.availableData.map(
+              (e) => e.priceTypeId
+            ),
+          },
+        },
       };
+      filters.stock = {
+        some: {
+          stockId: {
+            in: company.users[0].companyRole.availableData.map(
+              (e) => e.stockId
+            ),
+          },
+        },
+      };
+    }
 
-    // Get allowed stocks
+    // Get allowed products
     const [total, result] = await db.$transaction([
-      db.stock.count(),
-      db.stock.findMany({
+      db.product.count(),
+      db.product.findMany({
         take: limit,
         skip: startIndex,
         where: filters,

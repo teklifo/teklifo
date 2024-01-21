@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
 const NewCompany = () => {
-  const t = useTranslations("NewCompany");
+  const t = useTranslations("CompanyForm");
 
   const router = useRouter();
   const { toast } = useToast();

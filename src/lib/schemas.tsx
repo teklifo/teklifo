@@ -78,3 +78,21 @@ export const getUserSchema = (t: (value: string) => string) => {
     password: z.string().optional(),
   });
 };
+
+export const getProductSchema = (t: (value: string) => string) => {
+  return z.object({
+    id: z.number().optional(),
+    externalId: z.string(),
+    name: z.string().min(1, t("invalidName")),
+    number: z.string().min(1, t("invalidNumber")),
+    brand: z.string(),
+    brandNumber: z.string(),
+    unit: z.string(),
+    description: z.string(),
+    archive: z.boolean(),
+  });
+};
+
+export const getProductsSchema = (t: (value: string) => string) => {
+  return z.array(getProductSchema(t));
+};

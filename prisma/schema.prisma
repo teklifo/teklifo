@@ -117,25 +117,16 @@ model Invitation {
   companyId     String
 }
 
-model Brand {
-  id       String    @id @default(cuid())
-  name     String
-  products Product[]
-}
-
 model Product {
-  id          String          @id @default(cuid())
+  id          Int          @id @default(autoincrement())
   externalId  String
   name        String
   number      String
-  category    ProductCategory @relation(fields: [categoryId], references: [id], onDelete: SetDefault)
-  categoryId  String
-  brand       Brand           @relation(fields: [brandId], references: [id], onDelete: Restrict)
-  brandId     String
+  brand       String
   brandNumber String
   unit        String
   description String
-  visible     Boolean
+  archive     Boolean
   images      ProductImage[]
   company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId   String
@@ -143,15 +134,6 @@ model Product {
   prices      Price[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-}
-
-model ProductCategory {
-  id            String            @id @default(cuid())
-  name          String
-  parentId      String?
-  parent        ProductCategory?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: SetDefault)
-  subCategories ProductCategory[] @relation("SubCategories")
-  products      Product[]
 }
 
 model Stock {
@@ -167,7 +149,7 @@ model StockBalance {
   stock     Stock    @relation(fields: [stockId], references: [id], onDelete: Cascade)
   stockId   String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
+  productId Int
   quantity  Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -189,7 +171,7 @@ model Price {
   priceType   PriceType @relation(fields: [priceTypeId], references: [id], onDelete: Cascade)
   priceTypeId String
   product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId   String
+  productId   Int
   price       Float
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -201,7 +183,7 @@ model ProductImage {
   id        String  @id
   url       String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
+  productId Int
 }
 
 model CompanyImage {

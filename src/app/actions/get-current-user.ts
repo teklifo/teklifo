@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth/next";
+import { User as UserType } from "@prisma/client";
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import db from "@/lib/db";
@@ -15,11 +16,17 @@ export default async function getCurrentUser() {
       return null;
     }
 
-    return await db.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         email: session.user.email as string,
       },
     });
+
+    if (user) {
+      user.password = null;
+    }
+
+    return user;
   } catch (error: any) {
     return null;
   }

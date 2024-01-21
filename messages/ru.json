@@ -26,7 +26,9 @@
     "updateCompanyTitle": "{companyName} | Редактирование организации",
     "updateCompanyDescription": "Редактирование реквизитов организации",
     "settingsTitle": "{username} | Настройки",
-    "settingsDescription": "Редактирование настроек пользователя"
+    "settingsDescription": "Редактирование настроек пользователя",
+    "productsTitle": "Товары",
+    "productsDescription": "Поиск по товарам организаций"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -48,7 +50,9 @@
     "companyDeleted": "Организация {companyName} и все связанные с нею данные удалены",
     "defaultRoleCantBeChanged": "Предопределенную роль нельзя изменить или удалить",
     "dependingCompanies": "{username} остался единственным администратором в {companyName}. Сначала измените права в организациях пользователя или удалите эти организации",
-    "userDeleted": "Пользователь успешно удален"
+    "userDeleted": "Пользователь успешно удален",
+    "invalidCredentials": "Неверные данные авторизации",
+    "invalidMode": "Неизвестный режим {mode}"
   },
   "Layout": {
     "login": "Войти",
@@ -257,6 +261,17 @@
     "userDeleteSubtitle": "Вы будете исключены из всех организаций, а вся связанная с этим пользователем информация также будет удалена",
     "cancel": "Отмена"
   },
+  "Products": {
+    "name": "Наименование",
+    "number": "Номер",
+    "brand": "Производитель",
+    "brandNumber": "Номер производителя",
+    "unit": "Единица",
+    "quantity": "Количество",
+    "updatedAt": "Дата",
+    "company": "Организация",
+    "stock": "Склад"
+  },
   "Schemas": {
     "companySchema": {
       "invalidId": "Укажите идентификатор организации",
@@ -293,6 +308,10 @@
       "invalidEmail": "Введите корректный адрес электронной почты",
       "invalidPassword": "Укажите пароль",
       "invalidPasswordLength": "Пароль должен содержать как минимум 6 символов"
+    },
+    "productSchema": {
+      "invalidName": "Укажите наименование товара",
+      "invalidNumber": "Укажите номер товара"
     }
   },
   "Invitation": {

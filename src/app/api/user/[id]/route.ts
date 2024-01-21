@@ -143,7 +143,7 @@ export async function PUT(request: NextRequest) {
 
     const { name, password } = test.data;
 
-    let hashedPassword = null;
+    let hashedPassword = undefined;
     if (password) {
       // Encrypt password
       const salt = await bcrypt.genSalt(10);
