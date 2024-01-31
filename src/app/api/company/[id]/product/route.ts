@@ -14,7 +14,7 @@ type Props = {
 type UpsertResult = {
   index: number;
   id: number;
-  externalId: string;
+  externalId: string | null;
 };
 
 export async function POST(

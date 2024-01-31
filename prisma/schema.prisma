@@ -118,26 +118,29 @@ model Invitation {
 }
 
 model Product {
-  id          Int          @id @default(autoincrement())
-  externalId  String
-  name        String
-  number      String
-  brand       String
-  brandNumber String
-  unit        String
-  description String
-  archive     Boolean
-  images      ProductImage[]
-  company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId   String
-  stock       StockBalance[]
-  prices      Price[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id               Int            @id @default(autoincrement())
+  externalId       String?
+  productId        String?
+  characteristicId String?
+  name             String
+  number           String
+  brand            String
+  brandNumber      String
+  unit             String
+  description      String
+  archive          Boolean
+  images           ProductImage[]
+  company          Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId        String
+  stock            StockBalance[]
+  prices           Price[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 }
 
 model Stock {
   id           String          @id @default(cuid())
+  externalId   String?
   name         String
   company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId    String
@@ -159,6 +162,7 @@ model StockBalance {
 
 model PriceType {
   id           String          @id @default(cuid())
+  externalId   String?
   name         String
   currency     String
   company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
@@ -182,6 +186,7 @@ model Price {
 model ProductImage {
   id        String  @id
   url       String
+  commerceMl Boolean
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
 }

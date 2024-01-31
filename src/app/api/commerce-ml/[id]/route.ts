@@ -182,13 +182,25 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     } else if (mode === "import") {
       // Read exchange files
       // A foldres called 'progress' indicates that exchange is currently running
-      const progressPath = `${process.cwd()}/cml-files/${id}/progress`;
+
+      const filename =
+        request.nextUrl.searchParams.get("filename") ?? "filename";
+
+      const subfolderName =
+        filename
+          .replace("import", "")
+          .replace("offers", "")
+          .replace("import_files", "")
+          .replace(".xml", "") || "subfolder";
+
+      const folderPath = `${process.cwd()}/cml-files/${id}/${subfolderName}`;
+      const progressPath = `${folderPath}/progress`;
       const inProgress = await checkFile(progressPath);
       if (inProgress) {
         return new Response(getResponseMessage("progress"));
       }
       // Start reading
-      await readCMLFiles(id);
+      await readCMLFiles(id, folderPath);
       return new Response(getResponseMessage("success"));
     }
   } catch (error) {
@@ -226,8 +238,17 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
       // Create folder if needed
       const filename =
         request.nextUrl.searchParams.get("filename") ?? "filename";
-      const fullPath = `${process.cwd()}/cml-files/${id}/${filename}`;
+
+      const subfolderName =
+        filename
+          .replace("import", "")
+          .replace("offers", "")
+          .replace("import_files", "")
+          .replace(".xml", "") || "subfolder";
+
+      const fullPath = `${process.cwd()}/cml-files/${id}/${subfolderName}/${filename}`;
       const folderPath = path.dirname(fullPath);
+      console.log(folderPath);
       if (!(await checkFile(folderPath))) {
         await fs.promises.mkdir(folderPath, { recursive: true });
       }

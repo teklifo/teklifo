@@ -18,3 +18,37 @@ export type PaginationType = {
 };
 
 export type FlattenAvailableDataType = { stockId: string; priceTypeId: string };
+
+// CML TYPES
+
+export type CommerceML_Import = {
+  КоммерческаяИнформация: {
+    Каталог: CommerceML_Каталог[];
+  };
+};
+
+export type CommerceML_Каталог = {
+  Товары: CommerceML_Товары[];
+  $?: {
+    СодержитТолькоИзменения: string;
+  };
+  СодержитТолькоИзменения?: string[];
+};
+
+export type CommerceML_Товары = {
+  Товар: {
+    Ид: string[];
+    Наименование: string[];
+    Артикул: string[];
+    ШтрихКод?: string[];
+    Изготовитель?: CommerceML_Изготовитель;
+    БазоваяЕдиница: { $: { НаименованиеПолное: string } }[];
+    Описание?: string[];
+    Картинка?: string[];
+  }[];
+};
+
+export type CommerceML_Изготовитель = {
+  Ид: string[];
+  Наименование: string[];
+};
