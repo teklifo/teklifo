@@ -5,11 +5,10 @@ import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getPaginationData from "@/lib/pagination";
-import getLocale from "@/lib/get-locale";
+import { getTranslationsFromHeader } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
     const user = await getCurrentUser();
@@ -92,8 +91,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     const page = parseInt(

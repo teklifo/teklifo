@@ -123,7 +123,10 @@ const Members = async ({ params: { id }, searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination href={`/${id}/members?page=`} pagination={pagination} />
+        <Pagination
+          href={`/company/${id}/members?page=`}
+          pagination={pagination}
+        />
         <div />
       </div>
     </MaxWidthWrapper>

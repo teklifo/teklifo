@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getTranslations } from "next-intl/server";
 import db from "@/lib/db";
 import getCurrentUser from "@/app/actions/get-current-user";
-import getLocale from "@/lib/get-locale";
+import { getTranslationsFromHeader } from "@/lib/utils";
 
 type Props = {
   params: { id: string };
 };
 
 export async function GET(request: NextRequest, { params: { id } }: Props) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find user
@@ -60,8 +58,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 }
 
 export async function POST(request: NextRequest, { params: { id } }: Props) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find user

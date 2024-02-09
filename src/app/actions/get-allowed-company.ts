@@ -19,19 +19,17 @@ export default async function getAllowedCompany(
   const company = await db.company.findUnique({
     where: {
       id,
+    },
+    include: {
       users: {
-        some: {
-          userId: userId,
+        where: {
+          userId,
           companyRole: admin
             ? {
                 default: true,
               }
             : undefined,
         },
-      },
-    },
-    include: {
-      users: {
         include: {
           companyRole: {
             include: {

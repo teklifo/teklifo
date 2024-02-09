@@ -2,16 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import getAllowedCompany from "@/app/actions/get-allowed-company";
 import db from "@/lib/db";
-import getLocale from "@/lib/get-locale";
 import { getCompanySchema } from "@/lib/schemas";
+import { getTranslationsFromHeader } from "@/lib/utils";
 
 type Props = {
   params: { id: string };
 };
 
 export async function GET(request: NextRequest, { params: { id } }: Props) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     const company = await db.company.findUnique({
@@ -39,8 +38,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 }
 
 export async function DELETE(request: NextRequest, { params: { id } }: Props) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find company
@@ -77,8 +75,7 @@ export async function PUT(
   request: NextRequest,
   { params: { id: companyId } }: Props
 ) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find company

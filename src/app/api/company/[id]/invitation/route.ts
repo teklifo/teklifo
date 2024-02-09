@@ -3,15 +3,14 @@ import { getTranslations } from "next-intl/server";
 import getAllowedCompany from "@/app/actions/get-allowed-company";
 import db from "@/lib/db";
 import { getInvitationSchema } from "@/lib/schemas";
-import getLocale from "@/lib/get-locale";
+import { getTranslationsFromHeader } from "@/lib/utils";
 
 type Props = {
   params: { id: string };
 };
 
 export async function POST(request: NextRequest, { params: { id } }: Props) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find company

@@ -125,7 +125,10 @@ const PriceTypes = async ({
             ))}
           </div>
         )}
-        <Pagination href={`/${id}/price-types?page=`} pagination={pagination} />
+        <Pagination
+          href={`/company/${id}/price-types?page=`}
+          pagination={pagination}
+        />
         <div />
       </div>
     </MaxWidthWrapper>

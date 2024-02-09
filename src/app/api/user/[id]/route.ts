@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import bcrypt from "bcrypt";
 import getCurrentUser from "@/app/actions/get-current-user";
 import db from "@/lib/db";
-import getLocale from "@/lib/get-locale";
+import { getTranslationsFromHeader } from "@/lib/utils";
 import { getUserSchema } from "@/lib/schemas";
 
 type Props = {
@@ -11,8 +11,7 @@ type Props = {
 };
 
 export async function DELETE(request: NextRequest) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find current user
@@ -108,8 +107,7 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find user

@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import getAllowedCompany from "@/app/actions/get-allowed-company";
 import db from "@/lib/db";
 import { getMemberSchema } from "@/lib/schemas";
-import getLocale from "@/lib/get-locale";
+import { getTranslationsFromHeader } from "@/lib/utils";
 
 type Props = {
   params: { id: string; memberId: string };
@@ -13,8 +13,7 @@ export async function DELETE(
   request: NextRequest,
   { params: { id, memberId } }: Props
 ) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find company
@@ -92,8 +91,7 @@ export async function PUT(
   request: NextRequest,
   { params: { id, memberId } }: Props
 ) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find company

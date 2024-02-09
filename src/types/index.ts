@@ -21,34 +21,84 @@ export type FlattenAvailableDataType = { stockId: string; priceTypeId: string };
 
 // CML TYPES
 
-export type CommerceML_Import = {
+export type CML_Import = {
   КоммерческаяИнформация: {
-    Каталог: CommerceML_Каталог[];
+    Каталог: CML_Каталог[];
   };
 };
 
-export type CommerceML_Каталог = {
-  Товары: CommerceML_Товары[];
+export type CML_Каталог = {
+  Товары: [{ Товар: CML_Товар[] }];
   $?: {
     СодержитТолькоИзменения: string;
   };
   СодержитТолькоИзменения?: string[];
 };
 
-export type CommerceML_Товары = {
-  Товар: {
-    Ид: string[];
-    Наименование: string[];
-    Артикул: string[];
-    ШтрихКод?: string[];
-    Изготовитель?: CommerceML_Изготовитель;
-    БазоваяЕдиница: { $: { НаименованиеПолное: string } }[];
-    Описание?: string[];
-    Картинка?: string[];
-  }[];
-};
-
-export type CommerceML_Изготовитель = {
+export type CML_Товар = {
   Ид: string[];
   Наименование: string[];
+  Артикул: string[];
+  ШтрихКод?: string[];
+  Изготовитель?: CML_Изготовитель[];
+  БазоваяЕдиница: { $: { НаименованиеПолное: string } }[];
+  Описание?: string[];
+  Картинка?: string[];
+};
+
+export type CML_Изготовитель = {
+  Ид: string[];
+  Наименование: string[];
+};
+
+export type CML_Offers = {
+  КоммерческаяИнформация: {
+    ПакетПредложений: CML_ПакетПредложений[];
+  };
+};
+
+export type CML_ПакетПредложений = {
+  Предложения: [
+    {
+      Предложение: CML_Предложение[];
+    }
+  ];
+  ТипыЦен: [{ ТипЦены: CML_ТипЦены[] }];
+  Склады: [{ Склад: CML_Склад[] }];
+};
+
+export type CML_Предложение = {
+  Ид: string[];
+  ШтрихКод?: string[];
+  Артикул: string[];
+  Наименование: string[];
+  БазоваяЕдиница: { _: string }[];
+  Цены: CML_ДанныеЦены[];
+  Склад: CML_СвойстваОстатка[];
+  Количество: string[];
+};
+
+export type CML_ДанныеЦены = { Цена: CML_Цена[] };
+
+export type CML_Цена = {
+  ИдТипаЦены: string[];
+  ЦенаЗаЕдиницу: string[];
+};
+
+export type CML_ТипЦены = {
+  Ид: string[];
+  Наименование: string[];
+  Валюта: string[];
+};
+
+export type CML_Склад = {
+  Ид: string[];
+  Наименование: string[];
+};
+
+export type CML_СвойстваОстатка = { $: CML_ОстатокНаСкладе };
+
+export type CML_ОстатокНаСкладе = {
+  ИдСклада: string;
+  КоличествоНаСкладе: string;
 };

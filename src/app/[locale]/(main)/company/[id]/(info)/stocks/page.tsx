@@ -114,7 +114,10 @@ const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination href={`/${id}/stocks?page=`} pagination={pagination} />
+        <Pagination
+          href={`/company/${id}/stocks?page=`}
+          pagination={pagination}
+        />
         <div />
       </div>
     </MaxWidthWrapper>

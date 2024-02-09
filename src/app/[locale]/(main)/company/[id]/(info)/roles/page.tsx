@@ -127,7 +127,10 @@ const Roles = async ({ params: { id }, searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination href={`/${id}/roles?page=`} pagination={pagination} />
+        <Pagination
+          href={`/company/${id}/roles?page=`}
+          pagination={pagination}
+        />
         <div />
       </div>
     </MaxWidthWrapper>

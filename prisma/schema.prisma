@@ -15,6 +15,20 @@ enum Role {
   ADMIN
 }
 
+enum ExchangeType {
+  CML_IMPORT
+  CML_OFFERS
+  XLSX_PRODUCTS
+  XLSX_PRICES
+  XLSX_BALANCE
+}
+
+enum ExchangeStatus {
+  PENDING
+  SUCCESS
+  ERROR
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -94,6 +108,7 @@ model Company {
   priceTypes    PriceType[]
   stocks        Stock[]
   companyRoles  CompanyRole[]
+  exchangeJobs  ExchangeJob[]
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 }
@@ -203,4 +218,16 @@ model UserImage {
   url    String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
+}
+
+model ExchangeJob {
+  id String @id @default(cuid())
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+  path String
+  type ExchangeType
+  status ExchangeStatus
+  errors Json
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }

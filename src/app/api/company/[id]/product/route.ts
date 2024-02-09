@@ -5,7 +5,7 @@ import getAllowedCompany from "@/app/actions/get-allowed-company";
 import db from "@/lib/db";
 import { getProductsSchema } from "@/lib/schemas";
 import getPaginationData from "@/lib/pagination";
-import getLocale from "@/lib/get-locale";
+import { getTranslationsFromHeader } from "@/lib/utils";
 
 type Props = {
   params: { id: string };
@@ -21,8 +21,7 @@ export async function POST(
   request: NextRequest,
   { params: { id: companyId } }: Props
 ) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Find company
@@ -113,8 +112,7 @@ export async function POST(
 }
 
 export async function GET(request: NextRequest, { params: { id } }: Props) {
-  const locale = getLocale(request.headers);
-  const t = await getTranslations({ locale, namespace: "API" });
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     const page = parseInt(
