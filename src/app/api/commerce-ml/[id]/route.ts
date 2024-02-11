@@ -5,6 +5,7 @@ import {
   addReadFileJobToQueue,
   getExchangeFilePath,
   getExcangeJobStatus,
+  createExchangeJob,
 } from "@/lib/exchange/exchange-jobs";
 import {
   authenticateUser,
@@ -29,8 +30,13 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     } else if (mode === "import") {
       const filename =
         request.nextUrl.searchParams.get("filename") ?? "filename";
-      const jobStatus = await getExcangeJobStatus(id, filename);
-      return new Response(getResponseMessage(jobStatus));
+      const exchangeJob = await getExcangeJobStatus(id, filename);
+      if (exchangeJob?.status === "INACTIVE") {
+        const filePath = getExchangeFilePath(filename, id);
+        await addReadFileJobToQueue(id, filePath);
+        return new Response(getResponseMessage("PENDING"));
+      }
+      return new Response(getResponseMessage(exchangeJob?.status || "SUCCESS"));
     }
   } catch (error) {
     console.log(error);
@@ -62,9 +68,11 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
     if (mode === "file") {
       const filename =
         request.nextUrl.searchParams.get("filename") ?? "filename";
-      const fullPath = getExchangeFilePath(filename, id);
-      await writeFileFromStream(request, fullPath);
-      await addReadFileJobToQueue(id, fullPath);
+      const filePath = getExchangeFilePath(filename, id);
+      await writeFileFromStream(request, filePath);
+      if (filename.includes("xml")) {
+        await createExchangeJob(id, filePath);
+      }
       return new Response(getResponseMessage("SUCCESS"));
     } else {
       return new Response(

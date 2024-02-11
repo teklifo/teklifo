@@ -24,6 +24,7 @@ enum ExchangeType {
 }
 
 enum ExchangeStatus {
+  INACTIVE
   PENDING
   SUCCESS
   ERROR
@@ -227,7 +228,7 @@ model ExchangeJob {
   path String
   type ExchangeType
   status ExchangeStatus
-  errors Json
+  logs Json
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

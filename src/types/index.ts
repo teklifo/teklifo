@@ -19,6 +19,12 @@ export type PaginationType = {
 
 export type FlattenAvailableDataType = { stockId: string; priceTypeId: string };
 
+export type Log = {
+  id: string;
+  status: "success" | "error";
+  message?: string;
+};
+
 // CML TYPES
 
 export type CML_Import = {
