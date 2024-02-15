@@ -39,7 +39,6 @@ const NewCompany = () => {
     defaultValues: {
       id: "",
       name: "",
-      imageId: "",
       tin: "",
       description: "",
       descriptionRu: "",
