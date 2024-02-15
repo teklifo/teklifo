@@ -10,7 +10,6 @@ export const getCompanySchema = (t: (value: string) => string) => {
       .refine((data) => /^\d+$/.test(data), {
         message: t("numericTin"),
       }),
-    imageId: z.string().optional(),
     description: z.string().min(50, t("invalidDescription")),
     descriptionRu: z.string().optional(),
     slogan: z.string().optional(),

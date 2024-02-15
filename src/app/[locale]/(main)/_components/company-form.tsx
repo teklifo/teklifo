@@ -46,7 +46,6 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
       ? {
           id: company.id,
           name: company.name,
-          imageId: company.imageId,
           tin: company.tin,
           description: company.description,
           descriptionRu: company.descriptionRu || "",
@@ -56,7 +55,6 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
       : {
           id: "",
           name: "",
-          imageId: "",
           tin: "",
           description: "",
           descriptionRu: "",

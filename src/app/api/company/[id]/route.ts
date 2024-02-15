@@ -119,7 +119,6 @@ export async function PUT(
         name,
         tin,
         description,
-        imageId: "",
         descriptionRu,
         slogan,
         sloganRu,

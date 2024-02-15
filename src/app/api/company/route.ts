@@ -48,7 +48,6 @@ export async function POST(request: NextRequest) {
         name,
         tin,
         description,
-        imageId: "",
         descriptionRu,
         slogan,
         sloganRu,
