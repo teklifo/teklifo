@@ -48,9 +48,17 @@ export async function DELETE(
     }
 
     // Check that this member is not the last admin of that company
-    const admin = company.users.find(
-      (e) => e.companyRole.default && e.userId !== memberId
-    );
+    const admin = await db.companyMembers.findFirst({
+      where: {
+        NOT: {
+          userId: memberId,
+        },
+        companyRole: {
+          default: true,
+        },
+      },
+    });
+
     if (!admin) {
       return NextResponse.json(
         {
@@ -160,9 +168,17 @@ export async function PUT(
 
     // Check that this member is not the last admin of that company
     if (!role.default) {
-      const admin = company.users.find(
-        (e) => e.companyRole.default && e.userId !== memberId
-      );
+      const admin = await db.companyMembers.findFirst({
+        where: {
+          NOT: {
+            userId: memberId,
+          },
+          companyRole: {
+            default: true,
+          },
+        },
+      });
+
       if (!admin) {
         return NextResponse.json(
           {

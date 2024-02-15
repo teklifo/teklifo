@@ -98,7 +98,6 @@ model Company {
   name          String           @unique
   tin           String           @unique
   image         CompanyImage?
-  imageId       String
   description   String
   descriptionRu String?
   slogan        String?

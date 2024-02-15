@@ -13,10 +13,10 @@ import { getCredentialsSchema } from "@/lib/schemas";
 const getEmailSubject = (locale: string) => {
   switch (locale) {
     case "ru":
-      return "Авторизация на Kraft";
-    case "az":
+      return "Авторизация на Teklifo";
+    case "en":
     default:
-      return "Avtorizasiya | Kraft";
+      return "Authorization | Teklifo";
   }
 };
 
@@ -25,7 +25,7 @@ const sendVerificationRequest = async ({
   url,
 }: SendVerificationRequestParams) => {
   const cookieStore = cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "az";
+  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
 
   await sendEmail({
     locale,

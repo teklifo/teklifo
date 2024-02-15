@@ -1,10 +1,12 @@
 {
   "Metadata": {
-    "projectName": "Kraft",
+    "projectName": "Teklifo",
+    "homeTitle": "Teklifo - B2B платформа: коммерческие предложения, прайс-листы",
+    "homeDescription": "Единая платформа для взаимодействия между организациями: запрашивайте и отправляйте коммерческие предложения, публикуйте каталог товаров и услуг, прайс-листы и информацию о текущих остатках, ищите товары у поставщиков",
     "loginTitle": "Вход",
-    "loginDescription": "Войдите в свой аккаунт на Kraft",
+    "loginDescription": "Войдите в свой аккаунт на Teklifo",
     "checkEmailTitle": "Проверьте ваш почтовый ящик",
-    "checkEmailDescription": "Перейдите по ссылке в письме, чтобы завершить вход на Kraft",
+    "checkEmailDescription": "Перейдите по ссылке в письме, чтобы завершить вход на Teklifo",
     "myCompaniesTitle": "Мои организации",
     "myCompaniesDescription": "Список организаций, в которых вы состоите",
     "stocksTitle": "Склады организации",
@@ -22,7 +24,7 @@
     "editRoleTitle": "{roleName} | {companyName}",
     "editRoleDescription": "Обновление роли организации",
     "newCompanyTitle": "Новая организация",
-    "newCompanyDescription": "Создание новой организации на Kraft",
+    "newCompanyDescription": "Создание новой организации на Teklifo",
     "updateCompanyTitle": "{companyName} | Редактирование организации",
     "updateCompanyDescription": "Редактирование реквизитов организации",
     "settingsTitle": "{username} | Настройки",
@@ -66,7 +68,7 @@
     "email": "Адрес электронной почты",
     "next": "Продолжить",
     "invalidEmail": "Введите корректный адрес электронной почты",
-    "slogan": "Присоединяйтесь к Kraft",
+    "slogan": "Присоединяйтесь к Teklifo",
     "sloganDescription": "Это простой способ взаимодейтсвия между сотрудниками и даже целыми организациями!",
     "emailProvider": "Войти по коду",
     "credentialsProvider": "Войти с паролем",
@@ -77,7 +79,7 @@
   },
   "CheckEmail": {
     "title": "Проверьте ваш почтовый ящик",
-    "subtitle": "Перейдите по ссылке в письме, чтобы завершить вход на Kraft",
+    "subtitle": "Перейдите по ссылке в письме, чтобы завершить вход на Teklifo",
     "home": "Вернуться на главную страницу"
   },
   "MyCompanies": {
@@ -93,7 +95,7 @@
     "description": "Описание",
     "slogan": "Слоган",
     "create": "Создать организацию",
-    "azerbaijani": "По-азербайджански",
+    "english": "Международное",
     "russian": "По-русски (опционально)",
     "newCompanyIsCreated": "Ура! Новая организация успешно создана",
     "newCompanyHint": "Теперь вы можете перейти к дополнительным настройкам организации",

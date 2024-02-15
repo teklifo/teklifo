@@ -2,29 +2,29 @@ import db from "@/lib/db";
 import getCurrentUser from "./get-current-user";
 
 export default async function getAllowedCompany(
-  id: string,
-  admin: boolean = true,
-  defaultUserId?: string
+  companyId: string,
+  isAdmin: boolean = true,
+  userId?: string
 ) {
-  let userId = "";
+  let searchUserId = "";
 
-  if (defaultUserId) {
-    userId = defaultUserId;
+  if (userId) {
+    searchUserId = userId;
   } else {
     const user = await getCurrentUser();
     if (!user) return null;
-    userId = user.id;
+    searchUserId = user.id;
   }
 
   const company = await db.company.findUnique({
     where: {
-      id,
+      id: companyId,
     },
     include: {
       users: {
         where: {
-          userId,
-          companyRole: admin
+          userId: searchUserId,
+          companyRole: isAdmin
             ? {
                 default: true,
               }

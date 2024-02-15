@@ -27,10 +27,10 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
 
   const [open, setOpen] = useState(false);
 
-  const userName = user.name || user.email || "Kraft";
+  const userName = user.name || user.email || "Teklifo";
 
-  let avatarFallback = "K";
-  const match = userName.match(/[A-Za-z]/);
+  let avatarFallback = "T";
+  const match = userName.match(/[a-zA-Zа-яА-Я]/);
   if (match) {
     avatarFallback = match[0].toUpperCase();
   }

@@ -130,12 +130,12 @@ const NewCompany = () => {
               </FormItem>
             )}
           />
-          <Tabs defaultValue="azerbaijani">
+          <Tabs defaultValue="english">
             <TabsList>
-              <TabsTrigger value="azerbaijani">{t("azerbaijani")}</TabsTrigger>
+              <TabsTrigger value="english">{t("english")}</TabsTrigger>
               <TabsTrigger value="russian">{t("russian")}</TabsTrigger>
             </TabsList>
-            <TabsContent value="azerbaijani" className="space-y-6">
+            <TabsContent value="english" className="space-y-6">
               {/* Description */}
               <FormField
                 control={form.control}

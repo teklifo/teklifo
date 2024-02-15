@@ -6,10 +6,6 @@ import db from "@/lib/db";
 import { getTranslationsFromHeader } from "@/lib/utils";
 import { getUserSchema } from "@/lib/schemas";
 
-type Props = {
-  params: { id: string };
-};
-
 export async function DELETE(request: NextRequest) {
   const { t } = await getTranslationsFromHeader(request.headers);
 

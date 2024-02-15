@@ -60,22 +60,21 @@ export const getRoleSchema = (t: (value: string) => string) => {
   });
 };
 
-export const getCredentialsSchema = (
-  t: (value: string) => string,
-  checkPassword: boolean = false
-) => {
+export const getCredentialsSchema = (t: (value: string) => string) => {
   return z.object({
     email: z.string().email(t("invalidEmail")),
-    password: checkPassword
-      ? z.string().min(6, t("invalidPasswordLength"))
-      : z.string().min(1, t("invalidPassword")),
+    password: z.string().min(1, t("invalidPassword")),
   });
 };
 
 export const getUserSchema = (t: (value: string) => string) => {
   return z.object({
     name: z.string().optional(),
-    password: z.string().optional(),
+    password: z
+      .string()
+      .min(6, t("invalidPasswordLength"))
+      .optional()
+      .or(z.literal("")),
   });
 };
 

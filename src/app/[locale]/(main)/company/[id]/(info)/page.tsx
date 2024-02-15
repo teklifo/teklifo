@@ -67,7 +67,7 @@ const getLocalizedProperties = (company: CompanyType, locale: string) => {
           : company.description,
         slogan: company.sloganRu ? company.sloganRu : company.slogan,
       };
-    case "az":
+    case "en":
     default:
       return {
         description: company.description,

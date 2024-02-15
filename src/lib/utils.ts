@@ -19,12 +19,12 @@ export async function fileExists(file: string) {
 }
 
 export async function getLocale(headers: Headers) {
-  const acceptedLanguagues = ["az", "ru"];
+  const acceptedLanguagues = ["en", "ru"];
 
-  const locale = headers.get("Accept-Language") ?? "az";
+  const locale = headers.get("Accept-Language") ?? "en";
 
   if (!acceptedLanguagues.includes(locale)) {
-    return "az";
+    return "en";
   }
   return locale;
 }

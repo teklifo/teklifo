@@ -7,7 +7,7 @@ export default async function emailTemplate(
   context: EmailContextType,
   locale: string
 ) {
-  let localeFolder = "az";
+  let localeFolder = "en";
   if (locale.toLocaleLowerCase().startsWith("ru")) localeFolder = "ru";
 
   const filePath = path.join(
