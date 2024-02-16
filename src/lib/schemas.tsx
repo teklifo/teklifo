@@ -1,6 +1,7 @@
 import * as z from "zod";
+import { TranslateFunction } from "@/types";
 
-export const getCompanySchema = (t: (value: string) => string) => {
+export const getCompanySchema = (t: TranslateFunction) => {
   return z.object({
     id: z.string().min(1, t("invalidId")),
     name: z.string().min(1, t("invalidName")),
@@ -17,33 +18,33 @@ export const getCompanySchema = (t: (value: string) => string) => {
   });
 };
 
-export const getStockSchema = (t: (value: string) => string) => {
+export const getStockSchema = (t: TranslateFunction) => {
   return z.object({
     name: z.string().min(1, t("invalidName")),
   });
 };
 
-export const getPriceTypeSchema = (t: (value: string) => string) => {
+export const getPriceTypeSchema = (t: TranslateFunction) => {
   return z.object({
     name: z.string().min(1, t("invalidName")),
     currency: z.string().min(1, t("invalidCurrency")),
   });
 };
 
-export const getMemberSchema = (t: (value: string) => string) => {
+export const getMemberSchema = (t: TranslateFunction) => {
   return z.object({
     roleId: z.string().min(1, t("invalidRoleId")),
   });
 };
 
-export const getInvitationSchema = (t: (value: string) => string) => {
+export const getInvitationSchema = (t: TranslateFunction) => {
   return z.object({
     email: z.string().email(t("invalidEmail")),
     roleId: z.string().min(1, t("invalidRoleId")),
   });
 };
 
-export const getRoleSchema = (t: (value: string) => string) => {
+export const getRoleSchema = (t: TranslateFunction) => {
   return z.object({
     name: z.string().min(1, t("invalidName")),
     availableData: z.array(
@@ -59,14 +60,14 @@ export const getRoleSchema = (t: (value: string) => string) => {
   });
 };
 
-export const getCredentialsSchema = (t: (value: string) => string) => {
+export const getCredentialsSchema = (t: TranslateFunction) => {
   return z.object({
     email: z.string().email(t("invalidEmail")),
     password: z.string().min(1, t("invalidPassword")),
   });
 };
 
-export const getUserSchema = (t: (value: string) => string) => {
+export const getUserSchema = (t: TranslateFunction) => {
   return z.object({
     name: z.string().optional(),
     password: z
@@ -77,7 +78,7 @@ export const getUserSchema = (t: (value: string) => string) => {
   });
 };
 
-export const getProductSchema = (t: (value: string) => string) => {
+export const getProductSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.number().optional(),
     externalId: z.string(),
@@ -91,6 +92,6 @@ export const getProductSchema = (t: (value: string) => string) => {
   });
 };
 
-export const getProductsSchema = (t: (value: string) => string) => {
+export const getProductsSchema = (t: TranslateFunction) => {
   return z.array(getProductSchema(t));
 };

@@ -29,6 +29,10 @@ const CompanyLinks = ({ id }: CompanyLinksProps) => {
       label: t("members"),
     },
     {
+      href: `/company/${id}/products`,
+      label: t("products"),
+    },
+    {
       href: `/company/${id}/stocks`,
       label: t("stocks"),
     },

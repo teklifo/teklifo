@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { ZodIssue } from "zod";
 
 export type EmailType = "email-verification";
@@ -24,6 +25,15 @@ export type Log = {
   status: "success" | "error";
   message?: string;
 };
+
+export type ProductWithPricesAndStocks = Prisma.ProductGetPayload<{
+  include: {
+    prices: { include: { priceType: true } };
+    stock: { include: { stock: true } };
+  };
+}>;
+
+export type TranslateFunction = (value: string) => string;
 
 // CML TYPES
 

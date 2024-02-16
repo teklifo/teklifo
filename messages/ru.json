@@ -30,7 +30,9 @@
     "settingsTitle": "{username} | Настройки",
     "settingsDescription": "Редактирование настроек пользователя",
     "productsTitle": "Товары",
-    "productsDescription": "Поиск по товарам организаций"
+    "productsDescription": "Поиск по товарам организаций",
+    "companyProductsTitle": "Товары организации",
+    "companyProductsDescription": "Список товаров организации"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -115,6 +117,7 @@
     "members": "Участники",
     "stocks": "Склады",
     "priceTypes": "Виды цен",
+    "products": "Товары",
     "tin": "ИНН"
   },
   "Stock": {
@@ -263,7 +266,12 @@
     "userDeleteSubtitle": "Вы будете исключены из всех организаций, а вся связанная с этим пользователем информация также будет удалена",
     "cancel": "Отмена"
   },
-  "Products": {
+  "CompanyProducts": {
+    "title": "Товары",
+    "subtitle": "Список товаров организации",
+    "new": "Добавить товар"
+  },
+  "Product": {
     "name": "Наименование",
     "number": "Номер",
     "brand": "Производитель",
@@ -272,7 +280,19 @@
     "quantity": "Количество",
     "updatedAt": "Дата",
     "company": "Организация",
-    "stock": "Склад"
+    "stock": "Склад",
+    "more": "Подробнее",
+    "price": "Цены",
+    "balance": "Остатки на складах"
+  },
+  "Prices": {
+    "priceType": "Вид цены",
+    "price": "Цена",
+    "currency": "Валюта"
+  },
+  "StockBalance": {
+    "stock": "Склад",
+    "balance": "Остаток"
   },
   "Schemas": {
     "companySchema": {

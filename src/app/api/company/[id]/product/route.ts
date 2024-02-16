@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import getAllowedCompany from "@/app/actions/get-allowed-company";
 import db from "@/lib/db";
 import { getProductsSchema } from "@/lib/schemas";
+import { upsertProduct } from "@/lib/exchange/bulk-import";
 import getPaginationData from "@/lib/pagination";
 import { getTranslationsFromHeader } from "@/lib/utils";
 
@@ -70,6 +71,7 @@ export async function POST(
         } = productData;
 
         const data = {
+          id,
           externalId,
           name,
           number,
@@ -78,20 +80,10 @@ export async function POST(
           unit,
           description,
           archive,
-          company: {
-            connect: {
-              id: company.id,
-            },
-          },
+          companyId: company.id,
         };
 
-        const product = await db.product.upsert({
-          where: {
-            id: id ? id : 0,
-          },
-          create: data,
-          update: data,
-        });
+        const product = await upsertProduct(data);
 
         result.push({
           index,
@@ -146,36 +138,61 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     }
 
     // Filters
+    const defaultRole = company.users[0].companyRole.default;
     const filters: Prisma.ProductWhereInput = {};
+
+    // Price filter
     filters.companyId = company.id;
-    if (!company.users[0].companyRole.default) {
-      filters.prices = {
-        some: {
-          priceTypeId: {
-            in: company.users[0].companyRole.availableData.map(
-              (e) => e.priceTypeId
-            ),
-          },
-        },
-      };
-      filters.stock = {
-        some: {
-          stockId: {
-            in: company.users[0].companyRole.availableData.map(
-              (e) => e.stockId
-            ),
-          },
-        },
-      };
-    }
+    const priceTypes = company.users[0].companyRole.availableData.map(
+      (e) => e.priceTypeId
+    );
+    const stocks = company.users[0].companyRole.availableData.map(
+      (e) => e.stockId
+    );
 
     // Get allowed products
     const [total, result] = await db.$transaction([
-      db.product.count(),
+      db.product.count({
+        where: filters,
+      }),
       db.product.findMany({
         take: limit,
         skip: startIndex,
         where: filters,
+        include: {
+          prices: defaultRole
+            ? {
+                include: {
+                  priceType: true,
+                },
+              }
+            : {
+                where: {
+                  priceTypeId: {
+                    in: priceTypes,
+                  },
+                },
+                include: {
+                  priceType: true,
+                },
+              },
+          stock: defaultRole
+            ? {
+                include: {
+                  stock: true,
+                },
+              }
+            : {
+                where: {
+                  stockId: {
+                    in: stocks,
+                  },
+                },
+                include: {
+                  stock: true,
+                },
+              },
+        },
         orderBy: {
           name: "desc",
         },
