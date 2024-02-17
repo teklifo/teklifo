@@ -2,10 +2,10 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Stock as StockType } from "@prisma/client";
+import type { PriceType as PriceTypeType } from "@prisma/client";
+import PriceTypeForm from "./_components/price-type-form";
+import DeletePriceType from "./_components/delete-price-type";
 import { MoreHorizontal } from "lucide-react";
-import StockForm from "./_components/stock-form";
-import DeleteStock from "./_components/delete-stock";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Pagination from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
@@ -22,16 +22,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
+import getCompanyId from "@/lib/get-company-id";
 
 type Props = {
-  params: { locale: string; id: string };
+  params: { locale: string };
   searchParams: {
     page?: number;
   };
 };
 
 type PaginatedData = {
-  result: StockType[];
+  result: PriceTypeType[];
   pagination: PaginationType;
 };
 
@@ -41,19 +42,19 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("stocksTitle"),
-    description: t("stocksDescription"),
+    title: t("priceTypesTitle"),
+    description: t("priceTypesDescription"),
   };
 };
 
-const getCompanyStocks = async (companyId: string, page: number) => {
+const getCompanyPriceTypes = async (companyId: string, page: number) => {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/company/${companyId}/stock?page=${page}&limit=10`,
+      `/api/company/${companyId}/price-type?page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -67,13 +68,14 @@ const getCompanyStocks = async (companyId: string, page: number) => {
   }
 };
 
-const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
-  const data = await getCompanyStocks(id, page ?? 1);
+const PriceTypes = async ({ searchParams: { page } }: Props) => {
+  const id = getCompanyId();
+  const data = await getCompanyPriceTypes(id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
 
-  const t = await getTranslations("Stock");
+  const t = await getTranslations("PriceType");
 
   return (
     <MaxWidthWrapper className="mb-8">
@@ -82,16 +84,16 @@ const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <StockForm companyId={id} />
+        <PriceTypeForm companyId={id} />
       </div>
       <div className="mt-4">
         {result.length > 0 && (
           <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
-            {result.map((stock) => (
-              <Card key={stock.id} className="h-full w-full">
+            {result.map((priceType) => (
+              <Card key={priceType.id} className="h-full w-full">
                 <CardHeader>
                   <div className="flex flex-row justify-between">
-                    <CardTitle>{stock.name}</CardTitle>
+                    <CardTitle>{priceType.name}</CardTitle>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -103,25 +105,30 @@ const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
                         align="end"
                         className="flex flex-col"
                       >
-                        <StockForm companyId={id} stock={stock} />
-                        <DeleteStock companyId={id} stockId={stock.id} />
+                        <PriceTypeForm companyId={id} priceType={priceType} />
+                        <DeletePriceType
+                          companyId={id}
+                          priceTypeId={priceType.id}
+                        />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <CardDescription>{`${t("id")}: ${stock.id}`}</CardDescription>
+                  <CardDescription>{`${t("currency")}: ${
+                    priceType.currency
+                  }`}</CardDescription>
+                  <CardDescription>{`${t("id")}: ${
+                    priceType.id
+                  }`}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
           </div>
         )}
-        <Pagination
-          href={`/company/${id}/stocks?page=`}
-          pagination={pagination}
-        />
+        <Pagination href={`/price-types?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>
   );
 };
 
-export default Stocks;
+export default PriceTypes;

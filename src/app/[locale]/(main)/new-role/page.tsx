@@ -5,18 +5,20 @@ import type {
   Stock as StockType,
   PriceType as PriceTypeType,
 } from "@prisma/client";
+import EditRole from "@/app/[locale]/(main)/roles/_components/edit-role";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import EditRole from "@/app/[locale]/(main)/company/[id]/(info)/roles/_components/edit-role";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
 import getAllowedCompany from "@/app/actions/get-allowed-company";
+import getCompanyId from "@/lib/get-company-id";
 
 type Props = {
-  params: { locale: string; id: string };
+  params: { locale: string };
 };
 
 export const generateMetadata = async ({
-  params: { locale, id },
+  params: { locale },
 }: Props): Promise<Metadata> => {
+  const id = getCompanyId();
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   const company = await getAllowedCompany(id);
@@ -32,7 +34,8 @@ export const generateMetadata = async ({
   };
 };
 
-const NewRole = async ({ params: { id } }: Props) => {
+const NewRole = async () => {
+  const id = getCompanyId();
   const company = await getAllowedCompany(id);
   if (!company) return notFound();
 

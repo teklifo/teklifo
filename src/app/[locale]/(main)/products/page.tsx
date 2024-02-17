@@ -1,16 +1,18 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import { headers, cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Product as ProductType } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+import { Plus } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { PaginationType } from "@/types";
+import ProductCard from "@/app/[locale]/(main)/_components/product-card";
+import Pagination from "@/components/ui/pagination";
+import { buttonVariants } from "@/components/ui/button";
+import request from "@/lib/request";
+import { cn } from "@/lib/utils";
+import { ProductWithPricesAndStocks, PaginationType } from "@/types";
+import getCompanyId from "@/lib/get-company-id";
 
 type Props = {
   params: { locale: string };
@@ -20,7 +22,7 @@ type Props = {
 };
 
 type PaginatedData = {
-  result: ProductType[];
+  result: ProductWithPricesAndStocks[];
   pagination: PaginationType;
 };
 
@@ -30,89 +32,67 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("productsTitle"),
-    description: t("productsDescription"),
+    title: t("companyProductsTitle"),
+    description: t("companyProductsDescription"),
   };
 };
 
-const Products = async () => {
-  const t = await getTranslations("Products");
+const getCompanyProducts = async (companyId: string, page: number) => {
+  try {
+    const cookieStore = cookies();
+    const headersList = headers();
+    const cookie = headersList.get("cookie");
 
-  const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ];
+    return await request<PaginatedData>(
+      `/api/company/${companyId}/product?page=${page}&limit=10`,
+      {
+        headers: {
+          "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
+          Cookie: cookie,
+        },
+        next: { revalidate: 0 },
+      }
+    );
+  } catch (error) {
+    return undefined;
+  }
+};
+
+const Products = async ({ searchParams: { page } }: Props) => {
+  const id = getCompanyId();
+  const data = await getCompanyProducts(id, page ?? 1);
+  if (!data) return notFound();
+
+  const { result, pagination } = data;
+
+  const t = await getTranslations("CompanyProducts");
 
   return (
-    <MaxWidthWrapper className="my-8">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>{t("name")}</TableHead>
-            <TableHead>{t("number")}</TableHead>
-            <TableHead>{t("brand")}</TableHead>
-            <TableHead>{t("brandNumber")}</TableHead>
-            <TableHead>{t("unit")}</TableHead>
-            <TableHead>{t("quantity")}</TableHead>
-            <TableHead>{t("company")}</TableHead>
-            <TableHead>{t("updatedAt")}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell>{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.totalAmount}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <MaxWidthWrapper className="mb-8">
+      <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
+        </div>
+        <Link
+          href={`/new-product`}
+          className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
+        >
+          <Plus />
+          <span>{t("new")}</span>
+        </Link>
+      </div>
+      <div className="mt-4">
+        {result.length > 0 && (
+          <div className="flex flex-col space-y-3 pt-4">
+            {result.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+        <Pagination href={`/products?page=`} pagination={pagination} />
+        <div />
+      </div>
     </MaxWidthWrapper>
   );
 };

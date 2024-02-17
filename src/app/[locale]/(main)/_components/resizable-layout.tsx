@@ -17,9 +17,9 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import Nav from "./nav";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Nav } from "./nav";
 
 type ResizableLayoutProps = {
   defaultCollapsed: boolean;
@@ -43,7 +43,7 @@ const ResizableLayout = ({
         onLayout={(sizes: number[]) => {
           setCookie("react-resizable-panels:layout", sizes);
         }}
-        className="h-full max-h-[800px] items-stretch"
+        className="max-h-[calc(100vh-4rem)] items-stretch"
       >
         <ResizablePanel
           defaultSize={defaultLayout[0]}
@@ -123,8 +123,12 @@ const ResizableLayout = ({
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-          {children}
+        <ResizablePanel
+          defaultSize={defaultLayout[1]}
+          minSize={30}
+          className="!overflow-auto"
+        >
+          <div className="container mt-8">{children}</div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>

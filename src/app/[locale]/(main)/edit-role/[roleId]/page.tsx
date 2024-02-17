@@ -8,17 +8,23 @@ import type {
   PriceType as PriceTypeType,
 } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import EditRole from "@/app/[locale]/(main)/company/[id]/(info)/roles/_components/edit-role";
+import EditRole from "@/app/[locale]/(main)/roles/_components/edit-role";
 import request from "@/lib/request";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
+import getCompanyId from "@/lib/get-company-id";
+
+type Props = {
+  params: { locale: string; roleId: string };
+};
 
 type RoleType = Prisma.CompanyRoleGetPayload<{
   include: { availableData: true; company: true };
 }>;
 
 export const generateMetadata = async ({
-  params: { locale, id, roleId },
+  params: { locale, roleId },
 }: Props): Promise<Metadata> => {
+  const id = getCompanyId();
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   const role = await getRole(id, roleId);
@@ -56,11 +62,8 @@ const getRole = async (id: string, roleId: string) => {
   }
 };
 
-type Props = {
-  params: { locale: string; id: string; roleId: string };
-};
-
-const UpdateForm = async ({ params: { id, roleId } }: Props) => {
+const UpdateForm = async ({ params: { roleId } }: Props) => {
+  const id = getCompanyId();
   const role = await getRole(id, roleId);
   if (!role) return notFound();
 

@@ -13,7 +13,7 @@ import type {
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { Plus, Trash } from "lucide-react";
-import AvailableData from "@/app/[locale]/(main)/company/[id]/(info)/roles/_components/available-data";
+import AvailableData from "./available-data";
 import { Button } from "@/components/ui/button";
 import {
   Form,

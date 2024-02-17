@@ -1,19 +1,20 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { CompanyRole as RoleType } from "@prisma/client";
-import { MoreHorizontal, Plus, Pencil } from "lucide-react";
-import DeleteRole from "./_components/delete-role";
+import type { Prisma } from "@prisma/client";
+import { MoreHorizontal } from "lucide-react";
+import MemberForm from "./_components/member-form";
+import InvitationForm from "./_components/invitation-form";
+import DeleteMember from "./_components/delete-member";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Pagination from "@/components/ui/pagination";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -21,18 +22,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import request from "@/lib/request";
-import { cn } from "@/lib/utils";
 import { PaginationType } from "@/types";
+import getCompanyId from "@/lib/get-company-id";
+
+type MemberType = Prisma.CompanyMembersGetPayload<{
+  include: { user: true; companyRole: true };
+}>;
 
 type Props = {
-  params: { locale: string; id: string };
+  params: { locale: string };
   searchParams: {
     page?: number;
   };
 };
 
 type PaginatedData = {
-  result: RoleType[];
+  result: MemberType[];
   pagination: PaginationType;
 };
 
@@ -42,19 +47,19 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("rolesTitle"),
-    description: t("rolesDescription"),
+    title: t("membersTitle"),
+    description: t("membersDescription"),
   };
 };
 
-const getCompanyRoles = async (companyId: string, page: number) => {
+const getCompanyMembers = async (companyId: string, page: number) => {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/company/${companyId}/role?page=${page}&limit=10`,
+      `/api/company/${companyId}/member?page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -68,13 +73,14 @@ const getCompanyRoles = async (companyId: string, page: number) => {
   }
 };
 
-const Roles = async ({ params: { id }, searchParams: { page } }: Props) => {
-  const data = await getCompanyRoles(id, page ?? 1);
+const Members = async ({ searchParams: { page } }: Props) => {
+  const id = getCompanyId();
+  const data = await getCompanyMembers(id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
 
-  const t = await getTranslations("Role");
+  const t = await getTranslations("Member");
 
   return (
     <MaxWidthWrapper className="mb-8">
@@ -83,22 +89,18 @@ const Roles = async ({ params: { id }, searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <Link
-          href={`/company/${id}/new-role`}
-          className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
-        >
-          <Plus />
-          <span>{t("new")}</span>
-        </Link>
+        <InvitationForm companyId={id} />
       </div>
       <div className="mt-4">
         {result.length > 0 && (
           <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
-            {result.map((role) => (
-              <Card key={role.id} className="h-full w-full">
+            {result.map((member) => (
+              <Card key={member.userId} className="h-full w-full">
                 <CardHeader>
                   <div className="flex flex-row justify-between">
-                    <CardTitle>{role.name}</CardTitle>
+                    <CardTitle className="text-xl truncate">
+                      {member.user.name || member.user.email}
+                    </CardTitle>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -110,31 +112,24 @@ const Roles = async ({ params: { id }, searchParams: { page } }: Props) => {
                         align="end"
                         className="flex flex-col"
                       >
-                        <Link
-                          href={`/company/${id}/edit-role/${role.id}`}
-                          className={buttonVariants({ variant: "ghost" })}
-                        >
-                          <Pencil className="mr-2 h-4 w-4" />
-                          <span>{t("edit")}</span>
-                        </Link>
-                        <DeleteRole companyId={id} roleId={role.id} />
+                        <MemberForm companyId={id} member={member} />
+                        <DeleteMember companyId={id} memberId={member.userId} />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <CardDescription>{`${t("id")}: ${role.id}`}</CardDescription>
+                  <CardDescription>{`${t("role")}: ${
+                    member.companyRole.name
+                  }`}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
           </div>
         )}
-        <Pagination
-          href={`/company/${id}/roles?page=`}
-          pagination={pagination}
-        />
+        <Pagination href={`/members?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>
   );
 };
 
-export default Roles;
+export default Members;

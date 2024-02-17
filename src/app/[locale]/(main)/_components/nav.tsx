@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { LucideIcon } from "lucide-react";
+import { usePathname } from "@/navigation";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -21,7 +21,7 @@ interface NavProps {
   }[];
 }
 
-export function Nav({ links, isCollapsed }: NavProps) {
+const Nav = ({ links, isCollapsed }: NavProps) => {
   const pathname = usePathname();
 
   return (
@@ -87,4 +87,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
       </nav>
     </div>
   );
-}
+};
+
+export default Nav;
