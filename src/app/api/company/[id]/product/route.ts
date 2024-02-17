@@ -137,18 +137,29 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    // Filters
-    const defaultRole = company.users[0].companyRole.default;
-    const filters: Prisma.ProductWhereInput = {};
+    const role = company.users[0].companyRole;
 
-    // Price filter
+    // Allowed prices
+    const priceTypes = role.availableData.map((e) => e.priceTypeId);
+
+    // Allowed stocks
+    const stocks = role.availableData.map((e) => e.stockId);
+
+    const filters: Prisma.ProductWhereInput = {};
     filters.companyId = company.id;
-    const priceTypes = company.users[0].companyRole.availableData.map(
-      (e) => e.priceTypeId
-    );
-    const stocks = company.users[0].companyRole.availableData.map(
-      (e) => e.stockId
-    );
+    if (!role.default) {
+      // Display only products with prices
+      filters.prices = {
+        some: {
+          priceTypeId: {
+            in: priceTypes,
+          },
+          price: {
+            gt: 0,
+          },
+        },
+      };
+    }
 
     // Get allowed products
     const [total, result] = await db.$transaction([
@@ -160,38 +171,33 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         skip: startIndex,
         where: filters,
         include: {
-          prices: defaultRole
-            ? {
-                include: {
-                  priceType: true,
-                },
-              }
-            : {
-                where: {
+          prices: {
+            where: role.default
+              ? undefined
+              : {
                   priceTypeId: {
                     in: priceTypes,
                   },
                 },
-                include: {
-                  priceType: true,
-                },
-              },
-          stock: defaultRole
-            ? {
-                include: {
-                  stock: true,
-                },
-              }
-            : {
-                where: {
+            include: {
+              priceType: true,
+            },
+          },
+          stock: {
+            where: role.default
+              ? undefined
+              : {
                   stockId: {
                     in: stocks,
                   },
                 },
-                include: {
-                  stock: true,
-                },
-              },
+            include: {
+              stock: true,
+            },
+            orderBy: {
+              quantity: "desc",
+            },
+          },
         },
         orderBy: {
           name: "desc",

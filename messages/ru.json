@@ -118,7 +118,9 @@
     "stocks": "Склады",
     "priceTypes": "Виды цен",
     "products": "Товары",
-    "tin": "ИНН"
+    "tin": "ИНН",
+    "search": "Поиск",
+    "noResult": "Нет результатов"
   },
   "Stock": {
     "title": "Склады",

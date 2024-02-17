@@ -111,7 +111,9 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // Get allowed stocks
     const [total, result] = await db.$transaction([
-      db.stock.count(),
+      db.stock.count({
+        where: filters,
+      }),
       db.stock.findMany({
         take: limit,
         skip: startIndex,

@@ -2,14 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Company as CompanyType } from "@prisma/client";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, Check } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 type CompanySwitchProps = {
@@ -18,42 +26,45 @@ type CompanySwitchProps = {
 };
 
 const CompanySwitch = ({ id, companies }: CompanySwitchProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const t = useTranslations("Company");
 
   return (
-    <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      className="space-y-2 mb-2"
-    >
-      <div className="flex items-center justify-between space-x-4">
-        <h4 className="text-lg font-semibold h-10 px-4 py-2">
-          {companies.find((company) => company.id === id)?.name}
-        </h4>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="w-9 p-0">
-            <ChevronsUpDown className="h-4 w-4" />
-            <span className="sr-only">Toggle</span>
+    <div className="w-full mb-4">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            className={"w-full justify-between"}
+          >
+            {companies.find((company) => company.id === id)?.name}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
-        </CollapsibleTrigger>
-      </div>
-      <CollapsibleContent className="space-y-2">
-        {companies.map((company) =>
-          company.id === id ? null : (
-            <Link
-              key={company.id}
-              href={`/company/${company.id}`}
-              className={cn(
-                "w-full h-10 mx-4 my-2",
-                buttonVariants({ variant: "outline" })
-              )}
-            >
-              {company.name}
-            </Link>
-          )
-        )}
-      </CollapsibleContent>
-    </Collapsible>
+        </PopoverTrigger>
+        <PopoverContent className="w-full p-0">
+          <Command>
+            <CommandInput placeholder={t("search")} />
+            <CommandEmpty>{t("noResult")}</CommandEmpty>
+            <CommandGroup>
+              {companies.map((company) => (
+                <CommandItem key={company.id}>
+                  <Link href={`/company/${company.id}`} className="w-full">
+                    {company.name}
+                  </Link>
+                  <Check
+                    className={cn(
+                      "ml-auto h-4 w-4",
+                      company.id === id ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
 

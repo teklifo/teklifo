@@ -114,7 +114,9 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // Get allowed priceTypes
     const [total, result] = await db.$transaction([
-      db.priceType.count(),
+      db.priceType.count({
+        where: filters,
+      }),
       db.priceType.findMany({
         take: limit,
         skip: startIndex,

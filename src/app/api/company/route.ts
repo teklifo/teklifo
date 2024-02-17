@@ -122,7 +122,9 @@ export async function GET(request: NextRequest) {
       };
 
     const [total, result] = await db.$transaction([
-      db.company.count(),
+      db.company.count({
+        where: filters,
+      }),
       db.company.findMany({
         take: limit,
         skip: startIndex,

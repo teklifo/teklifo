@@ -49,7 +49,9 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // Get members
     const [total, result] = await db.$transaction([
-      db.companyMembers.count(),
+      db.companyMembers.count({
+        where: filters,
+      }),
       db.companyMembers.findMany({
         take: limit,
         skip: startIndex,

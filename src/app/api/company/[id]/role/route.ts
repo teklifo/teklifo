@@ -121,7 +121,9 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // Get allowed roles
     const [total, result] = await db.$transaction([
-      db.companyRole.count(),
+      db.companyRole.count({
+        where: filters,
+      }),
       db.companyRole.findMany({
         take: limit,
         skip: startIndex,
