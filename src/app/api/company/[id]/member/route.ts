@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import db from "@/lib/db";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import getUserCompany from "@/app/actions/get-user-company";
 import getPaginationData from "@/lib/pagination";
 import { getTranslationsFromHeader } from "@/lib/utils";
 
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       );
 
     // Find company
-    const company = await getAllowedCompany(id, false);
+    const company = await getUserCompany(id, false);
     if (!company) {
       return NextResponse.json(
         {

@@ -20,10 +20,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getCurrentCompany } from "@/app/actions/get-user-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
 import { PaginationType } from "@/types";
-import getCompanyId from "@/lib/get-company-id";
 
 type Props = {
   params: { locale: string };
@@ -70,8 +70,10 @@ const getCompanyRoles = async (companyId: string, page: number) => {
 };
 
 const Roles = async ({ searchParams: { page } }: Props) => {
-  const id = getCompanyId();
-  const data = await getCompanyRoles(id, page ?? 1);
+  const company = await getCurrentCompany();
+  if (!company) return notFound();
+
+  const data = await getCompanyRoles(company.id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
@@ -119,7 +121,7 @@ const Roles = async ({ searchParams: { page } }: Props) => {
                           <Pencil className="mr-2 h-4 w-4" />
                           <span>{t("edit")}</span>
                         </Link>
-                        <DeleteRole companyId={id} roleId={role.id} />
+                        <DeleteRole companyId={company.id} roleId={role.id} />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import getUserCompany from "@/app/actions/get-user-company";
 import db from "@/lib/db";
 import { getProductsSchema } from "@/lib/schemas";
 import { upsertProduct } from "@/lib/exchange/bulk-import";
@@ -26,7 +26,7 @@ export async function POST(
 
   try {
     // Find company
-    const company = await getAllowedCompany(companyId);
+    const company = await getUserCompany(companyId);
     if (!company) {
       return NextResponse.json(
         {
@@ -127,7 +127,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       );
 
     // Find company
-    const company = await getAllowedCompany(id, false);
+    const company = await getUserCompany(id, false);
     if (!company) {
       return NextResponse.json(
         {

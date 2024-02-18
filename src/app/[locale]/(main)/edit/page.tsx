@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import CompanyForm from "@/app/[locale]/(main)/_components/company-form";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
-import getCompanyId from "@/lib/get-company-id";
+import { getCurrentCompany } from "@/app/actions/get-user-company";
 
 type Props = {
   params: { locale: string };
@@ -13,10 +12,9 @@ type Props = {
 export const generateMetadata = async ({
   params: { locale },
 }: Props): Promise<Metadata> => {
-  const id = getCompanyId();
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
-  const company = await getAllowedCompany(id);
+  const company = await getCurrentCompany();
   if (!company)
     return {
       title: `${t("projectName")}`,
@@ -30,8 +28,7 @@ export const generateMetadata = async ({
 };
 
 const EditCompany = async () => {
-  const id = getCompanyId();
-  const company = await getAllowedCompany(id);
+  const company = await getCurrentCompany();
   if (!company) return notFound();
 
   const t = await getTranslations("CompanyForm");

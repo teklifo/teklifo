@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { setCookie } from "cookies-next";
+import { deleteCookie, setCookie } from "cookies-next";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import {
   LayoutGrid,
@@ -12,38 +12,52 @@ import {
   Warehouse,
   Coins,
 } from "lucide-react";
+import { Company as CompanyType } from "@prisma/client";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import Nav from "./nav";
+import CompanySwitcher from "./company-switcher";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 type ResizableLayoutProps = {
   defaultCollapsed: boolean;
   defaultLayout: number[] | undefined;
+  defaultCompany: CompanyType | null;
+  userCompanies: CompanyType[];
   children: React.ReactNode;
 };
 
 const ResizableLayout = ({
   defaultCollapsed,
   defaultLayout = [265, 440, 655],
+  defaultCompany,
+  userCompanies,
   children,
 }: ResizableLayoutProps) => {
   const t = useTranslations("Company");
 
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
-  return (
+  useEffect(() => {
+    if (defaultCompany) {
+      setCookie("user-company", defaultCompany.id);
+    } else {
+      deleteCookie("user-company");
+    }
+  }, [defaultCompany]);
+
+  return defaultCompany ? (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
         direction="horizontal"
         onLayout={(sizes: number[]) => {
           setCookie("react-resizable-panels:layout", sizes);
         }}
-        className="max-h-[calc(100vh-4rem)] items-stretch"
+        className="!h-[calc(100vh-4rem)] items-stretch"
       >
         <ResizablePanel
           defaultSize={defaultLayout[0]}
@@ -66,12 +80,15 @@ const ResizableLayout = ({
         >
           <div
             className={cn(
-              "flex h-[52px] items-center justify-center",
+              "flex h-[52px] items-center justify-center mt-2",
               isCollapsed ? "h-[52px]" : "px-2"
             )}
           >
-            Hello
-            {/* <AccountSwitcher isCollapsed={isCollapsed} accounts={accounts} /> */}
+            <CompanySwitcher
+              isCollapsed={isCollapsed}
+              defaultCompany={defaultCompany}
+              userCompanies={userCompanies}
+            />
           </div>
           <Separator />
           <Nav
@@ -132,6 +149,8 @@ const ResizableLayout = ({
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>
+  ) : (
+    <>{children}</>
   );
 };
 

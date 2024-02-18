@@ -1,7 +1,20 @@
+import { cookies } from "next/headers";
 import db from "@/lib/db";
 import getCurrentUser from "./get-current-user";
 
-export default async function getAllowedCompany(
+export async function getCurrentCompany() {
+  const cookieStore = cookies();
+  const userCompanyCookie = cookieStore.get("user-company");
+  const companyId = userCompanyCookie ? userCompanyCookie.value : null;
+  if (!companyId) {
+    return null;
+  }
+  const company = getUserCompany(companyId);
+
+  return company;
+}
+
+export default async function getUserCompany(
   companyId: string,
   isAdmin: boolean = true,
   userId?: string
@@ -19,10 +32,8 @@ export default async function getAllowedCompany(
   const company = await db.company.findUnique({
     where: {
       id: companyId,
-    },
-    include: {
       users: {
-        where: {
+        some: {
           userId: searchUserId,
           companyRole: isAdmin
             ? {
@@ -30,6 +41,10 @@ export default async function getAllowedCompany(
               }
             : undefined,
         },
+      },
+    },
+    include: {
+      users: {
         include: {
           companyRole: {
             include: {

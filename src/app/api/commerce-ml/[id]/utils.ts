@@ -3,7 +3,7 @@ import path from "path";
 import { pipeline } from "stream";
 import { NextRequest } from "next/server";
 import { stringify } from "querystring";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import getUserCompany from "@/app/actions/get-user-company";
 import { getTranslationsFromHeader } from "@/lib/utils";
 import db from "@/lib/db";
 import { fileExists } from "@/lib/utils";
@@ -60,7 +60,7 @@ export const authenticateUser = async (
     );
   }
 
-  const company = await getAllowedCompany(companyId, true, user.id);
+  const company = await getUserCompany(companyId, true, user.id);
   if (!company) {
     return new Response(
       getResponseMessage("ERROR", undefined, t("invalidCompanyId")),

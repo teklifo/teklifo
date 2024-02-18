@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import getUserCompany from "@/app/actions/get-user-company";
 import db from "@/lib/db";
 import { getRoleSchema } from "@/lib/schemas";
 import { FlattenAvailableDataType } from "@/types";
@@ -18,7 +18,7 @@ export async function DELETE(
 
   try {
     // Find company
-    const company = await getAllowedCompany(id);
+    const company = await getUserCompany(id);
     if (!company) {
       return NextResponse.json(
         {
@@ -87,7 +87,7 @@ export async function PUT(
 
   try {
     // Find company
-    const company = await getAllowedCompany(id);
+    const company = await getUserCompany(id);
     if (!company) {
       return NextResponse.json(
         {
@@ -159,7 +159,7 @@ export async function GET(
 
   try {
     // Find company
-    const company = await getAllowedCompany(id);
+    const company = await getUserCompany(id);
     if (!company) {
       return NextResponse.json(
         {

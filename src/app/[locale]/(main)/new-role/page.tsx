@@ -8,8 +8,7 @@ import type {
 import EditRole from "@/app/[locale]/(main)/roles/_components/edit-role";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
-import getCompanyId from "@/lib/get-company-id";
+import { getCurrentCompany } from "@/app/actions/get-user-company";
 
 type Props = {
   params: { locale: string };
@@ -18,10 +17,9 @@ type Props = {
 export const generateMetadata = async ({
   params: { locale },
 }: Props): Promise<Metadata> => {
-  const id = getCompanyId();
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
-  const company = await getAllowedCompany(id);
+  const company = await getCurrentCompany();
   if (!company)
     return {
       title: `${t("projectName")}`,
@@ -35,11 +33,10 @@ export const generateMetadata = async ({
 };
 
 const NewRole = async () => {
-  const id = getCompanyId();
-  const company = await getAllowedCompany(id);
+  const company = await getCurrentCompany();
   if (!company) return notFound();
 
-  const result = await getStocksAndPriceTypes(id);
+  const result = await getStocksAndPriceTypes();
   const emptyStocks: StockType[] = [];
   const stocks = result ? result[0].result : emptyStocks;
   const emptyPriceTypes: PriceTypeType[] = [];
@@ -55,7 +52,7 @@ const NewRole = async () => {
         </h1>
         <p className="text-lg text-muted-foreground">{t("newRoleSubtitle")}</p>
       </div>
-      <EditRole companyId={id} stocks={stocks} priceTypes={priceTypes} />
+      <EditRole stocks={stocks} priceTypes={priceTypes} />
     </MaxWidthWrapper>
   );
 };

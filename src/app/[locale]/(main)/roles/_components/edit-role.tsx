@@ -26,6 +26,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { getCurrentCompany } from "@/app/actions/get-user-company";
 import { getRoleSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 import sleep from "@/lib/sleep";
@@ -35,13 +36,12 @@ type RoleType = Prisma.CompanyRoleGetPayload<{
 }>;
 
 type RoleFormProps = {
-  companyId: string;
   role?: RoleType;
   stocks: StockType[];
   priceTypes: PriceTypeType[];
 };
 
-const RoleForm = ({ companyId, role, stocks, priceTypes }: RoleFormProps) => {
+const RoleForm = ({ role, stocks, priceTypes }: RoleFormProps) => {
   const t = useTranslations("Role");
 
   const update = role !== undefined;
@@ -103,9 +103,12 @@ const RoleForm = ({ companyId, role, stocks, priceTypes }: RoleFormProps) => {
     };
 
     try {
+      const company = await getCurrentCompany();
+      if (!company) return;
+
       if (update) {
         await request<RoleType>(
-          `/api/company/${companyId}/role/${role.id}`,
+          `/api/company/${company.id}/role/${role.id}`,
           config
         );
 
@@ -114,7 +117,7 @@ const RoleForm = ({ companyId, role, stocks, priceTypes }: RoleFormProps) => {
           description: t("roleIsUpdatedHint"),
         });
       } else {
-        await request<RoleType>(`/api/company/${companyId}/role/`, config);
+        await request<RoleType>(`/api/company/${company.id}/role/`, config);
 
         toast({
           title: t("newRoleIsCreated"),
@@ -124,7 +127,7 @@ const RoleForm = ({ companyId, role, stocks, priceTypes }: RoleFormProps) => {
 
       router.refresh();
       await sleep(1000);
-      router.push(`/company/${companyId}/roles`);
+      router.push(`/company/${company.id}/roles`);
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;

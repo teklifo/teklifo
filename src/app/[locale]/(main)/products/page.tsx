@@ -3,16 +3,15 @@ import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Prisma } from "@prisma/client";
 import { Plus } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import ProductCard from "@/app/[locale]/(main)/_components/product-card";
 import Pagination from "@/components/ui/pagination";
 import { buttonVariants } from "@/components/ui/button";
+import { getCurrentCompany } from "@/app/actions/get-user-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
 import { ProductWithPricesAndStocks, PaginationType } from "@/types";
-import getCompanyId from "@/lib/get-company-id";
 
 type Props = {
   params: { locale: string };
@@ -59,8 +58,10 @@ const getCompanyProducts = async (companyId: string, page: number) => {
 };
 
 const Products = async ({ searchParams: { page } }: Props) => {
-  const id = getCompanyId();
-  const data = await getCompanyProducts(id, page ?? 1);
+  const company = await getCurrentCompany();
+  if (!company) return notFound();
+
+  const data = await getCompanyProducts(company.id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;

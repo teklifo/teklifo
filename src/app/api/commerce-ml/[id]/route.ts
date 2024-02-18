@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import getUserCompany from "@/app/actions/get-user-company";
 import { getTranslationsFromHeader } from "@/lib/utils";
 import {
   addReadFileJobToQueue,
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
   const mode = request.nextUrl.searchParams.get("mode") ?? "import";
 
   try {
-    const company = await getAllowedCompany(id);
+    const company = await getUserCompany(id);
     if (!company) {
       return new Response(
         getResponseMessage("ERROR", undefined, t("invalidCompanyId")),

@@ -20,9 +20,9 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getCurrentCompany } from "@/app/actions/get-user-company";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
-import getCompanyId from "@/lib/get-company-id";
 
 type Props = {
   params: { locale: string };
@@ -69,8 +69,10 @@ const getCompanyPriceTypes = async (companyId: string, page: number) => {
 };
 
 const PriceTypes = async ({ searchParams: { page } }: Props) => {
-  const id = getCompanyId();
-  const data = await getCompanyPriceTypes(id, page ?? 1);
+  const company = await getCurrentCompany();
+  if (!company) return notFound();
+
+  const data = await getCompanyPriceTypes(company.id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
@@ -84,7 +86,7 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <PriceTypeForm companyId={id} />
+        <PriceTypeForm companyId={company.id} />
       </div>
       <div className="mt-4">
         {result.length > 0 && (
@@ -105,9 +107,12 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
                         align="end"
                         className="flex flex-col"
                       >
-                        <PriceTypeForm companyId={id} priceType={priceType} />
+                        <PriceTypeForm
+                          companyId={company.id}
+                          priceType={priceType}
+                        />
                         <DeletePriceType
-                          companyId={id}
+                          companyId={company.id}
                           priceTypeId={priceType.id}
                         />
                       </DropdownMenuContent>

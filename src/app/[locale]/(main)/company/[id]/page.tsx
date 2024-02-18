@@ -7,7 +7,7 @@ import { Prisma } from "@prisma/client";
 import { Pencil } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import getUserCompany from "@/app/actions/get-user-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -79,12 +79,12 @@ const getLocalizedProperties = (company: CompanyType, locale: string) => {
 const Company = async ({ params: { locale, id } }: Props) => {
   const t = await getTranslations("Company");
 
-  const allowedCompany = await getAllowedCompany(id);
+  const userCompany = await getUserCompany(id);
 
   const company = await getCompany(id);
   if (!company) return notFound();
 
-  const isMember = allowedCompany !== null;
+  const isMember = userCompany !== null;
 
   let { description, slogan } = getLocalizedProperties(company, locale);
 

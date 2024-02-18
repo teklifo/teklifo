@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
-import getCompanyId from "@/lib/get-company-id";
+import { getCurrentCompany } from "@/app/actions/get-user-company";
 
 type Props = {
   params: { locale: string };
@@ -69,8 +69,10 @@ const getCompanyStocks = async (companyId: string, page: number) => {
 };
 
 const Stocks = async ({ searchParams: { page } }: Props) => {
-  const id = getCompanyId();
-  const data = await getCompanyStocks(id, page ?? 1);
+  const company = await getCurrentCompany();
+  if (!company) return notFound();
+
+  const data = await getCompanyStocks(company.id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
@@ -84,7 +86,7 @@ const Stocks = async ({ searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <StockForm companyId={id} />
+        <StockForm companyId={company.id} />
       </div>
       <div className="mt-4">
         {result.length > 0 && (
@@ -105,8 +107,11 @@ const Stocks = async ({ searchParams: { page } }: Props) => {
                         align="end"
                         className="flex flex-col"
                       >
-                        <StockForm companyId={id} stock={stock} />
-                        <DeleteStock companyId={id} stockId={stock.id} />
+                        <StockForm companyId={company.id} stock={stock} />
+                        <DeleteStock
+                          companyId={company.id}
+                          stockId={stock.id}
+                        />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
