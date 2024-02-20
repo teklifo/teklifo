@@ -125,9 +125,7 @@ const RoleForm = ({ role, stocks, priceTypes }: RoleFormProps) => {
         });
       }
 
-      router.refresh();
-      await sleep(1000);
-      router.push(`/company/${company.id}/roles`);
+      window.location.href = `/company/${company.id}/roles`;
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;

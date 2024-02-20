@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { signIn } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,12 +18,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { getCredentialsSchema } from "@/lib/schemas";
-import sleep from "@/lib/sleep";
 
 const LoginWithPasswordForm = () => {
   const t = useTranslations("Login");
 
-  const router = useRouter();
   const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
@@ -62,9 +59,7 @@ const LoginWithPasswordForm = () => {
         variant: "destructive",
       });
     } else {
-      router.refresh();
-      await sleep(1000);
-      router.push("/");
+      window.location.href = "/";
     }
 
     setLoading(false);

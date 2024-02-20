@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { getCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Company as CompanyType } from "@prisma/client";
 import { useForm } from "react-hook-form";
@@ -23,7 +22,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import sleep from "@/lib/sleep";
 
 type CompanyFormProps = {
   company?: CompanyType;
@@ -34,7 +32,6 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
 
   const update = company !== undefined;
 
-  const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -87,9 +84,8 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
           description: t("companyIsUpdatedHint"),
         });
 
-        router.refresh();
-        await sleep(1000);
-        router.push(`/company/${updatedCompany.id}`);
+        setCookie("user-company", company.id);
+        window.location.href = `/company/${updatedCompany.id}`;
       } else {
         const newCompany = await request<CompanyType>("/api/company", config);
 
@@ -97,7 +93,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
           title: t("newCompanyIsCreated"),
           description: t("newCompanyHint"),
         });
-        router.push(`/company/${newCompany.id}`);
+
+        setCookie("user-company", newCompany.id);
+        window.location.href = `/company/${newCompany.id}`;
       }
     } catch (error) {
       let message = "";
