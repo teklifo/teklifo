@@ -3,7 +3,10 @@ import path from "path";
 import { pipeline } from "stream";
 import { NextRequest } from "next/server";
 import { stringify } from "querystring";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import {
+  getUserCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import { getTranslationsFromHeader } from "@/lib/utils";
 import db from "@/lib/db";
 import { fileExists } from "@/lib/utils";
@@ -50,6 +53,13 @@ export const authenticateUser = async (
     where: {
       email: username,
     },
+    include: {
+      companies: {
+        include: {
+          companyRole: true,
+        },
+      },
+    },
   });
   if (!user) {
     return new Response(
@@ -60,10 +70,18 @@ export const authenticateUser = async (
     );
   }
 
-  const company = await getAllowedCompany(companyId, true, user.id);
+  const company = await getUserCompany(companyId, user.id);
+  const isAdmin = await isCompanyAdmin(companyId, user);
   if (!company) {
     return new Response(
       getResponseMessage("ERROR", undefined, t("invalidCompanyId")),
+      {
+        status: 404,
+      }
+    );
+  } else if (!isAdmin) {
+    return new Response(
+      getResponseMessage("ERROR", undefined, t("notAllowed")),
       {
         status: 404,
       }

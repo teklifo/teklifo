@@ -5,6 +5,7 @@ import type {
 } from "@prisma/client";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
+import { getCurrentCompany } from "./get-current-company";
 
 export type StockPaginatedData = {
   result: StockType[];
@@ -16,7 +17,10 @@ export type PriceTypePaginatedData = {
   pagination: PaginationType;
 };
 
-export const getStocksAndPriceTypes = async (companyId: string) => {
+export const getStocksAndPriceTypes = async () => {
+  const company = await getCurrentCompany();
+  if (!company) return;
+
   const cookieStore = cookies();
   const headersList = headers();
   const cookie = headersList.get("cookie");
@@ -33,12 +37,12 @@ export const getStocksAndPriceTypes = async (companyId: string) => {
   try {
     const results = await Promise.all([
       await request<StockPaginatedData>(
-        `/api/company/${companyId}/stock?page=1&limit=100`,
+        `/api/company/${company.id}/stock?page=1&limit=100`,
         config
       ),
 
       await request<PriceTypePaginatedData>(
-        `/api/company/${companyId}/price-type?page=1&limit=100`,
+        `/api/company/${company.id}/price-type?page=1&limit=100`,
         config
       ),
     ]);

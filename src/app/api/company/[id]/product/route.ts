@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
-import getAllowedCompany from "@/app/actions/get-allowed-company";
+import {
+  getUserCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getProductsSchema } from "@/lib/schemas";
+import { upsertProduct } from "@/lib/exchange/bulk-import";
 import getPaginationData from "@/lib/pagination";
 import { getTranslationsFromHeader } from "@/lib/utils";
 
@@ -25,13 +29,21 @@ export async function POST(
 
   try {
     // Find company
-    const company = await getAllowedCompany(companyId);
+    const company = await getUserCompany(companyId);
+    const isAdmin = await isCompanyAdmin(companyId);
     if (!company) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
         { status: 404 }
+      );
+    } else if (!isAdmin) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("notAllowed") }],
+        },
+        { status: 401 }
       );
     }
 
@@ -70,6 +82,7 @@ export async function POST(
         } = productData;
 
         const data = {
+          id,
           externalId,
           name,
           number,
@@ -78,20 +91,10 @@ export async function POST(
           unit,
           description,
           archive,
-          company: {
-            connect: {
-              id: company.id,
-            },
-          },
+          companyId: company.id,
         };
 
-        const product = await db.product.upsert({
-          where: {
-            id: id ? id : 0,
-          },
-          create: data,
-          update: data,
-        });
+        const product = await upsertProduct(data);
 
         result.push({
           index,
@@ -135,7 +138,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       );
 
     // Find company
-    const company = await getAllowedCompany(id, false);
+    const company = await getUserCompany(id);
     if (!company) {
       return NextResponse.json(
         {
@@ -145,25 +148,25 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    // Filters
+    const role = company.users[0].companyRole;
+
+    // Allowed prices
+    const priceTypes = role.availableData.map((e) => e.priceTypeId);
+
+    // Allowed stocks
+    const stocks = role.availableData.map((e) => e.stockId);
+
     const filters: Prisma.ProductWhereInput = {};
     filters.companyId = company.id;
-    if (!company.users[0].companyRole.default) {
+    if (!role.default) {
+      // Display only products with prices
       filters.prices = {
         some: {
           priceTypeId: {
-            in: company.users[0].companyRole.availableData.map(
-              (e) => e.priceTypeId
-            ),
+            in: priceTypes,
           },
-        },
-      };
-      filters.stock = {
-        some: {
-          stockId: {
-            in: company.users[0].companyRole.availableData.map(
-              (e) => e.stockId
-            ),
+          price: {
+            gt: 0,
           },
         },
       };
@@ -171,11 +174,42 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // Get allowed products
     const [total, result] = await db.$transaction([
-      db.product.count(),
+      db.product.count({
+        where: filters,
+      }),
       db.product.findMany({
         take: limit,
         skip: startIndex,
         where: filters,
+        include: {
+          prices: {
+            where: role.default
+              ? undefined
+              : {
+                  priceTypeId: {
+                    in: priceTypes,
+                  },
+                },
+            include: {
+              priceType: true,
+            },
+          },
+          stock: {
+            where: role.default
+              ? undefined
+              : {
+                  stockId: {
+                    in: stocks,
+                  },
+                },
+            include: {
+              stock: true,
+            },
+            orderBy: {
+              quantity: "desc",
+            },
+          },
+        },
         orderBy: {
           name: "desc",
         },

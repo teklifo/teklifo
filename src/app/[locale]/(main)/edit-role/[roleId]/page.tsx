@@ -8,21 +8,32 @@ import type {
   PriceType as PriceTypeType,
 } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import EditRole from "@/app/[locale]/(main)/company/[id]/(info)/roles/_components/edit-role";
-import request from "@/lib/request";
+import EditRole from "@/app/[locale]/(main)/roles/_components/edit-role";
+import { getCurrentCompany } from "@/app/actions/get-current-company";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
+import request from "@/lib/request";
+
+type Props = {
+  params: { locale: string; roleId: string };
+};
 
 type RoleType = Prisma.CompanyRoleGetPayload<{
   include: { availableData: true; company: true };
 }>;
 
 export const generateMetadata = async ({
-  params: { locale, id, roleId },
+  params: { locale, roleId },
 }: Props): Promise<Metadata> => {
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
-  const role = await getRole(id, roleId);
+  const company = await getCurrentCompany();
+  if (!company)
+    return {
+      title: `${t("projectName")}`,
+      description: "",
+    };
 
+  const role = await getRole(company.id, roleId);
   if (!role)
     return {
       title: `${t("projectName")}`,
@@ -38,13 +49,13 @@ export const generateMetadata = async ({
   };
 };
 
-const getRole = async (id: string, roleId: string) => {
+const getRole = async (companyId: string, roleId: string) => {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
-    return await request<RoleType>(`/api/company/${id}/role/${roleId}`, {
+    return await request<RoleType>(`/api/company/${companyId}/role/${roleId}`, {
       headers: {
         "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
         Cookie: cookie,
@@ -56,15 +67,14 @@ const getRole = async (id: string, roleId: string) => {
   }
 };
 
-type Props = {
-  params: { locale: string; id: string; roleId: string };
-};
+const UpdateForm = async ({ params: { roleId } }: Props) => {
+  const company = await getCurrentCompany();
+  if (!company) return null;
 
-const UpdateForm = async ({ params: { id, roleId } }: Props) => {
-  const role = await getRole(id, roleId);
+  const role = await getRole(company.id, roleId);
   if (!role) return notFound();
 
-  const result = await getStocksAndPriceTypes(id);
+  const result = await getStocksAndPriceTypes();
   const emptyStocks: StockType[] = [];
   const stocks = result ? result[0].result : emptyStocks;
   const emptyPriceTypes: PriceTypeType[] = [];
@@ -86,8 +96,8 @@ const UpdateForm = async ({ params: { id, roleId } }: Props) => {
         </p>
       </div>
       <EditRole
-        companyId={id}
         role={role}
+        company={company}
         stocks={stocks}
         priceTypes={priceTypes}
       />

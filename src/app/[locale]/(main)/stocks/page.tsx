@@ -22,9 +22,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
+import {
+  getCurrentCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 
 type Props = {
-  params: { locale: string; id: string };
+  params: { locale: string };
   searchParams: {
     page?: number;
   };
@@ -67,8 +71,13 @@ const getCompanyStocks = async (companyId: string, page: number) => {
   }
 };
 
-const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
-  const data = await getCompanyStocks(id, page ?? 1);
+const Stocks = async ({ searchParams: { page } }: Props) => {
+  const company = await getCurrentCompany();
+  if (!company) return notFound();
+
+  const isAdmin = await isCompanyAdmin(company.id);
+
+  const data = await getCompanyStocks(company.id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
@@ -82,7 +91,7 @@ const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <StockForm companyId={id} />
+        {isAdmin && <StockForm companyId={company.id} />}
       </div>
       <div className="mt-4">
         {result.length > 0 && (
@@ -92,21 +101,26 @@ const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
                 <CardHeader>
                   <div className="flex flex-row justify-between">
                     <CardTitle>{stock.name}</CardTitle>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">{t("openMenu")}</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="flex flex-col"
-                      >
-                        <StockForm companyId={id} stock={stock} />
-                        <DeleteStock companyId={id} stockId={stock.id} />
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    {isAdmin && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">{t("openMenu")}</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="flex flex-col"
+                        >
+                          <StockForm companyId={company.id} stock={stock} />
+                          <DeleteStock
+                            companyId={company.id}
+                            stockId={stock.id}
+                          />
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </div>
                   <CardDescription>{`${t("id")}: ${stock.id}`}</CardDescription>
                 </CardHeader>
@@ -114,10 +128,7 @@ const Stocks = async ({ params: { id }, searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination
-          href={`/company/${id}/stocks?page=`}
-          pagination={pagination}
-        />
+        <Pagination href={`/stocks?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>

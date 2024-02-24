@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import type { Prisma } from "@prisma/client";
@@ -22,7 +21,6 @@ type Props = {
 const AcceptInvitation = ({ id, companyName, companyId }: Props) => {
   const t = useTranslations("Invitation");
 
-  const router = useRouter();
   const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
@@ -44,7 +42,7 @@ const AcceptInvitation = ({ id, companyName, companyId }: Props) => {
         description: t("invitationAcceptedHint"),
       });
 
-      router.push(`/company/${companyId}`);
+      window.location.href = `/company/${companyId}`;
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;

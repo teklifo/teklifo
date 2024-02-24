@@ -35,7 +35,9 @@ export async function GET(request: NextRequest) {
       };
 
     const [total, result] = await db.$transaction([
-      db.user.count(),
+      db.user.count({
+        where: filters,
+      }),
       db.user.findMany({
         take: limit,
         skip: startIndex,
