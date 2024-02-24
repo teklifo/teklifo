@@ -8,7 +8,10 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 import ProductCard from "@/app/[locale]/(main)/_components/product-card";
 import Pagination from "@/components/ui/pagination";
 import { buttonVariants } from "@/components/ui/button";
-import { getCurrentCompany } from "@/app/actions/get-user-company";
+import {
+  getCurrentCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
 import { ProductWithPricesAndStocks, PaginationType } from "@/types";
@@ -61,6 +64,8 @@ const Products = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
+  const isAdmin = await isCompanyAdmin(company.id);
+
   const data = await getCompanyProducts(company.id, page ?? 1);
   if (!data) return notFound();
 
@@ -75,13 +80,15 @@ const Products = async ({ searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <Link
-          href={`/new-product`}
-          className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
-        >
-          <Plus />
-          <span>{t("new")}</span>
-        </Link>
+        {isAdmin && (
+          <Link
+            href={`/new-product`}
+            className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
+          >
+            <Plus />
+            <span>{t("new")}</span>
+          </Link>
+        )}
       </div>
       <div className="mt-4">
         {result.length > 0 && (

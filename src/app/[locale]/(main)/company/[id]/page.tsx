@@ -7,10 +7,12 @@ import { Prisma } from "@prisma/client";
 import { Pencil } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
-import getUserCompany from "@/app/actions/get-user-company";
+import {
+  getUserCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
-import React from "react";
 
 type CompanyType = Prisma.CompanyGetPayload<{
   include: { users: true };
@@ -84,7 +86,7 @@ const Company = async ({ params: { locale, id } }: Props) => {
   const company = await getCompany(id);
   if (!company) return notFound();
 
-  const isMember = userCompany !== null;
+  const isAdmin = userCompany !== null ? await isCompanyAdmin(id) : false;
 
   let { description, slogan } = getLocalizedProperties(company, locale);
 
@@ -98,7 +100,7 @@ const Company = async ({ params: { locale, id } }: Props) => {
             company.tin
           }`}</p>
         </div>
-        {isMember && (
+        {isAdmin && (
           <Link
             href={`/company/${company.id}/edit`}
             className={cn("space-x-2", buttonVariants({ variant: "default" }))}

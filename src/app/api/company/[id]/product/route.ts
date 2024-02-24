@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
-import getUserCompany from "@/app/actions/get-user-company";
+import {
+  getUserCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getProductsSchema } from "@/lib/schemas";
 import { upsertProduct } from "@/lib/exchange/bulk-import";
@@ -27,12 +30,20 @@ export async function POST(
   try {
     // Find company
     const company = await getUserCompany(companyId);
+    const isAdmin = await isCompanyAdmin(companyId);
     if (!company) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
         { status: 404 }
+      );
+    } else if (!isAdmin) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("notAllowed") }],
+        },
+        { status: 401 }
       );
     }
 
@@ -127,7 +138,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       );
 
     // Find company
-    const company = await getUserCompany(id, false);
+    const company = await getUserCompany(id);
     if (!company) {
       return NextResponse.json(
         {

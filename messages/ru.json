@@ -41,7 +41,7 @@
     "invalidCompanyId": "Организация не найдена",
     "serverError": "Ошибка сервера",
     "userIsNotAMember": "Пользователь не является участником организации",
-    "notAllowed": "Не достаточно прав",
+    "notAllowed": "Недостаточно прав",
     "stockDeleted": "Склад удален",
     "priceTypeDeleted": "Вид цены удален",
     "invalidInvitationId": "Приглашение не найдено",

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
-import getUserCompany from "@/app/actions/get-user-company";
+import {
+  getUserCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getStockSchema } from "@/lib/schemas";
 import { getTranslationsFromHeader } from "@/lib/utils";
@@ -18,12 +21,20 @@ export async function DELETE(
   try {
     // Find company
     const company = await getUserCompany(id);
+    const isAdmin = await isCompanyAdmin(id);
     if (!company) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
         { status: 404 }
+      );
+    } else if (!isAdmin) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("notAllowed") }],
+        },
+        { status: 401 }
       );
     }
 
@@ -53,12 +64,20 @@ export async function PUT(
   try {
     // Find company
     const company = await getUserCompany(id);
+    const isAdmin = await isCompanyAdmin(id);
     if (!company) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidCompanyId") }],
         },
         { status: 404 }
+      );
+    } else if (!isAdmin) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("notAllowed") }],
+        },
+        { status: 401 }
       );
     }
 

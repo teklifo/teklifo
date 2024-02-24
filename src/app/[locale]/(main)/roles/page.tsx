@@ -20,7 +20,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getCurrentCompany } from "@/app/actions/get-user-company";
+import {
+  getCurrentCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
 import { PaginationType } from "@/types";
@@ -73,6 +76,8 @@ const Roles = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
+  const isAdmin = await isCompanyAdmin(company.id);
+
   const data = await getCompanyRoles(company.id, page ?? 1);
   if (!data) return notFound();
 
@@ -87,13 +92,15 @@ const Roles = async ({ searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <Link
-          href={`/new-role`}
-          className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
-        >
-          <Plus />
-          <span>{t("new")}</span>
-        </Link>
+        {isAdmin && (
+          <Link
+            href={`/new-role`}
+            className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
+          >
+            <Plus />
+            <span>{t("new")}</span>
+          </Link>
+        )}
       </div>
       <div className="mt-4">
         {result.length > 0 && (
@@ -103,27 +110,29 @@ const Roles = async ({ searchParams: { page } }: Props) => {
                 <CardHeader>
                   <div className="flex flex-row justify-between">
                     <CardTitle>{role.name}</CardTitle>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">{t("openMenu")}</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="flex flex-col"
-                      >
-                        <Link
-                          href={`/edit-role/${role.id}`}
-                          className={buttonVariants({ variant: "ghost" })}
+                    {isAdmin && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">{t("openMenu")}</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="flex flex-col"
                         >
-                          <Pencil className="mr-2 h-4 w-4" />
-                          <span>{t("edit")}</span>
-                        </Link>
-                        <DeleteRole companyId={company.id} roleId={role.id} />
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                          <Link
+                            href={`/edit-role/${role.id}`}
+                            className={buttonVariants({ variant: "ghost" })}
+                          >
+                            <Pencil className="mr-2 h-4 w-4" />
+                            <span>{t("edit")}</span>
+                          </Link>
+                          <DeleteRole companyId={company.id} roleId={role.id} />
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </div>
                   <CardDescription>{`${t("id")}: ${role.id}`}</CardDescription>
                 </CardHeader>

@@ -21,7 +21,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getCurrentCompany } from "@/app/actions/get-user-company";
+import {
+  getCurrentCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
 
@@ -77,6 +80,8 @@ const Members = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
+  const isAdmin = await isCompanyAdmin(company.id);
+
   const data = await getCompanyMembers(company.id, page ?? 1);
   if (!data) return notFound();
 
@@ -91,7 +96,7 @@ const Members = async ({ searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <InvitationForm companyId={company.id} />
+        {isAdmin && <InvitationForm companyId={company.id} />}
       </div>
       <div className="mt-4">
         {result.length > 0 && (
@@ -103,24 +108,26 @@ const Members = async ({ searchParams: { page } }: Props) => {
                     <CardTitle className="text-xl truncate">
                       {member.user.name || member.user.email}
                     </CardTitle>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">{t("openMenu")}</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="flex flex-col"
-                      >
-                        <MemberForm companyId={company.id} member={member} />
-                        <DeleteMember
-                          companyId={company.id}
-                          memberId={member.userId}
-                        />
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    {isAdmin && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">{t("openMenu")}</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="flex flex-col"
+                        >
+                          <MemberForm companyId={company.id} member={member} />
+                          <DeleteMember
+                            companyId={company.id}
+                            memberId={member.userId}
+                          />
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </div>
                   <CardDescription>{`${t("role")}: ${
                     member.companyRole.name

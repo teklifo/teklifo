@@ -1,5 +1,8 @@
 import { NextRequest } from "next/server";
-import getUserCompany from "@/app/actions/get-user-company";
+import {
+  getUserCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import { getTranslationsFromHeader } from "@/lib/utils";
 import {
   addReadFileJobToQueue,
@@ -56,9 +59,17 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
 
   try {
     const company = await getUserCompany(id);
+    const isAdmin = await isCompanyAdmin(id);
     if (!company) {
       return new Response(
         getResponseMessage("ERROR", undefined, t("invalidCompanyId")),
+        {
+          status: 404,
+        }
+      );
+    } else if (!isAdmin) {
+      return new Response(
+        getResponseMessage("ERROR", undefined, t("notAllowed")),
         {
           status: 404,
         }

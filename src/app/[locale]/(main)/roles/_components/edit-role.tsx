@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +8,7 @@ import type {
   Prisma,
   Stock as StockType,
   PriceType as PriceTypeType,
+  Company as CompanyType,
 } from "@prisma/client";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
@@ -26,10 +26,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { getCurrentCompany } from "@/app/actions/get-user-company";
+import { getCurrentCompany } from "@/app/actions/get-current-company";
 import { getRoleSchema } from "@/lib/schemas";
 import request from "@/lib/request";
-import sleep from "@/lib/sleep";
 
 type RoleType = Prisma.CompanyRoleGetPayload<{
   include: { availableData: true; company: true };
@@ -37,16 +36,16 @@ type RoleType = Prisma.CompanyRoleGetPayload<{
 
 type RoleFormProps = {
   role?: RoleType;
+  company: CompanyType;
   stocks: StockType[];
   priceTypes: PriceTypeType[];
 };
 
-const RoleForm = ({ role, stocks, priceTypes }: RoleFormProps) => {
+const RoleForm = ({ role, company, stocks, priceTypes }: RoleFormProps) => {
   const t = useTranslations("Role");
 
   const update = role !== undefined;
 
-  const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
@@ -103,9 +102,6 @@ const RoleForm = ({ role, stocks, priceTypes }: RoleFormProps) => {
     };
 
     try {
-      const company = await getCurrentCompany();
-      if (!company) return;
-
       if (update) {
         await request<RoleType>(
           `/api/company/${company.id}/role/${role.id}`,
@@ -125,7 +121,7 @@ const RoleForm = ({ role, stocks, priceTypes }: RoleFormProps) => {
         });
       }
 
-      window.location.href = `/company/${company.id}/roles`;
+      window.location.href = `/roles`;
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;

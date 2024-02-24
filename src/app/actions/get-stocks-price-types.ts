@@ -5,7 +5,7 @@ import type {
 } from "@prisma/client";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
-import { getCurrentCompany } from "./get-user-company";
+import { getCurrentCompany } from "./get-current-company";
 
 export type StockPaginatedData = {
   result: StockType[];

@@ -20,7 +20,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getCurrentCompany } from "@/app/actions/get-user-company";
+import {
+  getCurrentCompany,
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
 
@@ -72,6 +75,8 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
+  const isAdmin = await isCompanyAdmin(company.id);
+
   const data = await getCompanyPriceTypes(company.id, page ?? 1);
   if (!data) return notFound();
 
@@ -86,7 +91,7 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <PriceTypeForm companyId={company.id} />
+        {isAdmin && <PriceTypeForm companyId={company.id} />}
       </div>
       <div className="mt-4">
         {result.length > 0 && (
@@ -96,27 +101,29 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
                 <CardHeader>
                   <div className="flex flex-row justify-between">
                     <CardTitle>{priceType.name}</CardTitle>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">{t("openMenu")}</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="flex flex-col"
-                      >
-                        <PriceTypeForm
-                          companyId={company.id}
-                          priceType={priceType}
-                        />
-                        <DeletePriceType
-                          companyId={company.id}
-                          priceTypeId={priceType.id}
-                        />
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    {isAdmin && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">{t("openMenu")}</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="flex flex-col"
+                        >
+                          <PriceTypeForm
+                            companyId={company.id}
+                            priceType={priceType}
+                          />
+                          <DeletePriceType
+                            companyId={company.id}
+                            priceTypeId={priceType.id}
+                          />
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </div>
                   <CardDescription>{`${t("currency")}: ${
                     priceType.currency
