@@ -21,8 +21,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  getCurrentCompany,
+import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";

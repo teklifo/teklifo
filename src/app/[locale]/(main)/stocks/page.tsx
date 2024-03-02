@@ -22,8 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
-import {
-  getCurrentCompany,
+import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 

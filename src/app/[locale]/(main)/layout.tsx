@@ -3,7 +3,7 @@ import Navbar from "./_components/navbar";
 import ResizableLayout from "./_components/resizable-layout";
 import getCurrentUser from "@/app/actions/get-current-user";
 import db from "@/lib/db";
-import { getCurrentCompany } from "@/app/actions/get-current-company";
+import getCurrentCompany from "@/app/actions/get-current-company";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const layout = cookies().get("react-resizable-panels:layout");

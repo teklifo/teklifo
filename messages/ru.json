@@ -32,7 +32,9 @@
     "productsTitle": "Товары",
     "productsDescription": "Поиск по товарам организаций",
     "companyProductsTitle": "Товары организации",
-    "companyProductsDescription": "Список товаров организации"
+    "companyProductsDescription": "Список товаров организации",
+    "outgoingRfqTitle": "Запросы цен поставщикам",
+    "outgoingRfqDescription": "Список ваших запросов цен поставщикам"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -119,6 +121,7 @@
     "members": "Участники",
     "stocks": "Склады",
     "priceTypes": "Виды цен",
+    "outgoingRfq": "Запросы цен поставщикам",
     "products": "Товары",
     "tin": "ИНН",
     "search": "Поиск",
@@ -298,6 +301,11 @@
     "stock": "Склад",
     "balance": "Остаток"
   },
+  "OutgoingRFQ": {
+    "title": "Запросы цен поставщикам",
+    "subtitle": "Список ваших запросов цен поставщикам",
+    "new": "Создать запрос"
+  },
   "Schemas": {
     "companySchema": {
       "invalidId": "Укажите идентификатор организации",
@@ -338,6 +346,17 @@
     "productSchema": {
       "invalidName": "Укажите наименование товара",
       "invalidNumber": "Укажите номер товара"
+    },
+    "rfqSchema": {
+      "invalidCurrency": "Укажите валюту запроса",
+      "invalidRFQStartDate": "Укажите дату начала сбора предложений",
+      "invalidRFQEndDate": "Укажите дату окончания сбора предложений",
+      "invalidProducts": "Укажите список запрашиваемых товаров",
+      "invalidProductId": "Укажите запрашиваемый товар",
+      "invalidQuantity": "Укажите запрашиваемое количество",
+      "invalidPrice": "Укажите желаемую цену",
+      "invalidDeliveryDate": "Укажите предпочтительную дату доставки",
+      "invalidPublicRequest": "Укажите тип запроса цен - публичный или закрытый"
     }
   },
   "Invitation": {

@@ -11,6 +11,7 @@ import {
   ShoppingCart,
   Warehouse,
   Coins,
+  FileText,
 } from "lucide-react";
 import { Company as CompanyType } from "@prisma/client";
 import {
@@ -95,22 +96,10 @@ const ResizableLayout = ({
             isCollapsed={isCollapsed}
             links={[
               {
-                title: t("main"),
+                title: t("outgoingRfq"),
                 label: "",
-                icon: LayoutGrid,
-                href: `/dashboard`,
-              },
-              {
-                title: t("roles"),
-                label: "",
-                icon: Settings2,
-                href: `/roles`,
-              },
-              {
-                title: t("members"),
-                label: "",
-                icon: Users,
-                href: `/members`,
+                icon: FileText,
+                href: `/outgoing-rfq`,
               },
             ]}
           />
@@ -135,6 +124,30 @@ const ResizableLayout = ({
                 label: "",
                 icon: Coins,
                 href: `/price-types`,
+              },
+            ]}
+          />
+          <Separator />
+          <Nav
+            isCollapsed={isCollapsed}
+            links={[
+              {
+                title: t("main"),
+                label: "",
+                icon: LayoutGrid,
+                href: `/dashboard`,
+              },
+              {
+                title: t("roles"),
+                label: "",
+                icon: Settings2,
+                href: `/roles`,
+              },
+              {
+                title: t("members"),
+                label: "",
+                icon: Users,
+                href: `/members`,
               },
             ]}
           />

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import CompanyForm from "@/app/[locale]/(main)/_components/company-form";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import { getCurrentCompany } from "@/app/actions/get-current-company";
+import getCurrentCompany from "@/app/actions/get-current-company";
 
 type Props = {
   params: { locale: string };

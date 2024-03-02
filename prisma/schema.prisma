@@ -50,18 +50,19 @@ model Account {
 }
 
 model User {
-  id            String           @id @default(cuid())
-  name          String?
-  email         String?          @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?
-  userImage     UserImage?
-  accounts      Account[]
-  role          Role             @default(USER)
-  companies     CompanyMembers[]
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  id                   String                @id @default(cuid())
+  name                 String?
+  email                String?               @unique
+  emailVerified        DateTime?
+  password             String?
+  image                String?
+  userImage            UserImage?
+  accounts             Account[]
+  role                 Role                  @default(USER)
+  companies            CompanyMembers[]
+  requestsForQuotation RequestForQuotation[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
 }
 
 model VerificationToken {
@@ -94,23 +95,25 @@ model AvailableData {
 }
 
 model Company {
-  id            String           @id
-  name          String           @unique
-  tin           String           @unique
-  image         CompanyImage?
-  description   String
-  descriptionRu String?
-  slogan        String?
-  sloganRu      String?
-  users         CompanyMembers[]
-  invitations   Invitation[]
-  products      Product[]
-  priceTypes    PriceType[]
-  stocks        Stock[]
-  companyRoles  CompanyRole[]
-  exchangeJobs  ExchangeJob[]
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  id                   String                @id
+  name                 String                @unique
+  tin                  String                @unique
+  image                CompanyImage?
+  description          String
+  descriptionRu        String?
+  slogan               String?
+  sloganRu             String?
+  users                CompanyMembers[]
+  invitations          Invitation[]
+  products             Product[]
+  priceTypes           PriceType[]
+  stocks               Stock[]
+  companyRoles         CompanyRole[]
+  exchangeJobs         ExchangeJob[]
+  requestsForQuotation RequestForQuotation[]
+  participation        Participants[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
 }
 
 model CompanyMembers {
@@ -133,24 +136,25 @@ model Invitation {
 }
 
 model Product {
-  id               Int            @id @default(autoincrement())
-  externalId       String?
-  productId        String?
-  characteristicId String?
-  name             String
-  number           String
-  brand            String
-  brandNumber      String
-  unit             String
-  description      String
-  archive          Boolean
-  images           ProductImage[]
-  company          Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId        String
-  stock            StockBalance[]
-  prices           Price[]
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  id                   Int                           @id @default(autoincrement())
+  externalId           String?
+  productId            String?
+  characteristicId     String?
+  name                 String
+  number               String
+  brand                String
+  brandNumber          String
+  unit                 String
+  description          String
+  archive              Boolean
+  images               ProductImage[]
+  company              Company                       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId            String
+  stock                StockBalance[]
+  prices               Price[]
+  requestsForQuotation RequestForQuotationProducts[]
+  createdAt            DateTime                      @default(now())
+  updatedAt            DateTime                      @updatedAt
 }
 
 model Stock {
@@ -168,7 +172,7 @@ model StockBalance {
   stockId   String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
-  quantity  Float
+  quantity  Decimal  @db.Decimal(15, 3)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -191,7 +195,7 @@ model Price {
   priceTypeId String
   product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   Int
-  price       Float
+  price       Decimal   @db.Decimal(15, 2)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -199,11 +203,11 @@ model Price {
 }
 
 model ProductImage {
-  id        String  @id
-  url       String
+  id         String  @id
+  url        String
   commerceMl Boolean
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  Int
 }
 
 model CompanyImage {
@@ -221,13 +225,56 @@ model UserImage {
 }
 
 model ExchangeJob {
-  id String @id @default(cuid())
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  id        String         @id @default(cuid())
+  company   Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId String
-  path String
-  type ExchangeType
-  status ExchangeStatus
-  logs Json
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  path      String
+  type      ExchangeType
+  status    ExchangeStatus
+  logs      Json
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model RequestForQuotation {
+  id              String                        @id @default(cuid())
+  company         Company?                      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companyId       String?
+  user            User?                         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId          String?
+  publicRequest   Boolean
+  currency        String
+  startDate       DateTime
+  endDate         DateTime
+  description     String
+  deliveryAddress String
+  deliveryTerms   String
+  paymentTerms    String
+  products        RequestForQuotationProducts[]
+  participants    Participants[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RequestForQuotationProducts {
+  requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [id], onDelete: Cascade)
+  requestForQuotationId String
+  product               Product?            @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId             Int?
+  comment               String
+  quantity              Decimal             @db.Decimal(15, 3)
+  price                 Decimal             @db.Decimal(15, 2)
+  deliveryDate          DateTime
+
+  @@id([requestForQuotationId])
+}
+
+model Participants {
+  requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [id], onDelete: Cascade)
+  requestForQuotationId String
+  company               Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId             String
+
+  @@id([requestForQuotationId, companyId])
 }

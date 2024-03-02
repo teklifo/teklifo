@@ -13,7 +13,7 @@ type UserType = Prisma.UserGetPayload<{
   };
 }>;
 
-export async function getCurrentCompany() {
+export default async function getCurrentCompany() {
   const companyId = getCompanyIdFromCookies();
   if (!companyId) {
     return null;
