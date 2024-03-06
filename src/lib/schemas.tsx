@@ -216,19 +216,19 @@ export const getRFQSchema = (t: TranslateFunction) => {
 
 export const getRFQProductSchema = (t: TranslateFunction) => {
   return z.object({
-    productId: z
+    productId: z.coerce
       .number({
         required_error: t("invalidProductId"),
         invalid_type_error: t("invalidProductId"),
       })
       .min(1, t("invalidProductId")),
-    quantity: z
+    quantity: z.coerce
       .number({
         required_error: t("invalidQuantity"),
         invalid_type_error: t("invalidQuantity"),
       })
       .min(1, t("invalidQuantity")),
-    price: z
+    price: z.coerce
       .number({
         required_error: t("invalidPrice"),
         invalid_type_error: t("invalidPrice"),

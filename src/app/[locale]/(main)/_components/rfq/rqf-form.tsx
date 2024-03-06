@@ -7,8 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Prisma } from "@prisma/client";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
-import { Plus, Trash } from "lucide-react";
-// import AvailableData from "./available-data";
+import { MoreHorizontal, Plus, X } from "lucide-react";
+import RFQProducts from "./rfq-products";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,11 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { getRFQSchema } from "@/lib/schemas";
 import request from "@/lib/request";
+import ProductSelect from "../product-select";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: { products: true };
@@ -39,6 +41,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
 
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [openProducts, setOpenProducts] = useState(false);
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -125,7 +128,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             <FormItem>
               <FormLabel>{t("currency")}</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -133,21 +136,26 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
         />
         {products.fields.map((productField, index) => (
           <Card key={productField.id} className="h-full w-full">
-            <CardHeader className="flex flex-row items-center space-x-8">
+            <CardHeader className="flex flex-row items-center space-x-8 space-y-0">
+              <Dialog open={openProducts} onOpenChange={setOpenProducts}>
+                <DialogTrigger asChild>
+                  <Button type="button" className="space-x-2">
+                    <MoreHorizontal />
+                    <span>{t("selectProduct")}</span>
+                  </Button>
+                </DialogTrigger>
+                <ProductSelect />
+              </Dialog>
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => products.remove(index)}
               >
-                <Trash className="h-4 w-4" />
+                <X className="h-4 w-4" />
               </Button>
             </CardHeader>
             <CardContent>
-              {/* <AvailableData
-                stocks={stocks}
-                priceTypes={priceTypes}
-                index={index}
-              /> */}
+              <RFQProducts index={index} />
             </CardContent>
           </Card>
         ))}
@@ -171,7 +179,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               <span>{t("addRow")}</span>
             </Button>
           </div>
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading} className="w-full">
             {update ? t("update") : t("create")}
           </Button>
         </div>
