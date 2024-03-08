@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Prisma } from "@prisma/client";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
-import { MoreHorizontal, Plus, X } from "lucide-react";
+import { addDays, format } from "date-fns";
+import { Plus, CalendarIcon } from "lucide-react";
 import RFQProducts from "./rfq-products";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,13 +19,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { Textarea } from "@/components/ui/textarea";
 import { getRFQSchema } from "@/lib/schemas";
 import request from "@/lib/request";
-import ProductSelect from "../product-select";
+import { cn } from "@/lib/utils";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: { products: true };
@@ -41,7 +47,6 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
 
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [openProducts, setOpenProducts] = useState(false);
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -120,69 +125,201 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="currency"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("currency")}</FormLabel>
-              <FormControl>
-                <Input {...field} autoComplete="off" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {products.fields.map((productField, index) => (
-          <Card key={productField.id} className="h-full w-full">
-            <CardHeader className="flex flex-row items-center space-x-8 space-y-0">
-              <Dialog open={openProducts} onOpenChange={setOpenProducts}>
-                <DialogTrigger asChild>
-                  <Button type="button" className="space-x-2">
-                    <MoreHorizontal />
-                    <span>{t("selectProduct")}</span>
-                  </Button>
-                </DialogTrigger>
-                <ProductSelect />
-              </Dialog>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => products.remove(index)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <RFQProducts index={index} />
-            </CardContent>
-          </Card>
-        ))}
-        <div className="flex flex-col items-start space-y-8">
-          <div className="flex flex-col space-x-0 space-y-4 md:flex-row md:space-x-4 md:space-y-0">
-            <Button
-              type="button"
-              variant="outline"
-              className="space-x-2"
-              onClick={() =>
-                products.append({
-                  productId: 0,
-                  quantity: 0,
-                  price: 0,
-                  deliveryDate: new Date(),
-                  comment: "",
-                })
-              }
-            >
-              <Plus />
-              <span>{t("addRow")}</span>
-            </Button>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="space-y-4">
+          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            {t("main")}
+          </h3>
+          {/* Period */}
+          <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
+            <FormField
+              control={form.control}
+              name={`startDate`}
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>{t("startDate")}</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>{t("pickDate")}</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`endDate`}
+              render={({ field }) => (
+                <FormItem>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>{t("pickDate")}</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <Button type="submit" disabled={loading} className="w-full">
-            {update ? t("update") : t("create")}
+          {/* Currency*/}
+          <FormField
+            control={form.control}
+            name="currency"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("currency")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Description*/}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("description")}</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="space-y-4">
+          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            {t("products")}
+          </h3>
+          {products.fields.map((productField, index) => (
+            <RFQProducts
+              key={index}
+              productField={productField}
+              index={index}
+              removeProduct={() => {
+                products.remove(index);
+              }}
+            />
+          ))}
+          <Button
+            type="button"
+            className="space-x-2"
+            onClick={() =>
+              products.append({
+                productId: 0,
+                quantity: 0,
+                price: 0,
+                deliveryDate: new Date(0),
+                comment: "",
+              })
+            }
+          >
+            <Plus />
+            <span>{t("addRow")}</span>
           </Button>
         </div>
+        <div className="space-y-4">
+          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            {t("additional")}
+          </h3>
+          {/* Delivery address*/}
+          <FormField
+            control={form.control}
+            name="deliveryAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("deliveryAddress")}</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Delivery terms*/}
+          <FormField
+            control={form.control}
+            name="deliveryTerms"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("deliveryTerms")}</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Payment terms*/}
+          <FormField
+            control={form.control}
+            name="paymentTerms"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("paymentTerms")}</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <Button type="submit" disabled={loading} className="w-full">
+          {update ? t("update") : t("create")}
+        </Button>
       </form>
     </Form>
   );

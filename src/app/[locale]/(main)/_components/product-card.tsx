@@ -22,10 +22,12 @@ import BalanceTable from "./stock-balance-table";
 
 type ProductCardProps = {
   product: ProductWithPricesAndStocks;
+  children?: React.ReactNode;
 };
 
 const ProductCard = ({
   product: { id, name, number, description, prices, stock, unit },
+  children,
 }: ProductCardProps) => {
   const t = useTranslations("Product");
 
@@ -52,12 +54,16 @@ const ProductCard = ({
         </Accordion>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Link
-          href={`/product/${id}`}
-          className={cn("space-x-2", buttonVariants({ variant: "default" }))}
-        >
-          {t("more")}
-        </Link>
+        {children ? (
+          children
+        ) : (
+          <Link
+            href={`/product/${id}`}
+            className={cn("space-x-2", buttonVariants({ variant: "default" }))}
+          >
+            {t("more")}
+          </Link>
+        )}
       </CardFooter>
     </Card>
   );

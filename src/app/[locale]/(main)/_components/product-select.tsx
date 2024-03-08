@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import queryString from "query-string";
+import { Loader } from "lucide-react";
+import { Product as ProductType } from "@prisma/client";
 import ProductCard from "./product-card";
 import {
   DialogContent,
@@ -15,6 +17,7 @@ import request from "@/lib/request";
 import useDebounce from "@/hooks/useDebounce";
 import { ProductWithPricesAndStocks, PaginationType } from "@/types";
 import { Label } from "@radix-ui/react-label";
+import { Button } from "@/components/ui/button";
 
 type SearchParams = {
   page?: number;
@@ -26,7 +29,11 @@ type PaginatedData = {
   pagination: PaginationType;
 };
 
-const ProductSelect = () => {
+type ProductSelectProps = {
+  onSelect: (product: ProductType) => void;
+};
+
+const ProductSelect = ({ onSelect }: ProductSelectProps) => {
   const t = useTranslations("ProductSelect");
 
   const [loading, setLoading] = useState(false);
@@ -68,7 +75,7 @@ const ProductSelect = () => {
   }, [debouncedValue]);
 
   return (
-    <DialogContent>
+    <DialogContent className="h-full flex flex-col md:h-[80vh]">
       <DialogHeader>
         <DialogTitle>{t("title")}</DialogTitle>
       </DialogHeader>
@@ -80,15 +87,33 @@ const ProductSelect = () => {
           placeholder={t("queryHint")}
           onChange={(e) => {
             setQuery(e.target.value);
-            console.log(debouncedValue);
           }}
           value={query}
           autoComplete="off"
         />
       </div>
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+      {loading ? (
+        <div className="flex justify-center items-center h-full">
+          <Loader className="mr-2 animate-spin" />
+        </div>
+      ) : (
+        <div className="overflow-auto space-y-4">
+          {products.map((product) => (
+            <div key={product.id} className="h-auto">
+              <ProductCard product={product}>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    onSelect(product);
+                  }}
+                >
+                  {t("select")}
+                </Button>
+              </ProductCard>
+            </div>
+          ))}
+        </div>
+      )}
     </DialogContent>
   );
 };

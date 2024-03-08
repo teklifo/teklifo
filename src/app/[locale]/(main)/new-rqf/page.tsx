@@ -33,7 +33,7 @@ const NewRFQ = async () => {
 
   return (
     <MaxWidthWrapper className="my-8">
-      <div className="space-y-2 mb-4">
+      <div className="space-y-2 mb-8">
         <h1 className="text-4xl font-bold tracking-tight">
           {t("newRFQTitle")}
         </h1>

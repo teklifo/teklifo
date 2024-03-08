@@ -154,7 +154,7 @@ export const getUserSchema = (t: TranslateFunction) => {
 export const getProductSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.number().optional(),
-    externalId: z.string().default(""),
+    externalId: z.string().default("").nullable(),
     name: z
       .string({
         required_error: t("invalidName"),
@@ -221,19 +221,22 @@ export const getRFQProductSchema = (t: TranslateFunction) => {
         required_error: t("invalidProductId"),
         invalid_type_error: t("invalidProductId"),
       })
-      .min(1, t("invalidProductId")),
+      .min(0.001, t("invalidProductId")),
+    product: getProductSchema(() => {
+      return "";
+    }).optional(),
     quantity: z.coerce
       .number({
         required_error: t("invalidQuantity"),
         invalid_type_error: t("invalidQuantity"),
       })
-      .min(1, t("invalidQuantity")),
+      .min(0.001, t("invalidQuantity")),
     price: z.coerce
       .number({
         required_error: t("invalidPrice"),
         invalid_type_error: t("invalidPrice"),
       })
-      .min(1, t("invalidPrice")),
+      .min(0.001, t("invalidPrice")),
     deliveryDate: z.coerce.date({
       errorMap: (issue, { defaultError }) => ({
         message:

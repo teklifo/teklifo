@@ -325,12 +325,22 @@
     "addRow": "Добавить позицию",
     "create": "Создать запрос цен",
     "update": "Обновить запрос цен",
-    "selectProduct": "Выбрать товар"
+    "selectProduct": "Выбрать товар",
+    "main": "Основное",
+    "products": "Товары",
+    "deleteRow": "Удалить строку",
+    "description": "Текстовое описание",
+    "startDate": "Период сбора предложений",
+    "additional": "Дополнительно",
+    "deliveryAddress": "Адрес доставки",
+    "deliveryTerms": "Условия доставки",
+    "paymentTerms": "Условия оплаты"
   },
   "ProductSelect": {
     "title": "Подбор товаров",
     "query": "Поиск",
-    "queryHint": "Введите наименование или номер товара..."
+    "queryHint": "Введите наименование или номер товара...",
+    "select": "Выбрать"
   },
   "Schemas": {
     "companySchema": {
