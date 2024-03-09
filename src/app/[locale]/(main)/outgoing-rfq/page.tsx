@@ -7,7 +7,7 @@ import type { RequestForQuotation as RequestForQuotationType } from "@prisma/cli
 import { Plus } from "lucide-react";
 import RFQCard from "../_components/rfq-card";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import Pagination from "@/components/ui/pagination";
+import PaginationBar from "@/components/ui/pagination-bar";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {
   isCompanyAdmin,
@@ -100,10 +100,7 @@ const RequestForQuotation = async ({ searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination
-          href={`/request-for-quotation?page=`}
-          pagination={pagination}
-        />
+        <PaginationBar href={`/outgoing-rfq?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>

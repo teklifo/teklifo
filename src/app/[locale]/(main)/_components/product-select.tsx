@@ -13,16 +13,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import PaginationBarClient from "@/components/ui/pagintion-bar-client";
 import request from "@/lib/request";
 import useDebounce from "@/hooks/useDebounce";
 import { ProductWithPricesAndStocks, PaginationType } from "@/types";
-import { Label } from "@radix-ui/react-label";
-import { Button } from "@/components/ui/button";
-
-type SearchParams = {
-  page?: number;
-  query?: string;
-};
 
 type PaginatedData = {
   result: ProductWithPricesAndStocks[];
@@ -39,6 +35,12 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState<ProductWithPricesAndStocks[]>([]);
+  const [pagination, setPagination] = useState<PaginationType>({
+    current: 1,
+    skipped: 0,
+    total: 0,
+  });
+  const [page, setPage] = useState(1);
 
   const debouncedValue = useDebounce(query);
 
@@ -54,7 +56,7 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
 
       const companyId = getCookie("user-company") || "";
       const queryParams = queryString.stringify({
-        page: 1,
+        page,
         query: debouncedValue,
       });
 
@@ -64,6 +66,7 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
           config
         );
         setProducts(resonse.result);
+        setPagination(resonse.pagination);
       } catch (error) {
         throw error;
       }
@@ -72,7 +75,7 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
     }
 
     getProducts();
-  }, [debouncedValue]);
+  }, [debouncedValue, page]);
 
   return (
     <DialogContent className="h-full flex flex-col md:h-[80vh]">
@@ -112,6 +115,12 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
               </ProductCard>
             </div>
           ))}
+          <PaginationBarClient
+            pagination={pagination}
+            onPageClick={(newPage) => {
+              setPage(newPage);
+            }}
+          />
         </div>
       )}
     </DialogContent>

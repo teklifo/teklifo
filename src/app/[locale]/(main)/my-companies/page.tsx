@@ -8,7 +8,7 @@ import { Plus } from "lucide-react";
 import getCurrentUser from "@/app/actions/get-current-user";
 import CompanyCard from "@/app/[locale]/(main)/_components/company-card";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import Pagination from "@/components/ui/pagination";
+import PaginationBar from "@/components/ui/pagination-bar";
 import { buttonVariants } from "@/components/ui/button";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
@@ -89,7 +89,7 @@ const UserCompaniesContent = ({
             <CompanyCard key={company.id} company={company} />
           ))}
         </div>
-        <Pagination href="/my-companies?page=" pagination={pagination} />
+        <PaginationBar href="/my-companies?page=" pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>

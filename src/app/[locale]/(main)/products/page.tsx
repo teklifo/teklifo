@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { Plus } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import ProductCard from "@/app/[locale]/(main)/_components/product-card";
-import Pagination from "@/components/ui/pagination";
+import PaginationBar from "@/components/ui/pagination-bar";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {
   isCompanyAdmin,
@@ -97,7 +97,7 @@ const Products = async ({ searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination href={`/products?page=`} pagination={pagination} />
+        <PaginationBar href={`/products?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>

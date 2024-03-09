@@ -195,7 +195,7 @@ const RFQProducts = ({
             <FormItem>
               <FormLabel>{t("comment")}</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
