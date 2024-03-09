@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { useTranslations, useLocale } from "next-intl";
-import type { Company as CompanyType } from "@prisma/client";
+import { useTranslations } from "next-intl";
+import type { RequestForQuotation as RequestForQuotationType } from "@prisma/client";
 import { ArrowRight } from "lucide-react";
 import {
   Card,
@@ -13,26 +13,19 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type CompanyCardProps = {
-  company: CompanyType;
+type RFQCardProps = {
+  rfq: RequestForQuotationType;
 };
 
-const CompanyCard = ({
-  company: { id, name, slogan, sloganRu },
-}: CompanyCardProps) => {
+const RFQCard = ({
+  rfq: { id, startDate, endDate, description },
+}: RFQCardProps) => {
   const t = useTranslations("Company");
-
-  const currentLocale = useLocale();
-
-  let description = slogan;
-  if (currentLocale === "ru" && sloganRu) {
-    description = sloganRu;
-  }
 
   return (
     <Card className="h-full w-full">
       <CardHeader>
-        <CardTitle>{name}</CardTitle>
+        <CardTitle>{id}</CardTitle>
         <CardDescription className="line-clamp-5 break-all">
           {description}
         </CardDescription>
@@ -40,7 +33,7 @@ const CompanyCard = ({
       <CardContent></CardContent>
       <CardFooter className="flex justify-between">
         <Link
-          href={`/company/${id}`}
+          href={`/rfq/${id}`}
           className={cn("space-x-2", buttonVariants({ variant: "default" }))}
         >
           <span>{t("more")}</span>
@@ -51,4 +44,4 @@ const CompanyCard = ({
   );
 };
 
-export default CompanyCard;
+export default RFQCard;

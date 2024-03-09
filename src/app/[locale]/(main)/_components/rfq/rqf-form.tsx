@@ -8,12 +8,13 @@ import type { Prisma } from "@prisma/client";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { addDays, format } from "date-fns";
-import { Plus, CalendarIcon } from "lucide-react";
+import { Plus, CalendarIcon, CheckCircle2 } from "lucide-react";
 import RFQProducts from "./rfq-products";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { getRFQSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
@@ -123,13 +125,34 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
     setLoading(false);
   };
 
+  console.log(form.formState.errors);
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
         <div className="space-y-4">
           <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
             {t("main")}
           </h3>
+          {/* Public */}
+          <FormField
+            control={form.control}
+            name="publicRequest"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm !mb-10">
+                <div className="space-y-0.5">
+                  <FormLabel>{t("makePublic")}</FormLabel>
+                  <FormDescription>{t("makePublicHint")}</FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
           {/* Period */}
           <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
             <FormField
@@ -218,7 +241,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               <FormItem>
                 <FormLabel>{t("currency")}</FormLabel>
                 <FormControl>
-                  <Input {...field} autoComplete="off" />
+                  <Input {...field} className="w-[240px]" autoComplete="off" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -239,9 +262,10 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             )}
           />
         </div>
+        {/* Products */}
         <div className="space-y-4">
           <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {t("products")}
+            {`${t("products")} (${form.getValues("products")?.length || 0})`}
           </h3>
           {products.fields.map((productField, index) => (
             <RFQProducts
@@ -317,8 +341,9 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             )}
           />
         </div>
-        <Button type="submit" disabled={loading} className="w-full">
-          {update ? t("update") : t("create")}
+        <Button type="submit" disabled={loading} className="w-full space-x-2">
+          <CheckCircle2 />
+          <span>{update ? t("update") : t("create")}</span>
         </Button>
       </form>
     </Form>

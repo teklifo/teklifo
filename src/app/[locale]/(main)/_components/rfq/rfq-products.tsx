@@ -100,18 +100,23 @@ const RFQProducts = ({
             )}
           </Tooltip>
         </div>
-        <Tooltip delayDuration={0}>
-          <TooltipTrigger asChild>
-            <Button type="button" variant="outline" onClick={removeProduct}>
-              <X className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" className="flex items-center gap-4">
-            {t("deleteRow")}
-          </TooltipContent>
-        </Tooltip>
+        <div className="space-x-4">
+          <span className="text-2xl font-semibold tracking-tight">
+            {`#${index + 1}`}
+          </span>
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button type="button" variant="outline" onClick={removeProduct}>
+                <X className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="flex items-center gap-4">
+              {t("deleteRow")}
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-2">
         <div className="flex flex-col space-x-0 space-y-4 md:flex-row md:justify-start md:space-y-0 md:space-x-8">
           {/* Quantity */}
           <FormField
@@ -182,6 +187,20 @@ const RFQProducts = ({
             )}
           />
         </div>
+        {/* Comment*/}
+        <FormField
+          control={form.control}
+          name={`products.${index}.comment`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("comment")}</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </CardContent>
     </Card>
   );

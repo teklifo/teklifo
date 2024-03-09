@@ -182,10 +182,12 @@ export const getProductsSchema = (t: TranslateFunction) => {
 export const getRFQSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.number().optional(),
-    publicRequest: z.boolean({
-      required_error: t("invalidPublicRequest"),
-      invalid_type_error: t("invalidPublicRequest"),
-    }),
+    publicRequest: z
+      .boolean({
+        required_error: t("invalidPublicRequest"),
+        invalid_type_error: t("invalidPublicRequest"),
+      })
+      .default(false),
     currency: z
       .string({
         required_error: t("invalidCurrency"),

@@ -3,8 +3,9 @@ import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Company as CompanyType } from "@prisma/client";
+import type { RequestForQuotation as RequestForQuotationType } from "@prisma/client";
 import { Plus } from "lucide-react";
+import RFQCard from "../_components/rfq-card";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Pagination from "@/components/ui/pagination";
 import { buttonVariants } from "@/components/ui/button";
@@ -23,7 +24,7 @@ type Props = {
 };
 
 type PaginatedData = {
-  result: CompanyType[];
+  result: RequestForQuotationType[];
   pagination: PaginationType;
 };
 
@@ -93,7 +94,9 @@ const RequestForQuotation = async ({ searchParams: { page } }: Props) => {
         {result.length > 0 && (
           <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {result.map((rfq) => (
-              <div key={rfq.id}>Hello</div>
+              <div key={rfq.id}>
+                <RFQCard rfq={rfq} />
+              </div>
             ))}
           </div>
         )}
