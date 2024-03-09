@@ -8,7 +8,7 @@ import type {
 import EditRole from "@/app/[locale]/(main)/roles/_components/edit-role";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
-import { getCurrentCompany } from "@/app/actions/get-current-company";
+import getCurrentCompany from "@/app/actions/get-current-company";
 
 type Props = {
   params: { locale: string };

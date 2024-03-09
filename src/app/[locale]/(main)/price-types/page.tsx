@@ -7,7 +7,7 @@ import PriceTypeForm from "./_components/price-type-form";
 import DeletePriceType from "./_components/delete-price-type";
 import { MoreHorizontal } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import Pagination from "@/components/ui/pagination";
+import PaginationBar from "@/components/ui/pagination-bar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,8 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  getCurrentCompany,
+import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
@@ -136,7 +135,7 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination href={`/price-types?page=`} pagination={pagination} />
+        <PaginationBar href={`/price-types?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>

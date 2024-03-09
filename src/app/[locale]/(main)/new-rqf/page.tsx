@@ -1,8 +1,13 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import CompanyForm from "@/app/[locale]/(main)/_components/company-form";
+import type {
+  Stock as StockType,
+  PriceType as PriceTypeType,
+} from "@prisma/client";
+import RFQForm from "@/app/[locale]/(main)/_components/rfq/rqf-form";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
 import getCurrentCompany from "@/app/actions/get-current-company";
 
 type Props = {
@@ -14,38 +19,29 @@ export const generateMetadata = async ({
 }: Props): Promise<Metadata> => {
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
-  const company = await getCurrentCompany();
-  if (!company)
-    return {
-      title: `${t("projectName")}`,
-      description: "",
-    };
-
   return {
-    title: t("updateCompanyTitle", { companyName: company.name }),
-    description: t("updateCompanyDescription"),
+    title: t("newRFQTitle"),
+    description: t("newRFQDescription"),
   };
 };
 
-const EditCompany = async () => {
+const NewRFQ = async () => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
-  const t = await getTranslations("CompanyForm");
+  const t = await getTranslations("RFQForm");
 
   return (
     <MaxWidthWrapper className="my-8">
-      <div className="space-y-2">
+      <div className="space-y-2 mb-8">
         <h1 className="text-4xl font-bold tracking-tight">
-          {t("updateTitle")}
+          {t("newRFQTitle")}
         </h1>
-        <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>
+        <p className="text-lg text-muted-foreground">{t("newRFQSubtitle")}</p>
       </div>
-      <div className="mt-4">
-        <CompanyForm company={company} />
-      </div>
+      <RFQForm />
     </MaxWidthWrapper>
   );
 };
 
-export default EditCompany;
+export default NewRFQ;

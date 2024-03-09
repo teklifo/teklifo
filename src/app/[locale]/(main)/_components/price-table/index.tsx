@@ -5,7 +5,7 @@ type Props = {
   prices: PriceType[];
 };
 
-const PriceTable = async ({ prices }: Props) => {
+const PriceTable = ({ prices }: Props) => {
   return (
     <div className="mx-auto">
       <DataTable columns={columns} data={prices} />

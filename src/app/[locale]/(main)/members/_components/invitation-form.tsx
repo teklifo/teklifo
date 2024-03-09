@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { CompanyRole, Invitation } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Plus } from "lucide-react";
+import { Plus, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -196,8 +196,13 @@ const InvitationForm = ({ companyId }: InvitationFormProps) => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={loading}>
-              {t("send")}
+            <Button
+              type="submit"
+              className="w-full space-x-2"
+              disabled={loading}
+            >
+              <span>{t("send")}</span>
+              <Send />
             </Button>
           </form>
         </Form>

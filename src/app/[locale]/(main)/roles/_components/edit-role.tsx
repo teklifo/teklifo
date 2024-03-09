@@ -26,7 +26,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { getCurrentCompany } from "@/app/actions/get-current-company";
 import { getRoleSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 

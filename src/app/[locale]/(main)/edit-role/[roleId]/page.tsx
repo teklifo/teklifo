@@ -9,7 +9,7 @@ import type {
 } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import EditRole from "@/app/[locale]/(main)/roles/_components/edit-role";
-import { getCurrentCompany } from "@/app/actions/get-current-company";
+import getCurrentCompany from "@/app/actions/get-current-company";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
 import request from "@/lib/request";
 

@@ -7,7 +7,7 @@ import type { CompanyRole as RoleType } from "@prisma/client";
 import { MoreHorizontal, Plus, Pencil } from "lucide-react";
 import DeleteRole from "./_components/delete-role";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import Pagination from "@/components/ui/pagination";
+import PaginationBar from "@/components/ui/pagination-bar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -20,8 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  getCurrentCompany,
+import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
@@ -140,7 +139,7 @@ const Roles = async ({ searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination href={`/roles?page=`} pagination={pagination} />
+        <PaginationBar href={`/roles?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>

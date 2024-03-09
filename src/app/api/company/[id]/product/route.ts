@@ -158,6 +158,24 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     const filters: Prisma.ProductWhereInput = {};
     filters.companyId = company.id;
+
+    const query = request.nextUrl.searchParams.get("query");
+    if (query)
+      filters.OR = [
+        {
+          name: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+        {
+          number: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+      ];
+
     if (!role.default) {
       // Display only products with prices
       filters.prices = {

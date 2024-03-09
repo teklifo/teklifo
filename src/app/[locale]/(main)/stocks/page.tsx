@@ -7,7 +7,7 @@ import { MoreHorizontal } from "lucide-react";
 import StockForm from "./_components/stock-form";
 import DeleteStock from "./_components/delete-stock";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import Pagination from "@/components/ui/pagination";
+import PaginationBar from "@/components/ui/pagination-bar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,8 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
-import {
-  getCurrentCompany,
+import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 
@@ -128,7 +127,7 @@ const Stocks = async ({ searchParams: { page } }: Props) => {
             ))}
           </div>
         )}
-        <Pagination href={`/stocks?page=`} pagination={pagination} />
+        <PaginationBar href={`/stocks?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>

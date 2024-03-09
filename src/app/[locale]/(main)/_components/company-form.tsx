@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Company as CompanyType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { CheckCircle2 } from "lucide-react";
 import { getCompanySchema } from "@/lib/schemas";
 import request from "@/lib/request";
 import { Button } from "@/components/ui/button";
@@ -122,7 +123,7 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             <FormItem>
               <FormLabel>{t("id")}</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -136,7 +137,7 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             <FormItem>
               <FormLabel>{t("name")}</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -150,7 +151,7 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             <FormItem>
               <FormLabel>{t("tin")}</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -184,7 +185,7 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
                 <FormItem>
                   <FormLabel>{t("slogan")}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} autoComplete="off" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -214,7 +215,7 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
                 <FormItem>
                   <FormLabel>{t("slogan")}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} autoComplete="off" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -222,8 +223,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             />
           </TabsContent>
         </Tabs>
-        <Button type="submit" disabled={isLoading}>
-          {update ? t("update") : t("create")}
+        <Button type="submit" disabled={isLoading} className="w-full space-x-2">
+          <CheckCircle2 />
+          <span>{update ? t("update") : t("create")}</span>
         </Button>
       </form>
     </Form>

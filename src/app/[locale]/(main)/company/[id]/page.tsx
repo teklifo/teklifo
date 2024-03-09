@@ -105,7 +105,7 @@ const Company = async ({ params: { locale, id } }: Props) => {
             href={`/company/${company.id}/edit`}
             className={cn("space-x-2", buttonVariants({ variant: "default" }))}
           >
-            <Pencil />
+            <Pencil className="h-4 w-4" />
             <span>{t("edit")}</span>
           </Link>
         )}

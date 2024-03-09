@@ -3,9 +3,10 @@ import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import type { RequestForQuotation as RequestForQuotationType } from "@prisma/client";
 import { Plus } from "lucide-react";
+import RFQCard from "../_components/rfq-card";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import ProductCard from "@/app/[locale]/(main)/_components/product-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {
@@ -13,7 +14,7 @@ import getCurrentCompany, {
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
-import { ProductWithPricesAndStocks, PaginationType } from "@/types";
+import { PaginationType } from "@/types";
 
 type Props = {
   params: { locale: string };
@@ -23,7 +24,7 @@ type Props = {
 };
 
 type PaginatedData = {
-  result: ProductWithPricesAndStocks[];
+  result: RequestForQuotationType[];
   pagination: PaginationType;
 };
 
@@ -33,19 +34,19 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("companyProductsTitle"),
-    description: t("companyProductsDescription"),
+    title: t("outgoingRfqTitle"),
+    description: t("outgoingRfqDescription"),
   };
 };
 
-const getCompanyProducts = async (companyId: string, page: number) => {
+const getCompanyRFQ = async (companyId: string, page: number) => {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/company/${companyId}/product?page=${page}&limit=10`,
+      `/api/rfq?companyId=${companyId}&page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -59,18 +60,18 @@ const getCompanyProducts = async (companyId: string, page: number) => {
   }
 };
 
-const Products = async ({ searchParams: { page } }: Props) => {
+const RequestForQuotation = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
   const isAdmin = await isCompanyAdmin(company.id);
 
-  const data = await getCompanyProducts(company.id, page ?? 1);
+  const data = await getCompanyRFQ(company.id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
 
-  const t = await getTranslations("CompanyProducts");
+  const t = await getTranslations("OutgoingRFQ");
 
   return (
     <MaxWidthWrapper className="mb-8">
@@ -81,7 +82,7 @@ const Products = async ({ searchParams: { page } }: Props) => {
         </div>
         {isAdmin && (
           <Link
-            href={`/new-product`}
+            href={`/new-rqf`}
             className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
           >
             <Plus />
@@ -91,17 +92,19 @@ const Products = async ({ searchParams: { page } }: Props) => {
       </div>
       <div className="mt-4">
         {result.length > 0 && (
-          <div className="flex flex-col space-y-3 pt-4">
-            {result.map((product) => (
-              <ProductCard key={product.id} product={product} />
+          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {result.map((rfq) => (
+              <div key={rfq.id}>
+                <RFQCard rfq={rfq} />
+              </div>
             ))}
           </div>
         )}
-        <PaginationBar href={`/products?page=`} pagination={pagination} />
+        <PaginationBar href={`/outgoing-rfq?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>
   );
 };
 
-export default Products;
+export default RequestForQuotation;
