@@ -92,7 +92,7 @@ const RequestForQuotation = async ({ searchParams: { page } }: Props) => {
       </div>
       <div className="mt-4">
         {result.length > 0 && (
-          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3">
             {result.map((rfq) => (
               <div key={rfq.id}>
                 <RFQCard rfq={rfq} />
