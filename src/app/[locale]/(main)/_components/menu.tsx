@@ -23,7 +23,7 @@ type MenuProps = {
 };
 
 const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
-  const t = useTranslations("Company");
+  const t = useTranslations("Layout");
 
   return (
     <>
