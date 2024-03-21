@@ -28,7 +28,7 @@ const NewCompany = async () => {
         <h1 className="text-4xl font-bold tracking-tight">
           {t("createTitle")}
         </h1>
-        <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>
+        <p className="text-lg text-muted-foreground">{t("createSubtitle")}</p>
       </div>
       <div className="mt-4">
         <CompanyForm />

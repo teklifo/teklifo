@@ -237,7 +237,8 @@ model ExchangeJob {
 }
 
 model RequestForQuotation {
-  id              Int                           @id @default(autoincrement())
+  id              String                        @id @default(cuid())
+  number          Int                           @default(autoincrement())
   company         Company?                      @relation(fields: [companyId], references: [id], onDelete: SetNull)
   companyId       String?
   user            User?                         @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -260,7 +261,7 @@ model RequestForQuotation {
 model RequestForQuotationProducts {
   id                    String              @id @default(cuid())
   requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [id], onDelete: Cascade)
-  requestForQuotationId Int
+  requestForQuotationId String
   product               Product?            @relation(fields: [productId], references: [id], onDelete: SetNull)
   productId             Int?
   comment               String
@@ -271,7 +272,7 @@ model RequestForQuotationProducts {
 
 model Participants {
   requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [id], onDelete: Cascade)
-  requestForQuotationId Int
+  requestForQuotationId String
   company               Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId             String
 

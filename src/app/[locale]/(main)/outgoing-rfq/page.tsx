@@ -60,7 +60,7 @@ const getCompanyRFQ = async (companyId: string, page: number) => {
   }
 };
 
-const RequestForQuotation = async ({ searchParams: { page } }: Props) => {
+const OutgoingRFQ = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
@@ -94,9 +94,7 @@ const RequestForQuotation = async ({ searchParams: { page } }: Props) => {
         {result.length > 0 && (
           <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3">
             {result.map((rfq) => (
-              <div key={rfq.id}>
-                <RFQCard rfq={rfq} />
-              </div>
+              <RFQCard key={rfq.id} rfq={rfq} />
             ))}
           </div>
         )}
@@ -107,4 +105,4 @@ const RequestForQuotation = async ({ searchParams: { page } }: Props) => {
   );
 };
 
-export default RequestForQuotation;
+export default OutgoingRFQ;

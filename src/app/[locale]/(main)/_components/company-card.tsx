@@ -24,20 +24,21 @@ const CompanyCard = ({
 
   const currentLocale = useLocale();
 
-  let description = slogan;
+  let sloganText = slogan;
   if (currentLocale === "ru" && sloganRu) {
-    description = sloganRu;
+    sloganText = sloganRu;
   }
 
   return (
     <Card className="h-full w-full">
       <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription className="line-clamp-5 break-all">
-          {description}
-        </CardDescription>
+        <CardTitle className="line-clamp-1">{name}</CardTitle>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent className="h-[150px]">
+        <p className="line-clamp-5 break-words">
+          {sloganText || t("noSlogan")}
+        </p>
+      </CardContent>
       <CardFooter className="flex justify-between">
         <Link
           href={`/company/${id}`}

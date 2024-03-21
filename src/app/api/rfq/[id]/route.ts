@@ -11,43 +11,30 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find user
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
-    }
-
-    if (!user.email) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("noEmail") }],
-        },
-        { status: 400 }
-      );
-    }
-
-    // Find invitation
-    const invitation = await db.invitation.findUnique({
-      where: { id, email: user.email },
+    const rfq = await db.requestForQuotation.findUnique({
+      where: { id },
       include: {
         company: true,
+        products: {
+          include: {
+            product: true,
+          },
+        },
+        participants: true,
       },
     });
-    if (!invitation) {
+
+    // RFQ not found
+    if (!rfq) {
       return NextResponse.json(
         {
-          errors: [{ message: t("invalidInvitationId") }],
+          errors: [{ message: t("invalidRFQId") }],
         },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(invitation);
+    return NextResponse.json(rfq);
   } catch (error) {
     console.log(error);
     return NextResponse.json(
