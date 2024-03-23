@@ -69,7 +69,7 @@ const getRole = async (companyId: string, roleId: string) => {
 
 const UpdateForm = async ({ params: { roleId } }: Props) => {
   const company = await getCurrentCompany();
-  if (!company) return null;
+  if (!company) return notFound();
 
   const role = await getRole(company.id, roleId);
   if (!role) return notFound();

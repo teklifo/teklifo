@@ -198,7 +198,7 @@ const RFQ = async ({ params: { id } }: Props) => {
           product={product}
         />
       ))}
-      {(paymentTerms || deliveryTerms || deliveryAddress || true) && (
+      {(paymentTerms || deliveryTerms || deliveryAddress) && (
         <>
           <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
             {t("additional")}

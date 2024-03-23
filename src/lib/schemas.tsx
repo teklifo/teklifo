@@ -214,6 +214,7 @@ export const getRFQSchema = (t: TranslateFunction) => {
 
 export const getRFQProductSchema = (t: TranslateFunction) => {
   return z.object({
+    id: z.string().optional(),
     productId: z.coerce
       .number({
         required_error: t("invalidProductId"),
