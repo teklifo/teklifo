@@ -260,6 +260,7 @@ model RequestForQuotation {
 
 model RequestForQuotationProducts {
   id                    String              @id @default(cuid())
+  externalId           String?             
   requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [id], onDelete: Cascade)
   requestForQuotationId String
   product               Product?            @relation(fields: [productId], references: [id], onDelete: SetNull)

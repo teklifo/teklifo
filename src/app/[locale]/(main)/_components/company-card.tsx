@@ -18,7 +18,7 @@ type CompanyCardProps = {
 };
 
 const CompanyCard = ({
-  company: { id, name, slogan, sloganRu },
+  company: { id, tin, name, slogan, sloganRu },
 }: CompanyCardProps) => {
   const t = useTranslations("Company");
 
@@ -33,6 +33,7 @@ const CompanyCard = ({
     <Card className="h-full w-full">
       <CardHeader>
         <CardTitle className="line-clamp-1">{name}</CardTitle>
+        <CardDescription>{`${t("tin")}: ${tin}`}</CardDescription>
       </CardHeader>
       <CardContent className="h-[150px]">
         <p className="line-clamp-5 break-words">

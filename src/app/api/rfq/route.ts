@@ -78,6 +78,7 @@ export async function POST(request: NextRequest) {
         paymentTerms,
         products: {
           create: products.map((product) => ({
+            externalid: product.externalId,
             productId: product.productId,
             price: product.price,
             quantity: product.quantity,

@@ -164,6 +164,7 @@ export async function PUT(request: NextRequest) {
           create: {
             requestForQuotationId: updatedRfq.id,
             productId: product.productId,
+            externalId: product.externalId,
             price: product.price,
             quantity: product.quantity,
             deliveryDate: product.deliveryDate,
@@ -171,6 +172,7 @@ export async function PUT(request: NextRequest) {
           },
           update: {
             productId: product.productId,
+            externalId: product.externalId,
             price: product.price,
             quantity: product.quantity,
             deliveryDate: product.deliveryDate,

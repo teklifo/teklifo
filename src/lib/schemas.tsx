@@ -26,8 +26,8 @@ export const getCompanySchema = (t: TranslateFunction) => {
       }),
     description: z.string().default(""),
     descriptionRu: z.string().default(""),
-    slogan: z.string().default(""),
-    sloganRu: z.string().default(""),
+    slogan: z.string().max(100, t("invalidSloganLenght")).default(""),
+    sloganRu: z.string().max(100, t("invalidSloganLenght")).default(""),
   });
 };
 
@@ -215,6 +215,7 @@ export const getRFQSchema = (t: TranslateFunction) => {
 export const getRFQProductSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.string().optional(),
+    externalId: z.string().optional(),
     productId: z.coerce
       .number({
         required_error: t("invalidProductId"),
