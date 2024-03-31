@@ -43,8 +43,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <Navbar />
-
+      <Navbar defaultCompany={defaultCompany} userCompanies={userCompanies} />
       <ResizableLayout
         defaultLayout={defaultLayout}
         defaultCollapsed={defaultCollapsed}

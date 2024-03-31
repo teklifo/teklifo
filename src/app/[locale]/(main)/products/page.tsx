@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Plus } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -79,22 +80,36 @@ const Products = async ({ searchParams: { page } }: Props) => {
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        {isAdmin && (
-          <Link
-            href={`/new-product`}
-            className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
-          >
-            <Plus />
-            <span>{t("new")}</span>
-          </Link>
-        )}
+        {isAdmin && <NewProductLink />}
       </div>
       <div className="mt-4">
-        {result.length > 0 && (
+        {result.length > 0 ? (
           <div className="flex flex-col space-y-3 pt-4">
             {result.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
+          </div>
+        ) : (
+          <div className="my-8 flex flex-col justify-center items-center space-y-4 text-center">
+            <Image
+              src="/illustrations/not-found.svg"
+              alt="No products"
+              priority
+              width="600"
+              height="600"
+              className="mb-4"
+            />
+            <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("noProducts")}
+            </h2>
+            {isAdmin && (
+              <>
+                <span className="block text-xl text-muted-foreground">
+                  {t("noProductsHint")}
+                </span>
+                <NewProductLink />
+              </>
+            )}
           </div>
         )}
         <PaginationBar href={`/products?page=`} pagination={pagination} />
@@ -103,5 +118,19 @@ const Products = async ({ searchParams: { page } }: Props) => {
     </MaxWidthWrapper>
   );
 };
+
+async function NewProductLink() {
+  const t = await getTranslations("CompanyProducts");
+
+  return (
+    <Link
+      href={`/new-product`}
+      className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
+    >
+      <Plus />
+      <span>{t("new")}</span>
+    </Link>
+  );
+}
 
 export default Products;

@@ -10,8 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn, getAvatarFallback } from "@/lib/utils";
 
 type CompanySwitcherProps = {
   isCollapsed: boolean;
@@ -25,12 +25,6 @@ const CompanySwitcher = ({
   userCompanies,
 }: CompanySwitcherProps) => {
   const router = useRouter();
-
-  let avatarFallback = "T";
-  const match = defaultCompany.name.match(/[a-zA-Zа-яА-Я]/);
-  if (match) {
-    avatarFallback = match[0].toUpperCase();
-  }
 
   const switchToACompany = (value: string) => {
     const company = userCompanies.find((company) => company.id === value);
@@ -50,7 +44,9 @@ const CompanySwitcher = ({
       >
         <SelectValue>
           <Avatar className="h-7 w-7">
-            <AvatarFallback>{avatarFallback}</AvatarFallback>
+            <AvatarFallback>
+              {getAvatarFallback(defaultCompany.name)}
+            </AvatarFallback>
           </Avatar>
           <span className={cn("ml-2", isCollapsed && "hidden")}>
             {

@@ -24,15 +24,10 @@ export const getCompanySchema = (t: TranslateFunction) => {
       .refine((data) => /^\d+$/.test(data), {
         message: t("numericTin"),
       }),
-    description: z
-      .string({
-        required_error: t("invalidDescription"),
-        invalid_type_error: t("invalidDescription"),
-      })
-      .min(50, t("invalidDescription")),
+    description: z.string().default(""),
     descriptionRu: z.string().default(""),
-    slogan: z.string().default(""),
-    sloganRu: z.string().default(""),
+    slogan: z.string().max(100, t("invalidSloganLenght")).default(""),
+    sloganRu: z.string().max(100, t("invalidSloganLenght")).default(""),
   });
 };
 
@@ -181,7 +176,8 @@ export const getProductsSchema = (t: TranslateFunction) => {
 
 export const getRFQSchema = (t: TranslateFunction) => {
   return z.object({
-    id: z.number().optional(),
+    id: z.string().optional(),
+    number: z.number().optional(),
     publicRequest: z
       .boolean({
         required_error: t("invalidPublicRequest"),
@@ -218,6 +214,8 @@ export const getRFQSchema = (t: TranslateFunction) => {
 
 export const getRFQProductSchema = (t: TranslateFunction) => {
   return z.object({
+    id: z.string().optional(),
+    externalId: z.string().optional(),
     productId: z.coerce
       .number({
         required_error: t("invalidProductId"),

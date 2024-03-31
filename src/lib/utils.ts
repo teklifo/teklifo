@@ -40,3 +40,12 @@ export function getErrorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error);
 }
+
+export function getAvatarFallback(text: string) {
+  let avatarFallback = "T";
+  const match = text.match(/[a-zA-Zа-яА-Я]/);
+  if (match) {
+    avatarFallback = match[0].toUpperCase();
+  }
+  return avatarFallback;
+}

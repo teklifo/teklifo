@@ -1,7 +1,5 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
 import { NextIntlClientProvider, useMessages } from "next-intl";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";

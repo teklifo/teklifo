@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Prisma } from "@prisma/client";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Plus, CalendarIcon, CheckCircle2 } from "lucide-react";
 import RFQProducts from "./rfq-products";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,13 @@ import request from "@/lib/request";
 import { cn } from "@/lib/utils";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
-  include: { products: true };
+  include: {
+    products: {
+      include: {
+        product: true;
+      };
+    };
+  };
 }>;
 
 type RFQFormProps = {
@@ -56,6 +62,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: rfq?.id,
       publicRequest: rfq?.publicRequest,
       currency: rfq?.currency,
       startDate: rfq?.startDate,
@@ -64,13 +71,15 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
       deliveryAddress: rfq?.deliveryAddress,
       deliveryTerms: rfq?.deliveryTerms,
       paymentTerms: rfq?.paymentTerms,
-      products: rfq?.products.map((product) => {
+      products: rfq?.products.map((item) => {
         return {
-          productId: product.productId ?? undefined,
-          quantity: product.quantity.toNumber(),
-          price: product.price.toNumber(),
-          deliveryDate: product.deliveryDate,
-          comment: product.comment,
+          id: item.id,
+          productId: item.productId ?? undefined,
+          product: item.product || undefined,
+          quantity: Number(item.quantity),
+          price: Number(item.price),
+          deliveryDate: item.deliveryDate,
+          comment: item.comment,
         };
       }),
     },
@@ -95,22 +104,24 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
 
     try {
       if (update) {
-        await request<RFQType>(`/api/rfq/${rfq.id}`, config);
+        const updatedRfq = await request<RFQType>(`/api/rfq/${rfq.id}`, config);
 
         toast({
           title: t("rfqIsUpdated"),
           description: t("rfqIsUpdatedHint"),
         });
+
+        window.location.href = `/rfq/${updatedRfq.id}`;
       } else {
-        await request<RFQType>(`/api/rfq/`, config);
+        const newRfq = await request<RFQType>(`/api/rfq/`, config);
 
         toast({
           title: t("newRFQIsCreated"),
           description: t("newRFQHint"),
         });
-      }
 
-      window.location.href = `/outgoing-rfq`;
+        window.location.href = `/rfq/${newRfq.id}`;
+      }
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;
@@ -124,8 +135,6 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
 
     setLoading(false);
   };
-
-  console.log(form.formState.errors);
 
   return (
     <Form {...form}>

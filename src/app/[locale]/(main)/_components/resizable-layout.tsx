@@ -1,26 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
 import { deleteCookie, setCookie } from "cookies-next";
-import { Separator } from "@radix-ui/react-dropdown-menu";
-import {
-  LayoutGrid,
-  Settings2,
-  Users,
-  ShoppingCart,
-  Warehouse,
-  Coins,
-  FileText,
-} from "lucide-react";
 import { Company as CompanyType } from "@prisma/client";
+import Menu from "./menu";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import Nav from "./nav";
-import CompanySwitcher from "./company-switcher";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -39,8 +27,6 @@ const ResizableLayout = ({
   userCompanies,
   children,
 }: ResizableLayoutProps) => {
-  const t = useTranslations("Company");
-
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
   useEffect(() => {
@@ -75,84 +61,18 @@ const ResizableLayout = ({
             setCookie("react-resizable-panels:collapsed", false);
           }}
           className={cn(
+            "hidden 2xl:block",
             isCollapsed &&
               "min-w-[50px] transition-all duration-300 ease-in-out"
           )}
         >
-          <div
-            className={cn(
-              "flex h-[52px] items-center justify-center mt-2",
-              isCollapsed ? "h-[52px]" : "px-2"
-            )}
-          >
-            <CompanySwitcher
-              isCollapsed={isCollapsed}
-              defaultCompany={defaultCompany}
-              userCompanies={userCompanies}
-            />
-          </div>
-          <Separator />
-          <Nav
+          <Menu
             isCollapsed={isCollapsed}
-            links={[
-              {
-                title: t("outgoingRfq"),
-                label: "",
-                icon: FileText,
-                href: `/outgoing-rfq`,
-              },
-            ]}
-          />
-          <Separator />
-          <Nav
-            isCollapsed={isCollapsed}
-            links={[
-              {
-                title: t("products"),
-                label: "",
-                icon: ShoppingCart,
-                href: `/products`,
-              },
-              {
-                title: t("stocks"),
-                label: "",
-                icon: Warehouse,
-                href: `/stocks`,
-              },
-              {
-                title: t("priceTypes"),
-                label: "",
-                icon: Coins,
-                href: `/price-types`,
-              },
-            ]}
-          />
-          <Separator />
-          <Nav
-            isCollapsed={isCollapsed}
-            links={[
-              {
-                title: t("main"),
-                label: "",
-                icon: LayoutGrid,
-                href: `/dashboard`,
-              },
-              {
-                title: t("roles"),
-                label: "",
-                icon: Settings2,
-                href: `/roles`,
-              },
-              {
-                title: t("members"),
-                label: "",
-                icon: Users,
-                href: `/members`,
-              },
-            ]}
+            defaultCompany={defaultCompany}
+            userCompanies={userCompanies}
           />
         </ResizablePanel>
-        <ResizableHandle withHandle />
+        <ResizableHandle withHandle className="hidden 2xl:flex" />
         <ResizablePanel
           defaultSize={defaultLayout[1]}
           minSize={30}

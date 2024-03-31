@@ -84,7 +84,7 @@ const UserCompaniesContent = ({
         </Link>
       </div>
       <div>
-        <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3">
           {result.map((company) => (
             <CompanyCard key={company.id} company={company} />
           ))}

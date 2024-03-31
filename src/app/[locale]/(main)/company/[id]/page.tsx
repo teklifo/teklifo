@@ -102,7 +102,7 @@ const Company = async ({ params: { locale, id } }: Props) => {
         </div>
         {isAdmin && (
           <Link
-            href={`/company/${company.id}/edit`}
+            href={`/edit-company`}
             className={cn("space-x-2", buttonVariants({ variant: "default" }))}
           >
             <Pencil className="h-4 w-4" />

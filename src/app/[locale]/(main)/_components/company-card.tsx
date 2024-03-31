@@ -18,26 +18,28 @@ type CompanyCardProps = {
 };
 
 const CompanyCard = ({
-  company: { id, name, slogan, sloganRu },
+  company: { id, tin, name, slogan, sloganRu },
 }: CompanyCardProps) => {
   const t = useTranslations("Company");
 
   const currentLocale = useLocale();
 
-  let description = slogan;
+  let sloganText = slogan;
   if (currentLocale === "ru" && sloganRu) {
-    description = sloganRu;
+    sloganText = sloganRu;
   }
 
   return (
     <Card className="h-full w-full">
       <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription className="line-clamp-5 break-all">
-          {description}
-        </CardDescription>
+        <CardTitle className="line-clamp-1">{name}</CardTitle>
+        <CardDescription>{`${t("tin")}: ${tin}`}</CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent className="h-[150px]">
+        <CardDescription className="line-clamp-5 break-words">
+          {sloganText || t("noSlogan")}
+        </CardDescription>
+      </CardContent>
       <CardFooter className="flex justify-between">
         <Link
           href={`/company/${id}`}

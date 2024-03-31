@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import Image from "next/image";
 import type { PriceType as PriceTypeType } from "@prisma/client";
 import PriceTypeForm from "./_components/price-type-form";
 import DeletePriceType from "./_components/delete-price-type";
@@ -93,7 +94,7 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
         {isAdmin && <PriceTypeForm companyId={company.id} />}
       </div>
       <div className="mt-4">
-        {result.length > 0 && (
+        {result.length > 0 ? (
           <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
             {result.map((priceType) => (
               <Card key={priceType.id} className="h-full w-full">
@@ -133,6 +134,28 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
                 </CardHeader>
               </Card>
             ))}
+          </div>
+        ) : (
+          <div className="my-8 flex flex-col justify-center items-center space-y-4 text-center">
+            <Image
+              src="/illustrations/not-found.svg"
+              alt="No price types"
+              priority
+              width="600"
+              height="600"
+              className="mb-4"
+            />
+            <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("noPriceTypes")}
+            </h2>
+            {isAdmin && (
+              <>
+                <span className="block text-xl text-muted-foreground">
+                  {t("noPriceTypesHint")}
+                </span>
+                <PriceTypeForm companyId={company.id} />
+              </>
+            )}
           </div>
         )}
         <PaginationBar href={`/price-types?page=`} pagination={pagination} />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { RequestForQuotation as RequestForQuotationType } from "@prisma/client";
+import { format } from "date-fns";
 import { ArrowRight } from "lucide-react";
 import {
   Card,
@@ -18,19 +19,34 @@ type RFQCardProps = {
 };
 
 const RFQCard = ({
-  rfq: { id, startDate, endDate, description },
+  rfq: { id, number, startDate, endDate, publicRequest, description },
 }: RFQCardProps) => {
-  const t = useTranslations("Company");
+  const t = useTranslations("RFQ");
 
   return (
     <Card className="h-full w-full">
       <CardHeader>
-        <CardTitle>{id}</CardTitle>
-        <CardDescription className="line-clamp-5 break-all">
-          {description}
-        </CardDescription>
+        <CardTitle className="line-clamp-1">{`${t(
+          "rfq"
+        )} #${number}`}</CardTitle>
+        <div className="text-sm text-muted-foreground line-clamp-5 break-words space-y-1">
+          <span>{publicRequest ? t("public") : t("private")}</span>
+          <div className="flex flex-row space-x-2">
+            <span className="font-bold">{`${t("period")}:`}</span>
+            <span>
+              {`${format(startDate, "dd.MM.yyyy")} - ${format(
+                endDate,
+                "dd.MM.yyyy"
+              )}`}
+            </span>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent className="h-[150px]">
+        <CardDescription className="line-clamp-5 break-words">
+          {description || t("noDescription")}
+        </CardDescription>
+      </CardContent>
       <CardFooter className="flex justify-between">
         <Link
           href={`/rfq/${id}`}
