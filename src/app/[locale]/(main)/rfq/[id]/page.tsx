@@ -26,6 +26,7 @@ import getCurrentCompany from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
 import { RFQProductCard } from "./_components/rfq-product-card";
+import DeleteRFQ from "./_components/delete-rfq";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -114,13 +115,19 @@ const RFQ = async ({ params: { id } }: Props) => {
           "rfq"
         )} #${number}`}</h1>
         {userOwnsRFQ && isAdmin && (
-          <Link
-            href={`/edit-rfq/${rfq.id}`}
-            className={cn("space-x-2", buttonVariants({ variant: "default" }))}
-          >
-            <Pencil className="h-4 w-4" />
-            <span>{t("edit")}</span>
-          </Link>
+          <div className="flex space-x-2">
+            <Link
+              href={`/edit-rfq/${rfq.id}`}
+              className={cn(
+                "space-x-2",
+                buttonVariants({ variant: "default" })
+              )}
+            >
+              <Pencil className="h-4 w-4" />
+              <span>{t("edit")}</span>
+            </Link>
+            <DeleteRFQ rfq={rfq} />
+          </div>
         )}
       </div>
       <div>

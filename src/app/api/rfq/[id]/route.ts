@@ -221,3 +221,77 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest, { params: { id } }: Props) {
+  const { t } = await getTranslationsFromHeader(request.headers);
+
+  try {
+    // Find company
+    const company = await getCurrentCompany();
+    if (!company) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("invalidCompanyId") }],
+        },
+        { status: 404 }
+      );
+    }
+
+    const isAdmin = await isCompanyAdmin(company.id);
+    if (!isAdmin) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("notAllowed") }],
+        },
+        { status: 401 }
+      );
+    }
+
+    const rfq = await db.requestForQuotation.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        products: {
+          include: {
+            product: true,
+          },
+        },
+        participants: true,
+      },
+    });
+
+    // RFQ not found
+    if (!rfq) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("invalidRFQId") }],
+        },
+        { status: 404 }
+      );
+    }
+
+    if (rfq.companyId !== company.id) {
+      return NextResponse.json(
+        {
+          errors: [{ message: t("notAllowed") }],
+        },
+        { status: 401 }
+      );
+    }
+
+    // Delete RFQ
+    await db.requestForQuotation.delete({
+      where: {
+        id: rfq.id,
+      },
+    });
+
+    return NextResponse.json({ message: t("rfqDeleted") });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { errors: [{ message: t("serverError") }] },
+      { status: 500 }
+    );
+  }
+}

@@ -36,9 +36,9 @@ const CompanyCard = ({
         <CardDescription>{`${t("tin")}: ${tin}`}</CardDescription>
       </CardHeader>
       <CardContent className="h-[150px]">
-        <p className="line-clamp-5 break-words">
+        <CardDescription className="line-clamp-5 break-words">
           {sloganText || t("noSlogan")}
-        </p>
+        </CardDescription>
       </CardContent>
       <CardFooter className="flex justify-between">
         <Link

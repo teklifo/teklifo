@@ -29,7 +29,7 @@ const RFQCard = ({
         <CardTitle className="line-clamp-1">{`${t(
           "rfq"
         )} #${number}`}</CardTitle>
-        <CardDescription className="line-clamp-5 break-words space-y-1">
+        <div className="text-sm text-muted-foreground line-clamp-5 break-words space-y-1">
           <span>{publicRequest ? t("public") : t("private")}</span>
           <div className="flex flex-row space-x-2">
             <span className="font-bold">{`${t("period")}:`}</span>
@@ -40,12 +40,12 @@ const RFQCard = ({
               )}`}
             </span>
           </div>
-        </CardDescription>
+        </div>
       </CardHeader>
       <CardContent className="h-[150px]">
-        <p className="line-clamp-5 break-words">
+        <CardDescription className="line-clamp-5 break-words">
           {description || t("noDescription")}
-        </p>
+        </CardDescription>
       </CardContent>
       <CardFooter className="flex justify-between">
         <Link
