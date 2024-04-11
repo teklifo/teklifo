@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
 import { format } from "date-fns";
@@ -14,6 +13,7 @@ import {
   CircleDollarSign,
   Building2,
 } from "lucide-react";
+import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -95,6 +95,14 @@ const RFQ = async ({ params: { id } }: Props) => {
 
   const userOwnsRFQ = rfq.companyId === userCompany?.id;
 
+  if (
+    !userOwnsRFQ &&
+    !rfq.publicRequest &&
+    !rfq.participants.find((e) => e.companyId === userCompany?.id)
+  ) {
+    redirect(`/supplier-guide/${rfq.id}`);
+  }
+
   const {
     number,
     description,
@@ -109,7 +117,7 @@ const RFQ = async ({ params: { id } }: Props) => {
   } = rfq;
 
   return (
-    <MaxWidthWrapper className="mb-8 space-y-6">
+    <MaxWidthWrapper className="my-8 space-y-6">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <h1 className="text-4xl font-bold tracking-tight">{`${t(
           "rfq"

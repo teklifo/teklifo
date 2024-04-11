@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import type { User as UserType, Company as CompanyType } from "@prisma/client";
 import { Building2, Settings, LogOut } from "lucide-react";
+import { Link } from "@/navigation";
 import Menu from "./menu";
 import Nav from "./nav";
 import { Button } from "@/components/ui/button";

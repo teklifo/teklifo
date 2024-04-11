@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import type { Company as CompanyType } from "@prisma/client";
 import { ArrowRight } from "lucide-react";
+import { Link } from "@/navigation";
 import {
   Card,
   CardContent,

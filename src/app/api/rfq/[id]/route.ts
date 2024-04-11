@@ -159,7 +159,7 @@ export async function PUT(request: NextRequest) {
       products.map(async (product) => {
         return await db.requestForQuotationProducts.upsert({
           where: {
-            id: product.id,
+            id: product.id ?? "",
           },
           create: {
             requestForQuotationId: updatedRfq.id,

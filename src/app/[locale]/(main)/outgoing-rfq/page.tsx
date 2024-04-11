@@ -1,11 +1,11 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import type { RequestForQuotation as RequestForQuotationType } from "@prisma/client";
 import { Plus } from "lucide-react";
+import { Link } from "@/navigation";
 import RFQCard from "../_components/rfq-card";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PaginationBar from "@/components/ui/pagination-bar";
@@ -75,7 +75,7 @@ const OutgoingRFQ = async ({ searchParams: { page } }: Props) => {
   const t = await getTranslations("OutgoingRFQ");
 
   return (
-    <MaxWidthWrapper className="mb-8">
+    <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
