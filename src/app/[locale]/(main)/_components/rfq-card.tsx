@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { RequestForQuotation as RequestForQuotationType } from "@prisma/client";
 import { format } from "date-fns";
 import { ArrowRight } from "lucide-react";
+import { Link } from "@/navigation";
 import {
   Card,
   CardContent,

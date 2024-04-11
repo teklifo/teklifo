@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { CompanyRole as RoleType } from "@prisma/client";
 import { MoreHorizontal, Plus, Pencil } from "lucide-react";
+import { Link } from "@/navigation";
 import DeleteRole from "./_components/delete-role";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PaginationBar from "@/components/ui/pagination-bar";
@@ -85,7 +85,7 @@ const Roles = async ({ searchParams: { page } }: Props) => {
   const t = await getTranslations("Role");
 
   return (
-    <MaxWidthWrapper className="mb-8">
+    <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>

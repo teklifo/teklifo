@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
 import { Pencil } from "lucide-react";
+import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -91,7 +91,7 @@ const Company = async ({ params: { locale, id } }: Props) => {
   let { description, slogan } = getLocalizedProperties(company, locale);
 
   return (
-    <MaxWidthWrapper className="mb-8 space-y-4">
+    <MaxWidthWrapper className="my-8 space-y-4">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">{company.name}</h1>

@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { Company as CompanyType } from "@prisma/client";
 import { Plus } from "lucide-react";
+import { Link } from "@/navigation";
 import getCurrentUser from "@/app/actions/get-current-user";
 import CompanyCard from "@/app/[locale]/(main)/_components/company-card";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -69,7 +69,7 @@ const UserCompaniesContent = ({
   const t = useTranslations("MyCompanies");
 
   return (
-    <MaxWidthWrapper className="mt-8 space-y-4">
+    <MaxWidthWrapper className="my-8 space-y-4">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>

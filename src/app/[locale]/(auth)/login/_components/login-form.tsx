@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import getAuthCallbackUrl from "@/app/actions/get-auth-callback-url";
 
 const LoginForm = () => {
   const t = useTranslations("Login");
@@ -39,10 +40,12 @@ const LoginForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
 
+    const callbackUrl = await getAuthCallbackUrl(values.email);
+
     const result = await signIn("email", {
+      callbackUrl,
       email: values.email,
       redirect: true,
-      callbackUrl: "/",
     });
 
     if (result && result.error) {

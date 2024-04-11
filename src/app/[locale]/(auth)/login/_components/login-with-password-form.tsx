@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import getAuthCallbackUrl from "@/app/actions/get-auth-callback-url";
 import { getCredentialsSchema } from "@/lib/schemas";
 
 const LoginWithPasswordForm = () => {
@@ -40,7 +41,10 @@ const LoginWithPasswordForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
 
+    const callbackUrl = await getAuthCallbackUrl(values.email);
+
     const result = await signIn("credentials", {
+      callbackUrl,
       email: values.email,
       password: values.password,
       redirect: false,

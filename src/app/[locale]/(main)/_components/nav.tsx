@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { LucideIcon } from "lucide-react";
 import { usePathname } from "@/navigation";
 import { cn } from "@/lib/utils";
+import { Link } from "@/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
