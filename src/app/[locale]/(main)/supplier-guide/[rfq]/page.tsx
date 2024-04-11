@@ -81,7 +81,7 @@ const SupplierGuide = async ({ params: { rfq } }: Props) => {
               )}
 
               <div className="flex justify-center items-center w-full">
-                <ConfirmParticipation rfq={rfq} />
+                <ConfirmParticipation rfq={rfq} company={company} />
               </div>
             </div>
           </div>
