@@ -83,7 +83,7 @@ const EditRFQ = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight">
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("updateTitle", { number: rfq.number })}
         </h1>
         <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>

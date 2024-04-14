@@ -47,7 +47,7 @@ const NewRole = async () => {
   return (
     <MaxWidthWrapper className="my-8">
       <div className="space-y-2 mb-4">
-        <h1 className="text-4xl font-bold tracking-tight">
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("newRoleTitle", { companyName: company.name })}
         </h1>
         <p className="text-lg text-muted-foreground">{t("newRoleSubtitle")}</p>

@@ -29,12 +29,11 @@ export const RFQProductCard = async ({
   return (
     <Card className="h-full w-full">
       <CardHeader className="flex flex-col justify-between space-y-0">
-        <div className="flex flex-row items-start text-2xl font-semibold tracking-tight space-x-8">
-          <span className="">{`#${number}`}</span>
-          <span>{product?.name || t("unknowProduct")}</span>
-        </div>
+        <p className="text-2xl font-semibold tracking-tight">
+          {`#${number} ${product?.name || t("unknowProduct")}`}
+        </p>
         {product && (
-          <>
+          <div className="text-sm">
             <div className="flex flex-row space-x-2">
               <span>{`${t("number")}:`}</span>
               <span>{product.number}</span>
@@ -47,24 +46,24 @@ export const RFQProductCard = async ({
               <span>{`${t("brand")}:`}</span>
               <span>{product.brand}</span>
             </div>
-          </>
+          </div>
         )}
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col lg:flex-row lg:space-x-4">
-          <div className="flex flex-row items-center space-x-2">
-            <span className="font-semibold">{`${t("quantity")}:`}</span>
-            <span className="text-xl">{Number(quantity).toFixed(3)}</span>
+        <div className="flex flex-col space-y-2 md:flex-row md:space-x-8 md:space-y-0">
+          <div className="flex flex-col items-start">
+            <span className="font-semibold">{`${t("quantity")}`}</span>
+            <span className="md:text-xl">{Number(quantity).toFixed(3)}</span>
           </div>
-          <div className="flex flex-row items-center space-x-2">
-            <span className="font-semibold">{`${t("price")}:`}</span>
-            <span className="text-xl">{`${Number(price).toFixed(
+          <div className="flex flex-col items-start">
+            <span className="font-semibold">{`${t("price")}`}</span>
+            <span className="md:text-xl">{`${Number(price).toFixed(
               2
             )} ${currency}`}</span>
           </div>
-          <div className="flex flex-row items-center space-x-2">
-            <span className="font-semibold">{`${t("deliveryDate")}:`}</span>
-            <span className="text-xl">
+          <div className="flex flex-col items-start">
+            <span className="font-semibold">{`${t("deliveryDate")}`}</span>
+            <span className="md:text-xl">
               {format(deliveryDate, "dd.MM.yyyy")}
             </span>
           </div>
@@ -72,8 +71,8 @@ export const RFQProductCard = async ({
       </CardContent>
       {comment && (
         <CardFooter>
-          <div className="flex flex-row space-x-2">
-            <span className="font-semibold">{`${t("comment")}:`}</span>
+          <div className="flex flex-col">
+            <span className="font-semibold">{`${t("comment")}`}</span>
             <span>{comment}</span>
           </div>
         </CardFooter>

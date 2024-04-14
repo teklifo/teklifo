@@ -47,7 +47,7 @@ const UserDropdown = ({
 
   return (
     <>
-      <div className="block 2xl:hidden">
+      <div className="block xl:hidden">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" className="space-x-2">
@@ -103,7 +103,7 @@ const UserDropdown = ({
           </SheetContent>
         </Sheet>
       </div>
-      <div className="hidden 2xl:block">
+      <div className="hidden xl:block">
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="space-x-2">

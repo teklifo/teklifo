@@ -85,7 +85,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
           description: t("companyIsUpdatedHint"),
         });
 
-        setCookie("user-company", company.id);
+        setCookie("user-company", company.id, {
+          expires: new Date(3999, 1, 1),
+        });
         window.location.href = `/company/${updatedCompany.id}`;
       } else {
         const newCompany = await request<CompanyType>("/api/company", config);
@@ -95,7 +97,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
           description: t("newCompanyHint"),
         });
 
-        setCookie("user-company", newCompany.id);
+        setCookie("user-company", newCompany.id, {
+          expires: new Date(3999, 1, 1),
+        });
         window.location.href = `/company/${newCompany.id}`;
       }
     } catch (error) {

@@ -5,12 +5,13 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Company as CompanyType } from "@prisma/client";
 import {
   LayoutGrid,
-  Settings2,
+  UserCog,
   Users,
-  ShoppingCart,
+  Package,
   Warehouse,
   Coins,
-  FileText,
+  FileInput,
+  FileOutput,
 } from "lucide-react";
 import Nav from "./nav";
 import CompanySwitcher from "./company-switcher";
@@ -58,8 +59,14 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           {
             title: t("outgoingRfq"),
             label: "",
-            icon: FileText,
+            icon: FileOutput,
             href: `/outgoing-rfq`,
+          },
+          {
+            title: t("incomingRfq"),
+            label: "",
+            icon: FileInput,
+            href: `/incoming-rfq`,
           },
         ]}
       />
@@ -70,7 +77,7 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           {
             title: t("products"),
             label: "",
-            icon: ShoppingCart,
+            icon: Package,
             href: `/products`,
           },
           {
@@ -94,7 +101,7 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           {
             title: t("roles"),
             label: "",
-            icon: Settings2,
+            icon: UserCog,
             href: `/roles`,
           },
           {

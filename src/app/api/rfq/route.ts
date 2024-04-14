@@ -153,6 +153,13 @@ export async function GET(request: NextRequest) {
     if (request.nextUrl.searchParams.get("companyId"))
       filters.companyId = request.nextUrl.searchParams.get("companyId") ?? "";
 
+    if (request.nextUrl.searchParams.get("participantId"))
+      filters.participants = {
+        some: {
+          companyId: request.nextUrl.searchParams.get("participantId") ?? "",
+        },
+      };
+
     const [total, result] = await db.$transaction([
       db.requestForQuotation.count({
         where: filters,

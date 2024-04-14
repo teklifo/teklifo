@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { ThumbsUp } from "lucide-react";
+import { Company as CompanyType } from "@prisma/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,9 +23,10 @@ import request from "@/lib/request";
 
 type Props = {
   rfq: string;
+  company: CompanyType | null;
 };
 
-const ConfirmParticipation = ({ rfq }: Props) => {
+const ConfirmParticipation = ({ rfq, company }: Props) => {
   const t = useTranslations("SupplierGuide");
 
   const router = useRouter();
@@ -32,11 +34,11 @@ const ConfirmParticipation = ({ rfq }: Props) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const deleteMember = async () => {
+  const confirmParticipation = async () => {
     setLoading(true);
 
     const config = {
-      method: "delete",
+      method: "PATCH",
       headers: {
         "Accept-Language": getCookie("NEXT_LOCALE"),
       },
@@ -46,19 +48,19 @@ const ConfirmParticipation = ({ rfq }: Props) => {
       await request(`/api/rfq/${rfq}/participation`, config);
 
       toast({
-        title: t("memberDeleted"),
-        description: t("memberDeletedHint"),
+        title: t("participationConfirmed"),
+        description: t("participationdHint"),
       });
 
       setOpen(false);
 
-      router.refresh();
+      router.push(`/rfq/${rfq}`);
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("deleteError"),
+        title: t("confirmError"),
         description: message,
         variant: "destructive",
       });
@@ -70,24 +72,28 @@ const ConfirmParticipation = ({ rfq }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="flex justify-center space-x-2 w-full" size="lg">
+        <Button
+          className="flex justify-center space-x-2 w-full"
+          size="lg"
+          disabled={!company}
+        >
           <ThumbsUp />
           <span>{t("confirmParticipation")}</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("memberDeleteTitle")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("participationTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("memberDeleteSubtitle")}
+            {t("participationSubtitle")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>
             {t("cancel")}
           </AlertDialogCancel>
-          <AlertDialogAction disabled={loading} onClick={deleteMember}>
-            {t("delete")}
+          <AlertDialogAction disabled={loading} onClick={confirmParticipation}>
+            {t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

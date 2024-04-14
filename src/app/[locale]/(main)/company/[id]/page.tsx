@@ -94,7 +94,9 @@ const Company = async ({ params: { locale, id } }: Props) => {
     <MaxWidthWrapper className="my-8 space-y-4">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">{company.name}</h1>
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {company.name}
+          </h1>
           {slogan && <p className="text-lg text-muted-foreground">{slogan}</p>}
           <p className="text-lg text-muted-foreground">{`${t("tin")}: ${
             company.tin
