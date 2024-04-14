@@ -45,7 +45,7 @@ const getIncomingRFQ = async (companyId: string, page: number) => {
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/rfq?companyId=${companyId}&page=${page}&limit=10`,
+      `/api/rfq?participantId=${companyId}&page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -73,7 +73,9 @@ const IncomingRFQ = async ({ searchParams: { page } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8">
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+          {t("title")}
+        </h1>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
       <div className="mt-4">
@@ -91,7 +93,6 @@ const IncomingRFQ = async ({ searchParams: { page } }: Props) => {
               priority
               width="600"
               height="600"
-              className="mb-4"
             />
             <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
               {t("noIncomingRFQ")}

@@ -88,7 +88,9 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
     <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {t("title")}
+          </h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         {isAdmin && <PriceTypeForm companyId={company.id} />}
@@ -143,7 +145,6 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
               priority
               width="600"
               height="600"
-              className="mb-4"
             />
             <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
               {t("noPriceTypes")}

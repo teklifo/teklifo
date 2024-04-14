@@ -5,9 +5,9 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Company as CompanyType } from "@prisma/client";
 import {
   LayoutGrid,
-  Settings2,
+  UserCog,
   Users,
-  ShoppingCart,
+  Package,
   Warehouse,
   Coins,
   FileInput,
@@ -77,7 +77,7 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           {
             title: t("products"),
             label: "",
-            icon: ShoppingCart,
+            icon: Package,
             href: `/products`,
           },
           {
@@ -101,7 +101,7 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           {
             title: t("roles"),
             label: "",
-            icon: Settings2,
+            icon: UserCog,
             href: `/roles`,
           },
           {

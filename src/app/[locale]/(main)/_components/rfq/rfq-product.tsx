@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  FieldArrayWithId,
-  useFieldArray,
-  useFormContext,
-} from "react-hook-form";
+import { FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { MoreHorizontal, CalendarIcon, X } from "lucide-react";
 import { format } from "date-fns";
@@ -35,17 +31,17 @@ import ProductSelect from "../product-select";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
-type RFQProductsProps = {
+type RFQProductProps = {
   productField: FieldArrayWithId;
   index: number;
   removeProduct: () => void;
 };
 
-const RFQProducts = ({
+const RFQProduct = ({
   productField,
   index,
   removeProduct,
-}: RFQProductsProps) => {
+}: RFQProductProps) => {
   const t = useTranslations("RFQForm");
 
   const [openProducts, setOpenProducts] = useState(false);
@@ -206,4 +202,4 @@ const RFQProducts = ({
   );
 };
 
-export default RFQProducts;
+export default RFQProduct;

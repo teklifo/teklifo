@@ -69,7 +69,7 @@ const ResizableLayout = ({
             });
           }}
           className={cn(
-            "hidden 2xl:block",
+            "hidden xl:block",
             isCollapsed &&
               "min-w-[50px] transition-all duration-300 ease-in-out"
           )}
@@ -80,7 +80,7 @@ const ResizableLayout = ({
             userCompanies={userCompanies}
           />
         </ResizablePanel>
-        <ResizableHandle withHandle className="hidden 2xl:flex" />
+        <ResizableHandle withHandle className="hidden xl:flex" />
         <ResizablePanel
           defaultSize={defaultLayout[1]}
           minSize={30}

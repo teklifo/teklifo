@@ -48,7 +48,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(request: NextRequest, { params: { id } }: Props) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
@@ -92,7 +92,6 @@ export async function PUT(request: NextRequest) {
     }
 
     const {
-      id,
       publicRequest,
       currency,
       startDate,

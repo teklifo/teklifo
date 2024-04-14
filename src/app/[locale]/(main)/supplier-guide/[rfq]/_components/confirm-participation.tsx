@@ -34,11 +34,11 @@ const ConfirmParticipation = ({ rfq, company }: Props) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const deleteMember = async () => {
+  const confirmParticipation = async () => {
     setLoading(true);
 
     const config = {
-      method: "delete",
+      method: "PATCH",
       headers: {
         "Accept-Language": getCookie("NEXT_LOCALE"),
       },
@@ -54,7 +54,7 @@ const ConfirmParticipation = ({ rfq, company }: Props) => {
 
       setOpen(false);
 
-      router.refresh();
+      router.push(`/rfq/${rfq}`);
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;
@@ -92,7 +92,7 @@ const ConfirmParticipation = ({ rfq, company }: Props) => {
           <AlertDialogCancel disabled={loading}>
             {t("cancel")}
           </AlertDialogCancel>
-          <AlertDialogAction disabled={loading} onClick={deleteMember}>
+          <AlertDialogAction disabled={loading} onClick={confirmParticipation}>
             {t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>

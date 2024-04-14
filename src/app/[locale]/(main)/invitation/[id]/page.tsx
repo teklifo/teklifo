@@ -56,7 +56,7 @@ const Invitation = async ({ params: { id } }: Props) => {
       <div className="flex flex-col items-center justify-center h-[80vh] space-y-12 lg:flex-row lg:space-y-0">
         <div className="w-full flex justify-center items-center text-center">
           <div className="max-w-lg space-y-8">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground">
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight text-foreground">
               {t("title", {
                 companyName: invitation.company.name,
               })}

@@ -88,7 +88,9 @@ const Roles = async ({ searchParams: { page } }: Props) => {
     <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {t("title")}
+          </h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         {isAdmin && (

@@ -9,7 +9,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
 import { Plus, CalendarIcon, CheckCircle2 } from "lucide-react";
-import RFQProducts from "./rfq-products";
+import RFQProduct from "./rfq-product";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -264,7 +264,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               <FormItem>
                 <FormLabel>{t("description")}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <Textarea {...field} rows={10} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -277,7 +277,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             {`${t("products")} (${form.getValues("products")?.length || 0})`}
           </h3>
           {products.fields.map((productField, index) => (
-            <RFQProducts
+            <RFQProduct
               key={index}
               productField={productField}
               index={index}

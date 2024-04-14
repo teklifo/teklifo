@@ -14,10 +14,10 @@ const WelcomeScreen = async () => {
       <div className="flex flex-col items-center justify-center h-[80vh] space-y-12">
         <div className="w-full flex justify-center items-center text-center">
           <div className="max-w-lg space-y-8">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground">
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight text-foreground">
               {t("title")}
             </h1>
-            <p className="text-lg ">{t("hintText")}</p>
+            <p className="text-lg">{t("hintText")}</p>
             <div className="flex flex-col space-y-2">
               <Link
                 href={`/company`}

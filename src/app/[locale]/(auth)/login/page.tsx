@@ -59,7 +59,7 @@ const Login = () => {
           height="600"
         />
         <div className="space-y-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight text-foreground">
             {t("slogan")}
           </h1>
           <h4 className="text-lg tracking-tight text-muted-foreground max-w-md">

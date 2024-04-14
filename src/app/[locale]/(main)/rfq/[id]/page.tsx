@@ -12,6 +12,8 @@ import {
   HelpCircle,
   CircleDollarSign,
   Building2,
+  Fingerprint,
+  Receipt,
 } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -94,12 +96,10 @@ const RFQ = async ({ params: { id } }: Props) => {
     userCompany !== null ? userCompany.users[0].companyRole.default : false;
 
   const userOwnsRFQ = rfq.companyId === userCompany?.id;
+  const userIsParticipant =
+    rfq.participants.find((e) => e.companyId === userCompany?.id) !== undefined;
 
-  if (
-    !userOwnsRFQ &&
-    !rfq.publicRequest &&
-    !rfq.participants.find((e) => e.companyId === userCompany?.id)
-  ) {
+  if (!userOwnsRFQ && !rfq.publicRequest && !userIsParticipant) {
     redirect(`/supplier-guide/${rfq.id}`);
   }
 
@@ -119,7 +119,7 @@ const RFQ = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
-        <h1 className="text-4xl font-bold tracking-tight">{`${t(
+        <h1 className="scroll-m-20 text-4xl font-semibold tracking-tight">{`${t(
           "rfq"
         )} #${number}`}</h1>
         {userOwnsRFQ && isAdmin && (
@@ -138,19 +138,20 @@ const RFQ = async ({ params: { id } }: Props) => {
           </div>
         )}
       </div>
-      <div>
+      <div className="space-y-2">
         <div className="flex flex-row items-end space-x-2">
-          <span className="font-bold text-lg">{`${t("company")}:`}</span>
           <Building2 />
+          <span className="font-semibold">{`${t("company")}:`}</span>
           <Link
             href={`/company/${rfq.companyId}`}
-            className="scroll-m-20 underline text-2xl font-semibold tracking-tight"
+            className="scroll-m-20 underline text-lg font-semibold tracking-tight"
           >
             {rfq.company?.name}
           </Link>
         </div>
         <div className="flex flex-row items-end space-x-2">
-          <span className="font-bold text-lg">{`${t("tin")}:`}</span>
+          <Fingerprint />
+          <span className="font-semibold">{`${t("tin")}:`}</span>
           <span>{rfq.company?.tin}</span>
         </div>
       </div>
@@ -159,18 +160,18 @@ const RFQ = async ({ params: { id } }: Props) => {
           {publicRequest ? (
             <>
               <Globe />
-              <span className="font-bold">{t("public")}</span>
+              <span className="font-semibold">{t("public")}</span>
             </>
           ) : (
             <>
               <Lock />
-              <span className="font-bold">{t("private")}</span>
+              <span className="font-semibold">{t("private")}</span>
             </>
           )}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="text-accent" />
+                <HelpCircle className="text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent side="bottom">
                 <p>{publicRequest ? t("publicHint") : t("privateHint")}</p>
@@ -180,7 +181,7 @@ const RFQ = async ({ params: { id } }: Props) => {
         </div>
         <div className="flex flex-row space-x-2">
           <Calendar />
-          <span className="font-bold">{`${t("period")}:`}</span>
+          <span className="font-semibold">{`${t("period")}:`}</span>
           <span>
             {`${format(startDate, "dd.MM.yyyy")} - ${format(
               endDate,
@@ -190,7 +191,7 @@ const RFQ = async ({ params: { id } }: Props) => {
         </div>
         <div className="flex flex-row space-x-2">
           <CircleDollarSign />
-          <span className="font-bold">{`${t("currency")}:`}</span>
+          <span className="font-semibold">{`${t("currency")}:`}</span>
           <span>{currency}</span>
         </div>
       </div>
@@ -243,6 +244,20 @@ const RFQ = async ({ params: { id } }: Props) => {
             </div>
           )}
         </>
+      )}
+      {userIsParticipant && (
+        <div className="sticky bottom-8 flex justify-center">
+          <Link
+            href={`/new-quotation/${id}`}
+            className={cn(
+              "space-x-2",
+              buttonVariants({ variant: "default", size: "lg" })
+            )}
+          >
+            <Receipt />
+            <span>{t("createQuotation")}</span>
+          </Link>
+        </div>
       )}
     </MaxWidthWrapper>
   );
