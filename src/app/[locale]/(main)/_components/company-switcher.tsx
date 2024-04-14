@@ -29,7 +29,9 @@ const CompanySwitcher = ({
   const switchToACompany = (value: string) => {
     const company = userCompanies.find((company) => company.id === value);
     if (!company) return;
-    setCookie("user-company", company.id);
+    setCookie("user-company", company.id, {
+      expires: new Date(3999, 1, 1),
+    });
     router.refresh();
   };
 

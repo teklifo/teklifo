@@ -31,7 +31,9 @@ const ResizableLayout = ({
 
   useEffect(() => {
     if (defaultCompany) {
-      setCookie("user-company", defaultCompany.id);
+      setCookie("user-company", defaultCompany.id, {
+        expires: new Date(3999, 1, 1),
+      });
     } else {
       deleteCookie("user-company");
     }
@@ -42,7 +44,9 @@ const ResizableLayout = ({
       <ResizablePanelGroup
         direction="horizontal"
         onLayout={(sizes: number[]) => {
-          setCookie("react-resizable-panels:layout", sizes);
+          setCookie("react-resizable-panels:layout", sizes, {
+            expires: new Date(3999, 1, 1),
+          });
         }}
         className="!h-[calc(100vh-4rem)] items-stretch"
       >
@@ -54,11 +58,15 @@ const ResizableLayout = ({
           maxSize={20}
           onCollapse={() => {
             setIsCollapsed(true);
-            setCookie("react-resizable-panels:collapsed", true);
+            setCookie("react-resizable-panels:collapsed", true, {
+              expires: new Date(3999, 1, 1),
+            });
           }}
           onExpand={() => {
             setIsCollapsed(false);
-            setCookie("react-resizable-panels:collapsed", false);
+            setCookie("react-resizable-panels:collapsed", false, {
+              expires: new Date(3999, 1, 1),
+            });
           }}
           className={cn(
             "hidden 2xl:block",
