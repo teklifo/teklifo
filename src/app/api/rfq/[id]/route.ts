@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
+import { Prisma } from "@prisma/client";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
@@ -15,8 +16,8 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    const rfq = await db.requestForQuotation.findUnique({
-      where: { id },
+    const rfq = await db.requestForQuotation.findFirst({
+      where: { id, latestVersion: true },
       include: {
         company: true,
         products: {
@@ -73,7 +74,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    // Update RFQ
+    // Test request body
     const body = await request.json();
 
     const st = await getTranslations({
@@ -103,13 +104,18 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       products,
     } = test.data;
 
-    const rfq = await db.requestForQuotation.findUnique({
+    // Find and check RFQ
+    const previousRfqVersion = await db.requestForQuotation.findFirst({
       where: {
         id: id ?? "",
+        latestVersion: true,
+      },
+      include: {
+        products: true,
       },
     });
 
-    if (!rfq) {
+    if (!previousRfqVersion) {
       return NextResponse.json(
         {
           errors: [{ message: t("invalidRFQId") }],
@@ -118,7 +124,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    if (rfq.companyId !== company.id) {
+    if (previousRfqVersion.companyId !== company.id) {
       return NextResponse.json(
         {
           errors: [{ message: t("notAllowed") }],
@@ -127,11 +133,21 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    const updatedRfq = await db.requestForQuotation.update({
+    // Prev version is not latest anymore
+    await db.requestForQuotation.update({
       where: {
-        id,
+        versionId: previousRfqVersion.versionId,
       },
       data: {
+        latestVersion: false,
+      },
+    });
+
+    // Create new version of RFQ
+    const newRfqVersion = await db.requestForQuotation.create({
+      data: {
+        id: previousRfqVersion.id,
+        number: previousRfqVersion.number,
         companyId: company.id,
         userId: company.users.length > 0 ? company.users[0].userId : null,
         publicRequest,
@@ -143,6 +159,52 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         deliveryTerms,
         paymentTerms,
       },
+    });
+
+    const productsDataUnfiltered = products.map((product) => {
+      const existingRfqLine = previousRfqVersion.products.find(
+        (existingProduct) => existingProduct.id === product.id
+      );
+      if (product.id && !existingRfqLine) return null;
+
+      const productData: Prisma.RequestForQuotationProductsCreateManyInput =
+        existingRfqLine
+          ? {
+              ...existingRfqLine,
+              versionId: undefined,
+              requestForQuotationId: newRfqVersion.versionId,
+            }
+          : {
+              requestForQuotationId: newRfqVersion.versionId,
+              productId: product.productId,
+              externalId: product.externalId,
+              price: product.price,
+              quantity: product.quantity,
+              deliveryDate: product.deliveryDate,
+              comment: product.comment,
+            };
+
+      return productData;
+    });
+
+    const productsData: Prisma.RequestForQuotationProductsCreateManyInput[] =
+      productsDataUnfiltered.filter(
+        (
+          productData
+        ): productData is Prisma.RequestForQuotationProductsCreateManyInput =>
+          productData !== null
+      );
+
+    console.log(productsData);
+
+    await db.requestForQuotationProducts.createMany({
+      data: productsData,
+    });
+
+    const newRfqVersionWithProducts = await db.requestForQuotation.findUnique({
+      where: {
+        versionId: newRfqVersion.versionId,
+      },
       include: {
         products: true,
         user: {
@@ -154,64 +216,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       },
     });
 
-    const rfqProducts = await Promise.all(
-      products.map(async (product) => {
-        return await db.requestForQuotationProducts.upsert({
-          where: {
-            id: product.id ?? "",
-          },
-          create: {
-            requestForQuotationId: updatedRfq.id,
-            productId: product.productId,
-            externalId: product.externalId,
-            price: product.price,
-            quantity: product.quantity,
-            deliveryDate: product.deliveryDate,
-            comment: product.comment,
-          },
-          update: {
-            productId: product.productId,
-            externalId: product.externalId,
-            price: product.price,
-            quantity: product.quantity,
-            deliveryDate: product.deliveryDate,
-            comment: product.comment,
-          },
-        });
-      })
-    );
-
-    await db.requestForQuotationProducts.deleteMany({
-      where: {
-        AND: [
-          {
-            requestForQuotationId: updatedRfq.id,
-          },
-          {
-            id: {
-              notIn: rfqProducts.map((product) => product.id),
-            },
-          },
-        ],
-      },
-    });
-
-    const updatedRfqWithProducts = await db.requestForQuotation.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        products: true,
-        user: {
-          select: {
-            id: true,
-            email: true,
-          },
-        },
-      },
-    });
-
-    return NextResponse.json(updatedRfqWithProducts);
+    return NextResponse.json(newRfqVersionWithProducts);
   } catch (error) {
     console.log(error);
     return NextResponse.json(
@@ -246,8 +251,8 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
       );
     }
 
-    const rfq = await db.requestForQuotation.findUnique({
-      where: { id },
+    const rfq = await db.requestForQuotation.findFirst({
+      where: { id, latestVersion: true },
       include: {
         company: true,
         products: {
@@ -279,7 +284,7 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
     }
 
     // Delete RFQ
-    await db.requestForQuotation.delete({
+    await db.requestForQuotation.deleteMany({
       where: {
         id: rfq.id,
       },

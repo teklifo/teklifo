@@ -133,7 +133,9 @@ export async function GET(request: NextRequest) {
       );
 
     // Filters
-    const filters: Prisma.RequestForQuotationWhereInput = {};
+    const filters: Prisma.RequestForQuotationWhereInput = {
+      latestVersion: true,
+    };
     filters.OR = [
       {
         publicRequest: true,

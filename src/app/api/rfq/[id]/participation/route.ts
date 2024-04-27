@@ -35,9 +35,12 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
     }
 
     // Update RFQ
-    const rfq = await db.requestForQuotation.findUnique({
+    const rfq = await db.requestForQuotation.findFirst({
       where: {
         id: id ?? "",
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
@@ -52,7 +55,7 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
 
     const updatedRfq = await db.requestForQuotation.update({
       where: {
-        id,
+        versionId: rfq.versionId,
       },
       data: {
         participants: {
