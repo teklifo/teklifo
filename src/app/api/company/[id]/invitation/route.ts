@@ -7,6 +7,7 @@ import {
 import db from "@/lib/db";
 import { getInvitationSchema } from "@/lib/schemas";
 import { getTranslationsFromHeader } from "@/lib/utils";
+import { getErrorResponse } from "@/app/api/utils";
 
 type Props = {
   params: { id: string };
@@ -16,23 +17,13 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getUserCompany(id);
     const isAdmin = await isCompanyAdmin(id);
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     } else if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Create a new invitation
@@ -44,13 +35,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
     });
     const test = getInvitationSchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const { email, roleId } = test.data;
@@ -70,9 +55,6 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
     return NextResponse.json(invitation);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

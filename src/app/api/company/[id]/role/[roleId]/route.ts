@@ -8,6 +8,7 @@ import db from "@/lib/db";
 import { getRoleSchema } from "@/lib/schemas";
 import { FlattenAvailableDataType } from "@/types";
 import { getTranslationsFromHeader } from "@/lib/utils";
+import { getErrorResponse } from "@/app/api/utils";
 
 type Props = {
   params: { id: string; roleId: string };
@@ -20,23 +21,13 @@ export async function DELETE(
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getUserCompany(id);
     const isAdmin = await isCompanyAdmin(id);
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     } else if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Check that no user is using this role
@@ -49,28 +40,13 @@ export async function DELETE(
       },
     });
     if (!role) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRoleId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRoleId"), 404);
     }
     if (role.default) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("defaultRoleCantBeChanged") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("defaultRoleCantBeChanged"), 400);
     }
     if (role.users.length > 0) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("roleIsBeingUsed") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("roleIsBeingUsed"), 400);
     }
 
     // Delete a role
@@ -83,10 +59,7 @@ export async function DELETE(
     return NextResponse.json({ message: t("roleDeleted") });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -97,23 +70,13 @@ export async function PUT(
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getUserCompany(id);
     const isAdmin = await isCompanyAdmin(id);
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     } else if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Update a role
@@ -125,13 +88,7 @@ export async function PUT(
     });
     const test = getRoleSchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const { name, availableData } = test.data;
@@ -163,10 +120,7 @@ export async function PUT(
     return NextResponse.json(role);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -177,23 +131,13 @@ export async function GET(
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getUserCompany(id);
     const isAdmin = await isCompanyAdmin(id);
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     } else if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     const role = await db.companyRole.findUnique({
@@ -203,20 +147,12 @@ export async function GET(
 
     // Role not found
     if (!role) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRoleId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRoleId"), 404);
     }
 
     return NextResponse.json(role);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

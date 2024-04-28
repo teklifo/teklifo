@@ -10,6 +10,7 @@ import { getRoleSchema } from "@/lib/schemas";
 import getPaginationData from "@/lib/pagination";
 import { getTranslationsFromHeader } from "@/lib/utils";
 import { FlattenAvailableDataType } from "@/types";
+import { getErrorResponse } from "@/app/api/utils";
 
 type Props = {
   params: { id: string };
@@ -19,23 +20,13 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getUserCompany(id);
     const isAdmin = await isCompanyAdmin(id);
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     } else if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Create a new role
@@ -47,13 +38,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
     });
     const test = getRoleSchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const { name, availableData } = test.data;
@@ -85,10 +70,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
     return NextResponse.json(role);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -108,22 +90,12 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     const startIndex = (page - 1) * limit;
 
     if (!page || !limit)
-      return NextResponse.json(
-        {
-          errors: [{ message: t("pageAndlimitAreRequired") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("pageAndlimitAreRequired"), 400);
 
-    // Find company
+    // Check company
     const company = await getUserCompany(id);
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     // Filters
@@ -153,9 +125,6 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

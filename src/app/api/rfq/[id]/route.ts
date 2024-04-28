@@ -7,6 +7,7 @@ import getCurrentCompany, {
 import db from "@/lib/db";
 import { getRFQSchema } from "@/lib/schemas";
 import { getTranslationsFromHeader } from "@/lib/utils";
+import { getErrorResponse } from "../../utils";
 
 type Props = {
   params: { id: string };
@@ -31,21 +32,13 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // RFQ not found
     if (!rfq) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRFQId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRFQId"), 404);
     }
 
     return NextResponse.json(rfq);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -53,25 +46,15 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getCurrentCompany();
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     const isAdmin = await isCompanyAdmin(company.id);
     if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Test request body
@@ -83,13 +66,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     });
     const test = getRFQSchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const {
@@ -116,21 +93,11 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     });
 
     if (!previousRfqVersion) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRFQId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRFQId"), 404);
     }
 
     if (previousRfqVersion.companyId !== company.id) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Prev version is not latest anymore
@@ -219,10 +186,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     return NextResponse.json(newRfqVersionWithProducts);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -230,25 +194,15 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getCurrentCompany();
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     const isAdmin = await isCompanyAdmin(company.id);
     if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     const rfq = await db.requestForQuotation.findFirst({
@@ -266,21 +220,11 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
 
     // RFQ not found
     if (!rfq) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRFQId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRFQId"), 404);
     }
 
     if (rfq.companyId !== company.id) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Delete RFQ
@@ -293,9 +237,6 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
     return NextResponse.json({ message: t("rfqDeleted") });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

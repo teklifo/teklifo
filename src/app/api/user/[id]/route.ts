@@ -5,6 +5,7 @@ import getCurrentUser from "@/app/actions/get-current-user";
 import db from "@/lib/db";
 import { getTranslationsFromHeader } from "@/lib/utils";
 import { getUserSchema } from "@/lib/schemas";
+import { getErrorResponse } from "../../utils";
 
 export async function DELETE(request: NextRequest) {
   const { t } = await getTranslationsFromHeader(request.headers);
@@ -13,12 +14,7 @@ export async function DELETE(request: NextRequest) {
     // Find current user
     const currentUser = await getCurrentUser();
     if (!currentUser) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAuthorized"), 401);
     }
 
     // Find user
@@ -52,12 +48,7 @@ export async function DELETE(request: NextRequest) {
     });
 
     if (!user || user.id !== currentUser.id) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAuthorized"), 401);
     }
 
     // Check that there is no company depending on that user
@@ -68,18 +59,13 @@ export async function DELETE(request: NextRequest) {
       const companyName = dependingCompanies
         .map((c) => c.company.name)
         .join(", ");
-      return NextResponse.json(
-        {
-          errors: [
-            {
-              message: t("dependingCompanies", {
-                username: user.name || user.email,
-                companyName,
-              }),
-            },
-          ],
-        },
-        { status: 400 }
+
+      return getErrorResponse(
+        t("dependingCompanies", {
+          username: user.name || user.email,
+          companyName,
+        }),
+        400
       );
     }
 
@@ -95,10 +81,7 @@ export async function DELETE(request: NextRequest) {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -109,12 +92,7 @@ export async function PUT(request: NextRequest) {
     // Find user
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAuthorized"), 401);
     }
 
     // Update a user
@@ -126,13 +104,7 @@ export async function PUT(request: NextRequest) {
     });
     const test = getUserSchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const { name, password } = test.data;
@@ -157,9 +129,6 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(updatedUser);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

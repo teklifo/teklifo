@@ -7,6 +7,7 @@ import {
 import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
 import { getTranslationsFromHeader } from "@/lib/utils";
+import { getErrorResponse } from "../../utils";
 
 type Props = {
   params: { id: string };
@@ -22,21 +23,13 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // Company not found
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     return NextResponse.json(company);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -44,23 +37,13 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getUserCompany(id);
     const isAdmin = await isCompanyAdmin(id);
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     } else if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Delete a company
@@ -75,10 +58,7 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -89,23 +69,13 @@ export async function PUT(
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getUserCompany(companyId);
     const isAdmin = await isCompanyAdmin(companyId);
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     } else if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Update a company
@@ -117,13 +87,7 @@ export async function PUT(
     });
     const test = getCompanySchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
@@ -147,9 +111,6 @@ export async function PUT(
     return NextResponse.json(updatedCompany);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

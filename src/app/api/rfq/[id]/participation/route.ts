@@ -4,6 +4,7 @@ import getCurrentCompany, {
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getTranslationsFromHeader } from "@/lib/utils";
+import { getErrorResponse } from "@/app/api/utils";
 
 type Props = {
   params: { id: string };
@@ -13,25 +14,15 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getCurrentCompany();
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     const isAdmin = await isCompanyAdmin(company.id);
     if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Update RFQ
@@ -45,12 +36,7 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
     });
 
     if (!rfq) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRFQId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRFQId"), 404);
     }
 
     const updatedRfq = await db.requestForQuotation.update({
@@ -89,9 +75,6 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
     return NextResponse.json(updatedRfq);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
