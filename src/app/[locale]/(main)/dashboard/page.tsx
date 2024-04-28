@@ -1,6 +1,8 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import getCurrentCompany from "@/app/actions/get-current-company";
+import db from "@/lib/db";
+import getCurrentUser from "@/app/actions/get-current-user";
 import WelcomeScreen from "../_components/welcome-screen";
 
 type Props = {
@@ -19,9 +21,27 @@ export const generateMetadata = async ({
 };
 
 const Dashboard = async () => {
-  const company = await getCurrentCompany();
+  const user = await getCurrentUser();
+  if (!user) return notFound();
 
-  return <div>{!company ? <WelcomeScreen /> : null}</div>;
+  const userCompanies = await db.user.findUnique({
+    where: {
+      id: user.id,
+    },
+    include: {
+      _count: {
+        select: {
+          companies: true,
+        },
+      },
+    },
+  });
+
+  return (
+    <div>
+      {(userCompanies?._count.companies ?? 0) === 0 ? <WelcomeScreen /> : null}
+    </div>
+  );
 };
 
 export default Dashboard;
