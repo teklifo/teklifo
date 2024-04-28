@@ -3,14 +3,14 @@ import path from "path";
 import { pipeline } from "stream";
 import { NextRequest } from "next/server";
 import { stringify } from "querystring";
+import { ExchangeStatus } from "@prisma/client";
 import {
   getUserCompany,
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
-import { getTranslationsFromHeader } from "@/lib/utils";
 import db from "@/lib/db";
+import { getTranslationsFromHeader } from "@/lib/api-utils";
 import { fileExists } from "@/lib/utils";
-import { ExchangeStatus } from "@prisma/client";
 
 export const authenticateUser = async (
   companyId: string,

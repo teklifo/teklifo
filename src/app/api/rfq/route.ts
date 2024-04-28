@@ -6,9 +6,8 @@ import getCurrentCompany, {
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getRFQSchema } from "@/lib/schemas";
-import { getTranslationsFromHeader } from "@/lib/utils";
 import getPaginationData from "@/lib/pagination";
-import { getErrorResponse } from "../utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
@@ -65,8 +64,8 @@ export async function POST(request: NextRequest) {
           create: products.map((product) => ({
             externalId: product.externalId,
             productId: product.productId,
-            price: product.price,
             quantity: product.quantity,
+            price: product.price,
             deliveryDate: product.deliveryDate,
             comment: product.comment,
           })),

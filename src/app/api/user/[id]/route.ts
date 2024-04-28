@@ -3,9 +3,8 @@ import { getTranslations } from "next-intl/server";
 import bcrypt from "bcrypt";
 import getCurrentUser from "@/app/actions/get-current-user";
 import db from "@/lib/db";
-import { getTranslationsFromHeader } from "@/lib/utils";
 import { getUserSchema } from "@/lib/schemas";
-import { getErrorResponse } from "../../utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 export async function DELETE(request: NextRequest) {
   const { t } = await getTranslationsFromHeader(request.headers);

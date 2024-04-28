@@ -3,8 +3,7 @@ import { Prisma } from "@prisma/client";
 import db from "@/lib/db";
 import { getUserCompany } from "@/app/actions/get-current-company";
 import getPaginationData from "@/lib/pagination";
-import { getTranslationsFromHeader } from "@/lib/utils";
-import { getErrorResponse } from "@/app/api/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type Props = {
   params: { id: string };

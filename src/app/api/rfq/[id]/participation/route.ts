@@ -3,8 +3,7 @@ import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
-import { getTranslationsFromHeader } from "@/lib/utils";
-import { getErrorResponse } from "@/app/api/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type Props = {
   params: { id: string };

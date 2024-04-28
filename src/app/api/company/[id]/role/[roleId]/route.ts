@@ -7,8 +7,7 @@ import {
 import db from "@/lib/db";
 import { getRoleSchema } from "@/lib/schemas";
 import { FlattenAvailableDataType } from "@/types";
-import { getTranslationsFromHeader } from "@/lib/utils";
-import { getErrorResponse } from "@/app/api/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type Props = {
   params: { id: string; roleId: string };

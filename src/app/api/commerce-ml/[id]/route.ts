@@ -3,7 +3,7 @@ import {
   getUserCompany,
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
-import { getTranslationsFromHeader } from "@/lib/utils";
+import { getTranslationsFromHeader } from "@/lib/api-utils";
 import {
   addReadFileJobToQueue,
   getExchangeFilePath,

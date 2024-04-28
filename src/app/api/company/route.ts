@@ -5,8 +5,7 @@ import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getPaginationData from "@/lib/pagination";
-import { getTranslationsFromHeader } from "@/lib/utils";
-import { getErrorResponse } from "../utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);

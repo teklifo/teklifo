@@ -216,12 +216,10 @@ export const getRFQProductSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.string().optional(),
     externalId: z.string().optional(),
-    productId: z.coerce
-      .number({
-        required_error: t("invalidProductId"),
-        invalid_type_error: t("invalidProductId"),
-      })
-      .min(0.001, t("invalidProductId")),
+    productId: z.coerce.number({
+      required_error: t("invalidProductId"),
+      invalid_type_error: t("invalidProductId"),
+    }),
     product: getProductSchema(() => {
       return "";
     }).optional(),
@@ -236,7 +234,82 @@ export const getRFQProductSchema = (t: TranslateFunction) => {
         required_error: t("invalidPrice"),
         invalid_type_error: t("invalidPrice"),
       })
-      .min(0.001, t("invalidPrice")),
+      .min(0.01, t("invalidPrice")),
+    deliveryDate: z.coerce.date({
+      errorMap: (issue, { defaultError }) => ({
+        message:
+          issue.code === "invalid_date"
+            ? t("invalidDeliveryDate")
+            : defaultError,
+      }),
+    }),
+    comment: z.string().default(""),
+  });
+};
+
+export const getQuotationSchema = (t: TranslateFunction) => {
+  return z.object({
+    id: z.string().optional(),
+    rfqId: z.string({
+      required_error: t("invalidRFQId"),
+      invalid_type_error: t("invalidRFQId"),
+    }),
+    currency: z
+      .string({
+        required_error: t("invalidCurrency"),
+        invalid_type_error: t("invalidCurrency"),
+      })
+      .min(1, t("invalidCurrency")),
+    description: z.string().default(""),
+    products: z
+      .array(getQuotationProductSchema(t))
+      .min(1, t("invalidProducts")),
+  });
+};
+
+export const getQuotationProductSchema = (t: TranslateFunction) => {
+  return z.object({
+    id: z.string().optional(),
+    externalId: z.string().optional(),
+    rfqLineId: z.string({
+      required_error: t("invalidRFQLineId"),
+      invalid_type_error: t("invalidRFQLineId"),
+    }),
+    productId: z.coerce.number({
+      required_error: t("invalidProductId"),
+      invalid_type_error: t("invalidProductId"),
+    }),
+    product: getProductSchema(() => {
+      return "";
+    }).optional(),
+    quantity: z.coerce
+      .number({
+        required_error: t("invalidQuantity"),
+        invalid_type_error: t("invalidQuantity"),
+      })
+      .min(0.001, t("invalidQuantity")),
+    price: z.coerce
+      .number({
+        required_error: t("invalidPrice"),
+        invalid_type_error: t("invalidPrice"),
+      })
+      .min(0.01, t("invalidPrice")),
+    amount: z.coerce
+      .number({
+        required_error: t("invalidAmount"),
+        invalid_type_error: t("invalidAmount"),
+      })
+      .min(0.01, t("invalidAmount")),
+    vatRate: z.enum(["NOVAT", "VAT0", "VAT18", "VAT20"], {
+      required_error: t("invalidVatRate"),
+      invalid_type_error: t("invalidVatRate"),
+    }),
+    vatIncluded: z
+      .boolean({
+        required_error: t("invalidVatIncluded"),
+        invalid_type_error: t("invalidVatIncluded"),
+      })
+      .default(true),
     deliveryDate: z.coerce.date({
       errorMap: (issue, { defaultError }) => ({
         message:

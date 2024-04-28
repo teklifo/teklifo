@@ -9,8 +9,7 @@ import db from "@/lib/db";
 import { getProductsSchema } from "@/lib/schemas";
 import { upsertProduct } from "@/lib/exchange/bulk-import";
 import getPaginationData from "@/lib/pagination";
-import { getTranslationsFromHeader } from "@/lib/utils";
-import { getErrorResponse } from "@/app/api/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type Props = {
   params: { id: string };

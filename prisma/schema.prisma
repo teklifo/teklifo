@@ -30,6 +30,13 @@ enum ExchangeStatus {
   ERROR
 }
 
+enum VatRates {
+  NOVAT
+  VAT0
+  VAT18
+  VAT20
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -61,6 +68,7 @@ model User {
   role                 Role                  @default(USER)
   companies            CompanyMembers[]
   requestsForQuotation RequestForQuotation[]
+  quotations           Quotation[]
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
   deleted              Boolean               @default(false)
@@ -290,32 +298,34 @@ model Participants {
 }
 
 model Quotation {
-  id        Int                 @id @default(autoincrement())
-  company   Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId String
-  rfq       RequestForQuotation @relation(fields: [rfqId], references: [versionId], onDelete: Cascade)
-  rfqId     String
-  currency  String
-  comment   String
-  products  QuotationProducts[]
+  id          Int                 @id @default(autoincrement())
+  company     Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId   String
+  rfq         RequestForQuotation @relation(fields: [rfqId], references: [versionId], onDelete: Cascade)
+  rfqId       String
+  user        User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId      String?
+  currency    String
+  description String
+  products    QuotationProducts[]
 }
 
 model QuotationProducts {
-  id            String                       @id @default(uuid())
+  id            String                      @id @default(uuid())
   externalId    String?
-  quotation     Quotation                    @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  quotation     Quotation                   @relation(fields: [quotationId], references: [id], onDelete: Cascade)
   quotationId   Int
-  rfqLine       RequestForQuotationProducts? @relation(fields: [rfqLineId], references: [versionId], onDelete: Cascade)
+  rfqLine       RequestForQuotationProducts @relation(fields: [rfqLineId], references: [versionId], onDelete: Cascade)
   rfqLineId     String
-  product       Product                      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product       Product                     @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId     Int
-  quantity      Decimal                      @db.Decimal(15, 3)
-  price         Decimal                      @db.Decimal(15, 2)
-  amount        Decimal                      @db.Decimal(15, 2)
-  vatRate       Int
-  vatAmount     Decimal                      @db.Decimal(15, 2)
+  quantity      Decimal                     @db.Decimal(15, 3)
+  price         Decimal                     @db.Decimal(15, 2)
+  amount        Decimal                     @db.Decimal(15, 2)
+  vatRate       VatRates
+  vatAmount     Decimal                     @db.Decimal(15, 2)
   vatIncluded   Boolean
-  amountWithVat Decimal                      @db.Decimal(15, 2)
+  amountWithVat Decimal                     @db.Decimal(15, 2)
   deliveryDate  DateTime
   comment       String
 }

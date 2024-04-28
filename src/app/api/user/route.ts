@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import db from "@/lib/db";
 import getPaginationData from "@/lib/pagination";
-import { getTranslationsFromHeader } from "@/lib/utils";
-import { getErrorResponse } from "../utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
   const { t } = await getTranslationsFromHeader(request.headers);

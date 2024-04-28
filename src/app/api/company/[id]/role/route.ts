@@ -8,9 +8,8 @@ import {
 import db from "@/lib/db";
 import { getRoleSchema } from "@/lib/schemas";
 import getPaginationData from "@/lib/pagination";
-import { getTranslationsFromHeader } from "@/lib/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 import { FlattenAvailableDataType } from "@/types";
-import { getErrorResponse } from "@/app/api/utils";
 
 type Props = {
   params: { id: string };

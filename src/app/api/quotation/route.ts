@@ -5,10 +5,14 @@ import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
-import { getRFQSchema } from "@/lib/schemas";
-import { getTranslationsFromHeader } from "@/lib/utils";
+import { getQuotationSchema } from "@/lib/schemas";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
+import {
+  calculateAmountWithVat,
+  calculateVatAmount,
+  getVatRatePercentage,
+} from "@/lib/calculations";
 import getPaginationData from "@/lib/pagination";
-import { getErrorResponse } from "../utils";
 
 export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
@@ -25,51 +29,105 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(t("notAllowed"), 401);
     }
 
-    // Create a new RFQ
+    // Create a new quotation
     const body = await request.json();
 
     const st = await getTranslations({
       locale,
-      namespace: "Schemas.rfqSchema",
+      namespace: "Schemas.quotationSchema",
     });
-    const test = getRFQSchema(st).safeParse(body);
+    const test = getQuotationSchema(st).safeParse(body);
     if (!test.success) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const {
-      publicRequest,
-      currency,
-      startDate,
-      endDate,
-      description,
-      deliveryAddress,
-      deliveryTerms,
-      paymentTerms,
-      products,
-    } = test.data;
+    const { rfqId, currency, description, products } = test.data;
 
-    const rfq = await db.requestForQuotation.create({
+    // Check RFQ
+    const rfq = await db.requestForQuotation.findUnique({
+      where: {
+        versionId: rfqId,
+        participants: {
+          some: {
+            companyId: company.id,
+          },
+        },
+        products: {
+          some: {
+            versionId: {
+              in: products.map((e) => e.rfqLineId),
+            },
+          },
+        },
+      },
+    });
+    if (!rfq) {
+      return getErrorResponse(t("invalidRFQId"), 400);
+    }
+
+    // Check uniqueness
+    const existingQuotation = await db.quotation.findFirst({
+      where: {
+        companyId: company.id,
+        rfqId,
+      },
+    });
+    if (existingQuotation)
+      return getErrorResponse(
+        t("quotationAlreadyExists", {
+          companyName: company.name,
+          rfqNumber: rfq.number,
+        }),
+        400
+      );
+
+    const quotation = await db.quotation.create({
       data: {
         companyId: company.id,
+        rfqId,
         userId: company.users.length > 0 ? company.users[0].userId : null,
-        publicRequest,
         currency,
-        startDate,
-        endDate,
         description,
-        deliveryAddress,
-        deliveryTerms,
-        paymentTerms,
         products: {
-          create: products.map((product) => ({
-            externalId: product.externalId,
-            productId: product.productId,
-            price: product.price,
-            quantity: product.quantity,
-            deliveryDate: product.deliveryDate,
-            comment: product.comment,
-          })),
+          create: products.map((product) => {
+            const { vatRate, vatRatePercentage } = getVatRatePercentage(
+              product.vatRate
+            );
+
+            const vatAmount = calculateVatAmount(
+              product.amount,
+              vatRatePercentage
+            );
+
+            const amountWithVat = calculateAmountWithVat(
+              product.amount,
+              vatAmount,
+              product.vatIncluded
+            );
+
+            return {
+              externalId: product.externalId,
+              rfqLine: {
+                connect: {
+                  versionId: product.rfqLineId,
+                },
+              },
+              product: {
+                connect: {
+                  id: product.productId,
+                },
+              },
+              quantity: product.quantity,
+              price: product.price,
+              amount: product.amount,
+              vatRate,
+              vatAmount,
+              vatIncluded: product.vatIncluded,
+              amountWithVat,
+              deliveryDate: product.deliveryDate,
+              comment: product.comment,
+            };
+          }),
         },
       },
       include: {
@@ -83,7 +141,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(rfq);
+    return NextResponse.json(quotation);
   } catch (error) {
     console.log(error);
     return getErrorResponse(t("serverError"), 500);

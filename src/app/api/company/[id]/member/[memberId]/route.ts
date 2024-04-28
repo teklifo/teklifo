@@ -6,8 +6,7 @@ import {
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getMemberSchema } from "@/lib/schemas";
-import { getTranslationsFromHeader } from "@/lib/utils";
-import { getErrorResponse } from "@/app/api/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type Props = {
   params: { id: string; memberId: string };
