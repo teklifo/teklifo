@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import getCurrentUser from "@/app/actions/get-current-user";
-import { getTranslationsFromHeader } from "@/lib/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type Props = {
   params: { id: string };
@@ -14,21 +14,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     // Find user
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAuthorized"), 401);
     }
 
     if (!user.email) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("noEmail") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("noEmail"), 400);
     }
 
     // Find invitation
@@ -39,21 +29,13 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       },
     });
     if (!invitation) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidInvitationId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidInvitationId"), 404);
     }
 
     return NextResponse.json(invitation);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -64,21 +46,11 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
     // Find user
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAuthorized"), 401);
     }
 
     if (!user.email) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("noEmail") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("noEmail"), 400);
     }
 
     // Find invitation
@@ -86,15 +58,10 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
       where: { id, email: user.email },
     });
     if (!invitation) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidInvitationId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidInvitationId"), 404);
     }
 
-    // Find company
+    // Check company
     const company = await db.company.findUnique({
       where: { id: invitation.companyId },
       include: {
@@ -106,12 +73,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
       },
     });
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     // Find role
@@ -119,12 +81,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
       where: { id: invitation.companyRoleId, companyId: company.id },
     });
     if (!role) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRoleId") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("invalidRoleId"), 400);
     }
 
     // Create a new member
@@ -150,9 +107,6 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
     return NextResponse.json(member);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

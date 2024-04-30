@@ -1,10 +1,11 @@
-import { AuthOptions } from "next-auth";
+import { cookies } from "next/headers";
+import { NextAuthOptions } from "next-auth";
 import EmailProvider, {
   SendVerificationRequestParams,
 } from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { cookies } from "next/headers";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import db from "@/lib/db";
 import sendEmail from "@/lib/nodemailer/sendEmail";
@@ -38,8 +39,8 @@ const sendVerificationRequest = async ({
   });
 };
 
-const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(db),
+const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(db as unknown as PrismaClient),
   providers: [
     EmailProvider({
       sendVerificationRequest,

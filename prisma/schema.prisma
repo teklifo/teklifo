@@ -30,6 +30,13 @@ enum ExchangeStatus {
   ERROR
 }
 
+enum VatRates {
+  NOVAT
+  VAT0
+  VAT18
+  VAT20
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -61,8 +68,10 @@ model User {
   role                 Role                  @default(USER)
   companies            CompanyMembers[]
   requestsForQuotation RequestForQuotation[]
+  quotations           Quotation[]
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
+  deleted              Boolean               @default(false)
 }
 
 model VerificationToken {
@@ -112,8 +121,10 @@ model Company {
   exchangeJobs         ExchangeJob[]
   requestsForQuotation RequestForQuotation[]
   participation        Participants[]
+  sentQuotations       Quotation[]
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
+  deleted              Boolean               @default(false)
 }
 
 model CompanyMembers {
@@ -153,8 +164,10 @@ model Product {
   stock                StockBalance[]
   prices               Price[]
   requestsForQuotation RequestForQuotationProducts[]
+  quotations           QuotationProducts[]
   createdAt            DateTime                      @default(now())
   updatedAt            DateTime                      @updatedAt
+  deleted              Boolean                       @default(false)
 }
 
 model Stock {
@@ -237,13 +250,14 @@ model ExchangeJob {
 }
 
 model RequestForQuotation {
-  id              String                        @id @default(cuid())
+  versionId       String                        @id @default(cuid())
+  id              String                        @default(cuid())
   number          Int                           @default(autoincrement())
   company         Company?                      @relation(fields: [companyId], references: [id], onDelete: SetNull)
   companyId       String?
+  publicRequest   Boolean
   user            User?                         @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId          String?
-  publicRequest   Boolean
   currency        String
   startDate       DateTime
   endDate         DateTime
@@ -253,29 +267,67 @@ model RequestForQuotation {
   paymentTerms    String
   products        RequestForQuotationProducts[]
   participants    Participants[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  quotations      Quotation[]
+  createdAt       DateTime                      @default(now())
+  latestVersion   Boolean                       @default(true)
+  deleted         Boolean                       @default(false)
 }
 
 model RequestForQuotationProducts {
-  id                    String              @id @default(cuid())
-  externalId           String?             
-  requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [id], onDelete: Cascade)
+  versionId             String              @id @default(cuid())
+  id                    String              @default(cuid())
+  externalId            String?
+  requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [versionId], onDelete: Cascade)
   requestForQuotationId String
-  product               Product?            @relation(fields: [productId], references: [id], onDelete: SetNull)
-  productId             Int?
+  product               Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId             Int
   comment               String
   quantity              Decimal             @db.Decimal(15, 3)
   price                 Decimal             @db.Decimal(15, 2)
   deliveryDate          DateTime
+  quotationProducts     QuotationProducts[]
 }
 
 model Participants {
-  requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [id], onDelete: Cascade)
+  requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [versionId], onDelete: Cascade)
   requestForQuotationId String
   company               Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId             String
 
   @@id([requestForQuotationId, companyId])
+}
+
+model Quotation {
+  id          Int                 @id @default(autoincrement())
+  company     Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId   String
+  rfq         RequestForQuotation @relation(fields: [rfqId], references: [versionId], onDelete: Cascade)
+  rfqId       String
+  user        User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId      String?
+  currency    String
+  description String
+  products    QuotationProducts[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+model QuotationProducts {
+  id            String                      @id @default(uuid())
+  externalId    String?
+  quotation     Quotation                   @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  quotationId   Int
+  rfqLine       RequestForQuotationProducts @relation(fields: [rfqLineId], references: [versionId], onDelete: Cascade)
+  rfqLineId     String
+  product       Product                     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId     Int
+  quantity      Decimal                     @db.Decimal(15, 3)
+  price         Decimal                     @db.Decimal(15, 2)
+  amount        Decimal                     @db.Decimal(15, 2)
+  vatRate       VatRates
+  vatAmount     Decimal                     @db.Decimal(15, 2)
+  vatIncluded   Boolean
+  amountWithVat Decimal                     @db.Decimal(15, 2)
+  deliveryDate  DateTime
+  comment       String
 }

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
+import { Prisma } from "@prisma/client";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getRFQSchema } from "@/lib/schemas";
-import { getTranslationsFromHeader } from "@/lib/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type Props = {
   params: { id: string };
@@ -15,8 +16,8 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    const rfq = await db.requestForQuotation.findUnique({
-      where: { id },
+    const rfq = await db.requestForQuotation.findFirst({
+      where: { id, latestVersion: true },
       include: {
         company: true,
         products: {
@@ -30,21 +31,13 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 
     // RFQ not found
     if (!rfq) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRFQId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRFQId"), 404);
     }
 
     return NextResponse.json(rfq);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -52,28 +45,18 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getCurrentCompany();
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     const isAdmin = await isCompanyAdmin(company.id);
     if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
-    // Update RFQ
+    // Test request body
     const body = await request.json();
 
     const st = await getTranslations({
@@ -82,13 +65,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     });
     const test = getRFQSchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const {
@@ -103,35 +80,40 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       products,
     } = test.data;
 
-    const rfq = await db.requestForQuotation.findUnique({
+    // Find and check RFQ
+    const previousRfqVersion = await db.requestForQuotation.findFirst({
       where: {
         id: id ?? "",
+        latestVersion: true,
+      },
+      include: {
+        products: true,
       },
     });
 
-    if (!rfq) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRFQId") }],
-        },
-        { status: 404 }
-      );
+    if (!previousRfqVersion) {
+      return getErrorResponse(t("invalidRFQId"), 404);
     }
 
-    if (rfq.companyId !== company.id) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+    if (previousRfqVersion.companyId !== company.id) {
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
-    const updatedRfq = await db.requestForQuotation.update({
+    // Prev version is not latest anymore
+    await db.requestForQuotation.update({
       where: {
-        id,
+        versionId: previousRfqVersion.versionId,
       },
       data: {
+        latestVersion: false,
+      },
+    });
+
+    // Create new version of RFQ
+    const newRfqVersion = await db.requestForQuotation.create({
+      data: {
+        id: previousRfqVersion.id,
+        number: previousRfqVersion.number,
         companyId: company.id,
         userId: company.users.length > 0 ? company.users[0].userId : null,
         publicRequest,
@@ -143,62 +125,49 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         deliveryTerms,
         paymentTerms,
       },
-      include: {
-        products: true,
-        user: {
-          select: {
-            id: true,
-            email: true,
-          },
-        },
-      },
     });
 
-    const rfqProducts = await Promise.all(
-      products.map(async (product) => {
-        return await db.requestForQuotationProducts.upsert({
-          where: {
-            id: product.id ?? "",
-          },
-          create: {
-            requestForQuotationId: updatedRfq.id,
-            productId: product.productId,
-            externalId: product.externalId,
-            price: product.price,
-            quantity: product.quantity,
-            deliveryDate: product.deliveryDate,
-            comment: product.comment,
-          },
-          update: {
-            productId: product.productId,
-            externalId: product.externalId,
-            price: product.price,
-            quantity: product.quantity,
-            deliveryDate: product.deliveryDate,
-            comment: product.comment,
-          },
-        });
-      })
-    );
+    const productsDataUnfiltered = products.map((product) => {
+      const existingRfqLine = previousRfqVersion.products.find(
+        (existingProduct) => existingProduct.id === product.id
+      );
+      if (product.id && !existingRfqLine) return null;
 
-    await db.requestForQuotationProducts.deleteMany({
-      where: {
-        AND: [
-          {
-            requestForQuotationId: updatedRfq.id,
-          },
-          {
-            id: {
-              notIn: rfqProducts.map((product) => product.id),
-            },
-          },
-        ],
-      },
+      const productData: Prisma.RequestForQuotationProductsCreateManyInput =
+        existingRfqLine
+          ? {
+              ...existingRfqLine,
+              versionId: undefined,
+              requestForQuotationId: newRfqVersion.versionId,
+            }
+          : {
+              requestForQuotationId: newRfqVersion.versionId,
+              productId: product.productId,
+              externalId: product.externalId,
+              price: product.price,
+              quantity: product.quantity,
+              deliveryDate: product.deliveryDate,
+              comment: product.comment,
+            };
+
+      return productData;
     });
 
-    const updatedRfqWithProducts = await db.requestForQuotation.findUnique({
+    const productsData: Prisma.RequestForQuotationProductsCreateManyInput[] =
+      productsDataUnfiltered.filter(
+        (
+          productData
+        ): productData is Prisma.RequestForQuotationProductsCreateManyInput =>
+          productData !== null
+      );
+
+    await db.requestForQuotationProducts.createMany({
+      data: productsData,
+    });
+
+    const newRfqVersionWithProducts = await db.requestForQuotation.findUnique({
       where: {
-        id,
+        versionId: newRfqVersion.versionId,
       },
       include: {
         products: true,
@@ -211,13 +180,10 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       },
     });
 
-    return NextResponse.json(updatedRfqWithProducts);
+    return NextResponse.json(newRfqVersionWithProducts);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -225,29 +191,19 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getCurrentCompany();
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     const isAdmin = await isCompanyAdmin(company.id);
     if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
-    const rfq = await db.requestForQuotation.findUnique({
-      where: { id },
+    const rfq = await db.requestForQuotation.findFirst({
+      where: { id, latestVersion: true },
       include: {
         company: true,
         products: {
@@ -261,25 +217,15 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
 
     // RFQ not found
     if (!rfq) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRFQId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRFQId"), 404);
     }
 
     if (rfq.companyId !== company.id) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Delete RFQ
-    await db.requestForQuotation.delete({
+    await db.requestForQuotation.deleteMany({
       where: {
         id: rfq.id,
       },
@@ -288,9 +234,6 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
     return NextResponse.json({ message: t("rfqDeleted") });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

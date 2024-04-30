@@ -5,7 +5,7 @@ import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getPaginationData from "@/lib/pagination";
-import { getTranslationsFromHeader } from "@/lib/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
@@ -13,12 +13,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAuthorized") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAuthorized"), 401);
     }
 
     const body = await request.json();
@@ -29,13 +24,7 @@ export async function POST(request: NextRequest) {
     });
     const test = getCompanySchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
@@ -82,10 +71,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(company);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -105,12 +91,7 @@ export async function GET(request: NextRequest) {
     const startIndex = (page - 1) * limit;
 
     if (!page || !limit)
-      return NextResponse.json(
-        {
-          errors: [{ message: t("pageAndlimitAreRequired") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("pageAndlimitAreRequired"), 400);
 
     // Filters
     const filters: Prisma.CompanyWhereInput = {};
@@ -146,9 +127,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

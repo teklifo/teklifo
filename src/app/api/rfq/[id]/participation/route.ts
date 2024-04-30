@@ -3,7 +3,7 @@ import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
-import { getTranslationsFromHeader } from "@/lib/utils";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type Props = {
   params: { id: string };
@@ -13,46 +13,34 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getCurrentCompany();
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     const isAdmin = await isCompanyAdmin(company.id);
     if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Update RFQ
-    const rfq = await db.requestForQuotation.findUnique({
+    const rfq = await db.requestForQuotation.findFirst({
       where: {
         id: id ?? "",
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
     if (!rfq) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidRFQId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidRFQId"), 404);
     }
 
     const updatedRfq = await db.requestForQuotation.update({
       where: {
-        id,
+        versionId: rfq.versionId,
       },
       data: {
         participants: {
@@ -86,9 +74,6 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
     return NextResponse.json(updatedRfq);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }

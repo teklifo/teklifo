@@ -6,32 +6,22 @@ import getCurrentCompany, {
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getRFQSchema } from "@/lib/schemas";
-import { getTranslationsFromHeader } from "@/lib/utils";
 import getPaginationData from "@/lib/pagination";
+import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Find company
+    // Check company
     const company = await getCurrentCompany();
     if (!company) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("invalidCompanyId") }],
-        },
-        { status: 404 }
-      );
+      return getErrorResponse(t("invalidCompanyId"), 404);
     }
 
     const isAdmin = await isCompanyAdmin(company.id);
     if (!isAdmin) {
-      return NextResponse.json(
-        {
-          errors: [{ message: t("notAllowed") }],
-        },
-        { status: 401 }
-      );
+      return getErrorResponse(t("notAllowed"), 401);
     }
 
     // Create a new RFQ
@@ -43,13 +33,7 @@ export async function POST(request: NextRequest) {
     });
     const test = getRFQSchema(st).safeParse(body);
     if (!test.success) {
-      return NextResponse.json(
-        {
-          message: t("invalidRequest"),
-          errors: test.error.issues,
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
     const {
@@ -80,8 +64,8 @@ export async function POST(request: NextRequest) {
           create: products.map((product) => ({
             externalId: product.externalId,
             productId: product.productId,
-            price: product.price,
             quantity: product.quantity,
+            price: product.price,
             deliveryDate: product.deliveryDate,
             comment: product.comment,
           })),
@@ -101,10 +85,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(rfq);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
 
@@ -125,15 +106,12 @@ export async function GET(request: NextRequest) {
     const startIndex = (page - 1) * limit;
 
     if (!page || !limit)
-      return NextResponse.json(
-        {
-          errors: [{ message: t("pageAndlimitAreRequired") }],
-        },
-        { status: 400 }
-      );
+      return getErrorResponse(t("pageAndlimitAreRequired"), 400);
 
     // Filters
-    const filters: Prisma.RequestForQuotationWhereInput = {};
+    const filters: Prisma.RequestForQuotationWhereInput = {
+      latestVersion: true,
+    };
     filters.OR = [
       {
         publicRequest: true,
@@ -182,9 +160,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { errors: [{ message: t("serverError") }] },
-      { status: 500 }
-    );
+    return getErrorResponse(t("serverError"), 500);
   }
 }
