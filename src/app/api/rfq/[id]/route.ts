@@ -161,8 +161,6 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
           productData !== null
       );
 
-    console.log(productsData);
-
     await db.requestForQuotationProducts.createMany({
       data: productsData,
     });

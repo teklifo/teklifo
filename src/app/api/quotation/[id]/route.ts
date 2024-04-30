@@ -12,9 +12,45 @@ import {
   calculateVatAmount,
   getVatRatePercentage,
 } from "@/lib/calculations";
-import getPaginationData from "@/lib/pagination";
 
-export async function POST(request: NextRequest) {
+type Props = {
+  params: { id: string };
+};
+
+export async function GET(request: NextRequest, { params: { id } }: Props) {
+  const { t } = await getTranslationsFromHeader(request.headers);
+
+  try {
+    const rfq = await db.quotation.findFirst({
+      where: { id: parseInt(id) },
+      include: {
+        company: true,
+        products: {
+          include: {
+            product: true,
+            rfqLine: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Quotation not found
+    if (!rfq) {
+      return getErrorResponse(t("invalidQuotationId"), 404);
+    }
+
+    return NextResponse.json(rfq);
+  } catch (error) {
+    console.log(error);
+    return getErrorResponse(t("serverError"), 500);
+  }
+}
+
+export async function PUT(request: NextRequest, { params: { id } }: Props) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
@@ -43,45 +79,29 @@ export async function POST(request: NextRequest) {
 
     const { rfqId, currency, description, products } = test.data;
 
-    // Check RFQ
-    const rfq = await db.requestForQuotation.findUnique({
+    // Find quotation
+    const existingQuotation = await db.quotation.findUnique({
       where: {
-        versionId: rfqId,
-        participants: {
-          some: {
-            companyId: company.id,
-          },
-        },
-        products: {
-          some: {
-            versionId: {
-              in: products.map((e) => e.rfqLineId),
-            },
-          },
-        },
+        id: parseInt(id),
       },
     });
-    if (!rfq) {
-      return getErrorResponse(t("invalidRFQId"), 400);
+
+    if (!existingQuotation) {
+      return getErrorResponse(t("invalidQuotationId"), 404);
     }
 
-    // Check uniqueness
-    const existingQuotation = await db.quotation.findFirst({
+    // Delete previous products
+    await db.quotationProducts.deleteMany({
       where: {
-        companyId: company.id,
-        rfqId,
+        quotationId: existingQuotation.id,
       },
     });
-    if (existingQuotation)
-      return getErrorResponse(
-        t("quotationAlreadyExists", {
-          companyName: company.name,
-          rfqNumber: rfq.number,
-        }),
-        400
-      );
 
-    const quotation = await db.quotation.create({
+    // Update quotation
+    const updatedQuotation = await db.quotation.update({
+      where: {
+        id: parseInt(id),
+      },
       data: {
         companyId: company.id,
         rfqId,
@@ -141,76 +161,49 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(quotation);
+    return NextResponse.json(updatedQuotation);
   } catch (error) {
     console.log(error);
     return getErrorResponse(t("serverError"), 500);
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function DELETE(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
-  const company = await getCurrentCompany();
-  if (!company) {
-    return getErrorResponse(t("invalidCompanyId"), 404);
-  }
 
   try {
-    const page = parseInt(
-      request.nextUrl.searchParams.get("page") as string,
-      10
-    );
-    const limit = parseInt(
-      request.nextUrl.searchParams.get("limit") as string,
-      10
-    );
+    // Check company
+    const company = await getCurrentCompany();
+    if (!company) {
+      return getErrorResponse(t("invalidCompanyId"), 404);
+    }
 
-    const startIndex = (page - 1) * limit;
+    const isAdmin = await isCompanyAdmin(company.id);
+    if (!isAdmin) {
+      return getErrorResponse(t("notAllowed"), 401);
+    }
 
-    if (!page || !limit)
-      return getErrorResponse(t("pageAndlimitAreRequired"), 400);
-
-    // Filters
-    const filters: Prisma.QuotationWhereInput = {};
-    filters.OR = [
-      {
-        companyId: company.id,
-      },
-      {
-        rfq: {
-          companyId: company.id,
-        },
-      },
-    ];
-
-    if (request.nextUrl.searchParams.get("companyId"))
-      filters.companyId = request.nextUrl.searchParams.get("companyId") ?? "";
-
-    if (request.nextUrl.searchParams.get("rfqCompanyId"))
-      filters.rfq = {
-        companyId: request.nextUrl.searchParams.get("rfqCompanyId") ?? "",
-      };
-
-    const [total, result] = await db.$transaction([
-      db.quotation.count({
-        where: filters,
-      }),
-      db.quotation.findMany({
-        take: limit,
-        skip: startIndex,
-        where: filters,
-        orderBy: {
-          createdAt: "desc",
-        },
-      }),
-    ]);
-
-    const pagination = getPaginationData(startIndex, page, limit, total);
-
-    return NextResponse.json({
-      result,
-      pagination,
+    const quotation = await db.quotation.findFirst({
+      where: { id: parseInt(id) },
     });
+
+    // Quotation not found
+    if (!quotation) {
+      return getErrorResponse(t("invalidQuotationId"), 404);
+    }
+
+    if (quotation.companyId !== company.id) {
+      return getErrorResponse(t("notAllowed"), 401);
+    }
+
+    // Delete quotation
+    await db.quotation.deleteMany({
+      where: {
+        id: quotation.id,
+      },
+    });
+
+    return NextResponse.json({ message: t("quotationDeleted") });
   } catch (error) {
     console.log(error);
     return getErrorResponse(t("serverError"), 500);
