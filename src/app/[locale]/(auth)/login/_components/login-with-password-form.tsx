@@ -76,7 +76,10 @@ const LoginWithPasswordForm = () => {
             <FormItem>
               <FormLabel>{t("email")}</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  data-test="credentials-provider-email-input"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,13 +92,22 @@ const LoginWithPasswordForm = () => {
             <FormItem>
               <FormLabel>{t("password")}</FormLabel>
               <FormControl>
-                <Input {...field} type="password" />
+                <Input
+                  {...field}
+                  type="password"
+                  data-test="credentials-provider-password-input"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={loading}
+          data-test="credentials-provider-submit-btn"
+        >
           {t("next")}
         </Button>
       </form>
