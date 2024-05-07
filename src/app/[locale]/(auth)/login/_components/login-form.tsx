@@ -70,13 +70,18 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>{t("email")}</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input data-test="email-provider-email-input" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={loading}
+          data-test="email-provider-submit-btn"
+        >
           {t("next")}
         </Button>
       </form>

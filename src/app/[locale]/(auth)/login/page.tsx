@@ -34,10 +34,18 @@ const Login = () => {
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
           <Tabs defaultValue="emailProvider">
             <TabsList className="w-full">
-              <TabsTrigger className="w-full" value="emailProvider">
+              <TabsTrigger
+                className="w-full"
+                value="emailProvider"
+                data-test="email-provider-trigger"
+              >
                 {t("emailProvider")}
               </TabsTrigger>
-              <TabsTrigger className="w-full" value="credentialsProvider">
+              <TabsTrigger
+                className="w-full"
+                value="credentialsProvider"
+                data-test="credentials-provider-trigger"
+              >
                 {t("credentialsProvider")}
               </TabsTrigger>
             </TabsList>
