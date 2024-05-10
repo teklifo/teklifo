@@ -1,8 +1,6 @@
 import { Metadata } from "next";
-import { headers, cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Prisma } from "@prisma/client";
 import { format } from "date-fns";
 import {
   Pencil,
@@ -25,22 +23,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import getCurrentCompany from "@/app/actions/get-current-company";
-import request from "@/lib/request";
+import getRFQ from "@/app/actions/get-rfq";
 import { cn } from "@/lib/utils";
 import { RFQProductCard } from "./_components/rfq-product-card";
 import DeleteRFQ from "./_components/delete-rfq";
-
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-    products: {
-      include: {
-        product: true;
-      };
-    };
-    participants: true;
-  };
-}>;
 
 type Props = {
   params: { locale: string; id: string };
@@ -66,40 +52,22 @@ export const generateMetadata = async ({
   };
 };
 
-const getRFQ = async (id: string) => {
-  try {
-    const cookieStore = cookies();
-    const headersList = headers();
-    const cookie = headersList.get("cookie");
-
-    return await request<RequestForQuotationType>(`/api/rfq/${id}`, {
-      headers: {
-        "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
-        Cookie: cookie,
-      },
-      next: { revalidate: 0 },
-    });
-  } catch (error) {
-    return undefined;
-  }
-};
-
 const RFQ = async ({ params: { id } }: Props) => {
   const t = await getTranslations("RFQ");
 
   const rfq = await getRFQ(id);
   if (!rfq) return notFound();
 
-  const userCompany = await getCurrentCompany();
+  const company = await getCurrentCompany();
 
   const isAdmin =
-    userCompany !== null ? userCompany.users[0].companyRole.default : false;
+    company !== null ? company.users[0].companyRole.default : false;
 
-  const userOwnsRFQ = rfq.companyId === userCompany?.id;
-  const userIsParticipant =
-    rfq.participants.find((e) => e.companyId === userCompany?.id) !== undefined;
+  const companyOwnsRFQ = rfq.companyId === company?.id;
+  const companyIsParticipant =
+    rfq.participants.find((e) => e.companyId === company?.id) !== undefined;
 
-  if (!userOwnsRFQ && !rfq.publicRequest && !userIsParticipant) {
+  if (!companyOwnsRFQ && !rfq.publicRequest && !companyIsParticipant) {
     redirect(`/supplier-guide/${rfq.id}`);
   }
 
@@ -122,7 +90,7 @@ const RFQ = async ({ params: { id } }: Props) => {
         <h1 className="scroll-m-20 text-4xl font-semibold tracking-tight">{`${t(
           "rfq"
         )} #${number}`}</h1>
-        {userOwnsRFQ && isAdmin && (
+        {companyOwnsRFQ && isAdmin && (
           <div className="flex space-x-2">
             <Link
               href={`/edit-rfq/${rfq.id}`}
@@ -181,7 +149,7 @@ const RFQ = async ({ params: { id } }: Props) => {
         </div>
         <div className="flex flex-row space-x-2">
           <Calendar />
-          <span className="font-semibold">{`${t("period")}:`}</span>
+          <span className="font-semibold">{`${t("date")}:`}</span>
           <span>
             {`${format(startDate, "dd.MM.yyyy")} - ${format(
               endDate,
@@ -245,7 +213,7 @@ const RFQ = async ({ params: { id } }: Props) => {
           )}
         </>
       )}
-      {userIsParticipant && (
+      {companyIsParticipant && (
         <div className="sticky bottom-8 flex justify-center">
           <Link
             href={`/new-quotation/${id}`}

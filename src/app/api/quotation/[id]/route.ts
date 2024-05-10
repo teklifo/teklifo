@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         products: {
           include: {
             product: true,
-            rfqLine: {
+            rfqRow: {
               select: {
                 id: true,
               },
@@ -127,9 +127,9 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
 
             return {
               externalId: product.externalId,
-              rfqLine: {
+              rfqRow: {
                 connect: {
-                  versionId: product.rfqLineId,
+                  versionId: product.rfqRowId,
                 },
               },
               product: {

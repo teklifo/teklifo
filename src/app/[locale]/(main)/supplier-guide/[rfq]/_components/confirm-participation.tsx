@@ -54,7 +54,7 @@ const ConfirmParticipation = ({ rfq, company }: Props) => {
 
       setOpen(false);
 
-      router.push(`/rfq/${rfq}`);
+      window.location.href = `/rfq/${rfq}`;
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;

@@ -317,8 +317,8 @@ model QuotationProducts {
   externalId    String?
   quotation     Quotation                   @relation(fields: [quotationId], references: [id], onDelete: Cascade)
   quotationId   Int
-  rfqLine       RequestForQuotationProducts @relation(fields: [rfqLineId], references: [versionId], onDelete: Cascade)
-  rfqLineId     String
+  rfqRow        RequestForQuotationProducts @relation(fields: [rfqRowId], references: [versionId], onDelete: Cascade)
+  rfqRowId      String
   product       Product                     @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId     Int
   quantity      Decimal                     @db.Decimal(15, 3)

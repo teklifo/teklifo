@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         products: {
           some: {
             versionId: {
-              in: products.map((e) => e.rfqLineId),
+              in: products.map((e) => e.rfqRowId),
             },
           },
         },
@@ -107,9 +107,9 @@ export async function POST(request: NextRequest) {
 
             return {
               externalId: product.externalId,
-              rfqLine: {
+              rfqRow: {
                 connect: {
-                  versionId: product.rfqLineId,
+                  versionId: product.rfqRowId,
                 },
               },
               product: {

@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Prisma } from "@prisma/client";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
-import { format } from "date-fns";
+import { addDays, format } from "date-fns";
+import { DateRange } from "react-day-picker";
 import { Plus, CalendarIcon, CheckCircle2 } from "lucide-react";
+import type { Prisma } from "@prisma/client";
 import RFQProduct from "./rfq-product";
 import { Button } from "@/components/ui/button";
 import {
@@ -65,21 +66,25 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
       id: rfq?.id,
       publicRequest: rfq?.publicRequest,
       currency: rfq?.currency,
-      startDate: rfq?.startDate,
-      endDate: rfq?.endDate,
+      date: rfq
+        ? {
+            from: rfq.startDate,
+            to: rfq.endDate,
+          }
+        : undefined,
       description: rfq?.description,
       deliveryAddress: rfq?.deliveryAddress,
       deliveryTerms: rfq?.deliveryTerms,
       paymentTerms: rfq?.paymentTerms,
-      products: rfq?.products.map((item) => {
+      products: rfq?.products.map((rfqRow) => {
         return {
-          id: item.id,
-          productId: item.productId ?? undefined,
-          product: item.product || undefined,
-          quantity: Number(item.quantity),
-          price: Number(item.price),
-          deliveryDate: item.deliveryDate,
-          comment: item.comment,
+          id: rfqRow.id,
+          productId: rfqRow.productId ?? undefined,
+          product: rfqRow.product || undefined,
+          quantity: Number(rfqRow.quantity),
+          price: Number(rfqRow.price),
+          deliveryDate: rfqRow.deliveryDate,
+          comment: rfqRow.comment,
         };
       }),
     },
@@ -166,74 +171,43 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
           <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
             <FormField
               control={form.control}
-              name={`startDate`}
+              name={`date`}
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>{t("startDate")}</FormLabel>
+                  <FormLabel>{t("date")}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
+                      <Button
+                        id="date"
+                        variant={"outline"}
+                        className={cn(
+                          "w-[300px] justify-start text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value?.from ? (
+                          field.value.to ? (
+                            <>
+                              {format(field.value.from, "LLL dd, y")} -{" "}
+                              {format(field.value.to, "LLL dd, y")}
+                            </>
                           ) : (
-                            <span>{t("pickDate")}</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
+                            format(field.value.from, "LLL dd, y")
+                          )
+                        ) : (
+                          <span>{t("pickADate")}</span>
+                        )}
+                      </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
-                        mode="single"
+                        initialFocus
+                        mode="range"
+                        defaultMonth={field?.value?.from}
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name={`endDate`}
-              render={({ field }) => (
-                <FormItem>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>{t("pickDate")}</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
+                        numberOfMonths={2}
                       />
                     </PopoverContent>
                   </Popover>

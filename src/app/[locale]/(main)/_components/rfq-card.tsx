@@ -32,7 +32,7 @@ const RFQCard = ({
         <div className="text-sm text-muted-foreground line-clamp-5 break-words space-y-1">
           <span>{publicRequest ? t("public") : t("private")}</span>
           <div className="flex flex-row space-x-2">
-            <span className="font-bold">{`${t("period")}:`}</span>
+            <span className="font-bold">{`${t("date")}:`}</span>
             <span>
               {`${format(startDate, "dd.MM.yyyy")} - ${format(
                 endDate,
