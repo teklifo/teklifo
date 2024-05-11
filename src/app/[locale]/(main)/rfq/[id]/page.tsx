@@ -1,32 +1,16 @@
 import { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { format } from "date-fns";
-import {
-  Pencil,
-  Calendar,
-  Lock,
-  Globe,
-  HelpCircle,
-  CircleDollarSign,
-  Building2,
-  Fingerprint,
-  Receipt,
-} from "lucide-react";
+import { Pencil, Receipt } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
 import { cn } from "@/lib/utils";
 import { RFQProductCard } from "./_components/rfq-product-card";
 import DeleteRFQ from "./_components/delete-rfq";
+import RFQMainInfo from "../../_components/rfq-main-info";
 
 type Props = {
   params: { locale: string; id: string };
@@ -74,9 +58,6 @@ const RFQ = async ({ params: { id } }: Props) => {
   const {
     number,
     description,
-    startDate,
-    endDate,
-    publicRequest,
     currency,
     products,
     paymentTerms,
@@ -106,63 +87,7 @@ const RFQ = async ({ params: { id } }: Props) => {
           </div>
         )}
       </div>
-      <div className="space-y-2">
-        <div className="flex flex-row items-end space-x-2">
-          <Building2 />
-          <span className="font-semibold">{`${t("company")}:`}</span>
-          <Link
-            href={`/company/${rfq.companyId}`}
-            className="scroll-m-20 underline text-lg font-semibold tracking-tight"
-          >
-            {rfq.company?.name}
-          </Link>
-        </div>
-        <div className="flex flex-row items-end space-x-2">
-          <Fingerprint />
-          <span className="font-semibold">{`${t("tin")}:`}</span>
-          <span>{rfq.company?.tin}</span>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <div className="flex flex-row w-auto space-x-2">
-          {publicRequest ? (
-            <>
-              <Globe />
-              <span className="font-semibold">{t("public")}</span>
-            </>
-          ) : (
-            <>
-              <Lock />
-              <span className="font-semibold">{t("private")}</span>
-            </>
-          )}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <HelpCircle className="text-muted-foreground" />
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>{publicRequest ? t("publicHint") : t("privateHint")}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-        <div className="flex flex-row space-x-2">
-          <Calendar />
-          <span className="font-semibold">{`${t("date")}:`}</span>
-          <span>
-            {`${format(startDate, "dd.MM.yyyy")} - ${format(
-              endDate,
-              "dd.MM.yyyy"
-            )}`}
-          </span>
-        </div>
-        <div className="flex flex-row space-x-2">
-          <CircleDollarSign />
-          <span className="font-semibold">{`${t("currency")}:`}</span>
-          <span>{currency}</span>
-        </div>
-      </div>
+      <RFQMainInfo rfq={rfq} />
       {description && (
         <div>
           <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
