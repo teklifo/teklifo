@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
+import QuotationProduct from "./quotation-product";
 import { getQuotationSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 
@@ -47,14 +48,14 @@ type RFQFormProps = {
 };
 
 const QuotationForm = ({ rfq, quotation }: RFQFormProps) => {
-  const t = useTranslations("RFQForm");
+  const t = useTranslations("QuotationForm");
 
   const update = quotation !== undefined;
 
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
-  const st = useTranslations("Schemas.rfqSchema");
+  const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -73,16 +74,21 @@ const QuotationForm = ({ rfq, quotation }: RFQFormProps) => {
           rfqRowId: rfqRow.id,
           productId: rfqRow.productId,
           product: rfqRow.product,
-          quantity: Number(quotationRow?.quantity),
-          price: Number(quotationRow?.price),
-          amount: Number(quotationRow?.price),
-          vatRate: quotationRow?.vatRate,
-          vatIncluded: quotationRow?.vatIncluded,
-          deliveryDate: quotationRow?.deliveryDate,
-          comment: quotationRow?.comment,
+          quantity: Number(quotationRow?.quantity) || undefined,
+          price: Number(quotationRow?.price) || undefined,
+          amount: Number(quotationRow?.price) || undefined,
+          vatRate: quotationRow?.vatRate || undefined,
+          vatIncluded: quotationRow?.vatIncluded || true,
+          deliveryDate: quotationRow?.deliveryDate || undefined,
+          comment: quotationRow?.comment || "",
         };
       }),
     },
+  });
+
+  const products = useFieldArray({
+    control: form.control,
+    name: "products",
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -137,9 +143,26 @@ const QuotationForm = ({ rfq, quotation }: RFQFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-        <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-          {`${t("products")} (${form.getValues().products.length || 0})`}
-        </h3>
+        <div className="space-y-4">
+          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            {`${t("products")} (${form.getValues("products")?.length || 0})`}
+          </h3>
+          {products.fields.map((productField, index) => {
+            const rfqRow = rfq.products.find(
+              (e) => e.id === productField.rfqRowId
+            );
+            if (!rfqRow) return null;
+
+            return (
+              <QuotationProduct
+                rfqRow={rfqRow}
+                key={index}
+                productField={productField}
+                index={index}
+              />
+            );
+          })}
+        </div>
       </form>
     </Form>
   );

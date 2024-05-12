@@ -87,6 +87,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       },
       include: {
         products: true,
+        participants: true,
       },
     });
 
@@ -123,31 +124,32 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         deliveryAddress,
         deliveryTerms,
         paymentTerms,
+        participants: {
+          createMany: {
+            data: previousRfqVersion.participants.map((e) => ({
+              companyId: e.companyId,
+            })),
+          },
+        },
       },
     });
 
-    const productsDataUnfiltered = products.map((product) => {
-      const existingRfqLine = previousRfqVersion.products.find(
-        (existingProduct) => existingProduct.id === product.id
+    const productsDataUnfiltered = products.map((row) => {
+      const existingRfqRow = previousRfqVersion.products.find(
+        (existingProduct) => existingProduct.id === row.id
       );
-      if (product.id && !existingRfqLine) return null;
+      if (row.id && !existingRfqRow) return null;
 
-      const productData: Prisma.RequestForQuotationProductsCreateManyInput =
-        existingRfqLine
-          ? {
-              ...existingRfqLine,
-              versionId: undefined,
-              requestForQuotationId: newRfqVersion.versionId,
-            }
-          : {
-              requestForQuotationId: newRfqVersion.versionId,
-              productId: product.productId,
-              externalId: product.externalId,
-              price: product.price,
-              quantity: product.quantity,
-              deliveryDate: product.deliveryDate,
-              comment: product.comment,
-            };
+      const productData: Prisma.RequestForQuotationProductsCreateManyInput = {
+        id: existingRfqRow ? existingRfqRow.id : undefined,
+        requestForQuotationId: newRfqVersion.versionId,
+        productId: row.productId,
+        externalId: row.externalId,
+        price: row.price,
+        quantity: row.quantity,
+        deliveryDate: row.deliveryDate,
+        comment: row.comment,
+      };
 
       return productData;
     });
