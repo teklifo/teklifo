@@ -268,7 +268,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
                 productId: 0,
                 quantity: 0,
                 price: 0,
-                deliveryDate: new Date(0),
+                deliveryDate: new Date(),
                 comment: "",
               })
             }

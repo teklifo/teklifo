@@ -461,7 +461,17 @@
     "unit": "Единица измерения",
     "brand": "Производитель",
     "requested": "Запрошено",
-    "myQuotation": "Наше предложение"
+    "myQuotation": "Ваше предложение",
+    "amount": "Сумма",
+    "vatRate": "Ставка НДС",
+    "selectVatRate": "Укажите ставку НДС",
+    "NOVAT": "Без НДС",
+    "VAT0": "0%",
+    "VAT18": "18%",
+    "VAT20": "20%",
+    "vatIncluded": "Сумма включает НДС",
+    "vatAmount": "Сумма НДС",
+    "amountWithVat": "Сумма с НДС"
   },
   "Schemas": {
     "companySchema": {

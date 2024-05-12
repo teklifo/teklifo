@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { RequestForQuotationProducts } from "@prisma/client";
+import { RequestForQuotationProducts, VatRates } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -14,6 +14,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -23,6 +31,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { getQuotationSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
+import {
+  calculateAmountWithVat,
+  calculateVatAmount,
+  getVatRatePercentage,
+} from "@/lib/calculations";
+import { Label } from "@/components/ui/label";
 
 type QuotationProductProps = {
   rfqRow: RequestForQuotationProducts;
@@ -43,8 +57,26 @@ const QuotationProduct = ({
   const formSchema = getQuotationSchema(st);
 
   const form = useFormContext<z.infer<typeof formSchema>>();
+  const setValue = form.setValue;
 
   const product = form.getValues(`products.${index}.product`);
+
+  const quantity = form.watch(`products.${index}.quantity`);
+  const price = form.watch(`products.${index}.price`);
+  const amount = form.watch(`products.${index}.amount`);
+  const vatIncluded = form.watch(`products.${index}.vatIncluded`);
+  const vatRate = form.watch(`products.${index}.vatRate`);
+  const vatRateInfo = getVatRatePercentage(vatRate);
+  const vatAmount =
+    calculateVatAmount(amount, vatRateInfo.vatRatePercentage) || 0;
+
+  const amountWithVat =
+    calculateAmountWithVat(amount, vatAmount, vatIncluded) || 0;
+
+  useEffect(() => {
+    const value = quantity * price;
+    setValue(`products.${index}.amount`, value || 0);
+  }, [index, setValue, price, quantity]);
 
   return (
     <Card key={productField.id} className="h-full w-full">
@@ -100,11 +132,11 @@ const QuotationProduct = ({
             {rfqRow.comment}
           </p>
         </div>
-        <div className="p-6 space-y-2 border rounded-md">
+        <div className="space-y-2 relative">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {`${t("myQuotation")}:`}
           </h4>
-          <div className="flex flex-col space-x-0 space-y-4 md:flex-row md:justify-start md:space-y-0 md:space-x-8">
+          <div className="grid md:grid-cols-4 gap-4">
             {/* Quantity */}
             <FormField
               control={form.control}
@@ -133,6 +165,93 @@ const QuotationProduct = ({
                 </FormItem>
               )}
             />
+            {/* Amount */}
+            <FormField
+              disabled
+              control={form.control}
+              name={`products.${index}.amount`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("amount")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} autoComplete="off" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
+            {/* VAT Rate */}
+            <FormField
+              control={form.control}
+              name={`products.${index}.vatRate`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("vatRate")}</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("selectVatRate")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Object.keys(VatRates).map((key) => (
+                        <SelectItem key={key} value={key}>
+                          {t(key)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* VAT amount */}
+            <div className="space-y-2">
+              <Label htmlFor="vatAmount">{t("vatAmount")}</Label>
+              <Input
+                disabled
+                type="text"
+                id="vatAmount"
+                value={Number(vatAmount).toFixed(2)}
+                className="h-10"
+              />
+            </div>
+            {/* Amount with VAT */}
+            <div className="space-y-2">
+              <Label htmlFor="amountWithVat">{t("amountWithVat")}</Label>
+              <Input
+                disabled
+                type="text"
+                id="amountWithVat"
+                value={Number(amountWithVat).toFixed(2)}
+                className="h-10"
+              />
+            </div>
+            {/* VAT included */}
+            <FormField
+              control={form.control}
+              name={`products.${index}.vatIncluded`}
+              render={({ field }) => (
+                <FormItem className="flex flex-row mb-5 items-end space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>{t("vatIncluded")}</FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
             {/* Delivery date */}
             <FormField
               control={form.control}

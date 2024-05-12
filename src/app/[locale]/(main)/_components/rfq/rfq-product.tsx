@@ -113,7 +113,7 @@ const RFQProduct = ({
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
-        <div className="flex flex-col space-x-0 space-y-4 md:flex-row md:justify-start md:space-y-0 md:space-x-8">
+        <div className="grid md:grid-cols-4 gap-4">
           {/* Quantity */}
           <FormField
             control={form.control}
