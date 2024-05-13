@@ -6,19 +6,19 @@ import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
-import { format } from "date-fns";
 import type { Prisma } from "@prisma/client";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import QuotationProduct from "./quotation-product";
+import ConfirmQuotation from "./confirm-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 
@@ -163,6 +163,26 @@ const QuotationForm = ({ rfq, quotation }: RFQFormProps) => {
             );
           })}
         </div>
+        <div className="space-y-4">
+          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            {t("additional")}
+          </h3>
+          {/* Payment terms*/}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("description")}</FormLabel>
+                <FormControl>
+                  <Textarea {...field} rows={10} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <ConfirmQuotation />
       </form>
     </Form>
   );

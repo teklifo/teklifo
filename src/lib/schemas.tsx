@@ -291,7 +291,7 @@ export const getQuotationProductSchema = (t: TranslateFunction) => {
     }),
     product: getProductSchema(() => {
       return "";
-    }).optional(),
+    }),
     quantity: z.coerce
       .number({
         required_error: t("invalidQuantity"),

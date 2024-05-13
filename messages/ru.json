@@ -471,7 +471,14 @@
     "VAT20": "20%",
     "vatIncluded": "Сумма включает НДС",
     "vatAmount": "Сумма НДС",
-    "amountWithVat": "Сумма с НДС"
+    "amountWithVat": "Сумма с НДС",
+    "additional": "Дополнительная информация",
+    "description": "Описание",
+    "sendQuotation": "Отправить коммерческое предложение",
+    "send": "Отправить",
+    "cancel": "Отмена",
+    "quotationConfirmTitle": "Отправить коммерческое предложение клиенту?",
+    "quotationConfirmSubtitle": "Сразу после подтверждения, клиенту будет отправлено уведомление о вашем коммерческом предложении"
   },
   "Schemas": {
     "companySchema": {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
@@ -29,6 +29,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { getQuotationSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import {
@@ -36,7 +38,6 @@ import {
   calculateVatAmount,
   getVatRatePercentage,
 } from "@/lib/calculations";
-import { Label } from "@/components/ui/label";
 
 type QuotationProductProps = {
   rfqRow: RequestForQuotationProducts;
@@ -50,8 +51,6 @@ const QuotationProduct = ({
   index,
 }: QuotationProductProps) => {
   const t = useTranslations("QuotationForm");
-
-  const [openProducts, setOpenProducts] = useState(false);
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
@@ -82,10 +81,13 @@ const QuotationProduct = ({
     <Card key={productField.id} className="h-full w-full">
       <CardHeader className="flex flex-col justify-between space-y-0">
         {/* Product */}
-        <p className="text-2xl font-semibold tracking-tight">
-          {`#${index + 1} ${product?.name || t("unknowProduct")}`}
-        </p>
-        {product && (
+        <div className="bg-muted p-6 rounded-md space-y-3">
+          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            {`${t("requested")}:`}
+          </h4>
+          <p className="text-2xl font-semibold tracking-tight">
+            {`#${index + 1} ${product.name}`}
+          </p>
           <div className="text-sm">
             <div className="flex flex-row space-x-2">
               <span>{`${t("number")}:`}</span>
@@ -100,14 +102,6 @@ const QuotationProduct = ({
               <span>{product.brand}</span>
             </div>
           </div>
-        )}
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* RFQ info */}
-        <div className="bg-muted p-6 rounded-md space-y-3">
-          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {`${t("requested")}:`}
-          </h4>
           <div className="flex flex-col space-y-2-md md:flex-row md:space-x-8 md:space-y-0">
             <div className="flex flex-col items-start">
               <span className="font-semibold">{`${t("quantity")}`}</span>
@@ -119,7 +113,7 @@ const QuotationProduct = ({
               <span className="font-semibold">{`${t("price")}`}</span>
               <span className="md:text-xl">{`${Number(rfqRow.price).toFixed(
                 2
-              )} ${"USD"}`}</span>
+              )} ${form.getValues("currency")}`}</span>
             </div>
             <div className="flex flex-col items-start">
               <span className="font-semibold">{`${t("deliveryDate")}`}</span>
@@ -132,6 +126,8 @@ const QuotationProduct = ({
             {rfqRow.comment}
           </p>
         </div>
+      </CardHeader>
+      <CardContent className="space-y-6">
         <div className="space-y-2 relative">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {`${t("myQuotation")}:`}
@@ -301,7 +297,7 @@ const QuotationProduct = ({
               <FormItem>
                 <FormLabel>{t("comment")}</FormLabel>
                 <FormControl>
-                  <Input {...field} autoComplete="off" />
+                  <Textarea {...field} autoComplete="off" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
