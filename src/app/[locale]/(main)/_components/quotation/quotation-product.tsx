@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, HelpCircle } from "lucide-react";
 import { format } from "date-fns";
 import { RequestForQuotationProducts, VatRates } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getQuotationSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import {
@@ -71,6 +77,8 @@ const QuotationProduct = ({
 
   const amountWithVat =
     calculateAmountWithVat(amount, vatAmount, vatIncluded) || 0;
+
+  const skip = form.watch(`products.${index}.skip`);
 
   useEffect(() => {
     const value = quantity * price;
@@ -132,7 +140,7 @@ const QuotationProduct = ({
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {`${t("myQuotation")}:`}
           </h4>
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className={cn("grid md:grid-cols-4 gap-4", skip && "hidden")}>
             {/* Quantity */}
             <FormField
               control={form.control}
@@ -177,7 +185,7 @@ const QuotationProduct = ({
               )}
             />
           </div>
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className={cn("grid md:grid-cols-4 gap-4", skip && "hidden")}>
             {/* VAT Rate */}
             <FormField
               control={form.control}
@@ -241,13 +249,15 @@ const QuotationProduct = ({
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>{t("vatIncluded")}</FormLabel>
+                    <FormLabel className="cursor-pointer">
+                      {t("vatIncluded")}
+                    </FormLabel>
                   </div>
                 </FormItem>
               )}
             />
           </div>
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className={cn("grid md:grid-cols-4 gap-4", skip && "hidden")}>
             {/* Delivery date */}
             <FormField
               control={form.control}
@@ -289,6 +299,7 @@ const QuotationProduct = ({
               )}
             />
           </div>
+
           {/* Comment*/}
           <FormField
             control={form.control}
@@ -303,6 +314,38 @@ const QuotationProduct = ({
               </FormItem>
             )}
           />
+          {/* Skip */}
+          <div className="flex flex-row items-center !mt-4 space-x-2">
+            <FormField
+              control={form.control}
+              name={`products.${index}.skip`}
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-end text-muted-foreground space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="cursor-pointer">
+                      {t("skip")}
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <HelpCircle className="text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>{t("skipHint")}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       </CardContent>
     </Card>

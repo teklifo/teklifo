@@ -278,51 +278,83 @@ export const getQuotationSchema = (t: TranslateFunction) => {
 };
 
 export const getQuotationProductSchema = (t: TranslateFunction) => {
-  return z.object({
-    id: z.string().optional(),
-    externalId: z.string().optional(),
-    rfqRowId: z.string({
-      required_error: t("invalidRFQRowId"),
-      invalid_type_error: t("invalidRFQRowId"),
-    }),
-    productId: z.coerce.number({
-      required_error: t("invalidProductId"),
-      invalid_type_error: t("invalidProductId"),
-    }),
-    product: getProductSchema(() => {
-      return "";
-    }),
-    quantity: z.coerce
-      .number({
+  return z
+    .object({
+      id: z.string().optional(),
+      externalId: z.string().optional(),
+      rfqRowId: z.string({
+        required_error: t("invalidRFQRowId"),
+        invalid_type_error: t("invalidRFQRowId"),
+      }),
+      productId: z.coerce.number({
+        required_error: t("invalidProductId"),
+        invalid_type_error: t("invalidProductId"),
+      }),
+      product: getProductSchema(() => {
+        return "";
+      }),
+      skip: z.boolean().default(false),
+      quantity: z.coerce.number({
         required_error: t("invalidQuantity"),
         invalid_type_error: t("invalidQuantity"),
-      })
-      .min(0.001, t("invalidQuantity")),
-    price: z.coerce
-      .number({
+      }),
+      price: z.coerce.number({
         required_error: t("invalidPrice"),
         invalid_type_error: t("invalidPrice"),
-      })
-      .min(0.01, t("invalidPrice")),
-    amount: z.coerce
-      .number({
+      }),
+      amount: z.coerce.number({
         required_error: t("invalidAmount"),
         invalid_type_error: t("invalidAmount"),
-      })
-      .min(0.01, t("invalidAmount")),
-    vatRate: z.enum(["NOVAT", "VAT0", "VAT18", "VAT20"], {
-      required_error: t("invalidVatRate"),
-      invalid_type_error: t("invalidVatRate"),
-    }),
-    vatIncluded: z.boolean().default(true),
-    deliveryDate: z.coerce.date({
-      errorMap: (issue, { defaultError }) => ({
-        message:
-          issue.code === "invalid_date"
-            ? t("invalidDeliveryDate")
-            : defaultError,
       }),
-    }),
-    comment: z.string().default(""),
-  });
+      vatRate: z.enum(["NOVAT", "VAT0", "VAT18", "VAT20"], {
+        required_error: t("invalidVatRate"),
+        invalid_type_error: t("invalidVatRate"),
+      }),
+      vatIncluded: z.boolean().default(true),
+      deliveryDate: z.coerce.date({
+        errorMap: (issue, { defaultError }) => ({
+          message:
+            issue.code === "invalid_date"
+              ? t("invalidDeliveryDate")
+              : defaultError,
+        }),
+      }),
+      comment: z.string().default(""),
+    })
+    .superRefine((schema, ctx) => {
+      if (schema.skip) return;
+
+      if (schema.quantity < 0.001) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_small,
+          minimum: 0.001,
+          inclusive: true,
+          type: "number",
+          path: ["quantity"],
+          message: t("invalidQuantity"),
+        });
+      }
+
+      if (schema.price < 0.01) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_small,
+          minimum: 0.01,
+          inclusive: true,
+          type: "number",
+          path: ["price"],
+          message: t("invalidPrice"),
+        });
+      }
+
+      if (schema.amount < 0.01) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_small,
+          minimum: 0.01,
+          inclusive: true,
+          type: "number",
+          path: ["amount"],
+          message: t("invalidAmount"),
+        });
+      }
+    });
 };

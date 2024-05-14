@@ -28,7 +28,7 @@ export function getErrorResponse(
   return NextResponse.json(
     {
       message,
-      errors: typeof errors === "string" ? [{ errors }] : errors,
+      errors: typeof errors === "string" ? [{ message: errors }] : errors,
     },
     { status }
   );
