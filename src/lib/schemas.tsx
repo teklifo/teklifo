@@ -260,6 +260,10 @@ export const getRFQProductSchema = (t: TranslateFunction) => {
 export const getQuotationSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.number().optional(),
+    rfqVersionId: z.string({
+      required_error: t("invalidRFQVersionId"),
+      invalid_type_error: t("invalidRFQVersionId"),
+    }),
     rfqId: z.string({
       required_error: t("invalidRFQId"),
       invalid_type_error: t("invalidRFQId"),
@@ -282,6 +286,10 @@ export const getQuotationProductSchema = (t: TranslateFunction) => {
     .object({
       id: z.string().optional(),
       externalId: z.string().optional(),
+      rfqRowVersionId: z.string({
+        required_error: t("invalidRFQRowVersionId"),
+        invalid_type_error: t("invalidRFQRowVersionId"),
+      }),
       rfqRowId: z.string({
         required_error: t("invalidRFQRowId"),
         invalid_type_error: t("invalidRFQRowId"),

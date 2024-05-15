@@ -298,36 +298,39 @@ model Participants {
 }
 
 model Quotation {
-  id          Int                 @id @default(autoincrement())
-  company     Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId   String
-  rfq         RequestForQuotation @relation(fields: [rfqId], references: [versionId], onDelete: Cascade)
-  rfqId       String
-  user        User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId      String?
-  currency    String
-  description String
-  products    QuotationProducts[]
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  id           Int                 @id @default(autoincrement())
+  company      Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId    String
+  rfq          RequestForQuotation @relation(fields: [rfqVersionId], references: [versionId], onDelete: Cascade)
+  rfqVersionId String
+  rfqId        String
+  user         User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId       String?
+  currency     String
+  description  String
+  products     QuotationProducts[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 }
 
 model QuotationProducts {
-  id            String                      @id @default(uuid())
-  externalId    String?
-  quotation     Quotation                   @relation(fields: [quotationId], references: [id], onDelete: Cascade)
-  quotationId   Int
-  rfqRow        RequestForQuotationProducts @relation(fields: [rfqRowId], references: [versionId], onDelete: Cascade)
-  rfqRowId      String
-  product       Product                     @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId     Int
-  quantity      Decimal                     @db.Decimal(15, 3)
-  price         Decimal                     @db.Decimal(15, 2)
-  amount        Decimal                     @db.Decimal(15, 2)
-  vatRate       VatRates
-  vatAmount     Decimal                     @db.Decimal(15, 2)
-  vatIncluded   Boolean
-  amountWithVat Decimal                     @db.Decimal(15, 2)
-  deliveryDate  DateTime
-  comment       String
+  id              String                      @id @default(uuid())
+  externalId      String?
+  quotation       Quotation                   @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  quotationId     Int
+  rfqRow          RequestForQuotationProducts @relation(fields: [rfqVersionRowId], references: [versionId], onDelete: Cascade)
+  rfqVersionRowId String
+  rfqRowId        String
+  product         Product                     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId       Int
+  quantity        Decimal                     @db.Decimal(15, 3)
+  price           Decimal                     @db.Decimal(15, 2)
+  amount          Decimal                     @db.Decimal(15, 2)
+  vatRate         VatRates
+  vatAmount       Decimal                     @db.Decimal(15, 2)
+  vatIncluded     Boolean
+  amountWithVat   Decimal                     @db.Decimal(15, 2)
+  deliveryDate    DateTime
+  comment         String
+  skip            Boolean                     @default(false)
 }

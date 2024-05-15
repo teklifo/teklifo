@@ -41,12 +41,14 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { rfqId, currency, description, products } = test.data;
+    const { rfqVersionId, rfqId, currency, description, products } = test.data;
+
+    console.log(rfqVersionId);
 
     // Check RFQ
     const rfq = await db.requestForQuotation.findUnique({
       where: {
-        versionId: rfqId,
+        versionId: rfqVersionId,
         participants: {
           some: {
             companyId: company.id,
@@ -55,7 +57,7 @@ export async function POST(request: NextRequest) {
         products: {
           some: {
             versionId: {
-              in: products.map((e) => e.rfqRowId),
+              in: products.map((e) => e.rfqRowVersionId),
             },
           },
         },
@@ -84,48 +86,48 @@ export async function POST(request: NextRequest) {
     const quotation = await db.quotation.create({
       data: {
         companyId: company.id,
+        rfqVersionId,
         rfqId,
         userId: company.users.length > 0 ? company.users[0].userId : null,
         currency,
         description,
         products: {
-          create: products.map((product) => {
+          create: products.map((row) => {
             const { vatRate, vatRatePercentage } = getVatRatePercentage(
-              product.vatRate
+              row.vatRate
             );
 
-            const vatAmount = calculateVatAmount(
-              product.amount,
-              vatRatePercentage
-            );
+            const vatAmount = calculateVatAmount(row.amount, vatRatePercentage);
 
             const amountWithVat = calculateAmountWithVat(
-              product.amount,
+              row.amount,
               vatAmount,
-              product.vatIncluded
+              row.vatIncluded
             );
 
             return {
-              externalId: product.externalId,
+              externalId: row.externalId,
               rfqRow: {
                 connect: {
-                  versionId: product.rfqRowId,
+                  versionId: row.rfqRowVersionId,
                 },
               },
+              rfqRowId: row.rfqRowId,
               product: {
                 connect: {
-                  id: product.productId,
+                  id: row.productId,
                 },
               },
-              quantity: product.quantity,
-              price: product.price,
-              amount: product.amount,
+              quantity: row.quantity,
+              price: row.price,
+              amount: row.amount,
               vatRate,
               vatAmount,
-              vatIncluded: product.vatIncluded,
+              vatIncluded: row.vatIncluded,
               amountWithVat,
-              deliveryDate: product.deliveryDate,
-              comment: product.comment,
+              deliveryDate: row.deliveryDate,
+              comment: row.comment,
+              skip: row.skip,
             };
           }),
         },

@@ -55,6 +55,7 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
     reValidateMode: "onChange",
     defaultValues: {
       id: quotation?.id,
+      rfqVersionId: rfq.versionId,
       rfqId: rfq.id,
       currency: quotation?.currency || rfq.currency,
       description: quotation?.description,
@@ -64,6 +65,7 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
         );
         return {
           id: quotationRow?.id,
+          rfqRowVersionId: rfqRow.versionId,
           rfqRowId: rfqRow.id,
           productId: rfqRow.productId,
           product: rfqRow.product,
