@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { Company as CompanyType } from "@prisma/client";
-import { Plus } from "lucide-react";
+import { Building2, Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import getCurrentUser from "@/app/actions/get-current-user";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -72,9 +72,14 @@ const UserCompaniesContent = ({
     <MaxWidthWrapper className="my-8 space-y-4">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {t("title")}
-          </h1>
+          <div className="flex flex-row items-center space-x-2">
+            <div>
+              <Building2 className="w-10 h-10" />
+            </div>
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+              {t("title")}
+            </h1>
+          </div>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         <Link

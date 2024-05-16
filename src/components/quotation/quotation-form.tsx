@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import type { Prisma } from "@prisma/client";
+import { List } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -17,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import QuotationItem from "./quotation-item";
 import ConfirmQuotation from "./confirm-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
+import { Package } from "lucide-react";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -90,9 +92,12 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
     <Form {...form}>
       <form className="space-y-10">
         <div className="space-y-4">
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {`${t("products")} (${form.getValues("products")?.length || 0})`}
-          </h3>
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Package className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {`${t("products")} (${form.getValues("products")?.length || 0})`}
+            </h3>
+          </div>
           {products.fields.map((productField, index) => {
             const rfqItem = rfq.products.find(
               (e) => e.id === productField.rfqItemId
@@ -110,9 +115,12 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
           })}
         </div>
         <div className="space-y-4">
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {t("additional")}
-          </h3>
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <List className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("additional")}
+            </h3>
+          </div>
           {/* Payment terms*/}
           <FormField
             control={form.control}

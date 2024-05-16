@@ -6,7 +6,7 @@ import Image from "next/image";
 import type { PriceType as PriceTypeType } from "@prisma/client";
 import PriceTypeForm from "./_components/price-type-form";
 import DeletePriceType from "./_components/delete-price-type";
-import { MoreHorizontal } from "lucide-react";
+import { Coins, MoreHorizontal } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { Button } from "@/components/ui/button";
@@ -88,9 +88,14 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
     <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {t("title")}
-          </h1>
+          <div className="flex flex-row items-center space-x-2">
+            <div>
+              <Coins className="w-10 h-10" />
+            </div>
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+              {t("title")}
+            </h1>
+          </div>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         {isAdmin && <PriceTypeForm companyId={company.id} />}

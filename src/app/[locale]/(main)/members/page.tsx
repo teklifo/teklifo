@@ -3,7 +3,7 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Users } from "lucide-react";
 import MemberForm from "./_components/member-form";
 import InvitationForm from "./_components/invitation-form";
 import DeleteMember from "./_components/delete-member";
@@ -92,9 +92,14 @@ const Members = async ({ searchParams: { page } }: Props) => {
     <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {t("title")}
-          </h1>
+          <div className="flex flex-row items-center space-x-2">
+            <div>
+              <Users className="w-10 h-10" />
+            </div>
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+              {t("title")}
+            </h1>
+          </div>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         {isAdmin && <InvitationForm companyId={company.id} />}

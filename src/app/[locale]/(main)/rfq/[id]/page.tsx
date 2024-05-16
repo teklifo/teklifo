@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { Pencil, Receipt } from "lucide-react";
+import { FileOutput, Package, Pencil, Receipt } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
@@ -68,9 +68,14 @@ const RFQ = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
-        <h1 className="scroll-m-20 text-4xl font-semibold tracking-tight">{`${t(
-          "rfq"
-        )} #${number}`}</h1>
+        <div className="flex flex-row items-center space-x-2">
+          <div>
+            <FileOutput className="w-10 h-10" />
+          </div>
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {`${t("rfq")} #${number}`}
+          </h1>
+        </div>
         {companyOwnsRFQ && isAdmin && (
           <div className="flex space-x-2">
             <Link
@@ -96,9 +101,12 @@ const RFQ = async ({ params: { id } }: Props) => {
           <div className="whitespace-pre-line">{description}</div>
         </div>
       )}
-      <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        {`${t("products")} (${products.length || 0})`}
-      </h3>
+      <div className="flex flex-row items-center border-b pb-2 space-x-2">
+        <Package className="w-8 h-8" />
+        <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+          {`${t("products")} (${products.length || 0})`}
+        </h3>
+      </div>
       {products.map((product, index) => (
         <RFQItemCard
           key={index}

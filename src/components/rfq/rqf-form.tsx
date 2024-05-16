@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
-import { Plus, CalendarIcon, CheckCircle2 } from "lucide-react";
+import { Plus, CalendarIcon, CheckCircle2, Info, Package } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import RFQItem from "./rfq-item";
 import { Button } from "@/components/ui/button";
@@ -144,9 +144,12 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
         <div className="space-y-4">
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {t("main")}
-          </h3>
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Info className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("main")}
+            </h3>
+          </div>
           {/* Public */}
           <FormField
             control={form.control}
@@ -246,9 +249,12 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
         </div>
         {/* Products */}
         <div className="space-y-4">
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {`${t("products")} (${form.getValues("products")?.length || 0})`}
-          </h3>
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Package className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {`${t("products")} (${form.getValues("products")?.length || 0})`}
+            </h3>
+          </div>
           {products.fields.map((productField, index) => (
             <RFQItem
               key={index}
@@ -259,27 +265,32 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               }}
             />
           ))}
-          <Button
-            type="button"
-            className="space-x-2"
-            onClick={() =>
-              products.append({
-                productId: 0,
-                quantity: 0,
-                price: 0,
-                deliveryDate: new Date(),
-                comment: "",
-              })
-            }
-          >
-            <Plus />
-            <span>{t("addItem")}</span>
-          </Button>
+          <div className="flex justify-center items-center">
+            <Button
+              type="button"
+              className="space-x-2"
+              onClick={() =>
+                products.append({
+                  productId: 0,
+                  quantity: 0,
+                  price: 0,
+                  deliveryDate: new Date(),
+                  comment: "",
+                })
+              }
+            >
+              <Plus />
+              <span>{t("addItem")}</span>
+            </Button>
+          </div>
         </div>
         <div className="space-y-4">
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {t("additional")}
-          </h3>
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Package className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("additional")}
+            </h3>
+          </div>
           {/* Delivery address*/}
           <FormField
             control={form.control}

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import type { RequestForQuotation as RequestForQuotationType } from "@prisma/client";
-import { Plus } from "lucide-react";
+import { FileInput, Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQCard from "@/components/rfq/rfq-card";
@@ -73,9 +73,14 @@ const IncomingRFQ = async ({ searchParams: { page } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8">
       <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {t("title")}
-        </h1>
+        <div className="flex flex-row items-center space-x-2">
+          <div>
+            <FileInput className="w-10 h-10" />
+          </div>
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {t("title")}
+          </h1>
+        </div>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
       <div className="mt-4">

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import type { Stock as StockType } from "@prisma/client";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Warehouse } from "lucide-react";
 import StockForm from "./_components/stock-form";
 import DeleteStock from "./_components/delete-stock";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -88,9 +88,14 @@ const Stocks = async ({ searchParams: { page } }: Props) => {
     <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {t("title")}
-          </h1>
+          <div className="flex flex-row items-center space-x-2">
+            <div>
+              <Warehouse className="w-10 h-10" />
+            </div>
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+              {t("title")}
+            </h1>
+          </div>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         {isAdmin && <StockForm companyId={company.id} />}

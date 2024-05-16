@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon, Receipt } from "lucide-react";
 import { format } from "date-fns";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationForm from "@/components/quotation/quotation-form";
@@ -44,9 +44,14 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
       <div className="space-y-2 mb-8">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {t("newTitle")}
-        </h1>
+        <div className="flex flex-row items-center space-x-2">
+          <div>
+            <Receipt className="w-10 h-10" />
+          </div>
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {t("newTitle")}
+          </h1>
+        </div>
         <p className="text-lg text-muted-foreground">{t("newSubtitle")}</p>
       </div>
       {companyOwnsRFQ ? (

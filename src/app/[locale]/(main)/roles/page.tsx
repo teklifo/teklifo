@@ -3,7 +3,7 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { CompanyRole as RoleType } from "@prisma/client";
-import { MoreHorizontal, Plus, Pencil } from "lucide-react";
+import { MoreHorizontal, Plus, Pencil, UserCog } from "lucide-react";
 import { Link } from "@/navigation";
 import DeleteRole from "./_components/delete-role";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -88,9 +88,14 @@ const Roles = async ({ searchParams: { page } }: Props) => {
     <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {t("title")}
-          </h1>
+          <div className="flex flex-row items-center space-x-2">
+            <div>
+              <UserCog className="w-10 h-10" />
+            </div>
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+              {t("title")}
+            </h1>
+          </div>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         {isAdmin && (

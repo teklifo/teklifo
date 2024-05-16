@@ -3,6 +3,7 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
+import { FileOutput } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQForm from "@/components/rfq/rqf-form";
 import getCurrentCompany from "@/app/actions/get-current-company";
@@ -83,9 +84,14 @@ const EditRFQ = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8">
       <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {t("updateTitle", { number: rfq.number })}
-        </h1>
+        <div className="flex flex-row items-center space-x-2">
+          <div>
+            <FileOutput className="w-10 h-10" />
+          </div>
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {t("updateTitle", { number: rfq.number })}
+          </h1>
+        </div>
         <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>
       </div>
       <div className="mt-4">
