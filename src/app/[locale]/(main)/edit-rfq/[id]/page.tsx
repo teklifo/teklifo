@@ -3,8 +3,8 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
-import RFQForm from "@/app/[locale]/(main)/_components/rfq/rqf-form";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import RFQForm from "@/components/rfq/rqf-form";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 

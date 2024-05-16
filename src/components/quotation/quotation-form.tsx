@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import QuotationProduct from "./quotation-product";
+import QuotationItem from "./quotation-item";
 import ConfirmQuotation from "./confirm-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
 
@@ -59,23 +59,23 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
       rfqId: rfq.id,
       currency: quotation?.currency || rfq.currency,
       description: quotation?.description,
-      products: rfq.products.map((rfqRow) => {
-        const quotationRow = quotation?.products.find(
-          (quotationRow) => quotationRow.rfqRowId === rfqRow.id
+      products: rfq.products.map((rfqItem) => {
+        const quotationItem = quotation?.products.find(
+          (quotationItem) => quotationItem.rfqItemId === rfqItem.id
         );
         return {
-          id: quotationRow?.id,
-          rfqRowVersionId: rfqRow.versionId,
-          rfqRowId: rfqRow.id,
-          productId: rfqRow.productId,
-          product: rfqRow.product,
-          quantity: Number(quotationRow?.quantity) || 0,
-          price: Number(quotationRow?.price) || 0,
-          amount: Number(quotationRow?.price) || 0,
-          vatRate: quotationRow?.vatRate || "NOVAT",
-          vatIncluded: quotationRow?.vatIncluded || true,
-          deliveryDate: quotationRow?.deliveryDate || new Date(),
-          comment: quotationRow?.comment || "",
+          id: quotationItem?.id,
+          rfqItemVersionId: rfqItem.versionId,
+          rfqItemId: rfqItem.id,
+          productId: rfqItem.productId,
+          product: rfqItem.product,
+          quantity: Number(quotationItem?.quantity) || 0,
+          price: Number(quotationItem?.price) || 0,
+          amount: Number(quotationItem?.price) || 0,
+          vatRate: quotationItem?.vatRate || "NOVAT",
+          vatIncluded: quotationItem?.vatIncluded || true,
+          deliveryDate: quotationItem?.deliveryDate || new Date(),
+          comment: quotationItem?.comment || "",
         };
       }),
     },
@@ -94,14 +94,14 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
             {`${t("products")} (${form.getValues("products")?.length || 0})`}
           </h3>
           {products.fields.map((productField, index) => {
-            const rfqRow = rfq.products.find(
-              (e) => e.id === productField.rfqRowId
+            const rfqItem = rfq.products.find(
+              (e) => e.id === productField.rfqItemId
             );
-            if (!rfqRow) return null;
+            if (!rfqItem) return null;
 
             return (
-              <QuotationProduct
-                rfqRow={rfqRow}
+              <QuotationItem
+                rfqItem={rfqItem}
                 key={index}
                 productField={productField}
                 index={index}

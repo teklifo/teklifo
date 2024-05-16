@@ -9,7 +9,7 @@ import * as z from "zod";
 import { format } from "date-fns";
 import { Plus, CalendarIcon, CheckCircle2 } from "lucide-react";
 import type { Prisma } from "@prisma/client";
-import RFQProduct from "./rfq-product";
+import RFQItem from "./rfq-item";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -75,15 +75,15 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
       deliveryAddress: rfq?.deliveryAddress,
       deliveryTerms: rfq?.deliveryTerms,
       paymentTerms: rfq?.paymentTerms,
-      products: rfq?.products.map((rfqRow) => {
+      products: rfq?.products.map((rfqItem) => {
         return {
-          id: rfqRow.id,
-          productId: rfqRow.productId ?? undefined,
-          product: rfqRow.product || undefined,
-          quantity: Number(rfqRow.quantity),
-          price: Number(rfqRow.price),
-          deliveryDate: rfqRow.deliveryDate,
-          comment: rfqRow.comment,
+          id: rfqItem.id,
+          productId: rfqItem.productId ?? undefined,
+          product: rfqItem.product || undefined,
+          quantity: Number(rfqItem.quantity),
+          price: Number(rfqItem.price),
+          deliveryDate: rfqItem.deliveryDate,
+          comment: rfqItem.comment,
         };
       }),
     },
@@ -250,7 +250,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             {`${t("products")} (${form.getValues("products")?.length || 0})`}
           </h3>
           {products.fields.map((productField, index) => (
-            <RFQProduct
+            <RFQItem
               key={index}
               productField={productField}
               index={index}
@@ -273,7 +273,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             }
           >
             <Plus />
-            <span>{t("addRow")}</span>
+            <span>{t("addItem")}</span>
           </Button>
         </div>
         <div className="space-y-4">

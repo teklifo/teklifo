@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
-import PriceTable from "./price-table/";
+import PriceTable from "@/components/price-table";
+import BalanceTable from "@/components/stock-balance-table";
 import {
   Card,
   CardContent,
@@ -18,7 +19,6 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ProductWithPricesAndStocks } from "@/types";
-import BalanceTable from "./stock-balance-table";
 
 type ProductCardProps = {
   product: ProductWithPricesAndStocks;

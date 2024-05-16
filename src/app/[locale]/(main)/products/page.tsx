@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import ProductCard from "@/app/[locale]/(main)/_components/product-card";
+import ProductCard from "@/components/product/product-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {

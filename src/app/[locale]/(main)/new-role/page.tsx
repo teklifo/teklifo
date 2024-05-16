@@ -5,8 +5,8 @@ import type {
   Stock as StockType,
   PriceType as PriceTypeType,
 } from "@prisma/client";
-import EditRole from "@/app/[locale]/(main)/roles/_components/edit-role";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import EditRole from "@/components/role/edit-role";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
 import getCurrentCompany from "@/app/actions/get-current-company";
 

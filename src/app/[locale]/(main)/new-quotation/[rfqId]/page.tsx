@@ -5,10 +5,10 @@ import { getTranslations } from "next-intl/server";
 import { ExternalLinkIcon } from "lucide-react";
 import { format } from "date-fns";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import QuotationForm from "../../_components/quotation/quotation-form";
+import QuotationForm from "@/components/quotation/quotation-form";
+import RFQInfo from "@/components/rfq/rfq-main-info";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
-import RFQInfo from "../../_components/rfq-main-info";
 
 type Props = {
   params: { locale: string; rfqId: string };

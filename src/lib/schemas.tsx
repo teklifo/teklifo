@@ -218,11 +218,11 @@ export const getRFQSchema = (t: TranslateFunction) => {
     deliveryAddress: z.string().default(""),
     deliveryTerms: z.string().default(""),
     paymentTerms: z.string().default(""),
-    products: z.array(getRFQProductSchema(t)).min(1, t("invalidProducts")),
+    products: z.array(getRFQItemSchema(t)).min(1, t("invalidProducts")),
   });
 };
 
-export const getRFQProductSchema = (t: TranslateFunction) => {
+export const getRFQItemSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.string().optional(),
     externalId: z.string().optional(),
@@ -275,24 +275,22 @@ export const getQuotationSchema = (t: TranslateFunction) => {
       })
       .min(1, t("invalidCurrency")),
     description: z.string().default(""),
-    products: z
-      .array(getQuotationProductSchema(t))
-      .min(1, t("invalidProducts")),
+    products: z.array(getQuotationItemSchema(t)).min(1, t("invalidProducts")),
   });
 };
 
-export const getQuotationProductSchema = (t: TranslateFunction) => {
+export const getQuotationItemSchema = (t: TranslateFunction) => {
   return z
     .object({
       id: z.string().optional(),
       externalId: z.string().optional(),
-      rfqRowVersionId: z.string({
-        required_error: t("invalidRFQRowVersionId"),
-        invalid_type_error: t("invalidRFQRowVersionId"),
+      rfqItemVersionId: z.string({
+        required_error: t("invalidRFQItemVersionId"),
+        invalid_type_error: t("invalidRFQItemVersionId"),
       }),
-      rfqRowId: z.string({
-        required_error: t("invalidRFQRowId"),
-        invalid_type_error: t("invalidRFQRowId"),
+      rfqItemId: z.string({
+        required_error: t("invalidRFQItemId"),
+        invalid_type_error: t("invalidRFQItemId"),
       }),
       productId: z.coerce.number({
         required_error: t("invalidProductId"),

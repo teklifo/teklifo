@@ -4,13 +4,13 @@ import { getTranslations } from "next-intl/server";
 import { Pencil, Receipt } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
 import { cn } from "@/lib/utils";
-import { RFQProductCard } from "./_components/rfq-product-card";
+import { RFQItemCard } from "./_components/rfq-product-card";
 import DeleteRFQ from "./_components/delete-rfq";
-import RFQMainInfo from "../../_components/rfq-main-info";
 
 type Props = {
   params: { locale: string; id: string };
@@ -100,7 +100,7 @@ const RFQ = async ({ params: { id } }: Props) => {
         {`${t("products")} (${products.length || 0})`}
       </h3>
       {products.map((product, index) => (
-        <RFQProductCard
+        <RFQItemCard
           key={index}
           number={index + 1}
           currency={currency}

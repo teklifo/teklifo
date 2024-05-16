@@ -134,35 +134,35 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       },
     });
 
-    const productsDataUnfiltered = products.map((row) => {
-      const existingRfqRow = previousRfqVersion.products.find(
-        (existingProduct) => existingProduct.id === row.id
+    const productsDataUnfiltered = products.map((item) => {
+      const existingRfqItem = previousRfqVersion.products.find(
+        (existingProduct) => existingProduct.id === item.id
       );
-      if (row.id && !existingRfqRow) return null;
+      if (item.id && !existingRfqItem) return null;
 
-      const productData: Prisma.RequestForQuotationProductsCreateManyInput = {
-        id: existingRfqRow ? existingRfqRow.id : undefined,
+      const productData: Prisma.RequestForQuotationItemsCreateManyInput = {
+        id: existingRfqItem ? existingRfqItem.id : undefined,
         requestForQuotationId: newRfqVersion.versionId,
-        productId: row.productId,
-        externalId: row.externalId,
-        price: row.price,
-        quantity: row.quantity,
-        deliveryDate: row.deliveryDate,
-        comment: row.comment,
+        productId: item.productId,
+        externalId: item.externalId,
+        price: item.price,
+        quantity: item.quantity,
+        deliveryDate: item.deliveryDate,
+        comment: item.comment,
       };
 
       return productData;
     });
 
-    const productsData: Prisma.RequestForQuotationProductsCreateManyInput[] =
+    const productsData: Prisma.RequestForQuotationItemsCreateManyInput[] =
       productsDataUnfiltered.filter(
         (
           productData
-        ): productData is Prisma.RequestForQuotationProductsCreateManyInput =>
+        ): productData is Prisma.RequestForQuotationItemsCreateManyInput =>
           productData !== null
       );
 
-    await db.requestForQuotationProducts.createMany({
+    await db.requestForQuotationItems.createMany({
       data: productsData,
     });
 

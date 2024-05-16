@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         products: {
           include: {
             product: true,
-            rfqRow: {
+            rfqItem: {
               select: {
                 id: true,
               },
@@ -91,7 +91,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     }
 
     // Delete previous products
-    await db.quotationProducts.deleteMany({
+    await db.quotationItems.deleteMany({
       where: {
         quotationId: existingQuotation.id,
       },
@@ -110,42 +110,45 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         currency,
         description,
         products: {
-          create: products.map((row) => {
+          create: products.map((item) => {
             const { vatRate, vatRatePercentage } = getVatRatePercentage(
-              row.vatRate
+              item.vatRate
             );
 
-            const vatAmount = calculateVatAmount(row.amount, vatRatePercentage);
+            const vatAmount = calculateVatAmount(
+              item.amount,
+              vatRatePercentage
+            );
 
             const amountWithVat = calculateAmountWithVat(
-              row.amount,
+              item.amount,
               vatAmount,
-              row.vatIncluded
+              item.vatIncluded
             );
 
             return {
-              externalId: row.externalId,
-              rfqRow: {
+              externalId: item.externalId,
+              rfqItem: {
                 connect: {
-                  versionId: row.rfqRowVersionId,
+                  versionId: item.rfqItemVersionId,
                 },
               },
-              rfqRowId: row.rfqRowId,
+              rfqItemId: item.rfqItemId,
               product: {
                 connect: {
-                  id: row.productId,
+                  id: item.productId,
                 },
               },
-              quantity: row.quantity,
-              price: row.price,
-              amount: row.amount,
+              quantity: item.quantity,
+              price: item.price,
+              amount: item.amount,
               vatRate,
               vatAmount,
-              vatIncluded: row.vatIncluded,
+              vatIncluded: item.vatIncluded,
               amountWithVat,
-              deliveryDate: row.deliveryDate,
-              comment: row.comment,
-              skip: row.skip,
+              deliveryDate: item.deliveryDate,
+              comment: item.comment,
+              skip: item.skip,
             };
           }),
         },

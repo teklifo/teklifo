@@ -5,6 +5,7 @@ import * as z from "zod";
 import { MoreHorizontal, CalendarIcon, X } from "lucide-react";
 import { format } from "date-fns";
 import { Product as ProductType } from "@prisma/client";
+import ProductSelect from "@/components/product/product-select";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -27,21 +28,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
-import ProductSelect from "../product-select";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
-type RFQProductProps = {
+type RFQItemProps = {
   productField: FieldArrayWithId;
   index: number;
   removeProduct: () => void;
 };
 
-const RFQProduct = ({
-  productField,
-  index,
-  removeProduct,
-}: RFQProductProps) => {
+const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
   const t = useTranslations("RFQForm");
 
   const [openProducts, setOpenProducts] = useState(false);
@@ -107,7 +103,7 @@ const RFQProduct = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" className="flex items-center gap-4">
-              {t("deleteRow")}
+              {t("deleteItem")}
             </TooltipContent>
           </Tooltip>
         </div>
@@ -202,4 +198,4 @@ const RFQProduct = ({
   );
 };
 
-export default RFQProduct;
+export default RFQItem;

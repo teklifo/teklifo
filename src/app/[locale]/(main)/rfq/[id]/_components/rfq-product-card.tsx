@@ -8,22 +8,21 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 
-type RequestForQuotationProductsType =
-  Prisma.RequestForQuotationProductsGetPayload<{
-    include: { product: true };
-  }>;
+type RequestForQuotationItemsType = Prisma.RequestForQuotationItemsGetPayload<{
+  include: { product: true };
+}>;
 
-type RFQProductCardProps = {
+type RFQItemCardProps = {
   number: number;
   currency: string;
-  product: RequestForQuotationProductsType;
+  product: RequestForQuotationItemsType;
 };
 
-export const RFQProductCard = async ({
+export const RFQItemCard = async ({
   number,
   currency,
   product: { product, quantity, price, deliveryDate, comment },
-}: RFQProductCardProps) => {
+}: RFQItemCardProps) => {
   const t = await getTranslations("RFQ");
 
   return (

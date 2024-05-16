@@ -4,7 +4,7 @@ import { FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { CalendarIcon, HelpCircle } from "lucide-react";
 import { format } from "date-fns";
-import { RequestForQuotationProducts, VatRates } from "@prisma/client";
+import { RequestForQuotationItems, VatRates } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -45,17 +45,17 @@ import {
   getVatRatePercentage,
 } from "@/lib/calculations";
 
-type QuotationProductProps = {
-  rfqRow: RequestForQuotationProducts;
+type QuotationItemProps = {
+  rfqItem: RequestForQuotationItems;
   productField: FieldArrayWithId;
   index: number;
 };
 
-const QuotationProduct = ({
-  rfqRow,
+const QuotationItem = ({
+  rfqItem,
   productField,
   index,
-}: QuotationProductProps) => {
+}: QuotationItemProps) => {
   const t = useTranslations("QuotationForm");
 
   const st = useTranslations("Schemas.quotationSchema");
@@ -114,24 +114,24 @@ const QuotationProduct = ({
             <div className="flex flex-col items-start">
               <span className="font-semibold">{`${t("quantity")}`}</span>
               <span className="md:text-xl">
-                {Number(rfqRow.quantity).toFixed(3)}
+                {Number(rfqItem.quantity).toFixed(3)}
               </span>
             </div>
             <div className="flex flex-col items-start">
               <span className="font-semibold">{`${t("price")}`}</span>
-              <span className="md:text-xl">{`${Number(rfqRow.price).toFixed(
+              <span className="md:text-xl">{`${Number(rfqItem.price).toFixed(
                 2
               )} ${form.getValues("currency")}`}</span>
             </div>
             <div className="flex flex-col items-start">
               <span className="font-semibold">{`${t("deliveryDate")}`}</span>
               <span className="md:text-xl">
-                {format(rfqRow.deliveryDate, "dd.MM.yyyy")}
+                {format(rfqItem.deliveryDate, "dd.MM.yyyy")}
               </span>
             </div>
           </div>
           <p className="leading-7 [&:not(:first-child)]:mt-6">
-            {rfqRow.comment}
+            {rfqItem.comment}
           </p>
         </div>
       </CardHeader>
@@ -352,4 +352,4 @@ const QuotationProduct = ({
   );
 };
 
-export default QuotationProduct;
+export default QuotationItem;

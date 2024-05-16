@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import db from "@/lib/db";
 import getCurrentUser from "@/app/actions/get-current-user";
-import WelcomeScreen from "../_components/welcome-screen";
+import WelcomeScreen from "./_components/welcome-screen";
 
 type Props = {
   params: { locale: string };
