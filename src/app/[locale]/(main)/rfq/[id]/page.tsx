@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { FileOutput, Package, Pencil, Receipt } from "lucide-react";
+import { FileOutput, Package, Pencil, ArrowRightCircle } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
@@ -155,7 +155,7 @@ const RFQ = async ({ params: { id } }: Props) => {
               buttonVariants({ variant: "default", size: "lg" })
             )}
           >
-            <Receipt />
+            <ArrowRightCircle />
             <span>{t("createQuotation")}</span>
           </Link>
         </div>

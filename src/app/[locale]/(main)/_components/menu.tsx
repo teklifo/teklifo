@@ -12,6 +12,8 @@ import {
   Coins,
   FileInput,
   FileOutput,
+  ArrowRightCircle,
+  ArrowLeftCircle,
 } from "lucide-react";
 import Nav from "./nav";
 import CompanySwitcher from "./company-switcher";
@@ -67,6 +69,24 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
             label: "",
             icon: FileInput,
             href: `/incoming-rfq`,
+          },
+        ]}
+      />
+      <Separator />
+      <Nav
+        isCollapsed={isCollapsed}
+        links={[
+          {
+            title: t("incomingQuotation"),
+            label: "",
+            icon: ArrowRightCircle,
+            href: `/incoming-quotation`,
+          },
+          {
+            title: t("outgoingQuotation"),
+            label: "",
+            icon: ArrowLeftCircle,
+            href: `/outgoing-quotation`,
           },
         ]}
       />

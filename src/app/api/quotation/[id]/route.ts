@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
-import { Prisma } from "@prisma/client";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
@@ -25,6 +24,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       where: { id: parseInt(id) },
       include: {
         company: true,
+        rfq: true,
         products: {
           include: {
             product: true,

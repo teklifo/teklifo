@@ -67,22 +67,6 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(t("invalidRFQId"), 400);
     }
 
-    // Check uniqueness
-    const existingQuotation = await db.quotation.findFirst({
-      where: {
-        companyId: company.id,
-        rfqId,
-      },
-    });
-    if (existingQuotation)
-      return getErrorResponse(
-        t("quotationAlreadyExists", {
-          companyName: company.name,
-          rfqNumber: rfq.number,
-        }),
-        400
-      );
-
     const quotation = await db.quotation.create({
       data: {
         companyId: company.id,

@@ -121,7 +121,7 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
               {t("additional")}
             </h3>
           </div>
-          {/* Payment terms*/}
+          {/* Description*/}
           <FormField
             control={form.control}
             name="description"
