@@ -5,9 +5,9 @@ import { getTranslations } from "next-intl/server";
 import { ArrowRightCircle, Package, Pencil } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
-// import { RFQItemCard } from "./_components/rfq-product-card";
 import DeleteQuotation from "./_components/delete-quotation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import QuotationMainInfo from "@/components/quotation/quotation-main-info";
 import QuotationBase from "@/components/quotation/quotation-base";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
@@ -21,7 +21,11 @@ type Props = {
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
     company: true;
-    rfq: true;
+    rfq: {
+      include: {
+        company: true;
+      };
+    };
     products: {
       include: {
         product: true;
@@ -111,9 +115,9 @@ const Quotation = async ({ params: { id } }: Props) => {
         )}
       </div>
       <QuotationBase rfq={quotation.rfq} />
-      {/* <RFQMainInfo rfq={quotation} /> */}
+      <QuotationMainInfo quotation={quotation} />
       {description && (
-        <div>
+        <div className="space-y-2">
           <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {t("description")}
           </h3>

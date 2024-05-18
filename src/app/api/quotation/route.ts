@@ -43,8 +43,6 @@ export async function POST(request: NextRequest) {
 
     const { rfqVersionId, rfqId, currency, description, products } = test.data;
 
-    console.log(rfqVersionId);
-
     // Check RFQ
     const rfq = await db.requestForQuotation.findUnique({
       where: {
@@ -67,57 +65,62 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(t("invalidRFQId"), 400);
     }
 
+    // Create quotation
+    let totalAmount = 0;
+
+    const quotationProducts = {
+      create: products.map((item) => {
+        const { vatRate, vatRatePercentage } = getVatRatePercentage(
+          item.vatRate
+        );
+
+        const vatAmount = calculateVatAmount(item.amount, vatRatePercentage);
+
+        const amountWithVat = calculateAmountWithVat(
+          item.amount,
+          vatAmount,
+          item.vatIncluded
+        );
+
+        totalAmount = totalAmount + amountWithVat;
+
+        return {
+          externalId: item.externalId,
+          rfqItem: {
+            connect: {
+              versionId: item.rfqItemVersionId,
+            },
+          },
+          rfqItemId: item.rfqItemId,
+          product: {
+            connect: {
+              id: item.productId,
+            },
+          },
+          quantity: item.quantity,
+          price: item.price,
+          amount: item.amount,
+          vatRate,
+          vatAmount,
+          vatIncluded: item.vatIncluded,
+          amountWithVat,
+          deliveryDate: item.deliveryDate,
+          comment: item.comment,
+          skip: item.skip,
+        };
+      }),
+    };
+
     const quotation = await db.quotation.create({
       data: {
         companyId: company.id,
         rfqVersionId,
         rfqId,
-        userId: company.users.length > 0 ? company.users[0].userId : null,
+        userId: company.users[0].userId,
         currency,
         description,
-        products: {
-          create: products.map((item) => {
-            const { vatRate, vatRatePercentage } = getVatRatePercentage(
-              item.vatRate
-            );
-
-            const vatAmount = calculateVatAmount(
-              item.amount,
-              vatRatePercentage
-            );
-
-            const amountWithVat = calculateAmountWithVat(
-              item.amount,
-              vatAmount,
-              item.vatIncluded
-            );
-
-            return {
-              externalId: item.externalId,
-              rfqItem: {
-                connect: {
-                  versionId: item.rfqItemVersionId,
-                },
-              },
-              rfqItemId: item.rfqItemId,
-              product: {
-                connect: {
-                  id: item.productId,
-                },
-              },
-              quantity: item.quantity,
-              price: item.price,
-              amount: item.amount,
-              vatRate,
-              vatAmount,
-              vatIncluded: item.vatIncluded,
-              amountWithVat,
-              deliveryDate: item.deliveryDate,
-              comment: item.comment,
-              skip: item.skip,
-            };
-          }),
-        },
+        totalAmount,
+        products: quotationProducts,
       },
       include: {
         products: true,

@@ -115,7 +115,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         id: previousRfqVersion.id,
         number: previousRfqVersion.number,
         companyId: company.id,
-        userId: company.users.length > 0 ? company.users[0].userId : null,
+        userId: company.users[0].userId,
         publicRequest,
         currency,
         startDate: date.from,

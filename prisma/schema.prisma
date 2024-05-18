@@ -253,11 +253,11 @@ model RequestForQuotation {
   versionId       String                     @id @default(cuid())
   id              String                     @default(cuid())
   number          Int                        @default(autoincrement())
-  company         Company?                   @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  companyId       String?
+  company         Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String
   publicRequest   Boolean
-  user            User?                      @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId          String?
+  user            User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
   currency        String
   startDate       DateTime
   endDate         DateTime
@@ -304,11 +304,12 @@ model Quotation {
   rfq          RequestForQuotation @relation(fields: [rfqVersionId], references: [versionId], onDelete: Cascade)
   rfqVersionId String
   rfqId        String
-  user         User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId       String?
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
   currency     String
   description  String
   products     QuotationItems[]
+  totalAmount  Decimal             @db.Decimal(15, 2)
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
 }

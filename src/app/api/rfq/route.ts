@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     const rfq = await db.requestForQuotation.create({
       data: {
         companyId: company.id,
-        userId: company.users.length > 0 ? company.users[0].userId : null,
+        userId: company.users[0].userId,
         publicRequest,
         currency,
         startDate: date.from,

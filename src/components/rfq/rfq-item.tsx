@@ -28,6 +28,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "../ui/textarea";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
@@ -187,7 +188,7 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
             <FormItem>
               <FormLabel>{t("comment")}</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" />
+                <Textarea {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -94,7 +94,7 @@ const RFQ = async ({ params: { id } }: Props) => {
       </div>
       <RFQMainInfo rfq={rfq} />
       {description && (
-        <div>
+        <div className="space-y-2">
           <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {t("description")}
           </h3>
@@ -121,7 +121,7 @@ const RFQ = async ({ params: { id } }: Props) => {
             {t("additional")}
           </h3>
           {paymentTerms && (
-            <div>
+            <div className="space-y-2">
               <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
                 {t("paymentTerms")}
               </h4>
@@ -129,7 +129,7 @@ const RFQ = async ({ params: { id } }: Props) => {
             </div>
           )}
           {deliveryTerms && (
-            <div>
+            <div className="space-y-2">
               <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
                 {t("deliveryTerms")}
               </h4>
@@ -137,7 +137,7 @@ const RFQ = async ({ params: { id } }: Props) => {
             </div>
           )}
           {deliveryAddress && (
-            <div>
+            <div className="space-y-2">
               <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
                 {t("deliveryAddress")}
               </h4>

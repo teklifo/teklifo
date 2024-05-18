@@ -6,7 +6,7 @@ import {
   Lock,
   Globe,
   HelpCircle,
-  CircleDollarSign,
+  Banknote,
   Building2,
   Fingerprint,
 } from "lucide-react";
@@ -40,22 +40,22 @@ const RFQMainInfo = ({
   const t = useTranslations("RFQ");
 
   return (
-    <div className="space-y-6 bg-muted rounded-xl p-6">
+    <div className="space-y-6 bg-muted rounded-xl p-2 md:p-6">
       <div className="space-y-2">
         <div className="flex flex-row items-end space-x-2">
           <Building2 />
-          <span className="font-semibold">{`${t("company")}:`}</span>
+          <span>{`${t("company")}:`}</span>
           <Link
             href={`/company/${companyId}`}
             className="scroll-m-20 underline text-lg font-semibold tracking-tight"
           >
-            {company?.name}
+            {company.name}
           </Link>
         </div>
         <div className="flex flex-row items-end space-x-2">
           <Fingerprint />
-          <span className="font-semibold">{`${t("tin")}:`}</span>
-          <span>{company?.tin}</span>
+          <span>{`${t("tin")}:`}</span>
+          <span className="font-semibold">{company.tin}</span>
         </div>
       </div>
       <div className="space-y-2">
@@ -63,12 +63,12 @@ const RFQMainInfo = ({
           {publicRequest ? (
             <>
               <Globe />
-              <span className="font-semibold">{t("public")}</span>
+              <span>{t("public")}</span>
             </>
           ) : (
             <>
               <Lock />
-              <span className="font-semibold">{t("private")}</span>
+              <span>{t("private")}</span>
             </>
           )}
           <TooltipProvider>
@@ -84,8 +84,8 @@ const RFQMainInfo = ({
         </div>
         <div className="flex flex-row space-x-2">
           <Calendar />
-          <span className="font-semibold">{`${t("date")}:`}</span>
-          <span>
+          <span>{`${t("date")}:`}</span>
+          <span className="font-semibold">
             {`${format(startDate, "dd.MM.yyyy")} - ${format(
               endDate,
               "dd.MM.yyyy"
@@ -93,9 +93,9 @@ const RFQMainInfo = ({
           </span>
         </div>
         <div className="flex flex-row space-x-2">
-          <CircleDollarSign />
-          <span className="font-semibold">{`${t("currency")}:`}</span>
-          <span>{currency}</span>
+          <Banknote />
+          <span>{`${t("currency")}:`}</span>
+          <span className="font-semibold">{currency}</span>
         </div>
       </div>
     </div>
