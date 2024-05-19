@@ -7,7 +7,6 @@ import type {
   Stock as StockType,
   PriceType as PriceTypeType,
 } from "@prisma/client";
-import { UserCog } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import EditRole from "@/components/role/edit-role";
 import getCurrentCompany from "@/app/actions/get-current-company";
@@ -86,17 +85,13 @@ const UpdateForm = async ({ params: { roleId } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8">
       <div className="space-y-2 mb-4">
-        <div className="flex flex-row items-center space-x-2">
-          <div>
-            <UserCog className="w-10 h-10" />
-          </div>
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {t("updateRoleTitle", {
-              roleName: role.name,
-              companyName: role.company.name,
-            })}
-          </h1>
-        </div>
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+          {t("updateRoleTitle", {
+            roleName: role.name,
+            companyName: role.company.name,
+          })}
+        </h1>
+
         <p className="text-lg text-muted-foreground">
           {t("updateRoleSubtitle")}
         </p>

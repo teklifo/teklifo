@@ -3,7 +3,7 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Package, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import ProductCard from "@/components/product/product-card";
@@ -77,14 +77,9 @@ const Products = async ({ searchParams: { page } }: Props) => {
     <MaxWidthWrapper className="my-8">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <div className="flex flex-row items-center space-x-2">
-            <div>
-              <Package className="w-10 h-10" />
-            </div>
-            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-              {t("title")}
-            </h1>
-          </div>
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {t("title")}
+          </h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         {isAdmin && <NewProductLink />}

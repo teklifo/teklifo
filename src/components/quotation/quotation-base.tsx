@@ -20,10 +20,10 @@ const QuotationBase = async ({ rfq }: QuotationBaseProps) => {
           <Link
             href={`/rfq/${rfq.id}`}
             target="_blank"
-            className="inline-flex justify-center items-center space-x-1"
+            className="underline underline-offset-4"
           >
-            <span className="underline underline-offset-4">{chunk}</span>
-            <ExternalLinkIcon />
+            {chunk}
+            <ExternalLinkIcon className="ml-2 inline" />
           </Link>
         ),
       })}

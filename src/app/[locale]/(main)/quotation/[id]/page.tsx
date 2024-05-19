@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ArrowRightCircle, Package, Pencil } from "lucide-react";
+import { Package, Pencil } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
 import DeleteQuotation from "./_components/delete-quotation";
@@ -90,14 +90,9 @@ const Quotation = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
-        <div className="flex flex-row items-center space-x-2">
-          <div>
-            <ArrowRightCircle className="w-10 h-10" />
-          </div>
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {`${t("quotation")} #${id}`}
-          </h1>
-        </div>
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+          {`${t("quotation")} #${id}`}
+        </h1>
         {companyOwnsQuotation && isAdmin && (
           <div className="flex space-x-2">
             <Link

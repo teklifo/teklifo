@@ -11,6 +11,8 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 import { Link } from "@/navigation";
+import MainInfoItem from "@/components/main-info-item";
+import { Separator } from "@/components/ui/separator";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -42,72 +44,73 @@ const QuotationMainInfo = ({ quotation }: QuotationMainInfoProps) => {
   } = quotation;
 
   return (
-    <div className="space-y-6 bg-muted rounded-xl p-2 md:p-6">
-      <div className="space-y-2">
-        <div className="flex flex-row items-end space-x-2">
-          <ArrowLeftCircle />
-          <span>{`${t("requestCompany")}:`}</span>
-          <Link
-            href={`/company/${requestCompany.id}`}
-            className="scroll-m-20 underline text-lg font-semibold tracking-tight"
-          >
-            {requestCompany.name}
-          </Link>
-        </div>
-        <div className="flex flex-row items-end space-x-2">
-          <Fingerprint />
-          <span>{`${t("requestTin")}:`}</span>
-          <span className="font-semibold">{requestCompany.tin}</span>
-        </div>
+    <div className="space-y-6 border bg-card shadow-sm h-full rounded-xl p-4 md:p-6">
+      <div className="space-y-4">
+        <MainInfoItem
+          icon={<ArrowLeftCircle />}
+          title={t("requestCompany")}
+          content={
+            <Link
+              href={`/company/${requestCompany.id}`}
+              className="scroll-m-20 underline text-lg font-semibold tracking-tight"
+            >
+              {requestCompany.name}
+            </Link>
+          }
+        />
+        <MainInfoItem
+          icon={<Fingerprint />}
+          title={t("requestTin")}
+          content={requestCompany.tin}
+        />
+        <Separator />
       </div>
-      <div className="space-y-2">
-        <div className="flex flex-row items-end space-x-2">
-          <ArrowRightCircle />
-          <span>{`${t("quotationCompany")}:`}</span>
-          <Link
-            href={`/company/${quotationCompany.id}`}
-            className="scroll-m-20 underline text-lg font-semibold tracking-tight"
-          >
-            {quotationCompany.name}
-          </Link>
-        </div>
-        <div className="flex flex-row items-end space-x-2">
-          <Fingerprint />
-          <span>{`${t("quotationTin")}:`}</span>
-          <span className="font-semibold">{quotationCompany.tin}</span>
-        </div>
+      <div className="space-y-4">
+        <MainInfoItem
+          icon={<ArrowRightCircle />}
+          title={t("quotationCompany")}
+          content={
+            <Link
+              href={`/company/${quotationCompany.id}`}
+              className="scroll-m-20 underline text-lg font-semibold tracking-tight"
+            >
+              {quotationCompany.name}
+            </Link>
+          }
+        />
+        <MainInfoItem
+          icon={<Fingerprint />}
+          title={t("quotationTin")}
+          content={quotationCompany.tin}
+        />
+        <Separator />
       </div>
-      <div className="space-y-2">
-        <div className="flex flex-row space-x-2">
-          <Calendar />
-          <span>{`${t("requestDate")}:`}</span>
-          <span className="font-semibold">
-            {`${format(startDate, "dd.MM.yyyy")} - ${format(
-              endDate,
-              "dd.MM.yyyy"
-            )}`}
-          </span>
-        </div>
-        <div className="flex flex-row space-x-2">
-          <CalendarClock />
-          <span>{`${t("quotationCreatedAt")}:`}</span>
-          <span className="font-semibold">
-            {format(quotation.createdAt, "dd.MM.yyyy")}
-          </span>
-        </div>
-        <div className="flex flex-row space-x-2">
-          <Banknote />
-          <span>{`${t("currency")}:`}</span>
-          <span className="font-semibold">{currency}</span>
-        </div>
+      <div className="space-y-4">
+        <MainInfoItem
+          icon={<Calendar />}
+          title={t("requestDate")}
+          content={`${format(startDate, "dd.MM.yyyy")} - ${format(
+            endDate,
+            "dd.MM.yyyy"
+          )}`}
+        />
+        <MainInfoItem
+          icon={<CalendarClock />}
+          title={t("quotationCreatedAt")}
+          content={format(quotation.createdAt, "dd.MM.yyyy")}
+        />
+        <MainInfoItem
+          icon={<Banknote />}
+          title={t("currency")}
+          content={currency}
+        />
+        <Separator />
       </div>
-      <div className="flex flex-row items-center space-x-2">
-        <CircleDollarSign />
-        <span>{`${t("totalAmount")}:`}</span>
-        <span className="font-semibold text-2xl">{`${Number(
-          totalAmount
-        ).toFixed(2)} ${currency}`}</span>
-      </div>
+      <MainInfoItem
+        icon={<CircleDollarSign />}
+        title={t("totalAmount")}
+        content={`${Number(totalAmount).toFixed(2)} ${currency}`}
+      />
     </div>
   );
 };
