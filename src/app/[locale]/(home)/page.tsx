@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/navigation";
+import { HeroHighlight, Highlight } from "./_components/hero-highlight";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -23,22 +24,31 @@ const Home = async () => {
   const t = await getTranslations("Home");
 
   return (
-    <div className="relative h-[50vh] w-full flex flex-col justify-center items-center text-center space-y-4">
-      <div className="-z-10 absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-      <h1 className="text-3xl font-bold leading-tight tracking-tighter max-w-4xl md:text-5xl lg:leading-[1.1]">
-        {t("title")}
-      </h1>
-      <p className="text-xl text-muted-foreground">{t("subtitle")}</p>
-      <Link
-        href={`/dashboard`}
-        className={cn(
-          buttonVariants({ variant: "default", size: "lg" }),
-          "space-x-2"
-        )}
-      >
-        <span>{t("getStarted")}</span>
-      </Link>
-    </div>
+    <HeroHighlight>
+      <div className="h-[50vh] w-full px-3 flex flex-col justify-center items-center text-center space-y-8">
+        <h1 className="text-3xl font-bold leading-tight tracking-tighter max-w-4xl md:text-5xl md:leading-[1.3]">
+          {t.rich("title", {
+            highlight: (chunk) => (
+              <Highlight className="text-black dark:text-white">
+                {chunk}
+              </Highlight>
+            ),
+          })}
+        </h1>
+        <p className="text-xl font-semibold text-muted-foreground">
+          {t("subtitle")}
+        </p>
+        <Link
+          href={`/dashboard`}
+          className={cn(
+            buttonVariants({ variant: "default", size: "lg" }),
+            "space-x-2"
+          )}
+        >
+          <span>{t("getStarted")}</span>
+        </Link>
+      </div>
+    </HeroHighlight>
   );
 };
 
