@@ -8,14 +8,14 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 
-type RequestForQuotationItemsType = Prisma.RequestForQuotationItemGetPayload<{
+type RequestForQuotationItemType = Prisma.RequestForQuotationItemGetPayload<{
   include: { product: true };
 }>;
 
 type RFQItemCardProps = {
   number: number;
   currency: string;
-  item: RequestForQuotationItemsType;
+  item: RequestForQuotationItemType;
 };
 
 const RFQItemCard = async ({

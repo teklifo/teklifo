@@ -22,7 +22,7 @@ type QuotationType = Prisma.QuotationGetPayload<{
         company: true;
       };
     };
-    products: {
+    items: {
       include: {
         product: true;
       };

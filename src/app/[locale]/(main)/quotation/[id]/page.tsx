@@ -6,6 +6,7 @@ import { Package, Pencil } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
 import DeleteQuotation from "./_components/delete-quotation";
+import QuotationItemsTable from "./_components/quotation-items-table";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationMainInfo from "@/components/quotation/quotation-main-info";
 import QuotationBase from "@/components/quotation/quotation-base";
@@ -13,7 +14,6 @@ import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
 import request from "@/lib/request";
-import QuotationItem from "./_components/quotation-item";
 
 type Props = {
   params: { locale: string; id: string };
@@ -30,6 +30,7 @@ type QuotationType = Prisma.QuotationGetPayload<{
     items: {
       include: {
         product: true;
+        rfqItem: true;
       };
     };
   };
@@ -97,7 +98,7 @@ const Quotation = async ({ params: { id } }: Props) => {
         {companyOwnsQuotation && isAdmin && (
           <div className="flex space-x-2">
             <Link
-              href={`/edit-rfq/${quotation.id}`}
+              href={`/edit-quotation/${quotation.id}`}
               className={cn(
                 "space-x-2",
                 buttonVariants({ variant: "default" })
@@ -126,9 +127,7 @@ const Quotation = async ({ params: { id } }: Props) => {
           {`${t("items")} (${items.length || 0})`}
         </h3>
       </div>
-      {items.map((item, index) => (
-        <div key={index} />
-      ))}
+      <QuotationItemsTable items={items} />
     </MaxWidthWrapper>
   );
 };

@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
     company: true;
-    products: {
+    items: {
       include: {
         product: true;
       };

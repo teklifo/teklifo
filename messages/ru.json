@@ -504,6 +504,25 @@
     "currency": "Валюта",
     "totalAmount": "Итоговая сумма КП"
   },
+  "QuotationItems": {
+    "product": "Товар",
+    "requested": "Запрошено",
+    "rfqQuantity": "Запрошенное количество",
+    "rfqPrice": "Запрошенная цена",
+    "rfqDeliveryDate": "Запрошенная дата доставки",
+    "quantity": "Количество",
+    "price": "Цена",
+    "amount": "Сумма",
+    "vatRate": "Ставка НДС",
+    "vatAmount": "Сумма НДС",
+    "vatIncluded": "Сумма включает НДС",
+    "amountWithVat": "Сумма с НДС",
+    "deliveryDate": "Дата доставки",
+    "NOVAT": "Без НДС",
+    "VAT0": "0%",
+    "VAT18": "18%",
+    "VAT20": "20%"
+  },
   "Home": {
     "title": "Запрашивайте цены и выбирайте лучшие коммерческие предложения на <highlight>Teklifo</highlight>",
     "subtitle": "Помогаем покупателям и поставщикам найти друг друга",

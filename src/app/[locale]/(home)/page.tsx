@@ -26,7 +26,7 @@ const Home = async () => {
   return (
     <HeroHighlight>
       <div className="h-[50vh] w-full px-3 flex flex-col justify-center items-center text-center space-y-8">
-        <h1 className="text-3xl font-bold leading-tight tracking-tighter max-w-4xl md:text-5xl md:leading-[1.3]">
+        <h1 className="text-3xl font-bold leading-tight tracking-tighter animate-fade-in max-w-4xl md:text-5xl md:leading-[1.3]">
           {t.rich("title", {
             highlight: (chunk) => (
               <Highlight className="text-black dark:text-white">

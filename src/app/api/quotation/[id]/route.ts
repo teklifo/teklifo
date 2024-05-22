@@ -32,11 +32,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         items: {
           include: {
             product: true,
-            rfqItem: {
-              select: {
-                id: true,
-              },
-            },
+            rfqItem: true,
           },
         },
       },
