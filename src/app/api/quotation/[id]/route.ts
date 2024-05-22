@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             company: true,
           },
         },
-        products: {
+        items: {
           include: {
             product: true,
             rfqItem: {
@@ -81,7 +81,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { rfqVersionId, rfqId, currency, description, products } = test.data;
+    const { rfqVersionId, rfqId, currency, description, items } = test.data;
 
     // Find quotation
     const existingQuotation = await db.quotation.findUnique({
@@ -94,8 +94,8 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(t("invalidQuotationId"), 404);
     }
 
-    // Delete previous products
-    await db.quotationItems.deleteMany({
+    // Delete previous items
+    await db.quotationItem.deleteMany({
       where: {
         quotationId: existingQuotation.id,
       },
@@ -105,7 +105,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     let totalAmount = 0;
 
     const quotationProducts = {
-      create: products.map((item) => {
+      create: items.map((item) => {
         const { vatRate, vatRatePercentage } = getVatRatePercentage(
           item.vatRate
         );
@@ -157,10 +157,10 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         currency,
         description,
         totalAmount,
-        products: quotationProducts,
+        items: quotationProducts,
       },
       include: {
-        products: true,
+        items: true,
         user: {
           select: {
             id: true,

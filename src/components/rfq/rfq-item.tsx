@@ -49,12 +49,12 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
   function onProductSelect(product: ProductType) {
-    form.setValue(`products.${index}.productId`, product.id);
-    form.setValue(`products.${index}.product`, product);
+    form.setValue(`items.${index}.productId`, product.id);
+    form.setValue(`items.${index}.product`, product);
     setOpenProducts(false);
   }
 
-  const productSelected = form.getValues(`products.${index}.productId`) !== 0;
+  const productSelected = form.getValues(`items.${index}.productId`) !== 0;
 
   return (
     <Card key={productField.id} className="h-full w-full">
@@ -62,7 +62,7 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
         <div className="flex flex-row items-center space-x-8 mt-4">
           {productSelected && (
             <div className="text-2xl font-semibold tracking-tight">
-              {form.getValues(`products.${index}.product`)?.name}
+              {form.getValues(`items.${index}.product`)?.name}
             </div>
           )}
           {/* Product */}
@@ -76,8 +76,8 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
                       {!productSelected && <span>{t("selectProduct")}</span>}
                     </Button>
                     <FormMessage>
-                      {(form.formState.errors.products &&
-                        form.formState.errors.products[index]?.productId
+                      {(form.formState.errors.items &&
+                        form.formState.errors.items[index]?.productId
                           ?.message) ||
                         ""}{" "}
                     </FormMessage>
@@ -114,7 +114,7 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
           {/* Quantity */}
           <FormField
             control={form.control}
-            name={`products.${index}.quantity`}
+            name={`items.${index}.quantity`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("quantity")}</FormLabel>
@@ -128,7 +128,7 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
           {/* Price */}
           <FormField
             control={form.control}
-            name={`products.${index}.price`}
+            name={`items.${index}.price`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("price")}</FormLabel>
@@ -142,7 +142,7 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
           {/* Delivery date */}
           <FormField
             control={form.control}
-            name={`products.${index}.deliveryDate`}
+            name={`items.${index}.deliveryDate`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("deliveryDate")}</FormLabel>
@@ -183,7 +183,7 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
         {/* Comment*/}
         <FormField
           control={form.control}
-          name={`products.${index}.comment`}
+          name={`items.${index}.comment`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("comment")}</FormLabel>

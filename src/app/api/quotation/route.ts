@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { rfqVersionId, rfqId, currency, description, products } = test.data;
+    const { rfqVersionId, rfqId, currency, description, items } = test.data;
 
     // Check RFQ
     const rfq = await db.requestForQuotation.findUnique({
@@ -52,10 +52,10 @@ export async function POST(request: NextRequest) {
             companyId: company.id,
           },
         },
-        products: {
+        items: {
           some: {
             versionId: {
-              in: products.map((e) => e.rfqItemVersionId),
+              in: items.map((e) => e.rfqItemVersionId),
             },
           },
         },
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     let totalAmount = 0;
 
     const quotationProducts = {
-      create: products.map((item) => {
+      create: items.map((item) => {
         const { vatRate, vatRatePercentage } = getVatRatePercentage(
           item.vatRate
         );
@@ -120,10 +120,10 @@ export async function POST(request: NextRequest) {
         currency,
         description,
         totalAmount,
-        products: quotationProducts,
+        items: quotationProducts,
       },
       include: {
-        products: true,
+        items: true,
         user: {
           select: {
             id: true,

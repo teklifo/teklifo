@@ -22,7 +22,7 @@ import { Package } from "lucide-react";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
-    products: {
+    items: {
       include: {
         product: true;
       };
@@ -32,7 +32,7 @@ type QuotationType = Prisma.QuotationGetPayload<{
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
-    products: {
+    items: {
       include: {
         product: true;
       };
@@ -61,8 +61,8 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
       rfqId: rfq.id,
       currency: quotation?.currency || rfq.currency,
       description: quotation?.description,
-      products: rfq.products.map((rfqItem) => {
-        const quotationItem = quotation?.products.find(
+      items: rfq.items.map((rfqItem) => {
+        const quotationItem = quotation?.items.find(
           (quotationItem) => quotationItem.rfqItemId === rfqItem.id
         );
         return {
@@ -83,9 +83,9 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
     },
   });
 
-  const products = useFieldArray({
+  const items = useFieldArray({
     control: form.control,
-    name: "products",
+    name: "items",
   });
 
   return (
@@ -95,11 +95,11 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
           <div className="flex flex-row items-center border-b pb-2 space-x-2">
             <Package className="w-8 h-8" />
             <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-              {`${t("products")} (${form.getValues("products")?.length || 0})`}
+              {`${t("items")} (${form.getValues("items")?.length || 0})`}
             </h3>
           </div>
-          {products.fields.map((productField, index) => {
-            const rfqItem = rfq.products.find(
+          {items.fields.map((productField, index) => {
+            const rfqItem = rfq.items.find(
               (e) => e.id === productField.rfqItemId
             );
             if (!rfqItem) return null;

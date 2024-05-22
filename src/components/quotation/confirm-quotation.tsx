@@ -25,7 +25,7 @@ import request from "@/lib/request";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
-    products: {
+    items: {
       include: {
         product: true;
       };
@@ -35,7 +35,7 @@ type QuotationType = Prisma.QuotationGetPayload<{
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
-    products: {
+    items: {
       include: {
         product: true;
       };

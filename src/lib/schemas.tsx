@@ -218,7 +218,7 @@ export const getRFQSchema = (t: TranslateFunction) => {
     deliveryAddress: z.string().default(""),
     deliveryTerms: z.string().default(""),
     paymentTerms: z.string().default(""),
-    products: z.array(getRFQItemSchema(t)).min(1, t("invalidProducts")),
+    items: z.array(getRFQItemSchema(t)).min(1, t("invalidProducts")),
   });
 };
 
@@ -275,7 +275,7 @@ export const getQuotationSchema = (t: TranslateFunction) => {
       })
       .min(1, t("invalidCurrency")),
     description: z.string().default(""),
-    products: z.array(getQuotationItemSchema(t)).min(1, t("invalidProducts")),
+    items: z.array(getQuotationItemSchema(t)).min(1, t("invalidProducts")),
   });
 };
 

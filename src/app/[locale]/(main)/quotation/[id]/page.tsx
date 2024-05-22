@@ -13,6 +13,7 @@ import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
 import request from "@/lib/request";
+import QuotationItem from "./_components/quotation-item";
 
 type Props = {
   params: { locale: string; id: string };
@@ -26,7 +27,7 @@ type QuotationType = Prisma.QuotationGetPayload<{
         company: true;
       };
     };
-    products: {
+    items: {
       include: {
         product: true;
       };
@@ -85,7 +86,7 @@ const Quotation = async ({ params: { id } }: Props) => {
 
   const companyOwnsQuotation = quotation.companyId === company?.id;
 
-  const { description, products } = quotation;
+  const { description, items } = quotation;
 
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
@@ -122,17 +123,11 @@ const Quotation = async ({ params: { id } }: Props) => {
       <div className="flex flex-row items-center border-b pb-2 space-x-2">
         <Package className="w-8 h-8" />
         <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-          {`${t("products")} (${products.length || 0})`}
+          {`${t("items")} (${items.length || 0})`}
         </h3>
       </div>
-      {products.map((product, index) => (
-        <div className="" key={index}></div>
-        // <RFQItemCard
-        //   key={index}
-        //   number={index + 1}
-        //   currency={currency}
-        //   product={product}
-        // />
+      {items.map((item, index) => (
+        <div key={index} />
       ))}
     </MaxWidthWrapper>
   );

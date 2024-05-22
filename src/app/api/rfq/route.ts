@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       deliveryAddress,
       deliveryTerms,
       paymentTerms,
-      products,
+      items,
     } = test.data;
 
     const rfq = await db.requestForQuotation.create({
@@ -59,8 +59,8 @@ export async function POST(request: NextRequest) {
         deliveryAddress,
         deliveryTerms,
         paymentTerms,
-        products: {
-          create: products.map((product) => ({
+        items: {
+          create: items.map((product) => ({
             externalId: product.externalId,
             productId: product.productId,
             quantity: product.quantity,
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         },
       },
       include: {
-        products: true,
+        items: true,
         user: {
           select: {
             id: true,

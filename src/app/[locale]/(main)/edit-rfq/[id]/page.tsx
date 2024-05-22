@@ -10,7 +10,7 @@ import request from "@/lib/request";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
-    products: {
+    items: {
       include: {
         product: true;
       };

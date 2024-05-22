@@ -147,7 +147,7 @@ model Invitation {
 }
 
 model Product {
-  id                   Int                        @id @default(autoincrement())
+  id                   Int                       @id @default(autoincrement())
   externalId           String?
   productId            String?
   characteristicId     String?
@@ -159,15 +159,15 @@ model Product {
   description          String
   archive              Boolean
   images               ProductImage[]
-  company              Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company              Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId            String
   stock                StockBalance[]
   prices               Price[]
-  requestsForQuotation RequestForQuotationItems[]
-  quotations           QuotationItems[]
-  createdAt            DateTime                   @default(now())
-  updatedAt            DateTime                   @updatedAt
-  deleted              Boolean                    @default(false)
+  requestsForQuotation RequestForQuotationItem[]
+  quotations           QuotationItem[]
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  deleted              Boolean                   @default(false)
 }
 
 model Stock {
@@ -250,13 +250,13 @@ model ExchangeJob {
 }
 
 model RequestForQuotation {
-  versionId       String                     @id @default(cuid())
-  id              String                     @default(cuid())
-  number          Int                        @default(autoincrement())
-  company         Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  versionId       String                    @id @default(cuid())
+  id              String                    @default(cuid())
+  number          Int                       @default(autoincrement())
+  company         Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String
   publicRequest   Boolean
-  user            User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
   currency        String
   startDate       DateTime
@@ -265,15 +265,15 @@ model RequestForQuotation {
   deliveryAddress String
   deliveryTerms   String
   paymentTerms    String
-  products        RequestForQuotationItems[]
+  items           RequestForQuotationItem[]
   participants    Participants[]
   quotations      Quotation[]
-  createdAt       DateTime                   @default(now())
-  latestVersion   Boolean                    @default(true)
-  deleted         Boolean                    @default(false)
+  createdAt       DateTime                  @default(now())
+  latestVersion   Boolean                   @default(true)
+  deleted         Boolean                   @default(false)
 }
 
-model RequestForQuotationItems {
+model RequestForQuotationItem {
   versionId             String              @id @default(cuid())
   id                    String              @default(cuid())
   externalId            String?
@@ -285,7 +285,7 @@ model RequestForQuotationItems {
   quantity              Decimal             @db.Decimal(15, 3)
   price                 Decimal             @db.Decimal(15, 2)
   deliveryDate          DateTime
-  quotationItems        QuotationItems[]
+  quotationItems        QuotationItem[]
 }
 
 model Participants {
@@ -308,30 +308,30 @@ model Quotation {
   userId       String
   currency     String
   description  String
-  products     QuotationItems[]
+  items        QuotationItem[]
   totalAmount  Decimal             @db.Decimal(15, 2)
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
 }
 
-model QuotationItems {
-  id               String                   @id @default(uuid())
+model QuotationItem {
+  id               String                  @id @default(uuid())
   externalId       String?
-  quotation        Quotation                @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  quotation        Quotation               @relation(fields: [quotationId], references: [id], onDelete: Cascade)
   quotationId      Int
-  rfqItem          RequestForQuotationItems @relation(fields: [rfqItemVersionId], references: [versionId], onDelete: Cascade)
+  rfqItem          RequestForQuotationItem @relation(fields: [rfqItemVersionId], references: [versionId], onDelete: Cascade)
   rfqItemVersionId String
   rfqItemId        String
-  product          Product                  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product          Product                 @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId        Int
-  quantity         Decimal                  @db.Decimal(15, 3)
-  price            Decimal                  @db.Decimal(15, 2)
-  amount           Decimal                  @db.Decimal(15, 2)
+  quantity         Decimal                 @db.Decimal(15, 3)
+  price            Decimal                 @db.Decimal(15, 2)
+  amount           Decimal                 @db.Decimal(15, 2)
   vatRate          VatRates
-  vatAmount        Decimal                  @db.Decimal(15, 2)
+  vatAmount        Decimal                 @db.Decimal(15, 2)
   vatIncluded      Boolean
-  amountWithVat    Decimal                  @db.Decimal(15, 2)
+  amountWithVat    Decimal                 @db.Decimal(15, 2)
   deliveryDate     DateTime
   comment          String
-  skip             Boolean                  @default(false)
+  skip             Boolean                 @default(false)
 }

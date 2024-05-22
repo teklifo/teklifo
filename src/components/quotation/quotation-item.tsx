@@ -4,7 +4,7 @@ import { FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { CalendarIcon, HelpCircle } from "lucide-react";
 import { format } from "date-fns";
-import { RequestForQuotationItems, VatRates } from "@prisma/client";
+import { RequestForQuotationItem, VatRates } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -46,7 +46,7 @@ import {
 } from "@/lib/calculations";
 
 type QuotationItemProps = {
-  rfqItem: RequestForQuotationItems;
+  rfqItem: RequestForQuotationItem;
   productField: FieldArrayWithId;
   index: number;
 };
@@ -64,13 +64,13 @@ const QuotationItem = ({
   const form = useFormContext<z.infer<typeof formSchema>>();
   const setValue = form.setValue;
 
-  const product = form.getValues(`products.${index}.product`);
+  const product = form.getValues(`items.${index}.product`);
 
-  const quantity = form.watch(`products.${index}.quantity`);
-  const price = form.watch(`products.${index}.price`);
-  const amount = form.watch(`products.${index}.amount`);
-  const vatIncluded = form.watch(`products.${index}.vatIncluded`);
-  const vatRate = form.watch(`products.${index}.vatRate`);
+  const quantity = form.watch(`items.${index}.quantity`);
+  const price = form.watch(`items.${index}.price`);
+  const amount = form.watch(`items.${index}.amount`);
+  const vatIncluded = form.watch(`items.${index}.vatIncluded`);
+  const vatRate = form.watch(`items.${index}.vatRate`);
   const vatRateInfo = getVatRatePercentage(vatRate);
   const vatAmount =
     calculateVatAmount(amount, vatRateInfo.vatRatePercentage) || 0;
@@ -78,11 +78,11 @@ const QuotationItem = ({
   const amountWithVat =
     calculateAmountWithVat(amount, vatAmount, vatIncluded) || 0;
 
-  const skip = form.watch(`products.${index}.skip`);
+  const skip = form.watch(`items.${index}.skip`);
 
   useEffect(() => {
     const value = quantity * price;
-    setValue(`products.${index}.amount`, value || 0);
+    setValue(`items.${index}.amount`, value || 0);
   }, [index, setValue, price, quantity]);
 
   return (
@@ -144,7 +144,7 @@ const QuotationItem = ({
             {/* Quantity */}
             <FormField
               control={form.control}
-              name={`products.${index}.quantity`}
+              name={`items.${index}.quantity`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("quantity")}</FormLabel>
@@ -158,7 +158,7 @@ const QuotationItem = ({
             {/* Price */}
             <FormField
               control={form.control}
-              name={`products.${index}.price`}
+              name={`items.${index}.price`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("price")}</FormLabel>
@@ -173,7 +173,7 @@ const QuotationItem = ({
             <FormField
               disabled
               control={form.control}
-              name={`products.${index}.amount`}
+              name={`items.${index}.amount`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("amount")}</FormLabel>
@@ -189,7 +189,7 @@ const QuotationItem = ({
             {/* VAT Rate */}
             <FormField
               control={form.control}
-              name={`products.${index}.vatRate`}
+              name={`items.${index}.vatRate`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("vatRate")}</FormLabel>
@@ -239,7 +239,7 @@ const QuotationItem = ({
             {/* VAT included */}
             <FormField
               control={form.control}
-              name={`products.${index}.vatIncluded`}
+              name={`items.${index}.vatIncluded`}
               render={({ field }) => (
                 <FormItem className="flex flex-row mb-5 items-end space-x-3 space-y-0">
                   <FormControl>
@@ -261,7 +261,7 @@ const QuotationItem = ({
             {/* Delivery date */}
             <FormField
               control={form.control}
-              name={`products.${index}.deliveryDate`}
+              name={`items.${index}.deliveryDate`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("deliveryDate")}</FormLabel>
@@ -303,7 +303,7 @@ const QuotationItem = ({
           {/* Comment*/}
           <FormField
             control={form.control}
-            name={`products.${index}.comment`}
+            name={`items.${index}.comment`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("comment")}</FormLabel>
@@ -318,7 +318,7 @@ const QuotationItem = ({
           <div className="flex flex-row items-center !mt-4 space-x-2">
             <FormField
               control={form.control}
-              name={`products.${index}.skip`}
+              name={`items.${index}.skip`}
               render={({ field }) => (
                 <FormItem className="flex flex-row items-end text-muted-foreground space-x-3 space-y-0">
                   <FormControl>

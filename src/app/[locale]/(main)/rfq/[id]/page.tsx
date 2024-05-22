@@ -9,7 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
 import { cn } from "@/lib/utils";
-import { RFQItemCard } from "./_components/rfq-product-card";
+import RFQItemCard from "./_components/rfq-item-card";
 import DeleteRFQ from "./_components/delete-rfq";
 
 type Props = {
@@ -59,7 +59,7 @@ const RFQ = async ({ params: { id } }: Props) => {
     number,
     description,
     currency,
-    products,
+    items,
     paymentTerms,
     deliveryAddress,
     deliveryTerms,
@@ -99,15 +99,15 @@ const RFQ = async ({ params: { id } }: Props) => {
       <div className="flex flex-row items-center border-b pb-2 space-x-2">
         <Package className="w-8 h-8" />
         <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-          {`${t("products")} (${products.length || 0})`}
+          {`${t("items")} (${items.length || 0})`}
         </h3>
       </div>
-      {products.map((product, index) => (
+      {items.map((item, index) => (
         <RFQItemCard
           key={index}
           number={index + 1}
           currency={currency}
-          product={product}
+          item={item}
         />
       ))}
       {(paymentTerms || deliveryTerms || deliveryAddress) && (

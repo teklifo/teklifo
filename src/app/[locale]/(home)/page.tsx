@@ -35,9 +35,6 @@ const Home = async () => {
             ),
           })}
         </h1>
-        <p className="text-xl font-semibold text-muted-foreground">
-          {t("subtitle")}
-        </p>
         <Link
           href={`/dashboard`}
           className={cn(

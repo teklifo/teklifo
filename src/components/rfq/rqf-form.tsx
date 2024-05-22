@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
-    products: {
+    items: {
       include: {
         product: true;
       };
@@ -75,7 +75,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
       deliveryAddress: rfq?.deliveryAddress,
       deliveryTerms: rfq?.deliveryTerms,
       paymentTerms: rfq?.paymentTerms,
-      products: rfq?.products.map((rfqItem) => {
+      items: rfq?.items.map((rfqItem) => {
         return {
           id: rfqItem.id,
           productId: rfqItem.productId ?? undefined,
@@ -89,9 +89,9 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
     },
   });
 
-  const products = useFieldArray({
+  const items = useFieldArray({
     control: form.control,
-    name: "products",
+    name: "items",
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -252,16 +252,16 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
           <div className="flex flex-row items-center border-b pb-2 space-x-2">
             <Package className="w-8 h-8" />
             <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-              {`${t("products")} (${form.getValues("products")?.length || 0})`}
+              {`${t("items")} (${form.getValues("items")?.length || 0})`}
             </h3>
           </div>
-          {products.fields.map((productField, index) => (
+          {items.fields.map((productField, index) => (
             <RFQItem
               key={index}
               productField={productField}
               index={index}
               removeProduct={() => {
-                products.remove(index);
+                items.remove(index);
               }}
             />
           ))}
@@ -270,7 +270,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               type="button"
               className="space-x-2"
               onClick={() =>
-                products.append({
+                items.append({
                   productId: 0,
                   quantity: 0,
                   price: 0,
