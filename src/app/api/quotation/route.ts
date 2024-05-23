@@ -191,6 +191,14 @@ export async function GET(request: NextRequest) {
         take: limit,
         skip: startIndex,
         where: filters,
+        include: {
+          company: true,
+          rfq: {
+            include: {
+              company: true,
+            },
+          },
+        },
         orderBy: {
           createdAt: "desc",
         },

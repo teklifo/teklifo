@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import MainInfoItem from "@/components/main-info-item";
 import { Separator } from "@/components/ui/separator";
+import { QuotationBase } from "../quotation/quotation-main-info";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -34,16 +35,24 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
 
 type RFQMainInfoProps = {
   rfq: RequestForQuotationType;
+  displayBase?: boolean;
 };
 
-const RFQMainInfo = ({
-  rfq: { companyId, company, publicRequest, startDate, endDate, currency },
-}: RFQMainInfoProps) => {
+const RFQMainInfo = ({ rfq, displayBase }: RFQMainInfoProps) => {
   const t = useTranslations("RFQ");
+
+  const { companyId, company, publicRequest, startDate, endDate, currency } =
+    rfq;
 
   return (
     <div className="space-y-6 border bg-card shadow-sm h-full rounded-xl p-4 md:p-6">
-      <div className="space-y-4">
+      {displayBase && (
+        <div className="space-y-4 md:space-y-2">
+          <QuotationBase rfq={rfq} />
+          <Separator />
+        </div>
+      )}
+      <div className="space-y-4 md:space-y-2">
         <MainInfoItem
           icon={<Building2 />}
           title={t("company")}
@@ -63,7 +72,7 @@ const RFQMainInfo = ({
         />
         <Separator />
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 md:space-y-2">
         <div className="flex flex-col items-center md:flex-row md:space-x-2">
           <div className="flex flex-row space-x-2">
             {publicRequest ? <Globe /> : <Lock />}

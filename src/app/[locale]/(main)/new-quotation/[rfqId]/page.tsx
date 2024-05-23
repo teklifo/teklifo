@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import QuotationBase from "@/components/quotation/quotation-base";
 import QuotationForm from "@/components/quotation/quotation-form";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import getCurrentCompany from "@/app/actions/get-current-company";
@@ -41,7 +40,7 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
 
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
-      <div className="space-y-2 mb-8">
+      <div className="space-y-2">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("newTitle")}
         </h1>
@@ -51,8 +50,7 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
         <p>Its yours RFQ!</p>
       ) : (
         <>
-          <QuotationBase rfq={rfq} />
-          <RFQMainInfo rfq={rfq} />
+          <RFQMainInfo rfq={rfq} displayBase={true} />
           <QuotationForm rfq={rfq} />
         </>
       )}

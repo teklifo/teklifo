@@ -46,7 +46,9 @@
     "incomingRfqTitle": "Запросы цен клиентов",
     "incomingRfqDescription": "Список полученных запросов цен от клиентов",
     "newQuotationTitle": "Новое коммерческое предложение клиенту",
-    "newQuotationDescription": "Отправьте коммерческое предложение клиенту на основании полученного запроса цен"
+    "newQuotationDescription": "Отправьте коммерческое предложение клиенту на основании полученного запроса цен",
+    "outgoingQuotationTitle": "КП клиентам",
+    "outgoingQuotationDescription": "Список ваших коммерческих предложений клиентам"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -495,14 +497,17 @@
     "edit": "Изменить",
     "items": "Товары",
     "quotationBase": "На основании <link>запроса цен #{number} от {date}</link>",
-    "requestCompany": "Запросчик",
-    "requestTin": "ИНН запросчика",
+    "requestCompany": "Заказчик",
+    "requestTin": "ИНН заказчика",
     "quotationCompany": "Отправитель",
     "quotationTin": "ИНН отправителя",
     "requestDate": "Период сбора предложений",
-    "quotationCreatedAt": "Дата создания КП",
+    "quotationUpdatedAt": "Дата КП",
     "currency": "Валюта",
-    "totalAmount": "Итоговая сумма КП"
+    "totalAmount": "Итоговая сумма КП",
+    "more": "Подробнее",
+    "date": "Дата",
+    "daysLeft": "Осталось {daysLeft} дн."
   },
   "QuotationItems": {
     "product": "Товар",
@@ -527,6 +532,11 @@
     "title": "Запрашивайте цены и выбирайте лучшие коммерческие предложения на <highlight>Teklifo</highlight>",
     "subtitle": "Помогаем покупателям и поставщикам найти друг друга",
     "getStarted": "Начать"
+  },
+  "OutgoingQuotations": {
+    "title": "КП клиентам",
+    "subtitle": "Список ваших коммерческих предложений клиентам",
+    "noOutgoingQuotation": "Вы пока не отправляли коммерческие предложения клиентам"
   },
   "Schemas": {
     "companySchema": {

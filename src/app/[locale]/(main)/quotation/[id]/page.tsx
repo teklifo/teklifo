@@ -9,7 +9,6 @@ import DeleteQuotation from "./_components/delete-quotation";
 import QuotationItemsTable from "./_components/quotation-items-table";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationMainInfo from "@/components/quotation/quotation-main-info";
-import QuotationBase from "@/components/quotation/quotation-base";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
@@ -111,7 +110,6 @@ const Quotation = async ({ params: { id } }: Props) => {
           </div>
         )}
       </div>
-      <QuotationBase rfq={quotation.rfq} />
       <QuotationMainInfo quotation={quotation} />
       {description && (
         <div className="space-y-2">
