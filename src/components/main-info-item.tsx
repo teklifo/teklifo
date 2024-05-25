@@ -6,7 +6,7 @@ type MainInfoItemProps = {
 
 const MainInfoItem = ({ icon, title, content }: MainInfoItemProps) => {
   return (
-    <div className="flex flex-col items-center md:flex-row md:space-x-2">
+    <div className="flex flex-col items-start">
       <div className="flex flex-row space-x-2">
         {icon}
         <span>{`${title}:`}</span>

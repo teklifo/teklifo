@@ -26,7 +26,7 @@ const RFQItemCard = async ({
   const t = await getTranslations("RFQ");
 
   return (
-    <Card className="h-full w-full">
+    <Card className="w-full">
       <CardHeader className="flex flex-col justify-between space-y-0">
         <p className="text-2xl font-semibold tracking-tight">
           {`#${number} ${product?.name || t("unknowProduct")}`}

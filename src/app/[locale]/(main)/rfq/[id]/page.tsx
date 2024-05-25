@@ -93,74 +93,80 @@ const RFQ = async ({ params: { id } }: Props) => {
           </div>
         )}
       </div>
-      <RFQMainInfo rfq={rfq} />
-      {description && (
-        <div className="space-y-2">
-          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {t("description")}
-          </h3>
-          <div className="whitespace-pre-line">{description}</div>
+      <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
+        <div className="col-span-8 space-y-6">
+          {description && (
+            <div className="space-y-2">
+              <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                {t("description")}
+              </h3>
+              <div className="whitespace-pre-line">{description}</div>
+            </div>
+          )}
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Package className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {`${t("items")} (${items.length || 0})`}
+            </h3>
+          </div>
+          {items.map((item, index) => (
+            <RFQItemCard
+              key={index}
+              number={index + 1}
+              currency={currency}
+              item={item}
+            />
+          ))}
+          {(paymentTerms || deliveryTerms || deliveryAddress) && (
+            <>
+              <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                {t("additional")}
+              </h3>
+              {paymentTerms && (
+                <div className="space-y-2">
+                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                    {t("paymentTerms")}
+                  </h4>
+                  <p className="whitespace-pre-line">{paymentTerms}</p>
+                </div>
+              )}
+              {deliveryTerms && (
+                <div className="space-y-2">
+                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                    {t("deliveryTerms")}
+                  </h4>
+                  <p className="whitespace-pre-line">{deliveryTerms}</p>
+                </div>
+              )}
+              {deliveryAddress && (
+                <div className="space-y-2">
+                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                    {t("deliveryAddress")}
+                  </h4>
+                  <p className="whitespace-pre-line">{deliveryAddress}</p>
+                </div>
+              )}
+            </>
+          )}
         </div>
-      )}
-      <div className="flex flex-row items-center border-b pb-2 space-x-2">
-        <Package className="w-8 h-8" />
-        <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-          {`${t("items")} (${items.length || 0})`}
-        </h3>
+        <div className="order-first col-span-4 space-y-6 lg:order-none">
+          <RFQMainInfo rfq={rfq} />
+          {companyIsParticipant && (
+            <div className="absolute m-auto left-0 right-0 bottom-8 flex justify-center lg:bottom-0 lg:relative">
+              <Link
+                href={`/new-quotation/${id}`}
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "text-center whitespace-normal h-auto space-x-2 lg:w-full"
+                )}
+              >
+                <ArrowRightCircle />
+                <span>{t("createQuotation")}</span>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-      {items.map((item, index) => (
-        <RFQItemCard
-          key={index}
-          number={index + 1}
-          currency={currency}
-          item={item}
-        />
-      ))}
-      {(paymentTerms || deliveryTerms || deliveryAddress) && (
-        <>
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {t("additional")}
-          </h3>
-          {paymentTerms && (
-            <div className="space-y-2">
-              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                {t("paymentTerms")}
-              </h4>
-              <p className="whitespace-pre-line">{paymentTerms}</p>
-            </div>
-          )}
-          {deliveryTerms && (
-            <div className="space-y-2">
-              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                {t("deliveryTerms")}
-              </h4>
-              <p className="whitespace-pre-line">{deliveryTerms}</p>
-            </div>
-          )}
-          {deliveryAddress && (
-            <div className="space-y-2">
-              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                {t("deliveryAddress")}
-              </h4>
-              <p className="whitespace-pre-line">{deliveryAddress}</p>
-            </div>
-          )}
-        </>
-      )}
-      {companyIsParticipant && (
-        <div className="sticky bottom-8 flex justify-center">
-          <Link
-            href={`/new-quotation/${id}`}
-            className={cn(
-              "space-x-2",
-              buttonVariants({ variant: "default", size: "lg" })
-            )}
-          >
-            <ArrowRightCircle />
-            <span>{t("createQuotation")}</span>
-          </Link>
-        </div>
-      )}
     </MaxWidthWrapper>
   );
 };
