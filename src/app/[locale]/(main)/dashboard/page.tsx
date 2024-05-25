@@ -39,7 +39,11 @@ const Dashboard = async () => {
 
   return (
     <div>
-      {(userCompanies?._count.companies ?? 0) === 0 ? <WelcomeScreen /> : null}
+      {(userCompanies?._count.companies ?? 0) === 0 ? (
+        <WelcomeScreen />
+      ) : (
+        <WelcomeScreen />
+      )}
     </div>
   );
 };

@@ -7,7 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
-import { Plus, CalendarIcon, CheckCircle2, Info, Package } from "lucide-react";
+import {
+  Plus,
+  CalendarIcon,
+  CheckCircle2,
+  Info,
+  Package,
+  Text,
+} from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import RFQItem from "./rfq-item";
 import { Button } from "@/components/ui/button";
@@ -150,22 +157,18 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               {t("main")}
             </h3>
           </div>
-          {/* Public */}
+          {/* Title */}
           <FormField
             control={form.control}
-            name="publicRequest"
+            name="title"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm !mb-10">
-                <div className="space-y-0.5">
-                  <FormLabel>{t("makePublic")}</FormLabel>
-                  <FormDescription>{t("makePublicHint")}</FormDescription>
-                </div>
+              <FormItem>
+                <FormLabel>{t("title")}</FormLabel>
                 <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Input {...field} autoComplete="off" />
                 </FormControl>
+                <FormDescription>{t("titleDescription")}</FormDescription>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -240,7 +243,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               <FormItem>
                 <FormLabel>{t("description")}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} rows={10} />
+                  <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -286,7 +289,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
         </div>
         <div className="space-y-4">
           <div className="flex flex-row items-center border-b pb-2 space-x-2">
-            <Package className="w-8 h-8" />
+            <Text className="w-8 h-8" />
             <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
               {t("additional")}
             </h3>
@@ -330,6 +333,25 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
                   <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Public */}
+          <FormField
+            control={form.control}
+            name="publicRequest"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel>{t("makePublic")}</FormLabel>
+                  <FormDescription>{t("makePublicHint")}</FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

@@ -181,6 +181,13 @@ export const getRFQSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.string().optional(),
     number: z.number().optional(),
+    title: z
+      .string({
+        required_error: t("invalidTitle"),
+        invalid_type_error: t("invalidTitle"),
+      })
+      .min(1, t("invalidTitle"))
+      .max(100, "invalidTitleLength"),
     publicRequest: z
       .boolean({
         required_error: t("invalidPublicRequest"),

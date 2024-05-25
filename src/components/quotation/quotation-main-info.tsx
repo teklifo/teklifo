@@ -130,6 +130,8 @@ export const QuotationAttributes = ({
 }) => {
   const t = useTranslations("Quotation");
 
+  const daysLeft = differenceInDays(endDate, new Date());
+
   return (
     <>
       <div className="flex flex-col items-center space-x-2 md:flex-row">
@@ -141,9 +143,11 @@ export const QuotationAttributes = ({
             "dd.MM.yyyy"
           )}`}
         />
-        <Badge>
-          {t("daysLeft", { daysLeft: differenceInDays(endDate, new Date()) })}
-        </Badge>
+        {daysLeft > 0 ? (
+          <Badge>{t("daysLeft", { daysLeft })}</Badge>
+        ) : (
+          <Badge variant="destructive">{t("outdated")}</Badge>
+        )}
       </div>
       <MainInfoItem
         icon={<CalendarClock />}

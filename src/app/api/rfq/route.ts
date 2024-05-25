@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     const {
+      title,
       publicRequest,
       currency,
       date,
@@ -51,6 +52,7 @@ export async function POST(request: NextRequest) {
       data: {
         companyId: company.id,
         userId: company.users[0].userId,
+        title,
         publicRequest,
         currency,
         startDate: date.from,

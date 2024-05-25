@@ -258,6 +258,7 @@ model RequestForQuotation {
   publicRequest   Boolean
   user            User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
+  title           String                    
   currency        String
   startDate       DateTime
   endDate         DateTime
