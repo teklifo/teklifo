@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     const {
+      externalId,
       title,
       publicRequest,
       currency,
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
 
     const rfq = await db.requestForQuotation.create({
       data: {
+        externalId,
         companyId: company.id,
         userId: company.users[0].userId,
         title,

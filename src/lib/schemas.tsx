@@ -180,6 +180,7 @@ export const getProductsSchema = (t: TranslateFunction) => {
 export const getRFQSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.string().optional(),
+    externalId: z.string().optional(),
     number: z.number().optional(),
     title: z
       .string({
@@ -268,6 +269,7 @@ export const getRFQItemSchema = (t: TranslateFunction) => {
 export const getQuotationSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.number().optional(),
+    externalId: z.string().optional(),
     rfqVersionId: z.string({
       required_error: t("invalidRFQVersionId"),
       invalid_type_error: t("invalidRFQVersionId"),

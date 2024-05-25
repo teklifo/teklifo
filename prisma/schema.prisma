@@ -252,13 +252,14 @@ model ExchangeJob {
 model RequestForQuotation {
   versionId       String                    @id @default(cuid())
   id              String                    @default(cuid())
+  externalId      String?
   number          Int                       @default(autoincrement())
   company         Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String
   publicRequest   Boolean
   user            User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
-  title           String                    
+  title           String
   currency        String
   startDate       DateTime
   endDate         DateTime
@@ -300,6 +301,7 @@ model Participants {
 
 model Quotation {
   id           Int                 @id @default(autoincrement())
+  externalId   String?
   company      Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId    String
   rfq          RequestForQuotation @relation(fields: [rfqVersionId], references: [versionId], onDelete: Cascade)
