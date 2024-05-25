@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -129,6 +130,7 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
               <FormControl>
                 <Input {...field} autoComplete="off" />
               </FormControl>
+              <FormDescription>{t("idDescription")}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
