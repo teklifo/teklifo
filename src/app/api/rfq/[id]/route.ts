@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       where: { id, latestVersion: true },
       include: {
         company: true,
-        products: {
+        items: {
           include: {
             product: true,
           },
@@ -69,15 +69,15 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     }
 
     const {
+      title,
       publicRequest,
       currency,
-      startDate,
-      endDate,
+      date,
       description,
       deliveryAddress,
       deliveryTerms,
       paymentTerms,
-      products,
+      items,
     } = test.data;
 
     // Find and check RFQ
@@ -87,7 +87,8 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         latestVersion: true,
       },
       include: {
-        products: true,
+        items: true,
+        participants: true,
       },
     });
 
@@ -114,55 +115,58 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       data: {
         id: previousRfqVersion.id,
         number: previousRfqVersion.number,
+
         companyId: company.id,
-        userId: company.users.length > 0 ? company.users[0].userId : null,
+        userId: company.users[0].userId,
+        title,
         publicRequest,
         currency,
-        startDate,
-        endDate,
+        startDate: date.from,
+        endDate: date.to,
         description,
         deliveryAddress,
         deliveryTerms,
         paymentTerms,
+        participants: {
+          createMany: {
+            data: previousRfqVersion.participants.map((e) => ({
+              companyId: e.companyId,
+            })),
+          },
+        },
       },
     });
 
-    const productsDataUnfiltered = products.map((product) => {
-      const existingRfqLine = previousRfqVersion.products.find(
-        (existingProduct) => existingProduct.id === product.id
+    const itemsDataUnfiltered = items.map((item) => {
+      const existingRfqItem = previousRfqVersion.items.find(
+        (existingProduct) => existingProduct.id === item.id
       );
-      if (product.id && !existingRfqLine) return null;
+      if (item.id && !existingRfqItem) return null;
 
-      const productData: Prisma.RequestForQuotationProductsCreateManyInput =
-        existingRfqLine
-          ? {
-              ...existingRfqLine,
-              versionId: undefined,
-              requestForQuotationId: newRfqVersion.versionId,
-            }
-          : {
-              requestForQuotationId: newRfqVersion.versionId,
-              productId: product.productId,
-              externalId: product.externalId,
-              price: product.price,
-              quantity: product.quantity,
-              deliveryDate: product.deliveryDate,
-              comment: product.comment,
-            };
+      const productData: Prisma.RequestForQuotationItemCreateManyInput = {
+        id: existingRfqItem ? existingRfqItem.id : undefined,
+        requestForQuotationId: newRfqVersion.versionId,
+        productId: item.productId,
+        externalId: item.externalId,
+        price: item.price,
+        quantity: item.quantity,
+        deliveryDate: item.deliveryDate,
+        comment: item.comment,
+      };
 
       return productData;
     });
 
-    const productsData: Prisma.RequestForQuotationProductsCreateManyInput[] =
-      productsDataUnfiltered.filter(
+    const itemsData: Prisma.RequestForQuotationItemCreateManyInput[] =
+      itemsDataUnfiltered.filter(
         (
           productData
-        ): productData is Prisma.RequestForQuotationProductsCreateManyInput =>
+        ): productData is Prisma.RequestForQuotationItemCreateManyInput =>
           productData !== null
       );
 
-    await db.requestForQuotationProducts.createMany({
-      data: productsData,
+    await db.requestForQuotationItem.createMany({
+      data: itemsData,
     });
 
     const newRfqVersionWithProducts = await db.requestForQuotation.findUnique({
@@ -170,7 +174,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         versionId: newRfqVersion.versionId,
       },
       include: {
-        products: true,
+        items: true,
         user: {
           select: {
             id: true,
@@ -206,7 +210,7 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
       where: { id, latestVersion: true },
       include: {
         company: true,
-        products: {
+        items: {
           include: {
             product: true,
           },

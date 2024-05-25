@@ -8,7 +8,7 @@ import type {
   PriceType as PriceTypeType,
 } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import EditRole from "@/app/[locale]/(main)/roles/_components/edit-role";
+import EditRole from "@/components/role/edit-role";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { getStocksAndPriceTypes } from "@/app/actions/get-stocks-price-types";
 import request from "@/lib/request";
@@ -85,12 +85,13 @@ const UpdateForm = async ({ params: { roleId } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8">
       <div className="space-y-2 mb-4">
-        <h1 className="text-2xl font-bold tracking-tight">
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("updateRoleTitle", {
             roleName: role.name,
             companyName: role.company.name,
           })}
         </h1>
+
         <p className="text-lg text-muted-foreground">
           {t("updateRoleSubtitle")}
         </p>

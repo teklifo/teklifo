@@ -5,6 +5,7 @@ import * as z from "zod";
 import { MoreHorizontal, CalendarIcon, X } from "lucide-react";
 import { format } from "date-fns";
 import { Product as ProductType } from "@prisma/client";
+import ProductSelect from "@/components/product/product-select";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -27,21 +28,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
-import ProductSelect from "../product-select";
+import { Textarea } from "../ui/textarea";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
-type RFQProductProps = {
+type RFQItemProps = {
   productField: FieldArrayWithId;
   index: number;
   removeProduct: () => void;
 };
 
-const RFQProduct = ({
-  productField,
-  index,
-  removeProduct,
-}: RFQProductProps) => {
+const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
   const t = useTranslations("RFQForm");
 
   const [openProducts, setOpenProducts] = useState(false);
@@ -52,12 +49,12 @@ const RFQProduct = ({
   const form = useFormContext<z.infer<typeof formSchema>>();
 
   function onProductSelect(product: ProductType) {
-    form.setValue(`products.${index}.productId`, product.id);
-    form.setValue(`products.${index}.product`, product);
+    form.setValue(`items.${index}.productId`, product.id);
+    form.setValue(`items.${index}.product`, product);
     setOpenProducts(false);
   }
 
-  const productSelected = form.getValues(`products.${index}.productId`) !== 0;
+  const productSelected = form.getValues(`items.${index}.productId`) !== 0;
 
   return (
     <Card key={productField.id} className="h-full w-full">
@@ -65,7 +62,7 @@ const RFQProduct = ({
         <div className="flex flex-row items-center space-x-8 mt-4">
           {productSelected && (
             <div className="text-2xl font-semibold tracking-tight">
-              {form.getValues(`products.${index}.product`)?.name}
+              {form.getValues(`items.${index}.product`)?.name}
             </div>
           )}
           {/* Product */}
@@ -79,8 +76,8 @@ const RFQProduct = ({
                       {!productSelected && <span>{t("selectProduct")}</span>}
                     </Button>
                     <FormMessage>
-                      {(form.formState.errors.products &&
-                        form.formState.errors.products[index]?.productId
+                      {(form.formState.errors.items &&
+                        form.formState.errors.items[index]?.productId
                           ?.message) ||
                         ""}{" "}
                     </FormMessage>
@@ -107,17 +104,17 @@ const RFQProduct = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" className="flex items-center gap-4">
-              {t("deleteRow")}
+              {t("deleteItem")}
             </TooltipContent>
           </Tooltip>
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
-        <div className="flex flex-col space-x-0 space-y-4 md:flex-row md:justify-start md:space-y-0 md:space-x-8">
+        <div className="grid md:grid-cols-4 gap-4">
           {/* Quantity */}
           <FormField
             control={form.control}
-            name={`products.${index}.quantity`}
+            name={`items.${index}.quantity`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("quantity")}</FormLabel>
@@ -131,7 +128,7 @@ const RFQProduct = ({
           {/* Price */}
           <FormField
             control={form.control}
-            name={`products.${index}.price`}
+            name={`items.${index}.price`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("price")}</FormLabel>
@@ -145,7 +142,7 @@ const RFQProduct = ({
           {/* Delivery date */}
           <FormField
             control={form.control}
-            name={`products.${index}.deliveryDate`}
+            name={`items.${index}.deliveryDate`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("deliveryDate")}</FormLabel>
@@ -186,12 +183,12 @@ const RFQProduct = ({
         {/* Comment*/}
         <FormField
           control={form.control}
-          name={`products.${index}.comment`}
+          name={`items.${index}.comment`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("comment")}</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" />
+                <Textarea {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -202,4 +199,4 @@ const RFQProduct = ({
   );
 };
 
-export default RFQProduct;
+export default RFQItem;

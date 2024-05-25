@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
-import { Prisma } from "@prisma/client";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
@@ -25,14 +24,15 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       where: { id: parseInt(id) },
       include: {
         company: true,
-        products: {
+        rfq: {
+          include: {
+            company: true,
+          },
+        },
+        items: {
           include: {
             product: true,
-            rfqLine: {
-              select: {
-                id: true,
-              },
-            },
+            rfqItem: true,
           },
         },
       },
@@ -77,7 +77,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { rfqId, currency, description, products } = test.data;
+    const { rfqVersionId, rfqId, currency, description, items } = test.data;
 
     // Find quotation
     const existingQuotation = await db.quotation.findUnique({
@@ -90,68 +90,73 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(t("invalidQuotationId"), 404);
     }
 
-    // Delete previous products
-    await db.quotationProducts.deleteMany({
+    // Delete previous items
+    await db.quotationItem.deleteMany({
       where: {
         quotationId: existingQuotation.id,
       },
     });
 
     // Update quotation
+    let totalAmount = 0;
+
+    const quotationProducts = {
+      create: items.map((item) => {
+        const { vatRate, vatRatePercentage } = getVatRatePercentage(
+          item.vatRate
+        );
+
+        const vatAmount = calculateVatAmount(item.amount, vatRatePercentage);
+
+        const amountWithVat = calculateAmountWithVat(
+          item.amount,
+          vatAmount,
+          item.vatIncluded
+        );
+
+        return {
+          externalId: item.externalId,
+          rfqItem: {
+            connect: {
+              versionId: item.rfqItemVersionId,
+            },
+          },
+          rfqItemId: item.rfqItemId,
+          product: {
+            connect: {
+              id: item.productId,
+            },
+          },
+          quantity: item.quantity,
+          price: item.price,
+          amount: item.amount,
+          vatRate,
+          vatAmount,
+          vatIncluded: item.vatIncluded,
+          amountWithVat,
+          deliveryDate: item.deliveryDate,
+          comment: item.comment,
+          skip: item.skip,
+        };
+      }),
+    };
+
     const updatedQuotation = await db.quotation.update({
       where: {
         id: parseInt(id),
       },
       data: {
         companyId: company.id,
+        rfqVersionId,
         rfqId,
-        userId: company.users.length > 0 ? company.users[0].userId : null,
+        userId: company.users[0].userId,
         currency,
         description,
-        products: {
-          create: products.map((product) => {
-            const { vatRate, vatRatePercentage } = getVatRatePercentage(
-              product.vatRate
-            );
-
-            const vatAmount = calculateVatAmount(
-              product.amount,
-              vatRatePercentage
-            );
-
-            const amountWithVat = calculateAmountWithVat(
-              product.amount,
-              vatAmount,
-              product.vatIncluded
-            );
-
-            return {
-              externalId: product.externalId,
-              rfqLine: {
-                connect: {
-                  versionId: product.rfqLineId,
-                },
-              },
-              product: {
-                connect: {
-                  id: product.productId,
-                },
-              },
-              quantity: product.quantity,
-              price: product.price,
-              amount: product.amount,
-              vatRate,
-              vatAmount,
-              vatIncluded: product.vatIncluded,
-              amountWithVat,
-              deliveryDate: product.deliveryDate,
-              comment: product.comment,
-            };
-          }),
-        },
+        totalAmount,
+        items: quotationProducts,
       },
       include: {
-        products: true,
+        items: true,
         user: {
           select: {
             id: true,

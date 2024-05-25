@@ -23,7 +23,7 @@ import request from "@/lib/request";
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
     company: true;
-    products: {
+    items: {
       include: {
         product: true;
       };

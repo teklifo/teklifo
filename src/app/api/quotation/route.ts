@@ -41,21 +41,21 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { rfqId, currency, description, products } = test.data;
+    const { rfqVersionId, rfqId, currency, description, items } = test.data;
 
     // Check RFQ
     const rfq = await db.requestForQuotation.findUnique({
       where: {
-        versionId: rfqId,
+        versionId: rfqVersionId,
         participants: {
           some: {
             companyId: company.id,
           },
         },
-        products: {
+        items: {
           some: {
             versionId: {
-              in: products.map((e) => e.rfqLineId),
+              in: items.map((e) => e.rfqItemVersionId),
             },
           },
         },
@@ -65,73 +65,65 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(t("invalidRFQId"), 400);
     }
 
-    // Check uniqueness
-    const existingQuotation = await db.quotation.findFirst({
-      where: {
-        companyId: company.id,
-        rfqId,
-      },
-    });
-    if (existingQuotation)
-      return getErrorResponse(
-        t("quotationAlreadyExists", {
-          companyName: company.name,
-          rfqNumber: rfq.number,
-        }),
-        400
-      );
+    // Create quotation
+    let totalAmount = 0;
+
+    const quotationProducts = {
+      create: items.map((item) => {
+        const { vatRate, vatRatePercentage } = getVatRatePercentage(
+          item.vatRate
+        );
+
+        const vatAmount = calculateVatAmount(item.amount, vatRatePercentage);
+
+        const amountWithVat = calculateAmountWithVat(
+          item.amount,
+          vatAmount,
+          item.vatIncluded
+        );
+
+        totalAmount = totalAmount + amountWithVat;
+
+        return {
+          externalId: item.externalId,
+          rfqItem: {
+            connect: {
+              versionId: item.rfqItemVersionId,
+            },
+          },
+          rfqItemId: item.rfqItemId,
+          product: {
+            connect: {
+              id: item.productId,
+            },
+          },
+          quantity: item.quantity,
+          price: item.price,
+          amount: item.amount,
+          vatRate,
+          vatAmount,
+          vatIncluded: item.vatIncluded,
+          amountWithVat,
+          deliveryDate: item.deliveryDate,
+          comment: item.comment,
+          skip: item.skip,
+        };
+      }),
+    };
 
     const quotation = await db.quotation.create({
       data: {
         companyId: company.id,
+        rfqVersionId,
         rfqId,
-        userId: company.users.length > 0 ? company.users[0].userId : null,
+        userId: company.users[0].userId,
         currency,
         description,
-        products: {
-          create: products.map((product) => {
-            const { vatRate, vatRatePercentage } = getVatRatePercentage(
-              product.vatRate
-            );
-
-            const vatAmount = calculateVatAmount(
-              product.amount,
-              vatRatePercentage
-            );
-
-            const amountWithVat = calculateAmountWithVat(
-              product.amount,
-              vatAmount,
-              product.vatIncluded
-            );
-
-            return {
-              externalId: product.externalId,
-              rfqLine: {
-                connect: {
-                  versionId: product.rfqLineId,
-                },
-              },
-              product: {
-                connect: {
-                  id: product.productId,
-                },
-              },
-              quantity: product.quantity,
-              price: product.price,
-              amount: product.amount,
-              vatRate,
-              vatAmount,
-              vatIncluded: product.vatIncluded,
-              amountWithVat,
-              deliveryDate: product.deliveryDate,
-              comment: product.comment,
-            };
-          }),
-        },
+        totalAmount,
+        items: quotationProducts,
       },
       include: {
-        products: true,
+        items: true,
         user: {
           select: {
             id: true,
@@ -199,6 +191,14 @@ export async function GET(request: NextRequest) {
         take: limit,
         skip: startIndex,
         where: filters,
+        include: {
+          company: true,
+          rfq: {
+            include: {
+              company: true,
+            },
+          },
+        },
         orderBy: {
           createdAt: "desc",
         },

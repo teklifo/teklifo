@@ -4,12 +4,19 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Prisma } from "@prisma/client";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
-import { Plus, CalendarIcon, CheckCircle2 } from "lucide-react";
-import RFQProduct from "./rfq-product";
+import {
+  Plus,
+  CalendarIcon,
+  CheckCircle2,
+  Info,
+  Package,
+  Text,
+} from "lucide-react";
+import type { Prisma } from "@prisma/client";
+import RFQItem from "./rfq-item";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -36,7 +43,7 @@ import { cn } from "@/lib/utils";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
-    products: {
+    items: {
       include: {
         product: true;
       };
@@ -65,29 +72,33 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
       id: rfq?.id,
       publicRequest: rfq?.publicRequest,
       currency: rfq?.currency,
-      startDate: rfq?.startDate,
-      endDate: rfq?.endDate,
+      date: rfq
+        ? {
+            from: rfq.startDate,
+            to: rfq.endDate,
+          }
+        : undefined,
       description: rfq?.description,
       deliveryAddress: rfq?.deliveryAddress,
       deliveryTerms: rfq?.deliveryTerms,
       paymentTerms: rfq?.paymentTerms,
-      products: rfq?.products.map((item) => {
+      items: rfq?.items.map((rfqItem) => {
         return {
-          id: item.id,
-          productId: item.productId ?? undefined,
-          product: item.product || undefined,
-          quantity: Number(item.quantity),
-          price: Number(item.price),
-          deliveryDate: item.deliveryDate,
-          comment: item.comment,
+          id: rfqItem.id,
+          productId: rfqItem.productId ?? undefined,
+          product: rfqItem.product || undefined,
+          quantity: Number(rfqItem.quantity),
+          price: Number(rfqItem.price),
+          deliveryDate: rfqItem.deliveryDate,
+          comment: rfqItem.comment,
         };
       }),
     },
   });
 
-  const products = useFieldArray({
+  const items = useFieldArray({
     control: form.control,
-    name: "products",
+    name: "items",
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -140,25 +151,24 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
         <div className="space-y-4">
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {t("main")}
-          </h3>
-          {/* Public */}
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Info className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("main")}
+            </h3>
+          </div>
+          {/* Title */}
           <FormField
             control={form.control}
-            name="publicRequest"
+            name="title"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm !mb-10">
-                <div className="space-y-0.5">
-                  <FormLabel>{t("makePublic")}</FormLabel>
-                  <FormDescription>{t("makePublicHint")}</FormDescription>
-                </div>
+              <FormItem>
+                <FormLabel>{t("title")}</FormLabel>
                 <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Input {...field} autoComplete="off" />
                 </FormControl>
+                <FormDescription>{t("titleDescription")}</FormDescription>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -166,74 +176,43 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
           <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
             <FormField
               control={form.control}
-              name={`startDate`}
+              name={`date`}
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>{t("startDate")}</FormLabel>
+                  <FormLabel>{t("date")}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
+                      <Button
+                        id="date"
+                        variant={"outline"}
+                        className={cn(
+                          "w-[300px] justify-start text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value?.from ? (
+                          field.value.to ? (
+                            <>
+                              {format(field.value.from, "LLL dd, y")} -{" "}
+                              {format(field.value.to, "LLL dd, y")}
+                            </>
                           ) : (
-                            <span>{t("pickDate")}</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
+                            format(field.value.from, "LLL dd, y")
+                          )
+                        ) : (
+                          <span>{t("pickADate")}</span>
+                        )}
+                      </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
-                        mode="single"
+                        initialFocus
+                        mode="range"
+                        defaultMonth={field?.value?.from}
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name={`endDate`}
-              render={({ field }) => (
-                <FormItem>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>{t("pickDate")}</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
+                        numberOfMonths={2}
                       />
                     </PopoverContent>
                   </Popover>
@@ -264,7 +243,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               <FormItem>
                 <FormLabel>{t("description")}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} rows={10} />
+                  <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -273,40 +252,48 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
         </div>
         {/* Products */}
         <div className="space-y-4">
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {`${t("products")} (${form.getValues("products")?.length || 0})`}
-          </h3>
-          {products.fields.map((productField, index) => (
-            <RFQProduct
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Package className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {`${t("items")} (${form.getValues("items")?.length || 0})`}
+            </h3>
+          </div>
+          {items.fields.map((productField, index) => (
+            <RFQItem
               key={index}
               productField={productField}
               index={index}
               removeProduct={() => {
-                products.remove(index);
+                items.remove(index);
               }}
             />
           ))}
-          <Button
-            type="button"
-            className="space-x-2"
-            onClick={() =>
-              products.append({
-                productId: 0,
-                quantity: 0,
-                price: 0,
-                deliveryDate: new Date(0),
-                comment: "",
-              })
-            }
-          >
-            <Plus />
-            <span>{t("addRow")}</span>
-          </Button>
+          <div className="flex justify-center items-center">
+            <Button
+              type="button"
+              className="space-x-2"
+              onClick={() =>
+                items.append({
+                  productId: 0,
+                  quantity: 0,
+                  price: 0,
+                  deliveryDate: new Date(),
+                  comment: "",
+                })
+              }
+            >
+              <Plus />
+              <span>{t("addItem")}</span>
+            </Button>
+          </div>
         </div>
         <div className="space-y-4">
-          <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            {t("additional")}
-          </h3>
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Text className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("additional")}
+            </h3>
+          </div>
           {/* Delivery address*/}
           <FormField
             control={form.control}
@@ -346,6 +333,25 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
                   <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Public */}
+          <FormField
+            control={form.control}
+            name="publicRequest"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel>{t("makePublic")}</FormLabel>
+                  <FormDescription>{t("makePublicHint")}</FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

@@ -37,9 +37,9 @@ const Settings = async () => {
     <MaxWidthWrapper className="my-8">
       <div className="space-y-2">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {t("updateTitle")}
+          {t("title")}
         </h1>
-        <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>
+        <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
       <div className="mt-4">
         <SettingsForm user={user} />

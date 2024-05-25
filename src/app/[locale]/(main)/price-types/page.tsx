@@ -146,12 +146,12 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
               width="600"
               height="600"
             />
-            <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+            <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noPriceTypes")}
             </h2>
             {isAdmin && (
               <>
-                <span className="block text-xl text-muted-foreground">
+                <span className="leading-7 tracking-tight max-w-sm text-muted-foreground">
                   {t("noPriceTypesHint")}
                 </span>
                 <PriceTypeForm companyId={company.id} />

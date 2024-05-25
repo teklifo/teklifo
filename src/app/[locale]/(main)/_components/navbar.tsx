@@ -3,6 +3,7 @@ import { Company as CompanyType } from "@prisma/client";
 import { Link } from "@/navigation";
 import UserDropdown from "./user-dropdown";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import Logo from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentUser from "@/app/actions/get-current-user";
 
@@ -21,9 +22,7 @@ const Navbar = async ({ defaultCompany, userCompanies }: NavbarProps) => {
       <header className="relative bg-background border-b">
         <MaxWidthWrapper>
           <div className="flex h-16 justify-between items-center">
-            <Link href="/">
-              <div className="">Teklifo</div>
-            </Link>
+            <Logo />
             {user ? (
               <UserDropdown
                 user={user}

@@ -61,7 +61,7 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
         },
       },
       include: {
-        products: true,
+        items: true,
         user: {
           select: {
             id: true,

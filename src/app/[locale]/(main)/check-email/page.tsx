@@ -3,8 +3,8 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
-import { buttonVariants } from "@/components/ui/button";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { buttonVariants } from "@/components/ui/button";
 
 type Props = {
   params: { locale: string };

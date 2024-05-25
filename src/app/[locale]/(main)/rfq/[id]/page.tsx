@@ -1,46 +1,16 @@
 import { Metadata } from "next";
-import { headers, cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Prisma } from "@prisma/client";
-import { format } from "date-fns";
-import {
-  Pencil,
-  Calendar,
-  Lock,
-  Globe,
-  HelpCircle,
-  CircleDollarSign,
-  Building2,
-  Fingerprint,
-  Receipt,
-} from "lucide-react";
+import { Package, Pencil, ArrowRightCircle } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import getCurrentCompany from "@/app/actions/get-current-company";
-import request from "@/lib/request";
+import getRFQ from "@/app/actions/get-rfq";
 import { cn } from "@/lib/utils";
-import { RFQProductCard } from "./_components/rfq-product-card";
+import RFQItemCard from "./_components/rfq-item-card";
 import DeleteRFQ from "./_components/delete-rfq";
-
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-    products: {
-      include: {
-        product: true;
-      };
-    };
-    participants: true;
-  };
-}>;
 
 type Props = {
   params: { locale: string; id: string };
@@ -66,51 +36,31 @@ export const generateMetadata = async ({
   };
 };
 
-const getRFQ = async (id: string) => {
-  try {
-    const cookieStore = cookies();
-    const headersList = headers();
-    const cookie = headersList.get("cookie");
-
-    return await request<RequestForQuotationType>(`/api/rfq/${id}`, {
-      headers: {
-        "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
-        Cookie: cookie,
-      },
-      next: { revalidate: 0 },
-    });
-  } catch (error) {
-    return undefined;
-  }
-};
-
 const RFQ = async ({ params: { id } }: Props) => {
   const t = await getTranslations("RFQ");
 
   const rfq = await getRFQ(id);
   if (!rfq) return notFound();
 
-  const userCompany = await getCurrentCompany();
+  const company = await getCurrentCompany();
 
   const isAdmin =
-    userCompany !== null ? userCompany.users[0].companyRole.default : false;
+    company !== null ? company.users[0].companyRole.default : false;
 
-  const userOwnsRFQ = rfq.companyId === userCompany?.id;
-  const userIsParticipant =
-    rfq.participants.find((e) => e.companyId === userCompany?.id) !== undefined;
+  const companyOwnsRFQ = rfq.companyId === company?.id;
+  const companyIsParticipant =
+    rfq.participants.find((e) => e.companyId === company?.id) !== undefined;
 
-  if (!userOwnsRFQ && !rfq.publicRequest && !userIsParticipant) {
+  if (!companyOwnsRFQ && !rfq.publicRequest && !companyIsParticipant) {
     redirect(`/supplier-guide/${rfq.id}`);
   }
 
   const {
+    title,
     number,
     description,
-    startDate,
-    endDate,
-    publicRequest,
     currency,
-    products,
+    items,
     paymentTerms,
     deliveryAddress,
     deliveryTerms,
@@ -119,10 +69,15 @@ const RFQ = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
-        <h1 className="scroll-m-20 text-4xl font-semibold tracking-tight">{`${t(
-          "rfq"
-        )} #${number}`}</h1>
-        {userOwnsRFQ && isAdmin && (
+        <div className="space-y-2">
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {title}
+          </h1>
+          <p className="text-lg text-muted-foreground">{`${t(
+            "rfq"
+          )} #${number}`}</p>
+        </div>
+        {companyOwnsRFQ && isAdmin && (
           <div className="flex space-x-2">
             <Link
               href={`/edit-rfq/${rfq.id}`}
@@ -138,80 +93,27 @@ const RFQ = async ({ params: { id } }: Props) => {
           </div>
         )}
       </div>
-      <div className="space-y-2">
-        <div className="flex flex-row items-end space-x-2">
-          <Building2 />
-          <span className="font-semibold">{`${t("company")}:`}</span>
-          <Link
-            href={`/company/${rfq.companyId}`}
-            className="scroll-m-20 underline text-lg font-semibold tracking-tight"
-          >
-            {rfq.company?.name}
-          </Link>
-        </div>
-        <div className="flex flex-row items-end space-x-2">
-          <Fingerprint />
-          <span className="font-semibold">{`${t("tin")}:`}</span>
-          <span>{rfq.company?.tin}</span>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <div className="flex flex-row w-auto space-x-2">
-          {publicRequest ? (
-            <>
-              <Globe />
-              <span className="font-semibold">{t("public")}</span>
-            </>
-          ) : (
-            <>
-              <Lock />
-              <span className="font-semibold">{t("private")}</span>
-            </>
-          )}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <HelpCircle className="text-muted-foreground" />
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>{publicRequest ? t("publicHint") : t("privateHint")}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-        <div className="flex flex-row space-x-2">
-          <Calendar />
-          <span className="font-semibold">{`${t("period")}:`}</span>
-          <span>
-            {`${format(startDate, "dd.MM.yyyy")} - ${format(
-              endDate,
-              "dd.MM.yyyy"
-            )}`}
-          </span>
-        </div>
-        <div className="flex flex-row space-x-2">
-          <CircleDollarSign />
-          <span className="font-semibold">{`${t("currency")}:`}</span>
-          <span>{currency}</span>
-        </div>
-      </div>
+      <RFQMainInfo rfq={rfq} />
       {description && (
-        <div>
+        <div className="space-y-2">
           <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {t("description")}
           </h3>
           <div className="whitespace-pre-line">{description}</div>
         </div>
       )}
-      <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        {`${t("products")} (${products.length || 0})`}
-      </h3>
-      {products.map((product, index) => (
-        <RFQProductCard
+      <div className="flex flex-row items-center border-b pb-2 space-x-2">
+        <Package className="w-8 h-8" />
+        <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+          {`${t("items")} (${items.length || 0})`}
+        </h3>
+      </div>
+      {items.map((item, index) => (
+        <RFQItemCard
           key={index}
           number={index + 1}
           currency={currency}
-          product={product}
+          item={item}
         />
       ))}
       {(paymentTerms || deliveryTerms || deliveryAddress) && (
@@ -220,7 +122,7 @@ const RFQ = async ({ params: { id } }: Props) => {
             {t("additional")}
           </h3>
           {paymentTerms && (
-            <div>
+            <div className="space-y-2">
               <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
                 {t("paymentTerms")}
               </h4>
@@ -228,7 +130,7 @@ const RFQ = async ({ params: { id } }: Props) => {
             </div>
           )}
           {deliveryTerms && (
-            <div>
+            <div className="space-y-2">
               <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
                 {t("deliveryTerms")}
               </h4>
@@ -236,7 +138,7 @@ const RFQ = async ({ params: { id } }: Props) => {
             </div>
           )}
           {deliveryAddress && (
-            <div>
+            <div className="space-y-2">
               <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
                 {t("deliveryAddress")}
               </h4>
@@ -245,7 +147,7 @@ const RFQ = async ({ params: { id } }: Props) => {
           )}
         </>
       )}
-      {userIsParticipant && (
+      {companyIsParticipant && (
         <div className="sticky bottom-8 flex justify-center">
           <Link
             href={`/new-quotation/${id}`}
@@ -254,7 +156,7 @@ const RFQ = async ({ params: { id } }: Props) => {
               buttonVariants({ variant: "default", size: "lg" })
             )}
           >
-            <Receipt />
+            <ArrowRightCircle />
             <span>{t("createQuotation")}</span>
           </Link>
         </div>

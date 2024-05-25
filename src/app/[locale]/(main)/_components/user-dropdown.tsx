@@ -57,7 +57,7 @@ const UserDropdown = ({
               </Avatar>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="px-2 py-8">
+          <SheetContent side="right" className="px-2 py-8 overflow-auto">
             <div className="flex flex-col justify-center items-center space-y-2">
               <Avatar>
                 <AvatarImage src={user.image ?? ""} />

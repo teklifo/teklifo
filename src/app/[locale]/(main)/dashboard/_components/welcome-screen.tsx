@@ -20,16 +20,6 @@ const WelcomeScreen = async () => {
             <p className="text-lg">{t("hintText")}</p>
             <div className="flex flex-col space-y-2">
               <Link
-                href={`/company`}
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "space-x-2"
-                )}
-              >
-                <Search className="text-muted-foreground" />
-                <span>{t("joinCompany")}</span>
-              </Link>
-              <Link
                 href={`/new-company`}
                 className={cn(
                   buttonVariants({ variant: "outline" }),

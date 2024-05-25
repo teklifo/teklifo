@@ -1,8 +1,7 @@
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import CompanyForm from "@/app/[locale]/(main)/_components/company-form";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import CompanyForm from "@/components/company/company-form";
 
 type Props = {
   params: { locale: string };

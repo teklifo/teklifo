@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import ProductCard from "@/app/[locale]/(main)/_components/product-card";
+import ProductCard from "@/components/product/product-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {
@@ -100,12 +100,12 @@ const Products = async ({ searchParams: { page } }: Props) => {
               width="600"
               height="600"
             />
-            <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+            <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noProducts")}
             </h2>
             {isAdmin && (
               <>
-                <span className="block text-xl text-muted-foreground">
+                <span className="leading-7 tracking-tight max-w-sm text-muted-foreground">
                   {t("noProductsHint")}
                 </span>
                 <NewProductLink />

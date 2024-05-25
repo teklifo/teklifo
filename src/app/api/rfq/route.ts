@@ -37,31 +37,32 @@ export async function POST(request: NextRequest) {
     }
 
     const {
+      title,
       publicRequest,
       currency,
-      startDate,
-      endDate,
+      date,
       description,
       deliveryAddress,
       deliveryTerms,
       paymentTerms,
-      products,
+      items,
     } = test.data;
 
     const rfq = await db.requestForQuotation.create({
       data: {
         companyId: company.id,
-        userId: company.users.length > 0 ? company.users[0].userId : null,
+        userId: company.users[0].userId,
+        title,
         publicRequest,
         currency,
-        startDate,
-        endDate,
+        startDate: date.from,
+        endDate: date.to,
         description,
         deliveryAddress,
         deliveryTerms,
         paymentTerms,
-        products: {
-          create: products.map((product) => ({
+        items: {
+          create: items.map((product) => ({
             externalId: product.externalId,
             productId: product.productId,
             quantity: product.quantity,
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
         },
       },
       include: {
-        products: true,
+        items: true,
         user: {
           select: {
             id: true,
