@@ -145,7 +145,7 @@ const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
   const { company: requestCompany } = rfq;
 
   return (
-    <div className="space-y-4 border bg-card shadow-sm h-full rounded-xl p-4 md:p-6">
+    <div className="space-y-4 border bg-card shadow-sm rounded-xl p-4 md:p-6">
       <QuotationBase rfq={rfq} />
       <Separator />
       <CompanyInfo company={requestCompany} title={t("requestCompany")} />

@@ -83,7 +83,7 @@ const RFQ = async ({ params: { id } }: Props) => {
               href={`/edit-rfq/${rfq.id}`}
               className={cn(
                 "space-x-2",
-                buttonVariants({ variant: "default" })
+                buttonVariants({ variant: "outline" })
               )}
             >
               <Pencil className="h-4 w-4" />

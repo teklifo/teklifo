@@ -6,13 +6,14 @@ import { Package, Pencil } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
 import DeleteQuotation from "./_components/delete-quotation";
-import QuotationItemsTable from "./_components/quotation-items-table";
+import QuotationTableDrawer from "./_components/quotation-table-drawer";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationMainInfo from "@/components/quotation/quotation-main-info";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
 import request from "@/lib/request";
+import QuotationItemCard from "./_components/quotation-item-card";
 
 type Props = {
   params: { locale: string; id: string };
@@ -86,7 +87,7 @@ const Quotation = async ({ params: { id } }: Props) => {
 
   const companyOwnsQuotation = quotation.companyId === company?.id;
 
-  const { description, items } = quotation;
+  const { description, currency, items } = quotation;
 
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
@@ -100,7 +101,7 @@ const Quotation = async ({ params: { id } }: Props) => {
               href={`/edit-quotation/${quotation.id}`}
               className={cn(
                 "space-x-2",
-                buttonVariants({ variant: "default" })
+                buttonVariants({ variant: "outline" })
               )}
             >
               <Pencil className="h-4 w-4" />
@@ -126,7 +127,15 @@ const Quotation = async ({ params: { id } }: Props) => {
               {`${t("items")} (${items.length || 0})`}
             </h3>
           </div>
-          <QuotationItemsTable items={items} />
+          <QuotationTableDrawer items={items} />
+          {items.map((item, index) => (
+            <QuotationItemCard
+              key={item.id}
+              number={index + 1}
+              currency={currency}
+              item={item}
+            />
+          ))}
         </div>
         <div className="order-first col-span-4 space-y-6 lg:order-none">
           <QuotationMainInfo quotation={quotation} />

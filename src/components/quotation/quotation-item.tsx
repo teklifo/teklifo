@@ -87,7 +87,7 @@ const QuotationItem = ({
 
   return (
     <Card key={productField.id} className="h-full w-full">
-      <CardHeader className="flex flex-col justify-between space-y-0">
+      <CardHeader className="flex flex-col justify-between space-y-0 p-0 mb-4">
         {/* Product */}
         <div className="bg-muted p-6 rounded-md space-y-3">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
@@ -299,7 +299,6 @@ const QuotationItem = ({
               )}
             />
           </div>
-
           {/* Comment*/}
           <FormField
             control={form.control}

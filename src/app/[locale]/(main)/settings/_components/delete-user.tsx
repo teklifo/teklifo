@@ -70,7 +70,7 @@ const DeleteUser = ({ userId }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" className="justify-start">
+        <Button variant="outline" className="justify-start">
           <Trash className="mr-2 h-4 w-4" />
           <span>{t("delete")}</span>
         </Button>
