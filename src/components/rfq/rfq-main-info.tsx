@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -44,7 +45,7 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
   const daysLeft = differenceInDays(endDate, new Date());
 
   return (
-    <div className="w-full space-y-4 border bg-card shadow-sm rounded-xl p-4 mb-4 lg:p-6">
+    <div className="w-full space-y-4 border bg-card shadow-sm rounded-xl p-4 lg:p-6">
       <MainInfoItem
         icon={<Building2 />}
         title={t("company")}
@@ -57,6 +58,7 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
           </Link>
         }
       />
+      <Separator />
       <div className="flex flex-row space-x-2">
         {publicRequest ? <Globe /> : <Lock />}
         <span>{publicRequest ? t("public") : t("private")}</span>
@@ -71,6 +73,7 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
           </Tooltip>
         </TooltipProvider>
       </div>
+      <Separator />
       <div>
         <MainInfoItem
           icon={<Calendar />}
@@ -86,6 +89,7 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
           <Badge variant="destructive">{t("outdated")}</Badge>
         )}
       </div>
+      <Separator />
       <MainInfoItem
         icon={<Banknote />}
         title={t("currency")}

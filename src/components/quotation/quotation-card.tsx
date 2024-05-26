@@ -5,9 +5,8 @@ import { Link } from "@/navigation";
 import {
   QuotationAttributes,
   QuotationBase,
-  QuotationCompany,
+  CompanyInfo,
   QuotationTotal,
-  RequestCompany,
 } from "./quotation-main-info";
 import {
   Card,
@@ -60,9 +59,9 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
         </div>
         <div className="space-y-4 md:space-y-2">
           {currentCompany?.id === rfq.company.id ? (
-            <QuotationCompany quotationCompany={company} />
+            <CompanyInfo company={company} title={""} />
           ) : (
-            <RequestCompany requestCompany={rfq.company} />
+            <CompanyInfo company={rfq.company} title={""} />
           )}
           <Separator />
         </div>

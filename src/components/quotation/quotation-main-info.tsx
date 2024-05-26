@@ -8,8 +8,6 @@ import { differenceInDays, format } from "date-fns";
 import {
   Calendar,
   Banknote,
-  Fingerprint,
-  CalendarClock,
   ArrowLeftCircle,
   ArrowRightCircle,
   CircleDollarSign,
@@ -17,8 +15,11 @@ import {
 } from "lucide-react";
 import { Link } from "@/navigation";
 import MainInfoItem from "@/components/main-info-item";
+import CompanyHoverCard from "@/components/company/company-hover-card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getAvatarFallback } from "@/lib/utils";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -40,7 +41,7 @@ export const QuotationBase = ({ rfq }: { rfq: RequestForQuotationType }) => {
   const t = useTranslations("Quotation");
 
   return (
-    <h4 className="text-lg font-semibold text-center md:text-start">
+    <h4 className="text-lg font-semibold">
       {t.rich("quotationBase", {
         number: rfq.number,
         date: format(rfq.createdAt, "dd.MM.yyyy"),
@@ -59,63 +60,26 @@ export const QuotationBase = ({ rfq }: { rfq: RequestForQuotationType }) => {
   );
 };
 
-export const RequestCompany = ({
-  requestCompany: { name, id, tin },
+export const CompanyInfo = ({
+  company,
+  title,
 }: {
-  requestCompany: CompanyType;
+  company: CompanyType;
+  title: string;
 }) => {
   const t = useTranslations("Quotation");
 
   return (
-    <>
+    <div className="flex flex-row items-center justify-between space-x-2">
       <MainInfoItem
         icon={<ArrowLeftCircle />}
-        title={t("requestCompany")}
-        content={
-          <Link
-            href={`/company/${id}`}
-            className="scroll-m-20 underline text-lg font-semibold tracking-tight"
-          >
-            {name}
-          </Link>
-        }
+        title={title}
+        content={<CompanyHoverCard company={company} />}
       />
-      <MainInfoItem
-        icon={<Fingerprint />}
-        title={t("requestTin")}
-        content={tin}
-      />
-    </>
-  );
-};
-
-export const QuotationCompany = ({
-  quotationCompany: { name, id, tin },
-}: {
-  quotationCompany: CompanyType;
-}) => {
-  const t = useTranslations("Quotation");
-
-  return (
-    <>
-      <MainInfoItem
-        icon={<ArrowRightCircle />}
-        title={t("quotationCompany")}
-        content={
-          <Link
-            href={`/company/${id}`}
-            className="scroll-m-20 underline text-lg font-semibold tracking-tight"
-          >
-            {name}
-          </Link>
-        }
-      />
-      <MainInfoItem
-        icon={<Fingerprint />}
-        title={t("quotationTin")}
-        content={tin}
-      />
-    </>
+      <Avatar>
+        <AvatarFallback>{getAvatarFallback(company.name)}</AvatarFallback>
+      </Avatar>
+    </div>
   );
 };
 
@@ -123,7 +87,6 @@ export const QuotationAttributes = ({
   quotation: {
     rfq: { startDate, endDate },
     currency,
-    updatedAt,
   },
 }: {
   quotation: QuotationType;
@@ -134,7 +97,7 @@ export const QuotationAttributes = ({
 
   return (
     <>
-      <div className="flex flex-col items-center space-x-2 md:flex-row">
+      <div>
         <MainInfoItem
           icon={<Calendar />}
           title={t("requestDate")}
@@ -149,11 +112,7 @@ export const QuotationAttributes = ({
           <Badge variant="destructive">{t("outdated")}</Badge>
         )}
       </div>
-      <MainInfoItem
-        icon={<CalendarClock />}
-        title={t("quotationUpdatedAt")}
-        content={format(updatedAt, "dd.MM.yyyy")}
-      />
+      <Separator />
       <MainInfoItem
         icon={<Banknote />}
         title={t("currency")}
@@ -186,23 +145,15 @@ const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
   const { company: requestCompany } = rfq;
 
   return (
-    <div className="space-y-6 border bg-card shadow-sm h-full rounded-xl p-4 md:p-6">
-      <div className="space-y-4 md:space-y-2">
-        <QuotationBase rfq={rfq} />
-        <Separator />
-      </div>
-      <div className="space-y-4 md:space-y-2">
-        <RequestCompany requestCompany={requestCompany} />
-        <Separator />
-      </div>
-      <div className="space-y-4 md:space-y-2">
-        <QuotationCompany quotationCompany={quotationCompany} />
-        <Separator />
-      </div>
-      <div className="space-y-4 md:space-y-2">
-        <QuotationAttributes quotation={quotation} />
-        <Separator />
-      </div>
+    <div className="space-y-4 border bg-card shadow-sm h-full rounded-xl p-4 md:p-6">
+      <QuotationBase rfq={rfq} />
+      <Separator />
+      <CompanyInfo company={requestCompany} title={t("requestCompany")} />
+      <Separator />
+      <CompanyInfo company={quotationCompany} title={t("quotationCompany")} />
+      <Separator />
+      <QuotationAttributes quotation={quotation} />
+      <Separator />
       <QuotationTotal quotation={quotation} />
     </div>
   );

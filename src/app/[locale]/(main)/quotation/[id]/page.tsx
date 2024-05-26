@@ -110,22 +110,28 @@ const Quotation = async ({ params: { id } }: Props) => {
           </div>
         )}
       </div>
-      <QuotationMainInfo quotation={quotation} />
-      {description && (
-        <div className="space-y-2">
-          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {t("description")}
-          </h3>
-          <div className="whitespace-pre-line">{description}</div>
+      <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
+        <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
+          {description && (
+            <div className="space-y-2">
+              <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                {t("description")}
+              </h3>
+              <div className="whitespace-pre-line">{description}</div>
+            </div>
+          )}
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Package className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {`${t("items")} (${items.length || 0})`}
+            </h3>
+          </div>
+          <QuotationItemsTable items={items} />
         </div>
-      )}
-      <div className="flex flex-row items-center border-b pb-2 space-x-2">
-        <Package className="w-8 h-8" />
-        <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-          {`${t("items")} (${items.length || 0})`}
-        </h3>
+        <div className="order-first col-span-4 space-y-6 lg:order-none">
+          <QuotationMainInfo quotation={quotation} />
+        </div>
       </div>
-      <QuotationItemsTable items={items} />
     </MaxWidthWrapper>
   );
 };

@@ -9,7 +9,7 @@ const MainInfoItem = ({ icon, title, content }: MainInfoItemProps) => {
     <div className="flex flex-col items-start">
       <div className="flex flex-row space-x-2">
         {icon}
-        <span>{`${title}:`}</span>
+        <span className="break-words">{`${title}:`}</span>
       </div>
       <span className="font-semibold">{content}</span>
     </div>

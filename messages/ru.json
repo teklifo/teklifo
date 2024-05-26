@@ -387,7 +387,7 @@
   "RFQ": {
     "rfq": "Запрос цен",
     "more": "Подробнее",
-    "company": "Организация",
+    "company": "Заказчик",
     "tin": "ИНН",
     "description": "Описание",
     "public": "Открытый запрос",
@@ -506,7 +506,6 @@
     "quotationCompany": "Отправитель",
     "quotationTin": "ИНН отправителя",
     "requestDate": "Период сбора предложений",
-    "quotationUpdatedAt": "Дата КП",
     "currency": "Валюта",
     "totalAmount": "Итоговая сумма КП",
     "more": "Подробнее",

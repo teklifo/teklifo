@@ -94,7 +94,7 @@ const RFQ = async ({ params: { id } }: Props) => {
         )}
       </div>
       <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
-        <div className="col-span-8 space-y-6">
+        <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
           {description && (
             <div className="space-y-2">
               <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
