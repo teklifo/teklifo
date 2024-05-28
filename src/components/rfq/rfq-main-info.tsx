@@ -9,7 +9,6 @@ import {
   Banknote,
   Building2,
 } from "lucide-react";
-import { Link } from "@/navigation";
 import MainInfoItem from "@/components/main-info-item";
 import {
   Tooltip,
@@ -19,6 +18,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import CompanyInfo from "../company/company-info";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -36,27 +37,55 @@ type RFQMainInfoProps = {
   rfq: RequestForQuotationType;
 };
 
-const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
+export const RFQDateInfo = ({
+  rfq: { startDate, endDate },
+  view,
+}: {
+  rfq: { startDate: Date; endDate: Date };
+  view: "horizontal" | "vertical";
+}) => {
   const t = useTranslations("RFQ");
-
-  const { companyId, company, publicRequest, startDate, endDate, currency } =
-    rfq;
 
   const daysLeft = differenceInDays(endDate, new Date());
 
   return (
+    <>
+      <div
+        className={cn(
+          view === "horizontal" ? "md:flex md:flex-row md:space-x-2" : ""
+        )}
+      >
+        <MainInfoItem
+          icon={<Calendar />}
+          title={t("date")}
+          content={`${format(startDate, "dd.MM.yyyy")} - ${format(
+            endDate,
+            "dd.MM.yyyy"
+          )}`}
+          view={view}
+        />
+        {daysLeft > 0 ? (
+          <Badge>{t("daysLeft", { daysLeft })}</Badge>
+        ) : (
+          <Badge variant="destructive">{t("outdated")}</Badge>
+        )}
+      </div>
+    </>
+  );
+};
+
+const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
+  const t = useTranslations("RFQ");
+
+  const { company, publicRequest, currency } = rfq;
+
+  return (
     <div className="w-full space-y-4 border bg-card shadow-sm rounded-xl p-4 lg:p-6">
-      <MainInfoItem
+      <CompanyInfo
         icon={<Building2 />}
+        company={company}
         title={t("company")}
-        content={
-          <Link
-            href={`/company/${companyId}`}
-            className="scroll-m-20 underline text-lg font-semibold tracking-tight"
-          >
-            {company.name}
-          </Link>
-        }
+        view="vertical"
       />
       <Separator />
       <div className="flex flex-row space-x-2">
@@ -74,26 +103,13 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
         </TooltipProvider>
       </div>
       <Separator />
-      <div>
-        <MainInfoItem
-          icon={<Calendar />}
-          title={t("date")}
-          content={`${format(startDate, "dd.MM.yyyy")} - ${format(
-            endDate,
-            "dd.MM.yyyy"
-          )}`}
-        />
-        {daysLeft > 0 ? (
-          <Badge>{t("daysLeft", { daysLeft })}</Badge>
-        ) : (
-          <Badge variant="destructive">{t("outdated")}</Badge>
-        )}
-      </div>
+      <RFQDateInfo rfq={rfq} view="vertical" />
       <Separator />
       <MainInfoItem
         icon={<Banknote />}
         title={t("currency")}
         content={currency}
+        view="vertical"
       />
     </div>
   );

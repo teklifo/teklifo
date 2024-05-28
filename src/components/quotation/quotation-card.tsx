@@ -1,13 +1,10 @@
 import { useTranslations } from "next-intl";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
-import { ArrowRight } from "lucide-react";
+import { Building2, ArrowRight, Briefcase } from "lucide-react";
 import { Link } from "@/navigation";
-import {
-  QuotationAttributes,
-  QuotationBase,
-  CompanyInfo,
-  QuotationTotal,
-} from "./quotation-main-info";
+import { QuotationBase, QuotationTotal } from "./quotation-main-info";
+import { RFQDateInfo } from "@/components/rfq/rfq-main-info";
+import CompanyInfo from "@/components/company/company-info";
 import {
   Card,
   CardContent,
@@ -48,28 +45,33 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
   return (
     <Card className="h-full w-full">
       <CardHeader>
-        <CardTitle className="line-clamp-2 text-center md:text-start">{`${t(
+        <CardTitle className="line-clamp-2 text-start">{`${t(
           "quotation"
         )} #${id}`}</CardTitle>
       </CardHeader>
-      <CardContent className="min-h-[150px] space-y-6 p-4 pt-0 md:p-6 md:pt-0">
-        <div className="space-y-4 md:space-y-2">
-          <QuotationBase rfq={rfq} />
-          <Separator />
-        </div>
-        <div className="space-y-4 md:space-y-2">
-          {currentCompany?.id === rfq.company.id ? (
-            <CompanyInfo company={company} title={""} />
-          ) : (
-            <CompanyInfo company={rfq.company} title={""} />
-          )}
-          <Separator />
-        </div>
-        <div className="space-y-4 md:space-y-2">
-          <QuotationAttributes quotation={quotation} />
-          <Separator />
-        </div>
-        <QuotationTotal quotation={quotation} />
+      <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
+        <QuotationBase rfq={rfq} />
+        <Separator />
+        {currentCompany?.id === rfq.company.id ? (
+          <CompanyInfo
+            company={company}
+            icon={<Briefcase />}
+            title={t("quotationCompany")}
+            view="horizontal"
+          />
+        ) : (
+          <CompanyInfo
+            company={rfq.company}
+            icon={<Building2 />}
+            title={t("requestCompany")}
+            view="horizontal"
+          />
+        )}
+        <Separator />
+        <RFQDateInfo rfq={quotation.rfq} view="horizontal" />
+        <Separator />
+        <QuotationTotal quotation={quotation} view="horizontal" />
+        <Separator />
       </CardContent>
       <CardFooter className="flex justify-center md:justify-start">
         <Link

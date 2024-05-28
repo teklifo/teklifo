@@ -505,7 +505,6 @@
     "requestTin": "ИНН заказчика",
     "quotationCompany": "Отправитель",
     "quotationTin": "ИНН отправителя",
-    "requestDate": "Период сбора предложений",
     "currency": "Валюта",
     "totalAmount": "Итоговая сумма КП",
     "more": "Подробнее",
