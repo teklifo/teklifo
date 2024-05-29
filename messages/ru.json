@@ -48,7 +48,9 @@
     "newQuotationTitle": "Новое коммерческое предложение клиенту",
     "newQuotationDescription": "Отправьте коммерческое предложение клиенту на основании полученного запроса цен",
     "outgoingQuotationTitle": "КП клиентам",
-    "outgoingQuotationDescription": "Список ваших коммерческих предложений клиентам"
+    "outgoingQuotationDescription": "Список ваших коммерческих предложений клиентам",
+    "incomingQuotationTitle": "КП от поставщиков",
+    "incomingQuotationDescription": "Список полученных коммерческих предложений от поставщиков"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -567,6 +569,11 @@
     "title": "КП клиентам",
     "subtitle": "Список ваших коммерческих предложений клиентам",
     "noOutgoingQuotation": "Вы пока не отправляли коммерческие предложения клиентам"
+  },
+  "IncomingQuotations": {
+    "title": "КП от поставщиков",
+    "subtitle": "Список полученных коммерческих предложений от поставщиков",
+    "noIncomingQuotation": "Вы пока не получали коммерческих предложений от поставщиков"
   },
   "Schemas": {
     "companySchema": {
