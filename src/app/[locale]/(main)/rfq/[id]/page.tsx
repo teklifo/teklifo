@@ -11,6 +11,7 @@ import getRFQ from "@/app/actions/get-rfq";
 import { cn } from "@/lib/utils";
 import RFQItemCard from "./_components/rfq-item-card";
 import DeleteRFQ from "./_components/delete-rfq";
+import ShareRFQ from "./_components/share-rfq";
 
 type Props = {
   params: { locale: string; id: string };
@@ -163,6 +164,11 @@ const RFQ = async ({ params: { id } }: Props) => {
                 <ArrowRightCircle />
                 <span>{t("createQuotation")}</span>
               </Link>
+            </div>
+          )}
+          {companyOwnsRFQ && (
+            <div className="absolute m-auto left-0 right-0 bottom-8 flex justify-center lg:bottom-0 lg:relative">
+              <ShareRFQ />
             </div>
           )}
         </div>
