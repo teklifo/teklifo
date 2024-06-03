@@ -1,6 +1,8 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
 import { Building2, ArrowRight, Briefcase } from "lucide-react";
+import { formatRelative } from "date-fns";
+import * as loc from "date-fns/locale";
 import { Link } from "@/navigation";
 import { QuotationBase, QuotationTotal } from "./quotation-main-info";
 import { RFQDateInfo } from "@/components/rfq/rfq-main-info";
@@ -8,6 +10,7 @@ import CompanyInfo from "@/components/company/company-info";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -24,11 +27,6 @@ type QuotationType = Prisma.QuotationGetPayload<{
         company: true;
       };
     };
-    items: {
-      include: {
-        product: true;
-      };
-    };
   };
 }>;
 
@@ -40,7 +38,11 @@ type QuotationCardProps = {
 const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
   const t = useTranslations("Quotation");
 
-  const { id, company, rfq } = quotation;
+  const locale = useLocale();
+  let dateLocale = loc.enUS;
+  if (locale === "ru") dateLocale = loc.ru;
+
+  const { id, company, rfq, updatedAt } = quotation;
 
   return (
     <Card className="h-full w-full">
@@ -48,6 +50,17 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
         <CardTitle className="line-clamp-2 text-start">{`${t(
           "quotation"
         )} #${id}`}</CardTitle>
+        <CardDescription>
+          {`${t("updatedAt")}: ${formatRelative(updatedAt, new Date(), {
+            locale: {
+              ...dateLocale,
+              formatRelative: (token) =>
+                token === "other"
+                  ? "dd.MM.yyyy"
+                  : dateLocale.formatRelative(token, updatedAt, new Date()),
+            },
+          })}`}
+        </CardDescription>
       </CardHeader>
       <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
         <QuotationBase rfq={rfq} />

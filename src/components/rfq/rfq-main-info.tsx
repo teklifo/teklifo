@@ -74,6 +74,25 @@ export const RFQDateInfo = ({
   );
 };
 
+export const QuotationCurrency = ({
+  currency,
+  view,
+}: {
+  currency: string;
+  view: "horizontal" | "vertical";
+}) => {
+  const t = useTranslations("RFQ");
+
+  return (
+    <MainInfoItem
+      icon={<Banknote />}
+      title={t("currency")}
+      content={currency}
+      view={view}
+    />
+  );
+};
+
 const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
   const t = useTranslations("RFQ");
 

@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { format, formatDate } from "date-fns";
+import { format } from "date-fns";
 import { Prisma } from "@prisma/client";
 import {
   Card,
@@ -148,7 +148,7 @@ const QuotationItemCard = ({
               <div className="flex flex-col space-y-2 md:flex-row md:space-x-8 md:space-y-0">
                 <QuotationItemAttribute
                   label={t("deliveryDate")}
-                  value={formatDate(deliveryDate, "dd.MM.yyyy")}
+                  value={format(deliveryDate, "dd.MM.yyyy")}
                 />
               </div>
             </>

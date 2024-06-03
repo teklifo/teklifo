@@ -3,7 +3,7 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import type { RequestForQuotation as RequestForQuotationType } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -14,6 +14,12 @@ import getCurrentCompany from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
 import { PaginationType } from "@/types";
+
+type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
+  include: {
+    company: true;
+  };
+}>;
 
 type Props = {
   params: { locale: string };
@@ -80,9 +86,9 @@ const IncomingRFQ = async ({ searchParams: { page } }: Props) => {
       </div>
       <div className="mt-4">
         {result.length > 0 ? (
-          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col space-y-3 pt-4">
             {result.map((rfq) => (
-              <RFQCard key={rfq.id} rfq={rfq} />
+              <RFQCard key={rfq.id} rfq={rfq} currentCompany={company} />
             ))}
           </div>
         ) : (
