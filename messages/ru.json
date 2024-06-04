@@ -508,7 +508,7 @@
     "description": "Информация от поставщика",
     "edit": "Изменить",
     "items": "Товары",
-    "quotationBase": "На основании <link>запроса цен #{number} от {date}</link>",
+    "quotationBase": "На основании <link>запроса цен #{number}: {title}</link>",
     "requestCompany": "Заказчик",
     "quotationCompany": "Отправитель",
     "currency": "Валюта",

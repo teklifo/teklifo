@@ -1,9 +1,8 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type {
   Prisma,
   RequestForQuotation as RequestForQuotationType,
 } from "@prisma/client";
-import { format } from "date-fns";
 import {
   Building2,
   Briefcase,
@@ -16,6 +15,7 @@ import MainInfoItem from "@/components/main-info-item";
 import { RFQDateInfo } from "@/components/rfq/rfq-main-info";
 import CompanyInfo from "@/components/company/company-info";
 import { Separator } from "@/components/ui/separator";
+import { localizedRelativeDate } from "@/lib/utils";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -28,17 +28,21 @@ type QuotationType = Prisma.QuotationGetPayload<{
   };
 }>;
 
-export const QuotationBase = ({ rfq }: { rfq: RequestForQuotationType }) => {
+export const QuotationBase = ({
+  rfq: { number, id, title },
+}: {
+  rfq: RequestForQuotationType;
+}) => {
   const t = useTranslations("Quotation");
 
   return (
-    <h4 className="text-lg font-semibold">
+    <p className="text-lg text-muted-foreground">
       {t.rich("quotationBase", {
-        number: rfq.number,
-        date: format(rfq.createdAt, "dd.MM.yyyy"),
+        number,
+        title,
         link: (chunk) => (
           <Link
-            href={`/rfq/${rfq.id}`}
+            href={`/rfq/${id}`}
             target="_blank"
             className="underline underline-offset-4"
           >
@@ -47,7 +51,7 @@ export const QuotationBase = ({ rfq }: { rfq: RequestForQuotationType }) => {
           </Link>
         ),
       })}
-    </h4>
+    </p>
   );
 };
 
@@ -73,7 +77,9 @@ export const QuotationTotal = ({
 const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
   const t = useTranslations("Quotation");
 
-  const { company: quotationCompany, rfq } = quotation;
+  const locale = useLocale();
+
+  const { company: quotationCompany, rfq, updatedAt } = quotation;
   const { company: requestCompany } = rfq;
 
   return (
@@ -104,6 +110,14 @@ const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
       />
       <Separator />
       <QuotationTotal quotation={quotation} view="vertical" />
+      <Separator />
+      <p className="text-sm text-muted-foreground">
+        {`${t("updatedAt")}: ${localizedRelativeDate(
+          updatedAt,
+          new Date(),
+          locale
+        )}`}
+      </p>
     </div>
   );
 };

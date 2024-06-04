@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { Prisma } from "@prisma/client";
 import { differenceInDays, format } from "date-fns";
 import {
@@ -10,6 +10,7 @@ import {
   Building2,
 } from "lucide-react";
 import MainInfoItem from "@/components/main-info-item";
+import CompanyInfo from "@/components/company/company-info";
 import {
   Tooltip,
   TooltipContent,
@@ -18,8 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import CompanyInfo from "../company/company-info";
+import { cn, localizedRelativeDate } from "@/lib/utils";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -96,7 +96,9 @@ export const QuotationCurrency = ({
 const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
   const t = useTranslations("RFQ");
 
-  const { company, publicRequest, currency } = rfq;
+  const locale = useLocale();
+
+  const { company, publicRequest, currency, createdAt } = rfq;
 
   return (
     <div className="w-full space-y-4 border bg-card shadow-sm rounded-xl p-4 lg:p-6">
@@ -130,6 +132,14 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
         content={currency}
         view="vertical"
       />
+      <Separator />
+      <p className="text-sm text-muted-foreground">
+        {`${t("updatedAt")}: ${localizedRelativeDate(
+          createdAt,
+          new Date(),
+          locale
+        )}`}
+      </p>
     </div>
   );
 };

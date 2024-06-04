@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { cn, localizedRelativeDate } from "@/lib/utils";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -39,32 +39,16 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
   const t = useTranslations("Quotation");
 
   const locale = useLocale();
-  let dateLocale = loc.enUS;
-  if (locale === "ru") dateLocale = loc.ru;
 
   const { id, company, rfq, updatedAt } = quotation;
 
   return (
     <Card className="h-full w-full">
       <CardHeader>
-        <CardTitle className="line-clamp-2 text-start">{`${t(
-          "quotation"
-        )} #${id}`}</CardTitle>
-        <CardDescription>
-          {`${t("updatedAt")}: ${formatRelative(updatedAt, new Date(), {
-            locale: {
-              ...dateLocale,
-              formatRelative: (token) =>
-                token === "other"
-                  ? "dd.MM.yyyy"
-                  : dateLocale.formatRelative(token, updatedAt, new Date()),
-            },
-          })}`}
-        </CardDescription>
+        <CardTitle>{`${t("quotation")} #${id}`}</CardTitle>
+        <QuotationBase rfq={rfq} />
       </CardHeader>
       <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
-        <QuotationBase rfq={rfq} />
-        <Separator />
         {currentCompany?.id === rfq.company.id ? (
           <CompanyInfo
             company={company}
@@ -85,6 +69,13 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
         <Separator />
         <QuotationTotal quotation={quotation} view="horizontal" />
         <Separator />
+        <CardDescription>
+          {`${t("updatedAt")}: ${localizedRelativeDate(
+            updatedAt,
+            new Date(),
+            locale
+          )}`}
+        </CardDescription>
       </CardContent>
       <CardFooter className="flex justify-center md:justify-start">
         <Link

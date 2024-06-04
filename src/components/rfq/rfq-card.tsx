@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { cn, localizedRelativeDate } from "@/lib/utils";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -41,19 +41,10 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
   return (
     <Card className="h-full w-full">
       <CardHeader>
-        <CardTitle className="line-clamp-2 text-start">{title}</CardTitle>
-        <CardDescription>{`${t("rfq")} #${number}`}</CardDescription>
-        <CardDescription>
-          {`${t("updatedAt")}: ${formatRelative(createdAt, new Date(), {
-            locale: {
-              ...dateLocale,
-              formatRelative: (token) =>
-                token === "other"
-                  ? "dd.MM.yyyy"
-                  : dateLocale.formatRelative(token, createdAt, new Date()),
-            },
-          })}`}
-        </CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription className="text-lg">{`${t(
+          "rfq"
+        )} #${number}`}</CardDescription>
       </CardHeader>
       <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
         {currentCompany?.id === rfq.company.id ? (
@@ -76,6 +67,13 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
         <Separator />
         <QuotationCurrency currency={rfq.currency} view="horizontal" />
         <Separator />
+        <CardDescription>
+          {`${t("updatedAt")}: ${localizedRelativeDate(
+            createdAt,
+            new Date(),
+            locale
+          )}`}
+        </CardDescription>
       </CardContent>
       <CardFooter className="flex justify-center md:justify-start">
         <Link
