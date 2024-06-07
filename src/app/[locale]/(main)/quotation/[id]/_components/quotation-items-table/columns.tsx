@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Prisma } from "@prisma/client";
 import { ColumnDef, HeaderContext } from "@tanstack/react-table";
-import { ArrowUpDown, Check } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 
@@ -40,6 +40,17 @@ function getVatRateCell(varRate: string) {
   };
 
   return VatRateCell;
+}
+
+function getVatIncludedCell(vatIncluded: boolean) {
+  const VatIncludedCell = () => {
+    const t = useTranslations("QuotationItems");
+    return (
+      <div className="text-center">{vatIncluded ? t("yes") : t("no")}</div>
+    );
+  };
+
+  return VatIncludedCell;
 }
 
 export const columns: ColumnDef<QuotationItemType>[] = [
@@ -132,11 +143,8 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "vatIncluded",
     header: getTableHeader("vatIncluded"),
     cell: ({ row }) => {
-      return (
-        <div className="flex justify-center items-center">
-          {row.getValue("vatIncluded") ? <Check /> : ""}
-        </div>
-      );
+      const VatIncludedCell = getVatIncludedCell(row.getValue("vatIncluded"));
+      return <VatIncludedCell />;
     },
   },
   {

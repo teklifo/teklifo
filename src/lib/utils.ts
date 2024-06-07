@@ -1,6 +1,8 @@
 import fs from "fs";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import * as loc from "date-fns/locale";
+import { formatRelative } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -29,4 +31,23 @@ export function getAvatarFallback(text: string) {
     avatarFallback = match[0].toUpperCase();
   }
   return avatarFallback;
+}
+
+export function localizedRelativeDate(
+  date: Date,
+  baseDate: Date,
+  locale: string
+) {
+  let dateLocale = loc.enUS;
+  if (locale === "ru") dateLocale = loc.ru;
+
+  return formatRelative(date, baseDate, {
+    locale: {
+      ...dateLocale,
+      formatRelative: (token) =>
+        token === "other"
+          ? "dd.MM.yyyy"
+          : dateLocale.formatRelative(token, date, baseDate),
+    },
+  });
 }

@@ -4,22 +4,12 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import type { Prisma } from "@prisma/client";
-import { Plus } from "lucide-react";
-import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import RFQCard from "@/components/rfq/rfq-card";
+import QuotationCard from "@/components/quotation/quotation-card";
 import PaginationBar from "@/components/ui/pagination-bar";
-import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import request from "@/lib/request";
-import { cn } from "@/lib/utils";
 import { PaginationType } from "@/types";
-
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-  };
-}>;
 
 type Props = {
   params: { locale: string };
@@ -28,8 +18,24 @@ type Props = {
   };
 };
 
+type QuotationType = Prisma.QuotationGetPayload<{
+  include: {
+    company: true;
+    rfq: {
+      include: {
+        company: true;
+      };
+    };
+    items: {
+      include: {
+        product: true;
+      };
+    };
+  };
+}>;
+
 type PaginatedData = {
-  result: RequestForQuotationType[];
+  result: QuotationType[];
   pagination: PaginationType;
 };
 
@@ -39,19 +45,19 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("incomingRfqTitle"),
-    description: t("incomingRfqDescription"),
+    title: t("incomingQuotationTitle"),
+    description: t("incomingQuotationDescription"),
   };
 };
 
-const getIncomingRFQ = async (companyId: string, page: number) => {
+const getIncomingQuotations = async (companyId: string, page: number) => {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/rfq?participantId=${companyId}&page=${page}&limit=10`,
+      `/api/quotation?rfqCompanyId=${companyId}&page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -65,16 +71,16 @@ const getIncomingRFQ = async (companyId: string, page: number) => {
   }
 };
 
-const IncomingRFQ = async ({ searchParams: { page } }: Props) => {
+const IncomingQuotation = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
-  const data = await getIncomingRFQ(company.id, page ?? 1);
+  const data = await getIncomingQuotations(company.id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
 
-  const t = await getTranslations("IncomingRFQ");
+  const t = await getTranslations("IncomingQuotations");
 
   return (
     <MaxWidthWrapper className="my-8">
@@ -87,43 +93,36 @@ const IncomingRFQ = async ({ searchParams: { page } }: Props) => {
       <div className="mt-4">
         {result.length > 0 ? (
           <div className="flex flex-col space-y-3 pt-4">
-            {result.map((rfq) => (
-              <RFQCard key={rfq.id} rfq={rfq} currentCompany={company} />
+            {result.map((quotation) => (
+              <QuotationCard
+                key={quotation.id}
+                quotation={quotation}
+                currentCompany={company}
+              />
             ))}
           </div>
         ) : (
           <div className="my-8 flex flex-col justify-center items-center space-y-4 text-center">
             <Image
               src="/illustrations/not-found-alt.svg"
-              alt="No incoming RFQs"
+              alt="No incoming quotations"
               priority
               width="600"
               height="600"
             />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
-              {t("noIncomingRFQ")}
+              {t("noIncomingQuotation")}
             </h2>
           </div>
         )}
-        <PaginationBar href={`/outgoing-rfq?page=`} pagination={pagination} />
+        <PaginationBar
+          href={`/incoming-quotation?page=`}
+          pagination={pagination}
+        />
         <div />
       </div>
     </MaxWidthWrapper>
   );
 };
 
-async function NewRFQLink() {
-  const t = await getTranslations("IncomingRFQ");
-
-  return (
-    <Link
-      href={`/new-rqf`}
-      className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
-    >
-      <Plus />
-      <span>{t("new")}</span>
-    </Link>
-  );
-}
-
-export default IncomingRFQ;
+export default IncomingQuotation;

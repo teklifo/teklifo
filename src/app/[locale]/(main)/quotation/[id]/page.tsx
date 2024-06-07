@@ -6,13 +6,14 @@ import { Package, Pencil } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
 import DeleteQuotation from "./_components/delete-quotation";
-import QuotationItemsTable from "./_components/quotation-items-table";
+import QuotationTableDrawer from "./_components/quotation-table-drawer";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationMainInfo from "@/components/quotation/quotation-main-info";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
 import request from "@/lib/request";
+import QuotationItemCard from "./_components/quotation-item-card";
 
 type Props = {
   params: { locale: string; id: string };
@@ -86,7 +87,7 @@ const Quotation = async ({ params: { id } }: Props) => {
 
   const companyOwnsQuotation = quotation.companyId === company?.id;
 
-  const { description, items } = quotation;
+  const { description, currency, items } = quotation;
 
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
@@ -100,7 +101,7 @@ const Quotation = async ({ params: { id } }: Props) => {
               href={`/edit-quotation/${quotation.id}`}
               className={cn(
                 "space-x-2",
-                buttonVariants({ variant: "default" })
+                buttonVariants({ variant: "outline" })
               )}
             >
               <Pencil className="h-4 w-4" />
@@ -110,22 +111,36 @@ const Quotation = async ({ params: { id } }: Props) => {
           </div>
         )}
       </div>
-      <QuotationMainInfo quotation={quotation} />
-      {description && (
-        <div className="space-y-2">
-          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {t("description")}
-          </h3>
-          <div className="whitespace-pre-line">{description}</div>
+      <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
+        <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
+          {description && (
+            <div className="space-y-2">
+              <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                {t("description")}
+              </h3>
+              <div className="whitespace-pre-line">{description}</div>
+            </div>
+          )}
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Package className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {`${t("items")} (${items.length || 0})`}
+            </h3>
+          </div>
+          <QuotationTableDrawer items={items} />
+          {items.map((item, index) => (
+            <QuotationItemCard
+              key={item.id}
+              number={index + 1}
+              currency={currency}
+              item={item}
+            />
+          ))}
         </div>
-      )}
-      <div className="flex flex-row items-center border-b pb-2 space-x-2">
-        <Package className="w-8 h-8" />
-        <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-          {`${t("items")} (${items.length || 0})`}
-        </h3>
+        <div className="order-first col-span-4 space-y-6 lg:order-none">
+          <QuotationMainInfo quotation={quotation} />
+        </div>
       </div>
-      <QuotationItemsTable items={items} />
     </MaxWidthWrapper>
   );
 };

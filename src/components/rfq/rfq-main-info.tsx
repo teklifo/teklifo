@@ -1,6 +1,6 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { Prisma } from "@prisma/client";
-import { format } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 import {
   Calendar,
   Lock,
@@ -8,18 +8,18 @@ import {
   HelpCircle,
   Banknote,
   Building2,
-  Fingerprint,
 } from "lucide-react";
-import { Link } from "@/navigation";
+import MainInfoItem from "@/components/main-info-item";
+import CompanyInfo from "@/components/company/company-info";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import MainInfoItem from "@/components/main-info-item";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { QuotationBase } from "../quotation/quotation-main-info";
+import { cn, localizedRelativeDate } from "@/lib/utils";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -35,60 +35,26 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
 
 type RFQMainInfoProps = {
   rfq: RequestForQuotationType;
-  displayBase?: boolean;
 };
 
-const RFQMainInfo = ({ rfq, displayBase }: RFQMainInfoProps) => {
+export const RFQDateInfo = ({
+  rfq: { startDate, endDate },
+  view,
+}: {
+  rfq: { startDate: Date; endDate: Date };
+  view: "horizontal" | "vertical";
+}) => {
   const t = useTranslations("RFQ");
 
-  const { companyId, company, publicRequest, startDate, endDate, currency } =
-    rfq;
+  const daysLeft = differenceInDays(endDate, new Date());
 
   return (
-    <div className="space-y-6 border bg-card shadow-sm h-full rounded-xl p-4 md:p-6">
-      {displayBase && (
-        <div className="space-y-4 md:space-y-2">
-          <QuotationBase rfq={rfq} />
-          <Separator />
-        </div>
-      )}
-      <div className="space-y-4 md:space-y-2">
-        <MainInfoItem
-          icon={<Building2 />}
-          title={t("company")}
-          content={
-            <Link
-              href={`/company/${companyId}`}
-              className="scroll-m-20 underline text-lg font-semibold tracking-tight"
-            >
-              {company.name}
-            </Link>
-          }
-        />
-        <MainInfoItem
-          icon={<Fingerprint />}
-          title={t("tin")}
-          content={company.tin}
-        />
-        <Separator />
-      </div>
-      <div className="space-y-4 md:space-y-2">
-        <div className="flex flex-col items-center md:flex-row md:space-x-2">
-          <div className="flex flex-row space-x-2">
-            {publicRequest ? <Globe /> : <Lock />}
-            <span>{publicRequest ? t("public") : t("private")}</span>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <HelpCircle className="text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>{publicRequest ? t("publicHint") : t("privateHint")}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
+    <>
+      <div
+        className={cn(
+          view === "horizontal" ? "md:flex md:flex-row md:space-x-2" : ""
+        )}
+      >
         <MainInfoItem
           icon={<Calendar />}
           title={t("date")}
@@ -96,13 +62,84 @@ const RFQMainInfo = ({ rfq, displayBase }: RFQMainInfoProps) => {
             endDate,
             "dd.MM.yyyy"
           )}`}
+          view={view}
         />
-        <MainInfoItem
-          icon={<Banknote />}
-          title={t("currency")}
-          content={currency}
-        />
+        {daysLeft > 0 ? (
+          <Badge>{t("daysLeft", { daysLeft })}</Badge>
+        ) : (
+          <Badge variant="destructive">{t("outdated")}</Badge>
+        )}
       </div>
+    </>
+  );
+};
+
+export const QuotationCurrency = ({
+  currency,
+  view,
+}: {
+  currency: string;
+  view: "horizontal" | "vertical";
+}) => {
+  const t = useTranslations("RFQ");
+
+  return (
+    <MainInfoItem
+      icon={<Banknote />}
+      title={t("currency")}
+      content={currency}
+      view={view}
+    />
+  );
+};
+
+const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
+  const t = useTranslations("RFQ");
+
+  const locale = useLocale();
+
+  const { company, publicRequest, currency, createdAt } = rfq;
+
+  return (
+    <div className="w-full space-y-4 border bg-card shadow-sm rounded-xl p-4 lg:p-6">
+      <CompanyInfo
+        icon={<Building2 />}
+        company={company}
+        title={t("company")}
+        view="vertical"
+      />
+      <Separator />
+      <div className="flex flex-row space-x-2">
+        {publicRequest ? <Globe /> : <Lock />}
+        <span>{publicRequest ? t("public") : t("private")}</span>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <HelpCircle className="text-muted-foreground" />
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>{publicRequest ? t("publicHint") : t("privateHint")}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      <Separator />
+      <RFQDateInfo rfq={rfq} view="vertical" />
+      <Separator />
+      <MainInfoItem
+        icon={<Banknote />}
+        title={t("currency")}
+        content={currency}
+        view="vertical"
+      />
+      <Separator />
+      <p className="text-sm text-muted-foreground">
+        {`${t("updatedAt")}: ${localizedRelativeDate(
+          createdAt,
+          new Date(),
+          locale
+        )}`}
+      </p>
     </div>
   );
 };

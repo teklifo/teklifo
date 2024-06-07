@@ -69,6 +69,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     }
 
     const {
+      externalId,
       title,
       publicRequest,
       currency,
@@ -115,7 +116,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       data: {
         id: previousRfqVersion.id,
         number: previousRfqVersion.number,
-
+        externalId,
         companyId: company.id,
         userId: company.users[0].userId,
         title,

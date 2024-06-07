@@ -105,7 +105,7 @@ const Company = async ({ params: { locale, id } }: Props) => {
         {isAdmin && (
           <Link
             href={`/edit-company`}
-            className={cn("space-x-2", buttonVariants({ variant: "default" }))}
+            className={cn("space-x-2", buttonVariants({ variant: "outline" }))}
           >
             <Pencil className="h-4 w-4" />
             <span>{t("edit")}</span>

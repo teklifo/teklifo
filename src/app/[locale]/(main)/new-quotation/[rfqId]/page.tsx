@@ -50,7 +50,7 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
         <p>Its yours RFQ!</p>
       ) : (
         <>
-          <RFQMainInfo rfq={rfq} displayBase={true} />
+          <RFQMainInfo rfq={rfq} />
           <QuotationForm rfq={rfq} />
         </>
       )}

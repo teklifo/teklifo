@@ -26,27 +26,25 @@ const RFQItemCard = async ({
   const t = await getTranslations("RFQ");
 
   return (
-    <Card className="h-full w-full">
+    <Card className="w-full">
       <CardHeader className="flex flex-col justify-between space-y-0">
         <p className="text-2xl font-semibold tracking-tight">
           {`#${number} ${product?.name || t("unknowProduct")}`}
         </p>
-        {product && (
-          <div className="text-sm">
-            <div className="flex flex-row space-x-2">
-              <span>{`${t("number")}:`}</span>
-              <span>{product.number}</span>
-            </div>
-            <div className="flex flex-row space-x-2">
-              <span>{`${t("unit")}:`}</span>
-              <span>{product.unit}</span>
-            </div>
-            <div className="flex flex-row space-x-2">
-              <span>{`${t("brand")}:`}</span>
-              <span>{product.brand}</span>
-            </div>
+        <div className="text-sm">
+          <div className="flex flex-row space-x-2">
+            <span>{`${t("number")}:`}</span>
+            <span>{product.number}</span>
           </div>
-        )}
+          <div className="flex flex-row space-x-2">
+            <span>{`${t("unit")}:`}</span>
+            <span>{product.unit}</span>
+          </div>
+          <div className="flex flex-row space-x-2">
+            <span>{`${t("brand")}:`}</span>
+            <span>{product.brand}</span>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col space-y-2 md:flex-row md:space-x-8 md:space-y-0">
