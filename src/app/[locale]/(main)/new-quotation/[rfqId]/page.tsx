@@ -4,7 +4,9 @@ import { getTranslations } from "next-intl/server";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationForm from "@/components/quotation/quotation-form";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
-import getCurrentCompany from "@/app/actions/get-current-company";
+import getCurrentCompany, {
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
 
@@ -24,8 +26,6 @@ export const generateMetadata = async ({
 };
 
 const NewQuotation = async ({ params: { rfqId } }: Props) => {
-  const company = await getCurrentCompany();
-
   const rfq = await getRFQ(rfqId);
   if (!rfq) {
     const rfqPreview = await getRFQPreview(rfqId);
@@ -36,20 +36,15 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
     return notFound();
   }
 
-  const isAdmin =
-    company !== null ? company.users[0].companyRole.default : false;
+  const company = await getCurrentCompany();
+  if (!company) return notFound();
+
+  const isAdmin = await isCompanyAdmin(company.id);
+  if (!isAdmin) return notFound();
 
   const companyIsRequester = rfq.companyId === company?.id;
 
   const t = await getTranslations("QuotationForm");
-
-  if (!isAdmin) {
-    // No permisson
-  }
-
-  if (companyIsRequester) {
-    // Can' send quotation to yourself
-  }
 
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
@@ -59,12 +54,8 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
         </h1>
         <p className="text-lg text-muted-foreground">{t("newSubtitle")}</p>
       </div>
-      {companyIsRequester || !isAdmin ? (
-        !isAdmin ? (
-          <p>You are not admin</p>
-        ) : (
-          <p>Its yours RFQ!</p>
-        )
+      {companyIsRequester ? (
+        <p>Its yours RFQ!</p>
       ) : (
         <>
           <RFQMainInfo rfq={rfq} />

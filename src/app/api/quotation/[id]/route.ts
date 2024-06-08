@@ -27,6 +27,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         rfq: {
           include: {
             company: true,
+            items: {
+              include: {
+                product: true,
+              },
+            },
           },
         },
         items: {

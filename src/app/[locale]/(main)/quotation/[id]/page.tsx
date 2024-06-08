@@ -27,6 +27,11 @@ type QuotationType = Prisma.QuotationGetPayload<{
     rfq: {
       include: {
         company: true;
+        items: {
+          include: {
+            product: true;
+          };
+        };
       };
     };
     items: {

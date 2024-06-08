@@ -78,6 +78,7 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
           vatIncluded: quotationItem?.vatIncluded || true,
           deliveryDate: quotationItem?.deliveryDate || new Date(),
           comment: quotationItem?.comment || "",
+          skip: quotationItem?.skip || false,
         };
       }),
     },

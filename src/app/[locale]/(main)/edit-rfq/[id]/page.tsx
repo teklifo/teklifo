@@ -5,7 +5,9 @@ import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQForm from "@/components/rfq/rqf-form";
-import getCurrentCompany from "@/app/actions/get-current-company";
+import getCurrentCompany, {
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
@@ -67,16 +69,16 @@ async function getRFQById(rfqId: string) {
 }
 
 const EditRFQ = async ({ params: { id } }: Props) => {
-  const company = await getCurrentCompany();
   const rfq = await getRFQById(id);
+  if (!rfq) return notFound();
 
-  if (
-    !company ||
-    !rfq ||
-    company.id !== rfq.companyId ||
-    !company.users[0].companyRole.default
-  )
-    return notFound();
+  const company = await getCurrentCompany();
+  if (!company) return notFound();
+
+  const isAdmin = await isCompanyAdmin(company.id);
+  if (!isAdmin) return notFound();
+
+  if (company.id !== rfq.companyId) return notFound();
 
   const t = await getTranslations("RFQForm");
 

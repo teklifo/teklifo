@@ -84,7 +84,7 @@ const ConfirmQuotation = ({ rfq, quotation }: ConfirmQuotationProps) => {
     try {
       if (update) {
         const updatedQuotation = await request<QuotationType>(
-          `/api/quotation/${rfq.id}`,
+          `/api/quotation/${quotation.id}`,
           config
         );
 
