@@ -67,7 +67,7 @@ export const RFQDateInfo = ({
         {daysLeft > 0 ? (
           <Badge>{t("daysLeft", { daysLeft })}</Badge>
         ) : (
-          <Badge variant="destructive">{t("outdated")}</Badge>
+          <Badge variant="destructive">{t("completed")}</Badge>
         )}
       </div>
     </>

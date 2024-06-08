@@ -2,7 +2,11 @@ import { useLocale, useTranslations } from "next-intl";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
 import { Building2, ArrowRight, Briefcase } from "lucide-react";
 import { Link } from "@/navigation";
-import { QuotationBase, QuotationTotal } from "./quotation-main-info";
+import {
+  QuotationBase,
+  QuotationOutdated,
+  QuotationTotal,
+} from "./quotation-main-info";
 import { RFQDateInfo } from "@/components/rfq/rfq-main-info";
 import CompanyInfo from "@/components/company/company-info";
 import {
@@ -43,6 +47,11 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
   return (
     <Card className="h-full w-full">
       <CardHeader>
+        <QuotationOutdated
+          rfq={rfq}
+          currentCompanyId={company?.id}
+          className="mb-2"
+        />
         <CardTitle>{`${t("quotation")} #${id}`}</CardTitle>
         <QuotationBase rfq={rfq} />
       </CardHeader>

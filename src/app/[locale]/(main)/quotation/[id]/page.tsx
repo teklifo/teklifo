@@ -8,7 +8,9 @@ import { Link } from "@/navigation";
 import DeleteQuotation from "./_components/delete-quotation";
 import QuotationTableDrawer from "./_components/quotation-table-drawer";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import QuotationMainInfo from "@/components/quotation/quotation-main-info";
+import QuotationMainInfo, {
+  QuotationOutdated,
+} from "@/components/quotation/quotation-main-info";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
@@ -138,6 +140,11 @@ const Quotation = async ({ params: { id } }: Props) => {
           ))}
         </div>
         <div className="order-first col-span-4 space-y-6 lg:order-none">
+          <QuotationOutdated
+            rfq={quotation.rfq}
+            currentCompanyId={company?.id}
+            className="mb-2"
+          />
           <QuotationMainInfo quotation={quotation} />
         </div>
       </div>
