@@ -119,6 +119,8 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
           item.vatIncluded
         );
 
+        totalAmount = totalAmount + (item.skip ? 0 : amountWithVat);
+
         return {
           externalId: item.externalId,
           rfqItem: {

@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
           item.vatIncluded
         );
 
-        totalAmount = totalAmount + amountWithVat;
+        totalAmount = totalAmount + (item.skip ? 0 : amountWithVat);
 
         return {
           externalId: item.externalId,
