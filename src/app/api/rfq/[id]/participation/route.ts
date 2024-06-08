@@ -10,7 +10,7 @@ type Props = {
 };
 
 export async function PATCH(request: NextRequest, { params: { id } }: Props) {
-  const { t, locale } = await getTranslationsFromHeader(request.headers);
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Check company

@@ -4,7 +4,11 @@ import { Building2, ArrowRight, Briefcase } from "lucide-react";
 import { formatRelative } from "date-fns";
 import * as loc from "date-fns/locale";
 import { Link } from "@/navigation";
-import { QuotationCurrency, RFQDateInfo } from "@/components/rfq/rfq-main-info";
+import {
+  QuotationCurrency,
+  RFQDateInfo,
+  RFQType,
+} from "@/components/rfq/rfq-main-info";
 import CompanyInfo from "@/components/company/company-info";
 import {
   Card,
@@ -62,6 +66,8 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
             view="horizontal"
           />
         )}
+        <Separator />
+        <RFQType publicRequest={rfq.publicRequest} />
         <Separator />
         <RFQDateInfo rfq={rfq} view="horizontal" />
         <Separator />

@@ -15,9 +15,29 @@ type Props = {
 export async function GET(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
+  const company = await getCurrentCompany();
+
   try {
     const rfq = await db.requestForQuotation.findFirst({
-      where: { id, latestVersion: true },
+      where: {
+        id,
+        latestVersion: true,
+        OR: [
+          {
+            companyId: company?.id,
+          },
+          {
+            participants: {
+              some: {
+                companyId: company?.id,
+              },
+            },
+          },
+          {
+            publicRequest: true,
+          },
+        ],
+      },
       include: {
         company: true,
         items: {
@@ -25,7 +45,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             product: true,
           },
         },
-        participants: true,
+        participants: {
+          where: {
+            companyId: company?.id,
+          },
+        },
       },
     });
 

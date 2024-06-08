@@ -50,7 +50,9 @@
     "outgoingQuotationTitle": "КП клиентам",
     "outgoingQuotationDescription": "Список ваших коммерческих предложений клиентам",
     "incomingQuotationTitle": "КП от поставщиков",
-    "incomingQuotationDescription": "Список полученных коммерческих предложений от поставщиков"
+    "incomingQuotationDescription": "Список полученных коммерческих предложений от поставщиков",
+    "supplierGuideTitle": "Закрытый запрос цен",
+    "supplierGuideDescription": "Подтвердите участие в закрытом запросе цен"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -566,7 +568,7 @@
     "no": "Нет"
   },
   "Home": {
-    "title": "Запрашивайте цены и выбирайте лучшие коммерческие предложения на <highlight>Teklifo</highlight>",
+    "title": "Запрашивайте цены и выбирайте <highlight>лучшие</highlight> коммерческие предложения",
     "subtitle": "Помогаем покупателям и поставщикам найти друг друга",
     "getStarted": "Начать"
   },

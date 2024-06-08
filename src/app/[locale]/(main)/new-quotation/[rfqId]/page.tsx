@@ -6,6 +6,7 @@ import QuotationForm from "@/components/quotation/quotation-form";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
+import getRFQPreview from "@/app/actions/get-rfq-preview";
 
 type Props = {
   params: { locale: string; rfqId: string };
@@ -23,20 +24,32 @@ export const generateMetadata = async ({
 };
 
 const NewQuotation = async ({ params: { rfqId } }: Props) => {
-  const rfq = await getRFQ(rfqId);
-  if (!rfq) return notFound();
-
   const company = await getCurrentCompany();
 
-  const companyOwnsRFQ = rfq.companyId === company?.id;
-  const companyIsParticipant =
-    rfq.participants.find((e) => e.companyId === company?.id) !== undefined;
+  const rfq = await getRFQ(rfqId);
+  if (!rfq) {
+    const rfqPreview = await getRFQPreview(rfqId);
+    if (rfqPreview) {
+      redirect(`/supplier-guide/${rfqPreview.id}`);
+    }
 
-  if (!companyOwnsRFQ && !companyIsParticipant) {
-    redirect(`/supplier-guide/${rfq.id}`);
+    return notFound();
   }
 
+  const isAdmin =
+    company !== null ? company.users[0].companyRole.default : false;
+
+  const companyIsRequester = rfq.companyId === company?.id;
+
   const t = await getTranslations("QuotationForm");
+
+  if (!isAdmin) {
+    // No permisson
+  }
+
+  if (companyIsRequester) {
+    // Can' send quotation to yourself
+  }
 
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
@@ -46,8 +59,12 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
         </h1>
         <p className="text-lg text-muted-foreground">{t("newSubtitle")}</p>
       </div>
-      {companyOwnsRFQ ? (
-        <p>Its yours RFQ!</p>
+      {companyIsRequester || !isAdmin ? (
+        !isAdmin ? (
+          <p>You are not admin</p>
+        ) : (
+          <p>Its yours RFQ!</p>
+        )
       ) : (
         <>
           <RFQMainInfo rfq={rfq} />

@@ -8,6 +8,7 @@ import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
+import getRFQPreview from "@/app/actions/get-rfq-preview";
 import { cn } from "@/lib/utils";
 import RFQItemCard from "./_components/rfq-item-card";
 import DeleteRFQ from "./_components/delete-rfq";
@@ -41,20 +42,25 @@ const RFQ = async ({ params: { id } }: Props) => {
   const t = await getTranslations("RFQ");
 
   const rfq = await getRFQ(id);
-  if (!rfq) return notFound();
+  if (!rfq) {
+    const rfqPreview = await getRFQPreview(id);
+    if (rfqPreview) {
+      redirect(`/supplier-guide/${rfqPreview.id}`);
+    }
+
+    return notFound();
+  }
 
   const company = await getCurrentCompany();
 
   const isAdmin =
     company !== null ? company.users[0].companyRole.default : false;
 
-  const companyOwnsRFQ = rfq.companyId === company?.id;
+  const companyIsRequester = rfq.companyId === company?.id;
   const companyIsParticipant =
-    rfq.participants.find((e) => e.companyId === company?.id) !== undefined;
-
-  if (!companyOwnsRFQ && !rfq.publicRequest && !companyIsParticipant) {
-    redirect(`/supplier-guide/${rfq.id}`);
-  }
+    rfq.participants.find(
+      (participant) => participant.companyId === company?.id
+    ) !== undefined;
 
   const {
     title,
@@ -78,7 +84,7 @@ const RFQ = async ({ params: { id } }: Props) => {
             "rfq"
           )} #${number}`}</p>
         </div>
-        {companyOwnsRFQ && isAdmin && (
+        {companyIsRequester && isAdmin && (
           <div className="flex space-x-2">
             <Link
               href={`/edit-rfq/${rfq.id}`}
@@ -166,7 +172,7 @@ const RFQ = async ({ params: { id } }: Props) => {
               </Link>
             </div>
           )}
-          {companyOwnsRFQ && (
+          {companyIsRequester && (
             <div className="absolute m-auto left-0 right-0 bottom-8 flex justify-center lg:bottom-0 lg:relative">
               <ShareRFQ />
             </div>

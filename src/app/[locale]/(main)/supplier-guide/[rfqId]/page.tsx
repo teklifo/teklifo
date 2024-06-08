@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import GuideStep from "./_components/guide-steps";
@@ -7,10 +8,11 @@ import ConfirmParticipation from "./_components/confirm-participation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getCurrentCompany from "@/app/actions/get-current-company";
+import getRFQPreview from "@/app/actions/get-rfq-preview";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  params: { locale: string; rfq: string };
+  params: { locale: string; rfqId: string };
 };
 
 export const generateMetadata = async ({
@@ -19,14 +21,31 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("checkEmailTitle"),
-    description: t("checkEmailDescription"),
+    title: t("supplierGuideTitle"),
+    description: t("supplierGuideDescription"),
   };
 };
 
-const SupplierGuide = async ({ params: { rfq } }: Props) => {
-  const user = await getCurrentUser();
+const SupplierGuide = async ({ params: { rfqId } }: Props) => {
+  const rfqPreview = await getRFQPreview(rfqId);
+  if (!rfqPreview) {
+    return notFound();
+  }
+
   const company = await getCurrentCompany();
+
+  const companyIsRequester = rfqPreview.company.id === company?.id;
+
+  const companyIsParticipant =
+    rfqPreview.participants.find(
+      (participant) => participant.companyId === company?.id
+    ) !== undefined;
+
+  if (companyIsRequester || companyIsParticipant || rfqPreview.publicRequest) {
+    redirect(`/rfq/${rfqId}`);
+  }
+
+  const user = await getCurrentUser();
 
   const t = await getTranslations("SupplierGuide");
 
@@ -81,7 +100,7 @@ const SupplierGuide = async ({ params: { rfq } }: Props) => {
               )}
 
               <div className="flex justify-center items-center w-full">
-                <ConfirmParticipation rfq={rfq} company={company} />
+                <ConfirmParticipation rfqId={rfqId} company={company} />
               </div>
             </div>
           </div>

@@ -93,6 +93,27 @@ export const QuotationCurrency = ({
   );
 };
 
+export const RFQType = (publicRequest: { publicRequest: boolean }) => {
+  const t = useTranslations("RFQ");
+
+  return (
+    <div className="flex flex-row space-x-2">
+      {publicRequest ? <Globe /> : <Lock />}
+      <span>{publicRequest ? t("public") : t("private")}</span>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <HelpCircle className="text-muted-foreground" />
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p>{publicRequest ? t("publicHint") : t("privateHint")}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
+  );
+};
+
 const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
   const t = useTranslations("RFQ");
 
@@ -109,20 +130,7 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
         view="vertical"
       />
       <Separator />
-      <div className="flex flex-row space-x-2">
-        {publicRequest ? <Globe /> : <Lock />}
-        <span>{publicRequest ? t("public") : t("private")}</span>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <HelpCircle className="text-muted-foreground" />
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>{publicRequest ? t("publicHint") : t("privateHint")}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
+      <RFQType publicRequest={publicRequest} />
       <Separator />
       <RFQDateInfo rfq={rfq} view="vertical" />
       <Separator />

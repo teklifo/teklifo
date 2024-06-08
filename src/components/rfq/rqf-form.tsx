@@ -251,7 +251,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             )}
           />
         </div>
-        {/* Products */}
+        {/* Items */}
         <div className="space-y-4">
           <div className="flex flex-row items-center border-b pb-2 space-x-2">
             <Package className="w-8 h-8" />
@@ -269,6 +269,11 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               }}
             />
           ))}
+          <FormMessage>
+            {(form.formState.errors.items &&
+              form.formState.errors.items.message) ||
+              ""}
+          </FormMessage>
           <div className="flex justify-center items-center">
             <Button
               type="button"

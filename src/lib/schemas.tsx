@@ -235,10 +235,12 @@ export const getRFQItemSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.string().optional(),
     externalId: z.string().optional(),
-    productId: z.coerce.number({
-      required_error: t("invalidProductId"),
-      invalid_type_error: t("invalidProductId"),
-    }),
+    productId: z.coerce
+      .number({
+        required_error: t("invalidProductId"),
+        invalid_type_error: t("invalidProductId"),
+      })
+      .min(1, t("invalidProductId")),
     product: getProductSchema(() => {
       return "";
     }).optional(),
