@@ -41,7 +41,11 @@ const SupplierGuide = async ({ params: { rfqId } }: Props) => {
       (participant) => participant.companyId === company?.id
     ) !== undefined;
 
-  if (companyIsRequester || companyIsParticipant || rfqPreview.publicRequest) {
+  if (
+    companyIsRequester ||
+    companyIsParticipant ||
+    !rfqPreview.privateRequest
+  ) {
     redirect(`/rfq/${rfqId}`);
   }
 

@@ -7,7 +7,7 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
     id: true;
     company: true;
     participants: true;
-    publicRequest: true;
+    privateRequest: true;
     createdAt: true;
   };
 }>;

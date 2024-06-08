@@ -256,7 +256,7 @@ model RequestForQuotation {
   number          Int                       @default(autoincrement())
   company         Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String
-  publicRequest   Boolean
+  privateRequest  Boolean                   @default(false)
   user            User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
   title           String

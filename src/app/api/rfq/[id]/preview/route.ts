@@ -26,7 +26,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             companyId: company?.id,
           },
         },
-        publicRequest: true,
+        privateRequest: true,
         createdAt: true,
       },
     });

@@ -189,7 +189,7 @@ export const getRFQSchema = (t: TranslateFunction) => {
       })
       .min(1, t("invalidTitle"))
       .max(100, "invalidTitleLength"),
-    publicRequest: z
+    privateRequest: z
       .boolean({
         required_error: t("invalidPublicRequest"),
         invalid_type_error: t("invalidPublicRequest"),

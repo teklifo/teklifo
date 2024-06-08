@@ -71,7 +71,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
     defaultValues: {
       id: rfq?.id,
       title: rfq?.title,
-      publicRequest: rfq?.publicRequest,
+      privateRequest: rfq?.privateRequest,
       currency: rfq?.currency,
       date: rfq
         ? {
@@ -346,12 +346,12 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
           <div className="relative">
             <FormField
               control={form.control}
-              name="publicRequest"
+              name="privateRequest"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                   <div className="space-y-0.5">
-                    <FormLabel>{t("makePublic")}</FormLabel>
-                    <FormDescription>{t("makePublicHint")}</FormDescription>
+                    <FormLabel>{t("makePrivate")}</FormLabel>
+                    <FormDescription>{t("makePrivateHint")}</FormDescription>
                   </div>
                   <FormControl>
                     <Switch

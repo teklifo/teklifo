@@ -1,7 +1,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
 import { Building2, ArrowRight, Briefcase } from "lucide-react";
-import { formatRelative } from "date-fns";
 import * as loc from "date-fns/locale";
 import { Link } from "@/navigation";
 import {
@@ -37,8 +36,6 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
   const t = useTranslations("RFQ");
 
   const locale = useLocale();
-  let dateLocale = loc.enUS;
-  if (locale === "ru") dateLocale = loc.ru;
 
   const { id, number, title, company, createdAt } = rfq;
 
@@ -67,7 +64,7 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
           />
         )}
         <Separator />
-        <RFQType publicRequest={rfq.publicRequest} />
+        <RFQType privateRequest={rfq.privateRequest} />
         <Separator />
         <RFQDateInfo rfq={rfq} view="horizontal" />
         <Separator />

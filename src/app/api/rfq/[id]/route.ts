@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             },
           },
           {
-            publicRequest: true,
+            privateRequest: false,
           },
         ],
       },
@@ -95,7 +95,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     const {
       externalId,
       title,
-      publicRequest,
+      privateRequest,
       currency,
       date,
       description,
@@ -144,7 +144,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         companyId: company.id,
         userId: company.users[0].userId,
         title,
-        publicRequest,
+        privateRequest,
         currency,
         startDate: date.from,
         endDate: date.to,
