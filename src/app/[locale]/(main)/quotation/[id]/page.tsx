@@ -104,16 +104,18 @@ const Quotation = async ({ params: { id } }: Props) => {
         </h1>
         {companyOwnsQuotation && isAdmin && (
           <div className="flex space-x-2">
-            <Link
-              href={`/edit-quotation/${quotation.id}`}
-              className={cn(
-                "space-x-2",
-                buttonVariants({ variant: "outline" })
-              )}
-            >
-              <Pencil className="h-4 w-4" />
-              <span>{t("edit")}</span>
-            </Link>
+            {quotation.rfq.latestVersion && (
+              <Link
+                href={`/edit-quotation/${quotation.id}`}
+                className={cn(
+                  "space-x-2",
+                  buttonVariants({ variant: "outline" })
+                )}
+              >
+                <Pencil className="h-4 w-4" />
+                <span>{t("edit")}</span>
+              </Link>
+            )}
             <DeleteQuotation quotation={quotation} />
           </div>
         )}

@@ -88,6 +88,9 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     const existingQuotation = await db.quotation.findUnique({
       where: {
         id: parseInt(id),
+        rfq: {
+          latestVersion: true,
+        },
       },
     });
 

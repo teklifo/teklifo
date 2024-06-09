@@ -26,6 +26,7 @@ type QuotationType = Prisma.QuotationGetPayload<{
             product: true;
           };
         };
+        participants: true;
       };
     };
     items: {
@@ -68,7 +69,7 @@ export const generateMetadata = async ({
 
 const EditQuotation = async ({ params: { id } }: Props) => {
   const quotation = await getQuotation(id);
-  if (!quotation) return notFound();
+  if (!quotation || !quotation.rfq.latestVersion) return notFound();
 
   const company = await getCurrentCompany();
   if (!company) return notFound();
