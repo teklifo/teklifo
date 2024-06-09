@@ -70,7 +70,7 @@ async function getRFQById(rfqId: string) {
 
 const EditRFQ = async ({ params: { id } }: Props) => {
   const rfq = await getRFQById(id);
-  if (!rfq) return notFound();
+  if (!rfq || new Date(rfq.endDate) < new Date()) return notFound();
 
   const company = await getCurrentCompany();
   if (!company) return notFound();

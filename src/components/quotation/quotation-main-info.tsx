@@ -88,7 +88,7 @@ export const QuotationOutdated = ({
 }) => {
   const t = useTranslations("Quotation");
 
-  const outdated = !latestVersion && new Date(endDate) > new Date();
+  const outdated = !latestVersion && new Date(endDate) < new Date();
 
   return outdated ? (
     <Alert variant="destructive" className={cn("max-w-md", className)}>
@@ -130,13 +130,6 @@ const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
       />
       <Separator />
       <RFQDateInfo rfq={quotation.rfq} view="vertical" />
-      <Separator />
-      <MainInfoItem
-        icon={<Banknote />}
-        title={t("currency")}
-        content={quotation.currency}
-        view="vertical"
-      />
       <Separator />
       <QuotationTotal quotation={quotation} view="vertical" />
       <Separator />

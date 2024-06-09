@@ -73,6 +73,8 @@ const RFQ = async ({ params: { id } }: Props) => {
     deliveryTerms,
   } = rfq;
 
+  const completed = new Date(rfq.endDate) < new Date();
+
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
@@ -86,16 +88,18 @@ const RFQ = async ({ params: { id } }: Props) => {
         </div>
         {companyIsRequester && isAdmin && (
           <div className="flex space-x-2">
-            <Link
-              href={`/edit-rfq/${rfq.id}`}
-              className={cn(
-                "space-x-2",
-                buttonVariants({ variant: "outline" })
-              )}
-            >
-              <Pencil className="h-4 w-4" />
-              <span>{t("edit")}</span>
-            </Link>
+            {!completed && (
+              <Link
+                href={`/edit-rfq/${rfq.id}`}
+                className={cn(
+                  "space-x-2",
+                  buttonVariants({ variant: "outline" })
+                )}
+              >
+                <Pencil className="h-4 w-4" />
+                <span>{t("edit")}</span>
+              </Link>
+            )}
             <DeleteRFQ rfq={rfq} />
           </div>
         )}
@@ -158,7 +162,7 @@ const RFQ = async ({ params: { id } }: Props) => {
         </div>
         <div className="order-first col-span-4 space-y-6 lg:order-none">
           <RFQMainInfo rfq={rfq} />
-          {companyIsParticipant && (
+          {companyIsParticipant && !completed && (
             <div className="absolute m-auto left-0 right-0 bottom-8 flex justify-center lg:bottom-0 lg:relative">
               <Link
                 href={`/new-quotation/${id}`}

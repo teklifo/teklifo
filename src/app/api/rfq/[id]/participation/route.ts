@@ -38,6 +38,10 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(t("invalidRFQId"), 404);
     }
 
+    if (rfq.endDate < new Date()) {
+      return getErrorResponse(t("rfqIsCompleted"), 400);
+    }
+
     const updatedRfq = await db.requestForQuotation.update({
       where: {
         versionId: rfq.versionId,

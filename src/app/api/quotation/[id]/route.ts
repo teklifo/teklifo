@@ -92,10 +92,17 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
           latestVersion: true,
         },
       },
+      include: {
+        rfq: true,
+      },
     });
 
     if (!existingQuotation) {
       return getErrorResponse(t("invalidQuotationId"), 404);
+    }
+
+    if (existingQuotation.rfq.endDate < new Date()) {
+      return getErrorResponse(t("rfqIsCompleted"), 400);
     }
 
     // Delete previous items

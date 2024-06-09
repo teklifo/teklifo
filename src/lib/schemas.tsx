@@ -310,7 +310,7 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
       }),
       product: getProductSchema(() => {
         return "";
-      }),
+      }).optional(),
       skip: z.boolean().default(false),
       quantity: z.coerce.number({
         required_error: t("invalidQuantity"),

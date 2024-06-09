@@ -69,7 +69,12 @@ export const generateMetadata = async ({
 
 const EditQuotation = async ({ params: { id } }: Props) => {
   const quotation = await getQuotation(id);
-  if (!quotation || !quotation.rfq.latestVersion) return notFound();
+  if (
+    !quotation ||
+    !quotation.rfq.latestVersion ||
+    new Date(quotation.rfq.endDate) < new Date()
+  )
+    return notFound();
 
   const company = await getCurrentCompany();
   if (!company) return notFound();

@@ -94,7 +94,9 @@ const Quotation = async ({ params: { id } }: Props) => {
 
   const companyOwnsQuotation = quotation.companyId === company?.id;
 
-  const { description, currency, items } = quotation;
+  const { description, currency, items, rfq } = quotation;
+
+  const rfqCompleted = new Date(rfq.endDate) < new Date();
 
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
@@ -104,7 +106,7 @@ const Quotation = async ({ params: { id } }: Props) => {
         </h1>
         {companyOwnsQuotation && isAdmin && (
           <div className="flex space-x-2">
-            {quotation.rfq.latestVersion && (
+            {quotation.rfq.latestVersion && !rfqCompleted && (
               <Link
                 href={`/edit-quotation/${quotation.id}`}
                 className={cn(

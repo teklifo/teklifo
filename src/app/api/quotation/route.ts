@@ -65,6 +65,10 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(t("invalidRFQId"), 400);
     }
 
+    if (rfq.endDate < new Date()) {
+      return getErrorResponse(t("rfqIsCompleted"), 400);
+    }
+
     // Create quotation
     let totalAmount = 0;
 

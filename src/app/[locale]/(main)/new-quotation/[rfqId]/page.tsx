@@ -36,6 +36,8 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
     return notFound();
   }
 
+  if (new Date(rfq.endDate) < new Date()) return notFound();
+
   const company = await getCurrentCompany();
   if (!company) return notFound();
 

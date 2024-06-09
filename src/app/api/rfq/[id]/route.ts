@@ -125,6 +125,10 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(t("notAllowed"), 401);
     }
 
+    if (previousRfqVersion.endDate < new Date()) {
+      return getErrorResponse(t("rfqIsCompleted"), 400);
+    }
+
     // Prev version is not latest anymore
     await db.requestForQuotation.update({
       where: {
