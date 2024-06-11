@@ -49,7 +49,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
       <CardHeader>
         <QuotationOutdated
           rfq={rfq}
-          currentCompanyId={company?.id}
+          currentCompanyId={currentCompany?.id}
           className="mb-2"
         />
         <CardTitle>{`${t("quotation")} #${id}`}</CardTitle>
@@ -78,7 +78,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
         <Separator />
         <CardDescription>
           {`${t("updatedAt")}: ${localizedRelativeDate(
-            updatedAt,
+            new Date(updatedAt),
             new Date(),
             locale
           )}`}

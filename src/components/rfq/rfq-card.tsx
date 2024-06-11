@@ -72,7 +72,7 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
         <Separator />
         <CardDescription>
           {`${t("updatedAt")}: ${localizedRelativeDate(
-            createdAt,
+            new Date(createdAt),
             new Date(),
             locale
           )}`}

@@ -78,7 +78,7 @@ export const QuotationTotal = ({
 };
 
 export const QuotationOutdated = ({
-  rfq: { companyId, latestVersion, endDate },
+  rfq: { companyId, latestVersion },
   currentCompanyId,
   className,
 }: {
@@ -88,9 +88,7 @@ export const QuotationOutdated = ({
 }) => {
   const t = useTranslations("Quotation");
 
-  const outdated = !latestVersion && new Date(endDate) < new Date();
-
-  return outdated ? (
+  return !latestVersion ? (
     <Alert variant="destructive" className={cn("max-w-md", className)}>
       <AlertCircle className="h-4 w-4" />
       <AlertTitle>{t("outdated")}</AlertTitle>
