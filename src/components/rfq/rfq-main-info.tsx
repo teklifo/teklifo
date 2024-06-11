@@ -143,7 +143,7 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
       <Separator />
       <p className="text-sm text-muted-foreground">
         {`${t("updatedAt")}: ${localizedRelativeDate(
-          createdAt,
+          new Date(createdAt),
           new Date(),
           locale
         )}`}

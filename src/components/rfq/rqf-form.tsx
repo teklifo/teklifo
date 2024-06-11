@@ -279,13 +279,8 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               type="button"
               className="space-x-2"
               onClick={() =>
-                items.append({
-                  productId: 0,
-                  quantity: 0,
-                  price: 0,
-                  deliveryDate: new Date(),
-                  comment: "",
-                })
+                // @ts-ignore
+                items.append()
               }
             >
               <Plus />
