@@ -10,7 +10,7 @@ type Props = {
 };
 
 export async function PATCH(request: NextRequest, { params: { id } }: Props) {
-  const { t, locale } = await getTranslationsFromHeader(request.headers);
+  const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Check company
@@ -36,6 +36,10 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
 
     if (!rfq) {
       return getErrorResponse(t("invalidRFQId"), 404);
+    }
+
+    if (rfq.endDate < new Date()) {
+      return getErrorResponse(t("rfqIsCompleted"), 400);
     }
 
     const updatedRfq = await db.requestForQuotation.update({

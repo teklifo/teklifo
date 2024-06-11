@@ -22,11 +22,11 @@ import { useToast } from "@/components/ui/use-toast";
 import request from "@/lib/request";
 
 type Props = {
-  rfq: string;
+  rfqId: string;
   company: CompanyType | null;
 };
 
-const ConfirmParticipation = ({ rfq, company }: Props) => {
+const ConfirmParticipation = ({ rfqId, company }: Props) => {
   const t = useTranslations("SupplierGuide");
 
   const router = useRouter();
@@ -45,7 +45,7 @@ const ConfirmParticipation = ({ rfq, company }: Props) => {
     };
 
     try {
-      await request(`/api/rfq/${rfq}/participation`, config);
+      await request(`/api/rfq/${rfqId}/participation`, config);
 
       toast({
         title: t("participationConfirmed"),
@@ -54,7 +54,7 @@ const ConfirmParticipation = ({ rfq, company }: Props) => {
 
       setOpen(false);
 
-      window.location.href = `/rfq/${rfq}`;
+      window.location.href = `/rfq/${rfqId}`;
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;

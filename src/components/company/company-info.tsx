@@ -1,5 +1,4 @@
 import type { Company as CompanyType } from "@prisma/client";
-import { ArrowLeftCircle } from "lucide-react";
 import MainInfoItem from "@/components/main-info-item";
 import CompanyHoverCard from "@/components/company/company-hover-card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

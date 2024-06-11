@@ -94,20 +94,20 @@ const QuotationItem = ({
             {`${t("requested")}:`}
           </h4>
           <p className="text-2xl font-semibold tracking-tight">
-            {`#${index + 1} ${product.name}`}
+            {`#${index + 1} ${product?.name}`}
           </p>
           <div className="text-sm">
             <div className="flex flex-row space-x-2">
               <span>{`${t("number")}:`}</span>
-              <span>{product.number}</span>
+              <span>{product?.number}</span>
             </div>
             <div className="flex flex-row space-x-2">
               <span>{`${t("unit")}:`}</span>
-              <span>{product.unit}</span>
+              <span>{product?.unit}</span>
             </div>
             <div className="flex flex-row space-x-2">
               <span>{`${t("brand")}:`}</span>
-              <span>{product.brand}</span>
+              <span>{product?.brand}</span>
             </div>
           </div>
           <div className="flex flex-col space-y-2-md md:flex-row md:space-x-8 md:space-y-0">

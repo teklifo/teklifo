@@ -189,7 +189,7 @@ export const getRFQSchema = (t: TranslateFunction) => {
       })
       .min(1, t("invalidTitle"))
       .max(100, "invalidTitleLength"),
-    publicRequest: z
+    privateRequest: z
       .boolean({
         required_error: t("invalidPublicRequest"),
         invalid_type_error: t("invalidPublicRequest"),
@@ -235,10 +235,12 @@ export const getRFQItemSchema = (t: TranslateFunction) => {
   return z.object({
     id: z.string().optional(),
     externalId: z.string().optional(),
-    productId: z.coerce.number({
-      required_error: t("invalidProductId"),
-      invalid_type_error: t("invalidProductId"),
-    }),
+    productId: z.coerce
+      .number({
+        required_error: t("invalidProductId"),
+        invalid_type_error: t("invalidProductId"),
+      })
+      .min(1, t("invalidProductId")),
     product: getProductSchema(() => {
       return "";
     }).optional(),
@@ -308,7 +310,7 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
       }),
       product: getProductSchema(() => {
         return "";
-      }),
+      }).optional(),
       skip: z.boolean().default(false),
       quantity: z.coerce.number({
         required_error: t("invalidQuantity"),

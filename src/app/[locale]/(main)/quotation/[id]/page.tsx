@@ -8,7 +8,9 @@ import { Link } from "@/navigation";
 import DeleteQuotation from "./_components/delete-quotation";
 import QuotationTableDrawer from "./_components/quotation-table-drawer";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import QuotationMainInfo from "@/components/quotation/quotation-main-info";
+import QuotationMainInfo, {
+  QuotationOutdated,
+} from "@/components/quotation/quotation-main-info";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
@@ -25,6 +27,11 @@ type QuotationType = Prisma.QuotationGetPayload<{
     rfq: {
       include: {
         company: true;
+        items: {
+          include: {
+            product: true;
+          };
+        };
       };
     };
     items: {
@@ -87,7 +94,9 @@ const Quotation = async ({ params: { id } }: Props) => {
 
   const companyOwnsQuotation = quotation.companyId === company?.id;
 
-  const { description, currency, items } = quotation;
+  const { description, currency, items, rfq } = quotation;
+
+  const rfqCompleted = new Date(rfq.endDate) < new Date();
 
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
@@ -97,16 +106,18 @@ const Quotation = async ({ params: { id } }: Props) => {
         </h1>
         {companyOwnsQuotation && isAdmin && (
           <div className="flex space-x-2">
-            <Link
-              href={`/edit-quotation/${quotation.id}`}
-              className={cn(
-                "space-x-2",
-                buttonVariants({ variant: "outline" })
-              )}
-            >
-              <Pencil className="h-4 w-4" />
-              <span>{t("edit")}</span>
-            </Link>
+            {quotation.rfq.latestVersion && !rfqCompleted && (
+              <Link
+                href={`/edit-quotation/${quotation.id}`}
+                className={cn(
+                  "space-x-2",
+                  buttonVariants({ variant: "outline" })
+                )}
+              >
+                <Pencil className="h-4 w-4" />
+                <span>{t("edit")}</span>
+              </Link>
+            )}
             <DeleteQuotation quotation={quotation} />
           </div>
         )}
@@ -138,6 +149,11 @@ const Quotation = async ({ params: { id } }: Props) => {
           ))}
         </div>
         <div className="order-first col-span-4 space-y-6 lg:order-none">
+          <QuotationOutdated
+            rfq={quotation.rfq}
+            currentCompanyId={company?.id}
+            className="mb-2"
+          />
           <QuotationMainInfo quotation={quotation} />
         </div>
       </div>

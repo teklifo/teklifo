@@ -27,6 +27,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         rfq: {
           include: {
             company: true,
+            items: {
+              include: {
+                product: true,
+              },
+            },
           },
         },
         items: {
@@ -83,11 +88,21 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     const existingQuotation = await db.quotation.findUnique({
       where: {
         id: parseInt(id),
+        rfq: {
+          latestVersion: true,
+        },
+      },
+      include: {
+        rfq: true,
       },
     });
 
     if (!existingQuotation) {
       return getErrorResponse(t("invalidQuotationId"), 404);
+    }
+
+    if (existingQuotation.rfq.endDate < new Date()) {
+      return getErrorResponse(t("rfqIsCompleted"), 400);
     }
 
     // Delete previous items
@@ -113,6 +128,8 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
           vatAmount,
           item.vatIncluded
         );
+
+        totalAmount = totalAmount + (item.skip ? 0 : amountWithVat);
 
         return {
           externalId: item.externalId,

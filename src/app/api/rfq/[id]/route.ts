@@ -15,9 +15,29 @@ type Props = {
 export async function GET(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
+  const company = await getCurrentCompany();
+
   try {
     const rfq = await db.requestForQuotation.findFirst({
-      where: { id, latestVersion: true },
+      where: {
+        id,
+        latestVersion: true,
+        OR: [
+          {
+            companyId: company?.id,
+          },
+          {
+            participants: {
+              some: {
+                companyId: company?.id,
+              },
+            },
+          },
+          {
+            privateRequest: false,
+          },
+        ],
+      },
       include: {
         company: true,
         items: {
@@ -25,7 +45,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             product: true,
           },
         },
-        participants: true,
+        participants: {
+          where: {
+            companyId: company?.id,
+          },
+        },
       },
     });
 
@@ -71,7 +95,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
     const {
       externalId,
       title,
-      publicRequest,
+      privateRequest,
       currency,
       date,
       description,
@@ -101,6 +125,10 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(t("notAllowed"), 401);
     }
 
+    if (previousRfqVersion.endDate < new Date()) {
+      return getErrorResponse(t("rfqIsCompleted"), 400);
+    }
+
     // Prev version is not latest anymore
     await db.requestForQuotation.update({
       where: {
@@ -120,7 +148,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         companyId: company.id,
         userId: company.users[0].userId,
         title,
-        publicRequest,
+        privateRequest,
         currency,
         startDate: date.from,
         endDate: date.to,

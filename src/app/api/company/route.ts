@@ -30,6 +30,19 @@ export async function POST(request: NextRequest) {
     const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
       test.data;
 
+    // Check TIN is unique
+    const existingCompany = await db.company.findUnique({
+      where: {
+        tin,
+        NOT: {
+          id,
+        },
+      },
+    });
+    if (existingCompany) {
+      return getErrorResponse(t("tinIsNotUnique", { tin }), 400);
+    }
+
     // Create a new company.
     const newCompany = await db.company.create({
       data: {

@@ -71,7 +71,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
     defaultValues: {
       id: rfq?.id,
       title: rfq?.title,
-      publicRequest: rfq?.publicRequest,
+      privateRequest: rfq?.privateRequest,
       currency: rfq?.currency,
       date: rfq
         ? {
@@ -251,7 +251,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             )}
           />
         </div>
-        {/* Products */}
+        {/* Items */}
         <div className="space-y-4">
           <div className="flex flex-row items-center border-b pb-2 space-x-2">
             <Package className="w-8 h-8" />
@@ -269,18 +269,18 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               }}
             />
           ))}
+          <FormMessage>
+            {(form.formState.errors.items &&
+              form.formState.errors.items.message) ||
+              ""}
+          </FormMessage>
           <div className="flex justify-center items-center">
             <Button
               type="button"
               className="space-x-2"
               onClick={() =>
-                items.append({
-                  productId: 0,
-                  quantity: 0,
-                  price: 0,
-                  deliveryDate: new Date(),
-                  comment: "",
-                })
+                // @ts-ignore
+                items.append()
               }
             >
               <Plus />
@@ -341,12 +341,12 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
           <div className="relative">
             <FormField
               control={form.control}
-              name="publicRequest"
+              name="privateRequest"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                   <div className="space-y-0.5">
-                    <FormLabel>{t("makePublic")}</FormLabel>
-                    <FormDescription>{t("makePublicHint")}</FormDescription>
+                    <FormLabel>{t("makePrivate")}</FormLabel>
+                    <FormDescription>{t("makePrivateHint")}</FormDescription>
                   </div>
                   <FormControl>
                     <Switch

@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQForm from "@/components/rfq/rqf-form";
-import getCurrentCompany from "@/app/actions/get-current-company";
+import getCurrentCompany, {
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
 
 type Props = {
   params: { locale: string };
@@ -23,6 +25,9 @@ export const generateMetadata = async ({
 const NewRFQ = async () => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
+
+  const isAdmin = await isCompanyAdmin(company.id);
+  if (!isAdmin) return notFound();
 
   const t = await getTranslations("RFQForm");
 

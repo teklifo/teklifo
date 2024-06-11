@@ -1,10 +1,12 @@
 import { useLocale, useTranslations } from "next-intl";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
 import { Building2, ArrowRight, Briefcase } from "lucide-react";
-import { formatRelative } from "date-fns";
-import * as loc from "date-fns/locale";
 import { Link } from "@/navigation";
-import { QuotationBase, QuotationTotal } from "./quotation-main-info";
+import {
+  QuotationBase,
+  QuotationOutdated,
+  QuotationTotal,
+} from "./quotation-main-info";
 import { RFQDateInfo } from "@/components/rfq/rfq-main-info";
 import CompanyInfo from "@/components/company/company-info";
 import {
@@ -45,6 +47,11 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
   return (
     <Card className="h-full w-full">
       <CardHeader>
+        <QuotationOutdated
+          rfq={rfq}
+          currentCompanyId={currentCompany?.id}
+          className="mb-2"
+        />
         <CardTitle>{`${t("quotation")} #${id}`}</CardTitle>
         <QuotationBase rfq={rfq} />
       </CardHeader>
@@ -71,7 +78,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
         <Separator />
         <CardDescription>
           {`${t("updatedAt")}: ${localizedRelativeDate(
-            updatedAt,
+            new Date(updatedAt),
             new Date(),
             locale
           )}`}

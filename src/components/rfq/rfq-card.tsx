@@ -1,10 +1,13 @@
 import { useLocale, useTranslations } from "next-intl";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
 import { Building2, ArrowRight, Briefcase } from "lucide-react";
-import { formatRelative } from "date-fns";
 import * as loc from "date-fns/locale";
 import { Link } from "@/navigation";
-import { QuotationCurrency, RFQDateInfo } from "@/components/rfq/rfq-main-info";
+import {
+  QuotationCurrency,
+  RFQDateInfo,
+  RFQType,
+} from "@/components/rfq/rfq-main-info";
 import CompanyInfo from "@/components/company/company-info";
 import {
   Card,
@@ -33,8 +36,6 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
   const t = useTranslations("RFQ");
 
   const locale = useLocale();
-  let dateLocale = loc.enUS;
-  if (locale === "ru") dateLocale = loc.ru;
 
   const { id, number, title, company, createdAt } = rfq;
 
@@ -63,13 +64,15 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
           />
         )}
         <Separator />
+        <RFQType privateRequest={rfq.privateRequest} />
+        <Separator />
         <RFQDateInfo rfq={rfq} view="horizontal" />
         <Separator />
         <QuotationCurrency currency={rfq.currency} view="horizontal" />
         <Separator />
         <CardDescription>
           {`${t("updatedAt")}: ${localizedRelativeDate(
-            createdAt,
+            new Date(createdAt),
             new Date(),
             locale
           )}`}

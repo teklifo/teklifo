@@ -9,13 +9,16 @@ import {
   Banknote,
   CircleDollarSign,
   ExternalLinkIcon,
+  AlertCircle,
 } from "lucide-react";
+import { ClassValue } from "clsx";
 import { Link } from "@/navigation";
 import MainInfoItem from "@/components/main-info-item";
 import { RFQDateInfo } from "@/components/rfq/rfq-main-info";
 import CompanyInfo from "@/components/company/company-info";
 import { Separator } from "@/components/ui/separator";
-import { localizedRelativeDate } from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn, localizedRelativeDate } from "@/lib/utils";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -74,6 +77,30 @@ export const QuotationTotal = ({
   );
 };
 
+export const QuotationOutdated = ({
+  rfq: { companyId, latestVersion },
+  currentCompanyId,
+  className,
+}: {
+  rfq: RequestForQuotationType;
+  currentCompanyId?: string;
+  className: ClassValue;
+}) => {
+  const t = useTranslations("Quotation");
+
+  return !latestVersion ? (
+    <Alert variant="destructive" className={cn("max-w-md", className)}>
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>{t("outdated")}</AlertTitle>
+      <AlertDescription>
+        {currentCompanyId === companyId
+          ? t("outdatedHintRequest")
+          : t("outdatedHintQuotation")}
+      </AlertDescription>
+    </Alert>
+  ) : null;
+};
+
 const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
   const t = useTranslations("Quotation");
 
@@ -101,13 +128,6 @@ const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
       />
       <Separator />
       <RFQDateInfo rfq={quotation.rfq} view="vertical" />
-      <Separator />
-      <MainInfoItem
-        icon={<Banknote />}
-        title={t("currency")}
-        content={quotation.currency}
-        view="vertical"
-      />
       <Separator />
       <QuotationTotal quotation={quotation} view="vertical" />
       <Separator />

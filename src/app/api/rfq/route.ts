@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     const {
       externalId,
       title,
-      publicRequest,
+      privateRequest,
       currency,
       date,
       description,
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         companyId: company.id,
         userId: company.users[0].userId,
         title,
-        publicRequest,
+        privateRequest,
         currency,
         startDate: date.from,
         endDate: date.to,
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
     };
     filters.OR = [
       {
-        publicRequest: true,
+        privateRequest: false,
       },
       {
         participants: {
