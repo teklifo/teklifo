@@ -107,7 +107,11 @@ const Roles = async ({ searchParams: { page } }: Props) => {
         {result.length > 0 && (
           <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
             {result.map((role) => (
-              <Card key={role.id} className="h-full w-full">
+              <Card
+                key={role.id}
+                className="h-full w-full"
+                data-test="role-card"
+              >
                 <CardHeader>
                   <div className="flex flex-row justify-between">
                     <CardTitle>{role.name}</CardTitle>

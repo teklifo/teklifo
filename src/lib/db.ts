@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
 
 declare global {
   var prisma: ReturnType<typeof createPrisma>;
@@ -21,11 +22,20 @@ function createPrisma() {
       },
       company: {
         async delete({ where }: { where: { id: string } }) {
+          const company = await db.company.findUnique({
+            where: {
+              ...where,
+            },
+          });
+
           return db.company.update({
             where: {
               ...where,
             },
             data: {
+              id: `${company?.id} ${uuidv4()}`,
+              name: `${company?.name} ${uuidv4()}`,
+              tin: `${company?.tin} ${uuidv4()}`,
               deleted: true,
             },
           });

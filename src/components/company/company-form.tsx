@@ -128,10 +128,10 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             <FormItem>
               <FormLabel>{t("id")}</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" />
+                <Input {...field} autoComplete="off" data-test="id" />
               </FormControl>
               <FormDescription>{t("idDescription")}</FormDescription>
-              <FormMessage />
+              <FormMessage data-test="id-error" />
             </FormItem>
           )}
         />
@@ -143,9 +143,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             <FormItem>
               <FormLabel>{t("name")}</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" />
+                <Input {...field} autoComplete="off" data-test="name" />
               </FormControl>
-              <FormMessage />
+              <FormMessage data-test="name-error" />
             </FormItem>
           )}
         />
@@ -157,9 +157,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             <FormItem>
               <FormLabel>{t("tin")}</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" />
+                <Input {...field} autoComplete="off" data-test="tin" />
               </FormControl>
-              <FormMessage />
+              <FormMessage data-test="tin-error" />
             </FormItem>
           )}
         />
@@ -177,9 +177,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
                 <FormItem>
                   <FormLabel>{t("description")}</FormLabel>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea {...field} data-test="description" />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage data-test="description-error" />
                 </FormItem>
               )}
             />
@@ -191,9 +191,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
                 <FormItem>
                   <FormLabel>{t("slogan")}</FormLabel>
                   <FormControl>
-                    <Input {...field} autoComplete="off" />
+                    <Input {...field} autoComplete="off" data-test="slogan" />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage data-test="slogan-error" />
                 </FormItem>
               )}
             />
@@ -229,7 +229,12 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             />
           </TabsContent>
         </Tabs>
-        <Button type="submit" disabled={isLoading} className="w-full space-x-2">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="w-full space-x-2"
+          data-test="submit"
+        >
           <CheckCircle2 />
           <span>{update ? t("update") : t("create")}</span>
         </Button>

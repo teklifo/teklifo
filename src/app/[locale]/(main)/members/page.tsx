@@ -103,7 +103,11 @@ const Members = async ({ searchParams: { page } }: Props) => {
         {result.length > 0 && (
           <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
             {result.map((member) => (
-              <Card key={member.userId} className="h-full w-full">
+              <Card
+                key={member.userId}
+                className="h-full w-full"
+                data-test="member-card"
+              >
                 <CardHeader>
                   <div className="flex flex-row justify-between">
                     <CardTitle className="text-xl truncate">

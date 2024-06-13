@@ -1,7 +1,6 @@
 import * as z from "zod";
 import { addDays } from "date-fns";
 import { TranslateFunction } from "@/types";
-import errorMap from "zod/locales/en.js";
 
 export const getCompanySchema = (t: TranslateFunction) => {
   return z.object({
