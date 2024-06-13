@@ -39,3 +39,13 @@
 Cypress.Commands.add("getDataTest", (dataTestSelector) => {
   return cy.get(`[data-test="${dataTestSelector}"]`);
 });
+
+Cypress.Commands.add("authenticateUser", () => {
+  cy.getDataTest("credentials-provider-trigger").click();
+  cy.getDataTest("credentials-provider-email-input").type(
+    "kamranv21@gmail.com"
+  );
+  cy.getDataTest("credentials-provider-password-input").type("123456");
+  cy.getDataTest("credentials-provider-submit-btn").as("btn").click();
+  cy.location("pathname", { timeout: 10000 }).should("equal", "/en/dashboard");
+});

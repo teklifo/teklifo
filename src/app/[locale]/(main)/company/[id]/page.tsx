@@ -13,6 +13,7 @@ import {
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
+import DeleteCompany from "./_components/delete-company";
 
 type CompanyType = Prisma.CompanyGetPayload<{
   include: { users: true };
@@ -103,13 +104,20 @@ const Company = async ({ params: { locale, id } }: Props) => {
           }`}</p>
         </div>
         {isAdmin && (
-          <Link
-            href={`/edit-company`}
-            className={cn("space-x-2", buttonVariants({ variant: "outline" }))}
-          >
-            <Pencil className="h-4 w-4" />
-            <span>{t("edit")}</span>
-          </Link>
+          <div className="flex space-x-2">
+            <Link
+              href={`/edit-company`}
+              className={cn(
+                "space-x-2",
+                buttonVariants({ variant: "outline" })
+              )}
+              data-test="edit-company"
+            >
+              <Pencil className="h-4 w-4" />
+              <span>{t("edit")}</span>
+            </Link>
+            <DeleteCompany company={company} />
+          </div>
         )}
       </div>
       <div className="whitespace-pre-line">{description}</div>

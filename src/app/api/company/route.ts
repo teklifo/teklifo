@@ -30,17 +30,29 @@ export async function POST(request: NextRequest) {
     const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
       test.data;
 
-    // Check TIN is unique
-    const existingCompany = await db.company.findUnique({
+    // Check TIN & name are unique
+    const existingCompanies = await db.company.findMany({
       where: {
-        tin,
+        OR: [{ tin }, { name }],
         NOT: {
           id,
         },
       },
     });
-    if (existingCompany) {
-      return getErrorResponse(t("tinIsNotUnique", { tin }), 400);
+    if (existingCompanies.length > 0) {
+      let ununiqueName = false;
+      let ununiqueTin = false;
+      let errorMessage = "";
+      existingCompanies.map((existingCompany) => {
+        ununiqueName = existingCompany.name === name;
+        ununiqueTin = existingCompany.tin === tin;
+      });
+      if (ununiqueName && ununiqueTin)
+        errorMessage = t("nameAndTinAreNotUnique", { tin, name });
+      if (ununiqueName) errorMessage = t("nameIsNotUnique", { name });
+      if (ununiqueTin) errorMessage = t("tinIsNotUnique", { tin });
+
+      return getErrorResponse(errorMessage, 400);
     }
 
     // Create a new company.
