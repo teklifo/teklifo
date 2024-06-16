@@ -33,7 +33,7 @@ export const generateMetadata = async ({
   const { description } = rfq;
 
   return {
-    title: `${rfq.id} | ${t("projectName")}`,
+    title: `${rfq.title} | ${t("projectName")}`,
     description,
   };
 };
