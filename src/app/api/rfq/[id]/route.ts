@@ -44,6 +44,9 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
           include: {
             product: true,
           },
+          orderBy: {
+            lineNumber: "asc",
+          },
         },
         participants: {
           where: {
@@ -166,7 +169,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       },
     });
 
-    const itemsDataUnfiltered = items.map((item) => {
+    const itemsDataUnfiltered = items.map((item, index) => {
       const existingRfqItem = previousRfqVersion.items.find(
         (existingProduct) => existingProduct.id === item.id
       );
@@ -175,7 +178,9 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       const productData: Prisma.RequestForQuotationItemCreateManyInput = {
         id: existingRfqItem ? existingRfqItem.id : undefined,
         requestForQuotationId: newRfqVersion.versionId,
+        productName: item.productName,
         productId: item.productId,
+        lineNumber: index++,
         externalId: item.externalId,
         price: item.price,
         quantity: item.quantity,

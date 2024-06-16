@@ -282,8 +282,10 @@ model RequestForQuotationItem {
   externalId            String?
   requestForQuotation   RequestForQuotation @relation(fields: [requestForQuotationId], references: [versionId], onDelete: Cascade)
   requestForQuotationId String
-  product               Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId             Int
+  lineNumber            Int
+  productName           String
+  product               Product?             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId             Int?
   comment               String
   quantity              Decimal             @db.Decimal(15, 3)
   price                 Decimal             @db.Decimal(15, 2)
@@ -326,8 +328,9 @@ model QuotationItem {
   rfqItem          RequestForQuotationItem @relation(fields: [rfqItemVersionId], references: [versionId], onDelete: Cascade)
   rfqItemVersionId String
   rfqItemId        String
-  product          Product                 @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId        Int
+  productName      String  
+  product          Product?                 @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId        Int?
   quantity         Decimal                 @db.Decimal(15, 3)
   price            Decimal                 @db.Decimal(15, 2)
   amount           Decimal                 @db.Decimal(15, 2)

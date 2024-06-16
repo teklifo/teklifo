@@ -64,8 +64,10 @@ export async function POST(request: NextRequest) {
         deliveryTerms,
         paymentTerms,
         items: {
-          create: items.map((product) => ({
+          create: items.map((product, index) => ({
+            lineNumber: index++,
             externalId: product.externalId,
+            productName: product.productName,
             productId: product.productId,
             quantity: product.quantity,
             price: product.price,
