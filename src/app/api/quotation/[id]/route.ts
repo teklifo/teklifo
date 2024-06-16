@@ -39,6 +39,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             product: true,
             rfqItem: true,
           },
+          orderBy: {
+            rfqItem: {
+              lineNumber: "asc",
+            },
+          },
         },
       },
     });
@@ -139,6 +144,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
             },
           },
           rfqItemId: item.rfqItemId,
+          productName: item.productName,
           product: {
             connect: {
               id: item.productId,

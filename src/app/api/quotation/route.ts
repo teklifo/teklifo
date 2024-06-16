@@ -96,6 +96,7 @@ export async function POST(request: NextRequest) {
             },
           },
           rfqItemId: item.rfqItemId,
+          productName: item.productName,
           product: {
             connect: {
               id: item.productId,

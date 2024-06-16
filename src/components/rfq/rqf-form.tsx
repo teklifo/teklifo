@@ -86,6 +86,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
       items: rfq?.items.map((rfqItem) => {
         return {
           id: rfqItem.id,
+          productName: rfqItem.productName,
           productId: rfqItem.productId ?? undefined,
           product: rfqItem.product || undefined,
           quantity: Number(rfqItem.quantity),
