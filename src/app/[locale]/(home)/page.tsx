@@ -142,7 +142,7 @@ const Home = async () => {
           href={`/dashboard`}
           className={cn(
             buttonVariants({ variant: "default", size: "lg" }),
-            "bg-background text-foreground hover:bg-background hover:text-foreground"
+            "bg-background text-foreground hover:bg-background hover:text-foreground space-x-2"
           )}
         >
           <span>{t("startSelling")}</span>
