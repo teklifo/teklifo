@@ -1,9 +1,8 @@
 import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Plus } from "lucide-react";
+import { Package, Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import ProductCard from "@/components/product/product-card";
@@ -92,14 +91,8 @@ const Products = async ({ searchParams: { page } }: Props) => {
             ))}
           </div>
         ) : (
-          <div className="my-8 flex flex-col justify-center items-center space-y-4 text-center">
-            <Image
-              src="/illustrations/not-found.svg"
-              alt="No products"
-              priority
-              width="600"
-              height="600"
-            />
+          <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
+            <Package className="w-48 h-48" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noProducts")}
             </h2>

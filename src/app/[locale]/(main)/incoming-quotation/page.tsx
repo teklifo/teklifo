@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import Image from "next/image";
+import { ArrowRightCircle } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationCard from "@/components/quotation/quotation-card";
@@ -102,14 +102,8 @@ const IncomingQuotation = async ({ searchParams: { page } }: Props) => {
             ))}
           </div>
         ) : (
-          <div className="my-8 flex flex-col justify-center items-center space-y-4 text-center">
-            <Image
-              src="/illustrations/not-found-alt.svg"
-              alt="No incoming quotations"
-              priority
-              width="600"
-              height="600"
-            />
+          <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
+            <ArrowRightCircle className="w-48 h-48" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noIncomingQuotation")}
             </h2>
