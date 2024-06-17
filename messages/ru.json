@@ -54,7 +54,8 @@
     "supplierGuideTitle": "Закрытый запрос цен",
     "supplierGuideDescription": "Подтвердите участие в закрытом запросе цен",
     "updateQuotationTitle": "Изменить коммерческое предложение клиенту #{id}",
-    "updateQuotationDescription": "Измените существующее коммерческое предложение клиенту"
+    "updateQuotationDescription": "Измените существующее коммерческое предложение клиенту",
+    "quotation": "Коммерческое предложение"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
