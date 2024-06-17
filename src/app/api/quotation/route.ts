@@ -97,11 +97,13 @@ export async function POST(request: NextRequest) {
           },
           rfqItemId: item.rfqItemId,
           productName: item.productName,
-          product: {
-            connect: {
-              id: item.productId,
-            },
-          },
+          product: item.productId
+            ? {
+                connect: {
+                  id: item.productId,
+                },
+              }
+            : undefined,
           quantity: item.quantity,
           price: item.price,
           amount: item.amount,

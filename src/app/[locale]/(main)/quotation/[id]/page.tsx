@@ -76,7 +76,7 @@ export const generateMetadata = async ({
   const { description } = quotation;
 
   return {
-    title: `${quotation.id} | ${t("projectName")}`,
+    title: `${t("quotation")} #${quotation.id} | ${t("projectName")}`,
     description,
   };
 };
