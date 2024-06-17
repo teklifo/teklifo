@@ -62,7 +62,7 @@ const Login = () => {
           </Tabs>
         </div>
       </div>
-      <div className="hidden w-full bg-muted rounded-2xl h-full items-center justify-center lg:flex lg:flex-col lg:space-y-12">
+      <div className="hidden w-full bg-muted rounded-2xl h-full items-center justify-center px-8 lg:flex lg:flex-col lg:space-y-12">
         <Image
           src="/illustrations/login.svg"
           alt="Login"

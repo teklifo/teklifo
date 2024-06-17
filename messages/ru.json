@@ -701,5 +701,9 @@
     "accept": "Принять приглашение",
     "invitationAccepted": "Вы подтвердили свое участие в организации {companyName}",
     "invitationAcceptedHint": "Теперь вы можете взаимодействовать с данными по этой организации"
+  },
+  "NotFound": {
+    "notFoundTitle": "404",
+    "notFoundSubitle": "Страница не найдена"
   }
 }
