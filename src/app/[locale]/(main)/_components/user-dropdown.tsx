@@ -119,34 +119,37 @@ const UserDropdown = ({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Building2 className="mr-2 h-4 w-4" />
                 <Link
                   href="/my-companies"
-                  className="w-full"
+                  className="flex items-center w-full"
                   onClick={() => {
                     setOpen(false);
                   }}
                 >
-                  {t("myCompanies")}
+                  <Building2 className="mr-2 h-4 w-4" />
+                  <span>{t("myCompanies")}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
                 <Link
                   href="/settings"
-                  className="w-full"
+                  className="flex items-center w-full"
                   onClick={() => {
                     setOpen(false);
                   }}
                 >
-                  {t("settings")}
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>{t("settings")}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <LogOut className="mr-2 h-4 w-4" />
-                <button onClick={logout} className="w-full text-left">
-                  {t("logout")}
+                <button
+                  onClick={logout}
+                  className="flex items-center w-full text-left"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>{t("logout")}</span>
                 </button>
               </DropdownMenuItem>
             </DropdownMenuGroup>

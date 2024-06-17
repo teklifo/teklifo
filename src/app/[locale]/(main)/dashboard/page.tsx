@@ -21,6 +21,8 @@ export const generateMetadata = async ({
 };
 
 const Dashboard = async () => {
+  const t = await getTranslations("Dashboard");
+
   const user = await getCurrentUser();
   if (!user) return notFound();
 
@@ -42,7 +44,7 @@ const Dashboard = async () => {
       {(userCompanies?._count.companies ?? 0) === 0 ? (
         <WelcomeScreen />
       ) : (
-        <WelcomeScreen />
+        <span>{t("dashboard")}</span>
       )}
     </div>
   );

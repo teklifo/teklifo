@@ -1,7 +1,15 @@
+import { NextRequest } from "next/server";
 import { withAuth } from "next-auth/middleware";
 import createIntlMiddleware from "next-intl/middleware";
+import type { User as UserType } from "@prisma/client";
 import { locales, localePrefix } from "./navigation";
-import { NextRequest } from "next/server";
+import request from "@/lib/request";
+import { PaginationType } from "./types";
+
+type PaginatedData = {
+  result: UserType[];
+  pagination: PaginationType;
+};
 
 const publicPages = [
   "/",
@@ -27,7 +35,18 @@ const authMiddleware = withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => token != null,
+      authorized: async ({ token }) => {
+        if (!token) return false;
+
+        try {
+          const response = await request<PaginatedData>(
+            `/api/user?email=${token?.email}&page=1&limit=1`
+          );
+          return response.result.length > 0;
+        } catch (error) {
+          return false;
+        }
+      },
     },
     pages: {
       signIn: "/login",

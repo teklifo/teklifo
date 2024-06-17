@@ -2,11 +2,10 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import Image from "next/image";
 import type { PriceType as PriceTypeType } from "@prisma/client";
 import PriceTypeForm from "./_components/price-type-form";
 import DeletePriceType from "./_components/delete-price-type";
-import { MoreHorizontal } from "lucide-react";
+import { Coins, MoreHorizontal } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { Button } from "@/components/ui/button";
@@ -138,14 +137,8 @@ const PriceTypes = async ({ searchParams: { page } }: Props) => {
             ))}
           </div>
         ) : (
-          <div className="my-8 flex flex-col justify-center items-center space-y-4 text-center">
-            <Image
-              src="/illustrations/not-found.svg"
-              alt="No price types"
-              priority
-              width="600"
-              height="600"
-            />
+          <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
+            <Coins className="w-48 h-48" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noPriceTypes")}
             </h2>
