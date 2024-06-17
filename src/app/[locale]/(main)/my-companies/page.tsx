@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { Company as CompanyType } from "@prisma/client";
-import { Plus } from "lucide-react";
+import { Building2, Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import getCurrentUser from "@/app/actions/get-current-user";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -86,14 +86,36 @@ const UserCompaniesContent = ({
         </Link>
       </div>
       <div>
-        <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3">
-          {result.map((company) => (
-            <CompanyCard key={company.id} company={company} />
-          ))}
-        </div>
-        <PaginationBar href="/my-companies?page=" pagination={pagination} />
-        <div />
+        {result.length > 0 ? (
+          <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2 lg:grid-cols-3">
+            {result.map((company) => (
+              <CompanyCard key={company.id} company={company} />
+            ))}
+          </div>
+        ) : (
+          <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
+            <Building2 className="w-48 h-48" />
+            <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
+              {t("noCompany")}
+            </h2>
+            <span className="leading-7 tracking-tight max-w-sm text-muted-foreground">
+              {t("noCompanyHint")}
+            </span>
+            <Link
+              href="/new-company"
+              className={cn(
+                "space-x-2",
+                buttonVariants({ variant: "default" })
+              )}
+            >
+              <Plus />
+              <span>{t("newCompany")}</span>
+            </Link>
+          </div>
+        )}
       </div>
+      <PaginationBar href="/my-companies?page=" pagination={pagination} />
+      <div />
     </MaxWidthWrapper>
   );
 };

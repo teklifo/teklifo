@@ -3,7 +3,7 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Prisma } from "@prisma/client";
-import { Pencil } from "lucide-react";
+import { CircleHelp, Pencil } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
@@ -120,7 +120,16 @@ const Company = async ({ params: { locale, id } }: Props) => {
           </div>
         )}
       </div>
-      <div className="whitespace-pre-line">{description}</div>
+      {description ? (
+        <div className="whitespace-pre-line">{description}</div>
+      ) : (
+        <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
+          <CircleHelp className="w-48 h-48" />
+          <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            {t("noDescription")}
+          </h2>
+        </div>
+      )}
     </MaxWidthWrapper>
   );
 };
