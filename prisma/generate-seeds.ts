@@ -28,6 +28,24 @@ async function generateSeeds() {
     "./prisma/seeds/companyMembers.json",
     JSON.stringify(companyMembers)
   );
+
+  const product = await db.product.findMany({});
+  await fs.promises.writeFile(
+    "./prisma/seeds/product.json",
+    JSON.stringify(product)
+  );
+
+  const requestForQuotation = await db.requestForQuotation.findMany({});
+  await fs.promises.writeFile(
+    "./prisma/seeds/requestForQuotation.json",
+    JSON.stringify(requestForQuotation)
+  );
+
+  const requestForQuotationItem = await db.requestForQuotationItem.findMany({});
+  await fs.promises.writeFile(
+    "./prisma/seeds/requestForQuotationItem.json",
+    JSON.stringify(requestForQuotationItem)
+  );
 }
 
 generateSeeds();

@@ -90,6 +90,121 @@ async function main() {
       },
     ],
   });
+
+  // Product
+  await db.product.createMany({
+    data: [
+      {
+        id: 1,
+        externalId: "4d596b25-0517-4250-a969-f51c2381cc6f",
+        productId: null,
+        characteristicId: null,
+        name: "Thinkpad",
+        number: "54321",
+        brand: "Lenovo",
+        brandNumber: "85241",
+        unit: "piece",
+        description: "2024, 64 RAM, i11",
+        archive: false,
+        companyId: "lorem",
+        createdAt: "2024-06-16T13:22:58.291Z",
+        updatedAt: "2024-06-16T13:22:58.291Z",
+        deleted: false,
+      },
+      {
+        id: 2,
+        externalId: "4d596b25-0517-4250-a969-f51c2381cc6c",
+        productId: null,
+        characteristicId: null,
+        name: "Macbook Air",
+        number: "54321",
+        brand: "Apple",
+        brandNumber: "951478",
+        unit: "piece",
+        description: "2024, 32 RAM, M1",
+        archive: false,
+        companyId: "lorem",
+        createdAt: "2024-06-16T13:22:58.291Z",
+        updatedAt: "2024-06-16T13:22:58.291Z",
+        deleted: false,
+      },
+    ],
+  });
+
+  // Request for quotation
+  await db.requestForQuotation.createMany({
+    data: [
+      {
+        versionId: "clxhm1xi9000hg6bzwl5dolza",
+        id: "clxhluv3w0003g6bz8vu8rb0m",
+        externalId: null,
+        number: 1,
+        companyId: "lorem",
+        privateRequest: true,
+        userId: "clxc7jt700000qwprocvs6aue",
+        title: "Purchase of computer equipment",
+        currency: "USD",
+        startDate: "2024-06-29T20:00:00.000Z",
+        endDate: "2024-07-30T20:00:00.000Z",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vel massa vestibulum eros tempus tincidunt non et ante. Aliquam et dictum urna. Mauris auctor pretium ullamcorper. Aenean volutpat aliquet mauris, tempor lacinia nibh malesuada vel. Sed fermentum, nulla sed semper aliquam, ipsum purus congue nunc, eget venenatis tellus neque eget ex. Nunc non efficitur dui. Cras enim mauris, tempor id justo id, consequat sollicitudin augue. Nullam nec euismod erat, id sodales nibh. Morbi vestibulum imperdiet urna et laoreet.",
+        deliveryAddress: "Main st. 200",
+        deliveryTerms:
+          "Cras id mi nibh. Duis at gravida sapien. Maecenas ac risus vitae ex maximus lacinia. Ut ac quam justo. Maecenas vestibulum dolor quis mi auctor, nec aliquam augue malesuada. Duis viverra, massa id lacinia suscipit, tellus erat suscipit felis, eu pretium orci elit ut metus. In commodo velit vel ipsum dictum scelerisque.",
+        paymentTerms:
+          "Sed at tincidunt urna. Sed fringilla tortor at nunc finibus, id congue lacus pharetra. Curabitur odio massa, facilisis ut dui ut, tristique pellentesque diam. Nunc ut imperdiet elit.",
+        createdAt: "2024-06-16T13:57:09.729Z",
+        latestVersion: true,
+        deleted: false,
+      },
+    ],
+  });
+
+  // Request for quotation item
+  await db.requestForQuotationItem.createMany({
+    data: [
+      {
+        versionId: "clxhm1xih000ig6bz2nkom59w",
+        id: "clxhluv3w000bg6bzb4hdcjer",
+        externalId: null,
+        requestForQuotationId: "clxhm1xi9000hg6bzwl5dolza",
+        lineNumber: 0,
+        productName: "Lenovo PC 1T 8RAM i7",
+        productId: null,
+        comment:
+          "Sed a augue vitae leo tempus tempor et eu libero. Donec nec sagittis turpis. Nullam egestas ornare nisi. Fusce mollis scelerisque porttitor",
+        quantity: "6",
+        price: "800",
+        deliveryDate: "2024-08-09T20:00:00.000Z",
+      },
+      {
+        versionId: "clxhm1xih000jg6bzylrx6v85",
+        id: "clxhluv3w000dg6bzo0g5f8q8",
+        externalId: null,
+        requestForQuotationId: "clxhm1xi9000hg6bzwl5dolza",
+        lineNumber: 1,
+        productName: "Apple MacBook Pro M1 16RAM",
+        productId: null,
+        comment: "",
+        quantity: "2",
+        price: "4000",
+        deliveryDate: "2024-07-31T20:00:00.000Z",
+      },
+      {
+        versionId: "clxhm1xih000kg6bzrq1va2ek",
+        id: "clxhluv3w000fg6bznx99yq8t",
+        externalId: null,
+        requestForQuotationId: "clxhm1xi9000hg6bzwl5dolza",
+        lineNumber: 2,
+        productName: "Thinkpad",
+        productId: 1,
+        comment: "",
+        quantity: "1",
+        price: "1100",
+        deliveryDate: "2024-08-09T20:00:00.000Z",
+      },
+    ],
+  });
 }
 
 main()
