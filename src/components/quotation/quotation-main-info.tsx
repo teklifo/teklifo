@@ -133,7 +133,7 @@ const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
       <Separator />
       <p className="text-sm text-muted-foreground">
         {`${t("updatedAt")}: ${localizedRelativeDate(
-          updatedAt,
+          new Date(updatedAt),
           new Date(),
           locale
         )}`}

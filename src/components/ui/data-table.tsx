@@ -3,6 +3,8 @@
 import * as React from "react";
 import {
   ColumnDef,
+  ColumnResizeDirection,
+  ColumnResizeMode,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -10,7 +12,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -20,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface DataTableProps<TData, TValue> {
+interface DatatableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
@@ -28,12 +29,20 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DatatableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const [columnResizeMode, setColumnResizeMode] =
+    React.useState<ColumnResizeMode>("onChange");
+
+  const [columnResizeDirection, setColumnResizeDirection] =
+    React.useState<ColumnResizeDirection>("ltr");
 
   const table = useReactTable({
     data,
     columns,
+    columnResizeMode,
+    columnResizeDirection,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -43,39 +52,77 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <Table>
+    <div style={{ direction: table.options.columnResizeDirection }}>
+      <Table
+        className="min-w-full"
+        {...{
+          style: {
+            width: table.getCenterTotalSize(),
+          },
+        }}
+      >
         <TableHeader className="sticky top-[-1px] bg-secondary">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    className="border"
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
+              {headerGroup.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  className="border"
+                  {...{
+                    colSpan: header.colSpan,
+                    style: {
+                      width: header.getSize(),
+                    },
+                  }}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  <div
+                    {...{
+                      onDoubleClick: () => header.column.resetSize(),
+                      onMouseDown: header.getResizeHandler(),
+                      onTouchStart: header.getResizeHandler(),
+                      className: `resizer ${
+                        table.options.columnResizeDirection
+                      } ${header.column.getIsResizing() ? "isResizing" : ""}`,
+                      style: {
+                        transform:
+                          columnResizeMode === "onEnd" &&
+                          header.column.getIsResizing()
+                            ? `translateX(${
+                                (table.options.columnResizeDirection === "rtl"
+                                  ? -1
+                                  : 1) *
+                                (table.getState().columnSizingInfo
+                                  .deltaOffset ?? 0)
+                              }px)`
+                            : "",
+                      },
+                    }}
+                  />
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
+              <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="border">
+                  <TableCell
+                    key={cell.id}
+                    className="border"
+                    {...{
+                      style: {
+                        width: cell.column.getSize(),
+                      },
+                    }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

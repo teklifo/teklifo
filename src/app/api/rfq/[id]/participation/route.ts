@@ -51,7 +51,7 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
           upsert: {
             where: {
               requestForQuotationId_companyId: {
-                requestForQuotationId: id,
+                requestForQuotationId: rfq.versionId,
                 companyId: company.id,
               },
             },

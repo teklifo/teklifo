@@ -99,8 +99,8 @@
     "members": "Участники",
     "stocks": "Склады",
     "priceTypes": "Виды цен",
-    "outgoingRfq": "Запросы цен поставщикам",
-    "incomingRfq": "Запросы цен клиентов",
+    "outgoingRfq": "Запросы поставщикам",
+    "incomingRfq": "Запросы от клиентов",
     "outgoingQuotation": "КП клиентам",
     "incomingQuotation": "КП от поставщиков",
     "products": "Товары"
@@ -590,7 +590,8 @@
     "VAT18": "18%",
     "VAT20": "20%",
     "yes": "Да",
-    "no": "Нет"
+    "no": "Нет",
+    "lineNumber": "#"
   },
   "Home": {
     "title": "Оптимизируйте закупки в вашей организации",
