@@ -6,6 +6,7 @@ import { ColumnDef, HeaderContext } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/navigation";
 
 export type QuotationItemType = Prisma.QuotationItemGetPayload<{
   include: {
@@ -55,8 +56,34 @@ function getVatIncludedCell(vatIncluded: boolean) {
 
 export const columns: ColumnDef<QuotationItemType>[] = [
   {
-    accessorKey: "product.name",
+    accessorKey: "rfqItem.lineNumber",
+    header: getTableHeader("lineNumber"),
+    cell: (info) => {
+      return (
+        <div className="text-center">{(info.getValue() as number) + 1}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "rfqItem",
     header: getTableHeader("product"),
+    cell: (info) => {
+      const rfqItem = info.getValue() as any;
+
+      return rfqItem.productId ? (
+        <Link
+          href={`/product/${rfqItem.productId}`}
+          className="block w-full text-center "
+        >
+          <span className="underline underline-offset-4">
+            {rfqItem.productName}
+          </span>
+        </Link>
+      ) : (
+        <div className="text-center">{rfqItem.productName}</div>
+      );
+    },
+    size: 820,
   },
   {
     accessorKey: "rfqItem.quantity",
