@@ -182,13 +182,28 @@ export async function GET(request: NextRequest) {
       },
     ];
 
-    if (request.nextUrl.searchParams.get("companyId"))
-      filters.companyId = request.nextUrl.searchParams.get("companyId") ?? "";
+    const companyIdParam = request.nextUrl.searchParams.get("companyId");
+    if (companyIdParam) filters.companyId = companyIdParam ?? "";
 
-    if (request.nextUrl.searchParams.get("rfqCompanyId"))
+    const rfqCompanyIdParam = request.nextUrl.searchParams.get("rfqCompanyId");
+    if (rfqCompanyIdParam)
       filters.rfq = {
-        companyId: request.nextUrl.searchParams.get("rfqCompanyId") ?? "",
+        companyId: rfqCompanyIdParam ?? "",
       };
+
+    const rfqId = request.nextUrl.searchParams.get("rfqId");
+    if (rfqId) {
+      filters.rfqId = {
+        in: rfqId.split(","),
+      };
+    }
+
+    const onlyRelevant = request.nextUrl.searchParams.get("onlyRelevant");
+    if (onlyRelevant?.toLowerCase() === "true") {
+      filters.rfq = {
+        latestVersion: true,
+      };
+    }
 
     const [total, result] = await db.$transaction([
       db.quotation.count({
