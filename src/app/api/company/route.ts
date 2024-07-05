@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
+import type { ZodIssue } from "zod";
 import { Prisma } from "@prisma/client";
 import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
@@ -30,29 +31,40 @@ export async function POST(request: NextRequest) {
     const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
       test.data;
 
-    // Check TIN & name are unique
+    // Check unique attributes
     const existingCompanies = await db.company.findMany({
       where: {
-        OR: [{ tin }, { name }],
-        NOT: {
-          id,
-        },
+        OR: [{ id }, { tin }, { name }],
       },
     });
     if (existingCompanies.length > 0) {
-      let ununiqueName = false;
-      let ununiqueTin = false;
-      let errorMessage = "";
-      existingCompanies.map((existingCompany) => {
-        ununiqueName = existingCompany.name === name;
-        ununiqueTin = existingCompany.tin === tin;
-      });
-      if (ununiqueName && ununiqueTin)
-        errorMessage = t("nameAndTinAreNotUnique", { tin, name });
-      if (ununiqueName) errorMessage = t("nameIsNotUnique", { name });
-      if (ununiqueTin) errorMessage = t("tinIsNotUnique", { tin });
+      const uniquenessErrors: ZodIssue[] = [];
 
-      return getErrorResponse(errorMessage, 400);
+      existingCompanies.map((existingCompany) => {
+        if (existingCompany.id === id) {
+          uniquenessErrors.push({
+            code: "custom",
+            path: ["id"],
+            message: t("idIsNotUnique", { id }),
+          });
+        }
+        if (existingCompany.name === name) {
+          uniquenessErrors.push({
+            code: "custom",
+            path: ["name"],
+            message: t("nameIsNotUnique", { name }),
+          });
+        }
+        if (existingCompany.tin === tin) {
+          uniquenessErrors.push({
+            code: "custom",
+            path: ["tin"],
+            message: t("tinIsNotUnique", { tin }),
+          });
+        }
+      });
+
+      return getErrorResponse(uniquenessErrors, 400);
     }
 
     // Create a new company.
