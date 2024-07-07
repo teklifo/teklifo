@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import {
   ColumnDef,
   ColumnResizeDirection,
@@ -30,6 +31,9 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DatatableProps<TData, TValue>) {
+
+  const t = useTranslations("Layout");
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [columnResizeMode, setColumnResizeMode] =
@@ -134,7 +138,7 @@ export function DataTable<TData, TValue>({
                 colSpan={columns.length}
                 className="h-24 text-center border"
               >
-                No results.
+               {t('noData')}
               </TableCell>
             </TableRow>
           )}

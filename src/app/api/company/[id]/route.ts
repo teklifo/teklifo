@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
+import type { ZodIssue } from "zod";
 import {
   getUserCompany,
   isCompanyAdmin,
@@ -91,6 +92,49 @@ export async function PUT(
 
     const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
       test.data;
+
+    // Check unique attributes
+    const existingCompanies = await db.company.findMany({
+      where: {
+        AND: [
+          { OR: [{ id }, { tin }, { name }] },
+          {
+            NOT: {
+              id: company.id,
+            },
+          },
+        ],
+      },
+    });
+    if (existingCompanies.length > 0) {
+      const uniquenessErrors: ZodIssue[] = [];
+
+      existingCompanies.map((existingCompany) => {
+        if (existingCompany.id === id) {
+          uniquenessErrors.push({
+            code: "custom",
+            path: ["id"],
+            message: t("idIsNotUnique", { id }),
+          });
+        }
+        if (existingCompany.name === name) {
+          uniquenessErrors.push({
+            code: "custom",
+            path: ["name"],
+            message: t("nameIsNotUnique", { name }),
+          });
+        }
+        if (existingCompany.tin === tin) {
+          uniquenessErrors.push({
+            code: "custom",
+            path: ["tin"],
+            message: t("tinIsNotUnique", { tin }),
+          });
+        }
+      });
+
+      return getErrorResponse(uniquenessErrors, 400);
+    }
 
     const updatedCompany = await db.company.update({
       where: {

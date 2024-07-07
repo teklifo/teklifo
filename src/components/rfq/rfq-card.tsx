@@ -1,7 +1,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
 import { Building2, ArrowRight, Briefcase } from "lucide-react";
-import * as loc from "date-fns/locale";
 import { Link } from "@/navigation";
 import {
   QuotationCurrency,

@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { getCredentialsSchema } from "@/lib/schemas";
 
-const LoginWithPasswordForm = () => {
+const CredentialsLoginForm = () => {
   const t = useTranslations("Login");
 
   const { toast } = useToast();
@@ -115,4 +115,4 @@ const LoginWithPasswordForm = () => {
   );
 };
 
-export default LoginWithPasswordForm;
+export default CredentialsLoginForm;

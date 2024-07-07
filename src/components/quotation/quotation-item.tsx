@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { CalendarIcon, HelpCircle } from "lucide-react";
@@ -38,7 +38,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getQuotationSchema } from "@/lib/schemas";
-import { cn } from "@/lib/utils";
+import { cn, dateFnsLocale } from "@/lib/utils";
 import {
   calculateAmountWithVat,
   calculateVatAmount,
@@ -57,6 +57,8 @@ const QuotationItem = ({
   index,
 }: QuotationItemProps) => {
   const t = useTranslations("QuotationForm");
+
+  const locale = useLocale()
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
@@ -278,7 +280,7 @@ const QuotationItem = ({
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                             format(field.value, "PPP", {locale: dateFnsLocale(locale)})
                           ) : (
                             <span>{t("pickDate")}</span>
                           )}

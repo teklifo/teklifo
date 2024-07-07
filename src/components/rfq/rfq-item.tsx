@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { MoreHorizontal, CalendarIcon, X } from "lucide-react";
@@ -30,7 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { getRFQSchema } from "@/lib/schemas";
-import { cn } from "@/lib/utils";
+import { cn, dateFnsLocale } from "@/lib/utils";
 
 type RFQItemProps = {
   productField: FieldArrayWithId;
@@ -40,6 +40,8 @@ type RFQItemProps = {
 
 const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
   const t = useTranslations("RFQForm");
+
+  const locale = useLocale()
 
   const [openProducts, setOpenProducts] = useState(false);
 
@@ -208,7 +210,7 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
                         )}
                       >
                         {field.value ? (
-                          format(field.value, "PPP")
+                          format(field.value, "PPP", {locale: dateFnsLocale(locale)})
                         ) : (
                           <span>{t("pickDate")}</span>
                         )}
