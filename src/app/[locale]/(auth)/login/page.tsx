@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { useTranslations } from "next-intl";
 import Logo from "@/components/logo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LoginForm from "./_components/login-form";
@@ -22,8 +21,8 @@ export const generateMetadata = async ({
   };
 };
 
-const Login = () => {
-  const t = useTranslations("Login");
+const Login = async () => {
+  const t = await getTranslations("Login");
 
   return (
     <div className="flex flex-col h-screen p-8 md:flex-row">

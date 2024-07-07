@@ -1,10 +1,11 @@
 "use client"
 
 import * as React from "react"
+import { useLocale } from "next-intl"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
 
-import { cn } from "@/lib/utils"
+import { cn, dateFnsLocale } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
@@ -15,8 +16,13 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+
+  const locale = useLocale()
+  const calendarLocale = dateFnsLocale(locale)
+
   return (
     <DayPicker
+      locale={calendarLocale}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{

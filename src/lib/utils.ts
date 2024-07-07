@@ -33,13 +33,18 @@ export function getAvatarFallback(text: string) {
   return avatarFallback;
 }
 
+export function dateFnsLocale(locale: string) {
+  let datefns = loc.enUS;
+  if (locale === "ru") datefns = loc.ru;
+  return datefns;
+}
+
 export function localizedRelativeDate(
   date: Date,
   baseDate: Date,
   locale: string
 ) {
-  let dateLocale = loc.enUS;
-  if (locale === "ru") dateLocale = loc.ru;
+  const dateLocale = dateFnsLocale(locale);
 
   return formatRelative(date, baseDate, {
     locale: {

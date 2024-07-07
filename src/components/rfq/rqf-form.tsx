@@ -304,7 +304,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               <FormItem>
                 <FormLabel>{t("deliveryAddress")}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <Input {...field} autoComplete="off" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
