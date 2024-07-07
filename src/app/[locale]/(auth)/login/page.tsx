@@ -2,9 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import Logo from "@/components/logo";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LoginForm from "./_components/login-form";
-import LoginWithPasswordForm from "./_components/login-with-password-form";
 
 type Props = {
   params: { locale: string };
@@ -35,30 +33,7 @@ const Login = async () => {
             {t("title")}
           </h3>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
-          <Tabs defaultValue="emailProvider">
-            <TabsList className="w-full">
-              <TabsTrigger
-                className="w-full"
-                value="emailProvider"
-                data-test="email-provider-trigger"
-              >
-                {t("emailProvider")}
-              </TabsTrigger>
-              <TabsTrigger
-                className="w-full"
-                value="credentialsProvider"
-                data-test="credentials-provider-trigger"
-              >
-                {t("credentialsProvider")}
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="emailProvider" className="mt-4">
-              <LoginForm />
-            </TabsContent>
-            <TabsContent value="credentialsProvider" className="mt-4">
-              <LoginWithPasswordForm />
-            </TabsContent>
-          </Tabs>
+          <LoginForm />         
         </div>
       </div>
       <div className="hidden w-full bg-muted rounded-2xl h-full items-center justify-center px-8 lg:flex lg:flex-col lg:space-y-12">
