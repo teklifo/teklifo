@@ -39,7 +39,7 @@ export const QuotationBase = ({
   const t = useTranslations("Quotation");
 
   return (
-    <p className="text-lg text-muted-foreground">
+    <h3 className="text-2xl font-semibold leading-none tracking-tight">
       {t.rich("quotationBase", {
         number,
         title,
@@ -54,7 +54,7 @@ export const QuotationBase = ({
           </Link>
         ),
       })}
-    </p>
+    </h3>
   );
 };
 

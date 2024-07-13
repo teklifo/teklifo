@@ -42,9 +42,7 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
     <Card className="h-full w-full">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription className="text-lg">{`${t(
-          "rfq"
-        )} #${number}`}</CardDescription>
+        <CardDescription>{`${t("rfq")} #${number}`}</CardDescription>
       </CardHeader>
       <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
         {currentCompany?.id === rfq.company.id ? (
