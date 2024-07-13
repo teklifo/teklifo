@@ -262,7 +262,6 @@ model RequestForQuotation {
   userId          String
   title           String
   currency        String
-  startDate       DateTime
   endDate         DateTime
   description     String
   deliveryAddress String
