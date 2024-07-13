@@ -15,7 +15,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -52,8 +51,8 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
           currentCompanyId={currentCompany?.id}
           className="mb-2"
         />
-        <CardTitle>{`${t("quotation")} #${id}`}</CardTitle>
         <QuotationBase rfq={rfq} />
+        <CardDescription>{`${t("quotation")} #${id}`}</CardDescription>
       </CardHeader>
       <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
         {currentCompany?.id === rfq.company.id ? (

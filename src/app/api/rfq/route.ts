@@ -153,6 +153,24 @@ export async function GET(request: NextRequest) {
         where: filters,
         include: {
           company: true,
+          _count: {
+            select: {
+              quotations: {
+                where: {
+                  OR: [
+                    {
+                      companyId: company?.id ?? "",
+                    },
+                    {
+                      rfq: {
+                        companyId: company?.id ?? "",
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",

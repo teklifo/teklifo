@@ -28,8 +28,8 @@ const QuotationItemAttribute = ({
 }) => {
   return (
     <div className="flex flex-col items-start">
-      <span className="font-semibold">{label}</span>
-      <span className="md:text-xl">{value}</span>
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-semibold">{value}</span>
     </div>
   );
 };
@@ -84,20 +84,24 @@ const QuotationItemCard = ({
           )}
           <div className="flex flex-col space-y-2-md md:flex-row md:space-x-8 md:space-y-0">
             <div className="flex flex-col items-start">
-              <span className="font-semibold">{`${t("quantity")}`}</span>
-              <span className="md:text-xl">
+              <span className="text-muted-foreground">{`${t(
+                "quantity"
+              )}`}</span>
+              <span className="font-semibold">
                 {Number(rfqItem.quantity).toFixed(3)}
               </span>
             </div>
             <div className="flex flex-col items-start">
-              <span className="font-semibold">{`${t("price")}`}</span>
-              <span className="md:text-xl">{`${Number(rfqItem.price).toFixed(
+              <span className="text-muted-foreground">{`${t("price")}`}</span>
+              <span className="font-semibold">{`${Number(rfqItem.price).toFixed(
                 2
               )} ${currency}`}</span>
             </div>
             <div className="flex flex-col items-start">
-              <span className="font-semibold">{`${t("deliveryDate")}`}</span>
-              <span className="md:text-xl">
+              <span className="text-muted-foreground">{`${t(
+                "deliveryDate"
+              )}`}</span>
+              <span className="font-semibold">
                 {format(rfqItem.deliveryDate, "dd.MM.yyyy")}
               </span>
             </div>

@@ -35,6 +35,17 @@ export type ProductWithPricesAndStocks = Prisma.ProductGetPayload<{
 
 export type TranslateFunction = (value: string) => string;
 
+export type RFQWithQuotationsType = Prisma.RequestForQuotationGetPayload<{
+  include: {
+    company: true;
+    _count: {
+      select: {
+        quotations: true;
+      };
+    };
+  };
+}>;
+
 // CML TYPES
 
 export type CML_Import = {

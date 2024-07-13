@@ -44,10 +44,11 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
       </div>
       <Separator />
       <Nav
+        label={t("main")}
         isCollapsed={isCollapsed}
         links={[
           {
-            title: t("main"),
+            title: t("dashboard"),
             label: "",
             icon: LayoutGrid,
             href: `/dashboard`,
@@ -56,6 +57,7 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
       />
       <Separator />
       <Nav
+        label={t("purchases")}
         isCollapsed={isCollapsed}
         links={[
           {
@@ -65,22 +67,23 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
             href: `/outgoing-rfq`,
           },
           {
-            title: t("incomingRfq"),
+            title: t("incomingQuotation"),
             label: "",
-            icon: FileInput,
-            href: `/incoming-rfq`,
+            icon: ArrowRightCircle,
+            href: `/incoming-quotation`,
           },
         ]}
       />
       <Separator />
       <Nav
+        label={t("sales")}
         isCollapsed={isCollapsed}
         links={[
           {
-            title: t("incomingQuotation"),
+            title: t("incomingRfq"),
             label: "",
-            icon: ArrowRightCircle,
-            href: `/incoming-quotation`,
+            icon: FileInput,
+            href: `/incoming-rfq`,
           },
           {
             title: t("outgoingQuotation"),
@@ -92,6 +95,7 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
       />
       <Separator />
       <Nav
+        label={t("catalogs")}
         isCollapsed={isCollapsed}
         links={[
           {
@@ -116,19 +120,20 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
       />
       <Separator />
       <Nav
+        label={t("team")}
         isCollapsed={isCollapsed}
         links={[
-          {
-            title: t("roles"),
-            label: "",
-            icon: UserCog,
-            href: `/roles`,
-          },
           {
             title: t("members"),
             label: "",
             icon: Users,
             href: `/members`,
+          },
+          {
+            title: t("roles"),
+            label: "",
+            icon: UserCog,
+            href: `/roles`,
           },
         ]}
       />

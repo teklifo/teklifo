@@ -1,5 +1,5 @@
 import { useLocale, useTranslations } from "next-intl";
-import type { Prisma, Company as CompanyType } from "@prisma/client";
+import type { Company as CompanyType } from "@prisma/client";
 import { Building2, ArrowRight, Briefcase } from "lucide-react";
 import { Link } from "@/navigation";
 import {
@@ -17,17 +17,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn, localizedRelativeDate } from "@/lib/utils";
-
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-  };
-}>;
+import { RFQWithQuotationsType } from "@/types";
 
 type RFQCardProps = {
-  rfq: RequestForQuotationType;
+  rfq: RFQWithQuotationsType;
   currentCompany?: CompanyType;
 };
 
@@ -36,17 +32,24 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
 
   const locale = useLocale();
 
-  const { id, number, title, company, createdAt } = rfq;
+  const { id, number, title, company, createdAt, _count } = rfq;
 
   return (
     <Card className="h-full w-full">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription className="text-lg">{`${t(
-          "rfq"
-        )} #${number}`}</CardDescription>
+        <CardDescription>{`${t("rfq")} #${number}`}</CardDescription>
       </CardHeader>
       <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
+        {currentCompany?.id === rfq.company.id ? (
+          <Badge>
+            {`${t("quotationsRecieved", {
+              count: _count.quotations,
+            })}`}
+          </Badge>
+        ) : (
+          <>{_count.quotations && <Badge>{t("quotationsIsSent")}</Badge>}</>
+        )}
         {currentCompany?.id === rfq.company.id ? (
           <CompanyInfo
             company={company}
