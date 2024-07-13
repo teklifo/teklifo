@@ -200,28 +200,14 @@ export const getRFQSchema = (t: TranslateFunction) => {
         invalid_type_error: t("invalidCurrency"),
       })
       .min(1, t("invalidCurrency")),
-    date: z
-      .object(
-        {
-          from: z.coerce.date({
-            errorMap: (issue, { defaultError }) => ({
-              message:
-                issue.code === "invalid_date" ? t("invalidDate") : defaultError,
-            }),
-          }),
-          to: z.coerce.date({
-            errorMap: (issue, { defaultError }) => ({
-              message:
-                issue.code === "invalid_date" ? t("invalidDate") : defaultError,
-            }),
-          }),
-        },
-        {
-          required_error: t("invalidDate"),
-          invalid_type_error: t("invalidDate"),
-        }
-      )
-      .refine((data) => data.from > addDays(new Date(), -1), t("invalidDate")),
+    endDate: z.coerce
+      .date({
+        errorMap: (issue, { defaultError }) => ({
+          message:
+            issue.code === "invalid_date" ? t("invalidDate") : defaultError,
+        }),
+      })
+      .min(new Date(Date.now()), t("invalidDate")),
     description: z.string().default(""),
     deliveryAddress: z.string().default(""),
     deliveryTerms: z.string().default(""),

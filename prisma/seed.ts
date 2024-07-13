@@ -144,7 +144,6 @@ async function main() {
         userId: "clxc7jt700000qwprocvs6aue",
         title: "Purchase of computer equipment",
         currency: "USD",
-        startDate: "2024-06-29T20:00:00.000Z",
         endDate: "2024-07-30T20:00:00.000Z",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vel massa vestibulum eros tempus tincidunt non et ante. Aliquam et dictum urna. Mauris auctor pretium ullamcorper. Aenean volutpat aliquet mauris, tempor lacinia nibh malesuada vel. Sed fermentum, nulla sed semper aliquam, ipsum purus congue nunc, eget venenatis tellus neque eget ex. Nunc non efficitur dui. Cras enim mauris, tempor id justo id, consequat sollicitudin augue. Nullam nec euismod erat, id sodales nibh. Morbi vestibulum imperdiet urna et laoreet.",

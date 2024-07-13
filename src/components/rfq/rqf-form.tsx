@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -39,7 +39,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { getRFQSchema } from "@/lib/schemas";
 import request from "@/lib/request";
-import { cn } from "@/lib/utils";
+import { cn, dateFnsLocale } from "@/lib/utils";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -58,6 +58,8 @@ type RFQFormProps = {
 const RFQForm = ({ rfq }: RFQFormProps) => {
   const t = useTranslations("RFQForm");
 
+  const locale = useLocale();
+
   const update = rfq !== undefined;
 
   const { toast } = useToast();
@@ -73,12 +75,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
       title: rfq?.title,
       privateRequest: rfq?.privateRequest,
       currency: rfq?.currency,
-      date: rfq
-        ? {
-            from: rfq.startDate,
-            to: rfq.endDate,
-          }
-        : undefined,
+      endDate: rfq?.endDate,
       description: rfq?.description,
       deliveryAddress: rfq?.deliveryAddress,
       deliveryTerms: rfq?.deliveryTerms,
@@ -174,47 +171,42 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               </FormItem>
             )}
           />
-          {/* Period */}
-          <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
+          {/* End date */}
+          <div className="max-w-[240px]">
             <FormField
               control={form.control}
-              name={`date`}
+              name="endDate"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>{t("date")}</FormLabel>
+                <FormItem>
+                  <FormLabel>{t("endDate")}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
-                        id="date"
-                        variant={"outline"}
-                        className={cn(
-                          "w-[300px] justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value?.from ? (
-                          field.value.to ? (
-                            <>
-                              {format(field.value.from, "LLL dd, y")} -{" "}
-                              {format(field.value.to, "LLL dd, y")}
-                            </>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP", {
+                              locale: dateFnsLocale(locale),
+                            })
                           ) : (
-                            format(field.value.from, "LLL dd, y")
-                          )
-                        ) : (
-                          <span>{t("pickADate")}</span>
-                        )}
-                      </Button>
+                            <span>{t("pickDate")}</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
-                        initialFocus
-                        mode="range"
-                        defaultMonth={field?.value?.from}
+                        mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        numberOfMonths={2}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
                       />
                     </PopoverContent>
                   </Popover>
@@ -245,7 +237,7 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               <FormItem>
                 <FormLabel>{t("description")}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <Textarea {...field} rows={5} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

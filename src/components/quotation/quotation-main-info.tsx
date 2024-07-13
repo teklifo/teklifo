@@ -127,7 +127,7 @@ const QuotationMainInfo = ({ quotation }: { quotation: QuotationType }) => {
         view="vertical"
       />
       <Separator />
-      <RFQDateInfo rfq={quotation.rfq} view="vertical" />
+      <RFQDateInfo endDate={quotation.rfq.endDate} view="vertical" />
       <Separator />
       <QuotationTotal quotation={quotation} view="vertical" />
       <Separator />

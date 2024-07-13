@@ -38,10 +38,10 @@ type RFQMainInfoProps = {
 };
 
 export const RFQDateInfo = ({
-  rfq: { startDate, endDate },
+  endDate,
   view,
 }: {
-  rfq: { startDate: Date; endDate: Date };
+  endDate: Date;
   view: "horizontal" | "vertical";
 }) => {
   const t = useTranslations("RFQ");
@@ -57,11 +57,8 @@ export const RFQDateInfo = ({
       >
         <MainInfoItem
           icon={<Calendar />}
-          title={t("date")}
-          content={`${format(startDate, "dd.MM.yyyy")} - ${format(
-            endDate,
-            "dd.MM.yyyy"
-          )}`}
+          title={t("endDate")}
+          content={format(endDate, "dd.MM.yyyy")}
           view={view}
         />
         {daysLeft > 0 ? (
@@ -132,7 +129,7 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
       <Separator />
       <RFQType privateRequest={privateRequest} />
       <Separator />
-      <RFQDateInfo rfq={rfq} view="vertical" />
+      <RFQDateInfo endDate={rfq.endDate} view="vertical" />
       <Separator />
       <MainInfoItem
         icon={<Banknote />}

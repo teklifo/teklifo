@@ -68,7 +68,7 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
         <Separator />
         <RFQType privateRequest={rfq.privateRequest} />
         <Separator />
-        <RFQDateInfo rfq={rfq} view="horizontal" />
+        <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
         <Separator />
         <QuotationCurrency currency={rfq.currency} view="horizontal" />
         <Separator />

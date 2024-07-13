@@ -71,7 +71,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
           />
         )}
         <Separator />
-        <RFQDateInfo rfq={quotation.rfq} view="horizontal" />
+        <RFQDateInfo endDate={quotation.rfq.endDate} view="horizontal" />
         <Separator />
         <QuotationTotal quotation={quotation} view="horizontal" />
         <Separator />
