@@ -69,6 +69,17 @@ const ConfirmQuotation = ({ rfq, quotation }: ConfirmQuotationProps) => {
     setOpen(openAlert);
   };
 
+  async function confirmParticipation() {
+    const config = {
+      method: "PATCH",
+      headers: {
+        "Accept-Language": getCookie("NEXT_LOCALE"),
+      },
+    };
+
+    await request(`/api/rfq/${rfq.id}/participation`, config);
+  }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
 
@@ -95,6 +106,10 @@ const ConfirmQuotation = ({ rfq, quotation }: ConfirmQuotationProps) => {
 
         window.location.href = `/quotation/${updatedQuotation.id}`;
       } else {
+        if (!rfq.privateRequest) {
+          await confirmParticipation();
+        }
+
         const newQuotation = await request<QuotationType>(
           `/api/quotation/`,
           config

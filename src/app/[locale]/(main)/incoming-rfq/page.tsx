@@ -2,23 +2,13 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Prisma } from "@prisma/client";
-import { FileInput, Plus } from "lucide-react";
-import { Link } from "@/navigation";
+import { FileInput } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQCard from "@/components/rfq/rfq-card";
 import PaginationBar from "@/components/ui/pagination-bar";
-import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import request from "@/lib/request";
-import { cn } from "@/lib/utils";
-import { PaginationType } from "@/types";
-
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-  };
-}>;
+import { PaginationType, RFQWithQuotationsType } from "@/types";
 
 type Props = {
   params: { locale: string };
@@ -28,7 +18,7 @@ type Props = {
 };
 
 type PaginatedData = {
-  result: RequestForQuotationType[];
+  result: RFQWithQuotationsType[];
   pagination: PaginationType;
 };
 
@@ -104,19 +94,5 @@ const IncomingRFQ = async ({ searchParams: { page } }: Props) => {
     </MaxWidthWrapper>
   );
 };
-
-async function NewRFQLink() {
-  const t = await getTranslations("IncomingRFQ");
-
-  return (
-    <Link
-      href={`/new-rqf`}
-      className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
-    >
-      <Plus />
-      <span>{t("new")}</span>
-    </Link>
-  );
-}
 
 export default IncomingRFQ;

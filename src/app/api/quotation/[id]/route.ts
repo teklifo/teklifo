@@ -19,9 +19,26 @@ type Props = {
 export async function GET(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
+  const company = await getCurrentCompany();
+  if (!company) return getErrorResponse(t("invalidQuotationId"), 404);
+
   try {
-    const rfq = await db.quotation.findFirst({
-      where: { id: parseInt(id) },
+    const quotation = await db.quotation.findFirst({
+      where: {
+        AND: [
+          { id: parseInt(id) },
+          {
+            OR: [
+              { companyId: company.id },
+              {
+                rfq: {
+                  companyId: company.id,
+                },
+              },
+            ],
+          },
+        ],
+      },
       include: {
         company: true,
         rfq: {
@@ -49,11 +66,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     });
 
     // Quotation not found
-    if (!rfq) {
+    if (!quotation) {
       return getErrorResponse(t("invalidQuotationId"), 404);
     }
 
-    return NextResponse.json(rfq);
+    return NextResponse.json(quotation);
   } catch (error) {
     console.log(error);
     return getErrorResponse(t("serverError"), 500);

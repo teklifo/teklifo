@@ -51,18 +51,20 @@ const RFQItemCard = async ({
       <CardContent>
         <div className="flex flex-col space-y-2 md:flex-row md:space-x-8 md:space-y-0">
           <div className="flex flex-col items-start">
-            <span className="font-semibold">{`${t("quantity")}`}</span>
-            <span className="md:text-xl">{Number(quantity).toFixed(3)}</span>
+            <span className="text-muted-foreground">{`${t("quantity")}`}</span>
+            <span className="font-semibold">{Number(quantity).toFixed(3)}</span>
           </div>
           <div className="flex flex-col items-start">
-            <span className="font-semibold">{`${t("price")}`}</span>
-            <span className="md:text-xl">{`${Number(price).toFixed(
+            <span className="text-muted-foreground">{`${t("price")}`}</span>
+            <span className="font-semibold">{`${Number(price).toFixed(
               2
             )} ${currency}`}</span>
           </div>
           <div className="flex flex-col items-start">
-            <span className="font-semibold">{`${t("deliveryDate")}`}</span>
-            <span className="md:text-xl">
+            <span className="text-muted-foreground">{`${t(
+              "deliveryDate"
+            )}`}</span>
+            <span className="font-semibold">
               {format(deliveryDate, "dd.MM.yyyy")}
             </span>
           </div>
@@ -71,7 +73,7 @@ const RFQItemCard = async ({
       {comment && (
         <CardFooter>
           <div className="flex flex-col">
-            <span className="font-semibold">{`${t("comment")}`}</span>
+            <span className="text-muted-foreground">{`${t("comment")}`}</span>
             <span>{comment}</span>
           </div>
         </CardFooter>

@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import RFQItemCard from "./_components/rfq-item-card";
 import DeleteRFQ from "./_components/delete-rfq";
 import ShareRFQ from "./_components/share-rfq";
+import SentQuotations from "./_components/sent-quotations";
 
 type Props = {
   params: { locale: string; id: string };
@@ -42,6 +43,7 @@ const RFQ = async ({ params: { id } }: Props) => {
   const t = await getTranslations("RFQ");
 
   const rfq = await getRFQ(id);
+
   if (!rfq) {
     const rfqPreview = await getRFQPreview(id);
     if (rfqPreview) {
@@ -60,7 +62,8 @@ const RFQ = async ({ params: { id } }: Props) => {
   const companyIsParticipant =
     rfq.participants.find(
       (participant) => participant.companyId === company?.id
-    ) !== undefined;
+    ) !== undefined ||
+    (!rfq.privateRequest && !companyIsRequester);
 
   const {
     title,
@@ -106,6 +109,9 @@ const RFQ = async ({ params: { id } }: Props) => {
       </div>
       <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
         <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
+          {companyIsParticipant && (
+            <SentQuotations rfqId={rfq.id} rfqVersionId={rfq.versionId} />
+          )}
           {description && (
             <div className="space-y-2">
               <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">

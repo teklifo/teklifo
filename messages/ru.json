@@ -455,7 +455,12 @@
     "requestCompany": "Заказчик",
     "quotationCompany": "Отправитель",
     "updatedAt": "Обновлено",
-    "rfqIsCompleted": "Период сбора коммерческих предложений завершен"
+    "rfqIsCompleted": "Период сбора коммерческих предложений завершен",
+    "quotationsRecieved": "Получено предложений: {count}",
+    "quotationsIsSent": "Коммерческое предложение отправлено",
+    "sentQuotations": "Ваши коммерческие предложения по этому запросу",
+    "sentQuotationTitle": "Коммерческое предложение #{id} на сумму {amount} {currency}",
+    "sentOutdatedQuotationTitle": "Коммерческое предложение #{id} на сумму {amount} {currency} (устарело)"
   },
   "SupplierGuide": {
     "title": "Поздравляем! Вы перешли по ссылке закрытого запроса цен",

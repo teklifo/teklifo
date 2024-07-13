@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import type { Prisma } from "@prisma/client";
 import { FileOutput, Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -14,13 +13,7 @@ import getCurrentCompany, {
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { cn } from "@/lib/utils";
-import { PaginationType } from "@/types";
-
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-  };
-}>;
+import { PaginationType, RFQWithQuotationsType } from "@/types";
 
 type Props = {
   params: { locale: string };
@@ -30,7 +23,7 @@ type Props = {
 };
 
 type PaginatedData = {
-  result: RequestForQuotationType[];
+  result: RFQWithQuotationsType[];
   pagination: PaginationType;
 };
 
