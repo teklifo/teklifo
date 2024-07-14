@@ -1,4 +1,5 @@
 "use client";
+import "react-phone-number-input/style.css";
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -7,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Company as CompanyType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import PhoneNumberInput from "react-phone-number-input";
 import { CheckCircle2 } from "lucide-react";
 import { getCompanySchema } from "@/lib/schemas";
 import request from "@/lib/request";
@@ -46,6 +48,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
           id: company.id,
           name: company.name,
           tin: company.tin,
+          email: company.email,
+          phone: company.phone,
+          website: company.website || "",
           description: company.description,
           descriptionRu: company.descriptionRu || "",
           slogan: company.slogan || "",
@@ -160,6 +165,54 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
                 <Input {...field} autoComplete="off" data-test="tin" />
               </FormControl>
               <FormMessage data-test="tin-error" />
+            </FormItem>
+          )}
+        />
+        {/* Email */}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("email")}</FormLabel>
+              <FormControl>
+                <Input {...field} autoComplete="off" data-test="email" />
+              </FormControl>
+              <FormMessage data-test="email-error" />
+            </FormItem>
+          )}
+        />
+        {/* Phone */}
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("phone")}</FormLabel>
+              <FormControl>
+                <PhoneNumberInput
+                  {...field}
+                  inputComponent={Input}
+                  international
+                  autoComplete="off"
+                  data-test="phone"
+                />
+              </FormControl>
+              <FormMessage data-test="phone-error" />
+            </FormItem>
+          )}
+        />
+        {/* Website */}
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("website")}</FormLabel>
+              <FormControl>
+                <Input {...field} autoComplete="off" data-test="website" />
+              </FormControl>
+              <FormMessage data-test="website-error" />
             </FormItem>
           )}
         />

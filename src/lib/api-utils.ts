@@ -33,3 +33,13 @@ export function getErrorResponse(
     { status }
   );
 }
+
+export function formatWebsiteUrl(website: string | undefined) {
+  if (
+    !website ||
+    website.startsWith("http://") ||
+    website.startsWith("https://")
+  )
+    return website;
+  return `http://${website}`;
+}

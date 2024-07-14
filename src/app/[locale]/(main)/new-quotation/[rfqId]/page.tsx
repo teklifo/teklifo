@@ -59,10 +59,14 @@ const NewQuotation = async ({ params: { rfqId } }: Props) => {
       {companyIsRequester ? (
         <p>Its yours RFQ!</p>
       ) : (
-        <>
-          <RFQMainInfo rfq={rfq} />
-          <QuotationForm rfq={rfq} />
-        </>
+        <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
+          <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
+            <QuotationForm rfq={rfq} />
+          </div>
+          <div className="order-first col-span-4 space-y-6 lg:order-none">
+            <RFQMainInfo rfq={rfq} displayRfqLink={true} />
+          </div>
+        </div>
       )}
     </MaxWidthWrapper>
   );

@@ -109,6 +109,9 @@ model Company {
   name                 String                @unique
   tin                  String                @unique
   image                CompanyImage?
+  email                String                @default("")
+  phone                String                @default("")
+  website              String?
   description          String
   descriptionRu        String?
   slogan               String?
@@ -263,6 +266,9 @@ model RequestForQuotation {
   title           String
   currency        String
   endDate         DateTime
+  contactPerson   String                    @default("")
+  email           String                    @default("")
+  phone           String                    @default("")
   description     String
   deliveryAddress String
   deliveryTerms   String
@@ -283,7 +289,7 @@ model RequestForQuotationItem {
   requestForQuotationId String
   lineNumber            Int
   productName           String
-  product               Product?             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product               Product?            @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId             Int?
   comment               String
   quantity              Decimal             @db.Decimal(15, 3)
@@ -302,21 +308,24 @@ model Participants {
 }
 
 model Quotation {
-  id           Int                 @id @default(autoincrement())
-  externalId   String?
-  company      Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId    String
-  rfq          RequestForQuotation @relation(fields: [rfqVersionId], references: [versionId], onDelete: Cascade)
-  rfqVersionId String
-  rfqId        String
-  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  currency     String
-  description  String
-  items        QuotationItem[]
-  totalAmount  Decimal             @db.Decimal(15, 2)
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
+  id            Int                 @id @default(autoincrement())
+  externalId    String?
+  company       Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId     String
+  rfq           RequestForQuotation @relation(fields: [rfqVersionId], references: [versionId], onDelete: Cascade)
+  rfqVersionId  String
+  rfqId         String
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  currency      String
+  contactPerson String              @default("")
+  email         String              @default("")
+  phone         String              @default("")
+  description   String
+  items         QuotationItem[]
+  totalAmount   Decimal             @db.Decimal(15, 2)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
 }
 
 model QuotationItem {
@@ -327,8 +336,8 @@ model QuotationItem {
   rfqItem          RequestForQuotationItem @relation(fields: [rfqItemVersionId], references: [versionId], onDelete: Cascade)
   rfqItemVersionId String
   rfqItemId        String
-  productName      String  
-  product          Product?                 @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productName      String
+  product          Product?                @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId        Int?
   quantity         Decimal                 @db.Decimal(15, 3)
   price            Decimal                 @db.Decimal(15, 2)

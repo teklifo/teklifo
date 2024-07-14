@@ -8,7 +8,9 @@ import {
   HelpCircle,
   Banknote,
   Building2,
+  FileInput,
 } from "lucide-react";
+import { Link } from "@/navigation";
 import MainInfoItem from "@/components/main-info-item";
 import CompanyInfo from "@/components/company/company-info";
 import {
@@ -19,6 +21,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { buttonVariants } from "@/components/ui/button";
 import { cn, localizedRelativeDate } from "@/lib/utils";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
@@ -35,6 +38,7 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
 
 type RFQMainInfoProps = {
   rfq: RequestForQuotationType;
+  displayRfqLink: boolean;
 };
 
 export const RFQDateInfo = ({
@@ -58,14 +62,18 @@ export const RFQDateInfo = ({
         <MainInfoItem
           icon={<Calendar />}
           title={t("endDate")}
-          content={format(endDate, "dd.MM.yyyy")}
+          content={
+            <div className="flex flex-row space-x-2">
+              <span>{format(endDate, "dd.MM.yyyy")}</span>
+              {daysLeft > 0 ? (
+                <Badge variant="outline">{t("daysLeft", { daysLeft })}</Badge>
+              ) : (
+                <Badge variant="destructive">{t("completed")}</Badge>
+              )}
+            </div>
+          }
           view={view}
         />
-        {daysLeft > 0 ? (
-          <Badge>{t("daysLeft", { daysLeft })}</Badge>
-        ) : (
-          <Badge variant="destructive">{t("completed")}</Badge>
-        )}
       </div>
     </>
   );
@@ -111,7 +119,7 @@ export const RFQType = ({ privateRequest }: { privateRequest: boolean }) => {
   );
 };
 
-const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
+const RFQMainInfo = ({ rfq, displayRfqLink }: RFQMainInfoProps) => {
   const t = useTranslations("RFQ");
 
   const locale = useLocale();
@@ -145,6 +153,18 @@ const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
           locale
         )}`}
       </p>
+      {displayRfqLink && (
+        <Link
+          href={`/rfq/${rfq.id}`}
+          className={cn(
+            buttonVariants({ variant: "secondary" }),
+            "text-center whitespace-normal h-auto space-x-2 lg:w-full"
+          )}
+        >
+          <FileInput />
+          <span>{t("viewRfq")}</span>
+        </Link>
+      )}
     </div>
   );
 };

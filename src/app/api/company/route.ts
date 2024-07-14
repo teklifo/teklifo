@@ -6,7 +6,11 @@ import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getPaginationData from "@/lib/pagination";
-import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
+import {
+  getTranslationsFromHeader,
+  getErrorResponse,
+  formatWebsiteUrl,
+} from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
@@ -28,8 +32,18 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
-      test.data;
+    const {
+      id,
+      name,
+      tin,
+      email,
+      phone,
+      website,
+      description,
+      descriptionRu,
+      slogan,
+      sloganRu,
+    } = test.data;
 
     // Check unique attributes
     const existingCompanies = await db.company.findMany({
@@ -73,6 +87,9 @@ export async function POST(request: NextRequest) {
         id,
         name,
         tin,
+        email,
+        phone,
+        website: formatWebsiteUrl(website),
         description,
         descriptionRu,
         slogan,

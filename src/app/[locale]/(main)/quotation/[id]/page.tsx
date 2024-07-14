@@ -101,9 +101,14 @@ const Quotation = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="my-8 space-y-6">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {`${t("quotation")} #${id}`}
-        </h1>
+        <div className="space-y-2">
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {rfq.title}
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            {`${t("quotation")} #${id}`}
+          </p>
+        </div>
         {companyOwnsQuotation && isAdmin && (
           <div className="flex space-x-2">
             {quotation.rfq.latestVersion && !rfqCompleted && (

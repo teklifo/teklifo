@@ -2,14 +2,18 @@ import { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { FileInput } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationForm from "@/components/quotation/quotation-form";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
+import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
+import { Link } from "@/navigation";
+import { cn } from "@/lib/utils";
 
 type Props = {
   params: { locale: string; id: string };
@@ -94,9 +98,14 @@ const EditQuotation = async ({ params: { id } }: Props) => {
         </h1>
         <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>
       </div>
-
-      <RFQMainInfo rfq={quotation.rfq} />
-      <QuotationForm quotation={quotation} rfq={quotation.rfq} />
+      <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
+        <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
+          <QuotationForm quotation={quotation} rfq={quotation.rfq} />
+        </div>
+        <div className="order-first col-span-4 space-y-6 lg:order-none">
+          <RFQMainInfo rfq={quotation.rfq} displayRfqLink={true} />
+        </div>
+      </div>
     </MaxWidthWrapper>
   );
 };

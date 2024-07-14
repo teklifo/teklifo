@@ -85,9 +85,9 @@ const RFQ = async ({ params: { id } }: Props) => {
           <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
             {title}
           </h1>
-          <p className="text-lg text-muted-foreground">{`${t(
-            "rfq"
-          )} #${number}`}</p>
+          <p className="text-lg text-muted-foreground">
+            {`${t("rfq")} #${number}`}
+          </p>
         </div>
         {companyIsRequester && isAdmin && (
           <div className="flex space-x-2">
@@ -167,7 +167,7 @@ const RFQ = async ({ params: { id } }: Props) => {
           )}
         </div>
         <div className="order-first col-span-4 space-y-6 lg:order-none">
-          <RFQMainInfo rfq={rfq} />
+          <RFQMainInfo rfq={rfq} displayRfqLink={false} />
           {companyIsParticipant && !completed && (
             <div className="absolute m-auto left-0 right-0 bottom-8 flex justify-center lg:bottom-0 lg:relative">
               <Link

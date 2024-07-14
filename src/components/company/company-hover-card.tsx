@@ -32,7 +32,7 @@ const CompanyHoverCard = ({
       <HoverCardTrigger asChild>
         <Link
           href={`/company/${id}`}
-          className="scroll-m-20 underline text-lg font-semibold tracking-tight break-all"
+          className="scroll-m-20 text-lg font-semibold tracking-tight break-all"
         >
           {name}
         </Link>
