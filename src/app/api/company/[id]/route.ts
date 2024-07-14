@@ -90,8 +90,18 @@ export async function PUT(
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { id, name, tin, description, descriptionRu, slogan, sloganRu } =
-      test.data;
+    const {
+      id,
+      name,
+      tin,
+      email,
+      phone,
+      website,
+      description,
+      descriptionRu,
+      slogan,
+      sloganRu,
+    } = test.data;
 
     // Check unique attributes
     const existingCompanies = await db.company.findMany({
@@ -144,6 +154,9 @@ export async function PUT(
         id,
         name,
         tin,
+        email,
+        phone,
+        website,
         description,
         descriptionRu,
         slogan,

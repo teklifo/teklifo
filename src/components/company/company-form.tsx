@@ -1,4 +1,5 @@
 "use client";
+import "react-phone-number-input/style.css";
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -7,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Company as CompanyType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import PhoneNumberInput from "react-phone-number-input";
 import { CheckCircle2 } from "lucide-react";
 import { getCompanySchema } from "@/lib/schemas";
 import request from "@/lib/request";
@@ -46,6 +48,9 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
           id: company.id,
           name: company.name,
           tin: company.tin,
+          email: company.email,
+          phone: company.phone,
+          website: company.website || "",
           description: company.description,
           descriptionRu: company.descriptionRu || "",
           slogan: company.slogan || "",
@@ -185,7 +190,13 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             <FormItem>
               <FormLabel>{t("phone")}</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete="off" data-test="phone" />
+                <PhoneNumberInput
+                  {...field}
+                  inputComponent={Input}
+                  international
+                  autoComplete="off"
+                  data-test="phone"
+                />
               </FormControl>
               <FormMessage data-test="phone-error" />
             </FormItem>
