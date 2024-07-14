@@ -163,6 +163,48 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
             </FormItem>
           )}
         />
+        {/* Email */}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("email")}</FormLabel>
+              <FormControl>
+                <Input {...field} autoComplete="off" data-test="email" />
+              </FormControl>
+              <FormMessage data-test="email-error" />
+            </FormItem>
+          )}
+        />
+        {/* Phone */}
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("phone")}</FormLabel>
+              <FormControl>
+                <Input {...field} autoComplete="off" data-test="phone" />
+              </FormControl>
+              <FormMessage data-test="phone-error" />
+            </FormItem>
+          )}
+        />
+        {/* Website */}
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("website")}</FormLabel>
+              <FormControl>
+                <Input {...field} autoComplete="off" data-test="website" />
+              </FormControl>
+              <FormMessage data-test="website-error" />
+            </FormItem>
+          )}
+        />
         <Tabs defaultValue="english">
           <TabsList>
             <TabsTrigger value="english">{t("english")}</TabsTrigger>

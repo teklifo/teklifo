@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { addDays } from "date-fns";
+import parsePhoneNumberFromString from "libphonenumber-js";
 import { TranslateFunction } from "@/types";
 
 export const getCompanySchema = (t: TranslateFunction) => {
@@ -26,6 +26,36 @@ export const getCompanySchema = (t: TranslateFunction) => {
       .refine((data) => /^\d+$/.test(data), {
         message: t("numericTin"),
       }),
+    email: z
+      .string({
+        required_error: t("invalidEmail"),
+        invalid_type_error: t("invalidEmail"),
+      })
+      .email({
+        message: t("invalidEmail"),
+      }),
+    phone: z
+      .string({
+        required_error: t("invalidPhone"),
+        invalid_type_error: t("invalidPhone"),
+      })
+      .transform((arg, ctx) => {
+        const phone = parsePhoneNumberFromString(arg, {
+          extract: false,
+        });
+
+        if (phone && phone.isValid()) {
+          return phone.number;
+        }
+
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("invalidPhone"),
+        });
+
+        return z.NEVER;
+      }),
+    website: z.string().optional(),
     description: z.string().default(""),
     descriptionRu: z.string().default(""),
     slogan: z.string().max(100, t("invalidSloganLenght")).default(""),

@@ -36,7 +36,7 @@ const Nav = ({ links, isCollapsed, label }: NavProps) => {
 
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) => {
-          const variant = link.href === pathname ? "secondary" : "ghost";
+          const variant = link.href === pathname ? "default" : "ghost";
 
           return isCollapsed ? (
             <Tooltip key={index} delayDuration={0}>
@@ -46,7 +46,7 @@ const Nav = ({ links, isCollapsed, label }: NavProps) => {
                   className={cn(
                     buttonVariants({ variant, size: "icon" }),
                     "h-9 w-9",
-                    variant === "secondary" &&
+                    variant === "default" &&
                       "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                   )}
                 >
@@ -69,7 +69,7 @@ const Nav = ({ links, isCollapsed, label }: NavProps) => {
               href={link.href}
               className={cn(
                 buttonVariants({ variant, size: "sm" }),
-                variant === "secondary" &&
+                variant === "default" &&
                   "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                 "justify-start"
               )}
@@ -80,7 +80,7 @@ const Nav = ({ links, isCollapsed, label }: NavProps) => {
                 <span
                   className={cn(
                     "ml-auto",
-                    variant === "secondary" && "text-background dark:text-white"
+                    variant === "default" && "text-background dark:text-white"
                   )}
                 >
                   {link.label}
