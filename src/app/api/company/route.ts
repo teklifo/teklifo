@@ -6,7 +6,11 @@ import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getPaginationData from "@/lib/pagination";
-import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
+import {
+  getTranslationsFromHeader,
+  getErrorResponse,
+  formatWebsiteUrl,
+} from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
@@ -85,7 +89,7 @@ export async function POST(request: NextRequest) {
         tin,
         email,
         phone,
-        website,
+        website: formatWebsiteUrl(website),
         description,
         descriptionRu,
         slogan,

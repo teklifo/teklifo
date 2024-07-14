@@ -7,7 +7,11 @@ import {
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getCompanySchema } from "@/lib/schemas";
-import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
+import {
+  getTranslationsFromHeader,
+  getErrorResponse,
+  formatWebsiteUrl,
+} from "@/lib/api-utils";
 
 type Props = {
   params: { id: string };
@@ -156,7 +160,7 @@ export async function PUT(
         tin,
         email,
         phone,
-        website,
+        website: formatWebsiteUrl(website),
         description,
         descriptionRu,
         slogan,
