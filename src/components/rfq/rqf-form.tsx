@@ -1,14 +1,14 @@
 "use client";
 import "react-phone-number-input/style.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
-import PhoneNumberInput from "react-phone-number-input";
+import PhoneNumberInput, { type Value } from "react-phone-number-input";
 import {
   Plus,
   CalendarIcon,
@@ -81,8 +81,8 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
       currency: rfq?.currency ?? "",
       endDate: rfq?.endDate,
       contactPerson: rfq?.contactPerson ?? "",
-      email: rfq ? rfq?.email : currentCompany.email,
-      phone: rfq ? rfq?.phone : currentCompany.phone,
+      email: "",
+      phone: "",
       description: rfq?.description ?? "",
       deliveryAddress: rfq?.deliveryAddress ?? "",
       deliveryTerms: rfq?.deliveryTerms ?? "",
@@ -101,6 +101,11 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
       }),
     },
   });
+
+  useEffect(() => {
+    form.setValue("email", rfq ? rfq.email : currentCompany.email);
+    form.setValue("phone", (rfq ? rfq.phone : currentCompany.phone) as Value);
+  }, [currentCompany.email, currentCompany.phone, form, rfq]);
 
   const items = useFieldArray({
     control: form.control,

@@ -1,12 +1,13 @@
 "use client";
 import "react-phone-number-input/style.css";
 
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
-import PhoneNumberInput from "react-phone-number-input";
+import PhoneNumberInput, { type Value } from "react-phone-number-input";
 import { List, Package, Phone } from "lucide-react";
 import {
   Form,
@@ -68,8 +69,8 @@ const QuotationForm = ({
       rfqId: rfq.id ?? "",
       currency: quotation?.currency ?? rfq.currency,
       contactPerson: quotation?.contactPerson ?? "",
-      email: quotation ? quotation?.email : currentCompany.email,
-      phone: quotation ? quotation?.phone : currentCompany.phone,
+      email: "",
+      phone: "",
       description: quotation?.description ?? "",
       items: rfq.items.map((rfqItem) => {
         const quotationItem = quotation?.items.find(
@@ -94,6 +95,14 @@ const QuotationForm = ({
       }),
     },
   });
+
+  useEffect(() => {
+    form.setValue("email", quotation ? quotation.email : currentCompany.email);
+    form.setValue(
+      "phone",
+      (quotation ? quotation.phone : currentCompany.phone) as Value
+    );
+  }, [currentCompany.email, currentCompany.phone, form, quotation]);
 
   const items = useFieldArray({
     control: form.control,
