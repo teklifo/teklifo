@@ -58,7 +58,7 @@ const QuotationItem = ({
 }: QuotationItemProps) => {
   const t = useTranslations("QuotationForm");
 
-  const locale = useLocale()
+  const locale = useLocale();
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
@@ -75,16 +75,16 @@ const QuotationItem = ({
   const vatRate = form.watch(`items.${index}.vatRate`);
   const vatRateInfo = getVatRatePercentage(vatRate);
   const vatAmount =
-    calculateVatAmount(amount, vatRateInfo.vatRatePercentage) || 0;
+    calculateVatAmount(amount, vatRateInfo.vatRatePercentage) ?? 0;
 
   const amountWithVat =
-    calculateAmountWithVat(amount, vatAmount, vatIncluded) || 0;
+    calculateAmountWithVat(amount, vatAmount, vatIncluded) ?? 0;
 
   const skip = form.watch(`items.${index}.skip`);
 
   useEffect(() => {
     const value = quantity * price;
-    setValue(`items.${index}.amount`, value || 0);
+    setValue(`items.${index}.amount`, value ?? 0);
   }, [index, setValue, price, quantity]);
 
   return (
@@ -280,7 +280,9 @@ const QuotationItem = ({
                           )}
                         >
                           {field.value ? (
-                             format(field.value, "PPP", {locale: dateFnsLocale(locale)})
+                            format(field.value, "PPP", {
+                              locale: dateFnsLocale(locale),
+                            })
                           ) : (
                             <span>{t("pickDate")}</span>
                           )}

@@ -1,14 +1,14 @@
 "use client";
 import "react-phone-number-input/style.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie, setCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Company as CompanyType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import PhoneNumberInput from "react-phone-number-input";
+import PhoneNumberInput, { type Value } from "react-phone-number-input";
 import { CheckCircle2 } from "lucide-react";
 import { getCompanySchema } from "@/lib/schemas";
 import request from "@/lib/request";
@@ -48,24 +48,32 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
           id: company.id,
           name: company.name,
           tin: company.tin,
-          email: company.email,
-          phone: company.phone,
-          website: company.website || "",
+          email: "",
+          phone: "",
+          website: company.website ?? "",
           description: company.description,
-          descriptionRu: company.descriptionRu || "",
-          slogan: company.slogan || "",
-          sloganRu: company.sloganRu || "",
+          descriptionRu: company.descriptionRu ?? "",
+          slogan: company.slogan ?? "",
+          sloganRu: company.sloganRu ?? "",
         }
       : {
           id: "",
           name: "",
           tin: "",
+          email: "",
+          phone: "",
+          website: "",
           description: "",
           descriptionRu: "",
           slogan: "",
           sloganRu: "",
         },
   });
+
+  useEffect(() => {
+    form.setValue("email", company?.email ?? "");
+    form.setValue("phone", (company?.phone ?? "") as Value);
+  }, [company?.email, company?.phone, form]);
 
   const onSubmit = async (values: z.infer<typeof companySchema>) => {
     setIsLoading(true);

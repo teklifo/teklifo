@@ -39,7 +39,7 @@ const NewRFQ = async () => {
         </h1>
         <p className="text-lg text-muted-foreground">{t("newSubtitle")}</p>
       </div>
-      <RFQForm />
+      <RFQForm currentCompany={company} />
     </MaxWidthWrapper>
   );
 };

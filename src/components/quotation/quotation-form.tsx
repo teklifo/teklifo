@@ -1,11 +1,14 @@
 "use client";
+import "react-phone-number-input/style.css";
 
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
-import type { Prisma } from "@prisma/client";
-import { List } from "lucide-react";
+import type { Prisma, Company as CompanyType } from "@prisma/client";
+import PhoneNumberInput, { type Value } from "react-phone-number-input";
+import { List, Package, Phone } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -14,11 +17,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import QuotationItem from "./quotation-item";
 import ConfirmQuotation from "./confirm-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
-import { Package } from "lucide-react";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -43,9 +46,14 @@ type RFQType = Prisma.RequestForQuotationGetPayload<{
 type QuotationFormProps = {
   rfq: RFQType;
   quotation?: QuotationType;
+  currentCompany: CompanyType;
 };
 
-const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
+const QuotationForm = ({
+  rfq,
+  quotation,
+  currentCompany,
+}: QuotationFormProps) => {
   const t = useTranslations("QuotationForm");
 
   const st = useTranslations("Schemas.quotationSchema");
@@ -56,34 +64,45 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
-      id: quotation?.id,
-      rfqVersionId: rfq.versionId,
-      rfqId: rfq.id,
-      currency: quotation?.currency || rfq.currency,
-      description: quotation?.description,
+      id: quotation?.id ?? 0,
+      rfqVersionId: rfq.versionId ?? "",
+      rfqId: rfq.id ?? "",
+      currency: quotation?.currency ?? rfq.currency,
+      contactPerson: quotation?.contactPerson ?? "",
+      email: "",
+      phone: "",
+      description: quotation?.description ?? "",
       items: rfq.items.map((rfqItem) => {
         const quotationItem = quotation?.items.find(
           (quotationItem) => quotationItem.rfqItemId === rfqItem.id
         );
         return {
-          id: quotationItem?.id,
+          id: quotationItem?.id ?? "",
           rfqItemVersionId: rfqItem.versionId,
-          rfqItemId: rfqItem.id,
+          rfqItemId: rfqItem.id ?? "",
           productName: rfqItem.productName,
-          productId: rfqItem.productId || 0,
-          product: rfqItem.product || undefined,
-          quantity: Number(quotationItem?.quantity) || 0,
-          price: Number(quotationItem?.price) || 0,
-          amount: Number(quotationItem?.price) || 0,
-          vatRate: quotationItem?.vatRate || "NOVAT",
-          vatIncluded: quotationItem?.vatIncluded || false,
-          deliveryDate: quotationItem?.deliveryDate || rfqItem.deliveryDate,
-          comment: quotationItem?.comment || "",
-          skip: quotationItem?.skip || false,
+          productId: rfqItem.productId ?? 0,
+          product: rfqItem.product ?? undefined,
+          quantity: Number(quotationItem?.quantity ?? rfqItem.quantity),
+          price: Number(quotationItem?.price ?? rfqItem.price),
+          amount: Number(quotationItem?.amount ?? 0),
+          vatRate: quotationItem?.vatRate ?? "NOVAT",
+          vatIncluded: quotationItem?.vatIncluded ?? false,
+          deliveryDate: quotationItem?.deliveryDate ?? rfqItem.deliveryDate,
+          comment: quotationItem?.comment ?? "",
+          skip: quotationItem?.skip ?? false,
         };
       }),
     },
   });
+
+  useEffect(() => {
+    form.setValue("email", quotation ? quotation.email : currentCompany.email);
+    form.setValue(
+      "phone",
+      (quotation ? quotation.phone : currentCompany.phone) as Value
+    );
+  }, [currentCompany.email, currentCompany.phone, form, quotation]);
 
   const items = useFieldArray({
     control: form.control,
@@ -93,6 +112,62 @@ const QuotationForm = ({ rfq, quotation }: QuotationFormProps) => {
   return (
     <Form {...form}>
       <form className="space-y-10">
+        <div className="space-y-4">
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Phone className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("contacts")}
+            </h3>
+          </div>
+          {/* Contact person*/}
+          <FormField
+            control={form.control}
+            name="contactPerson"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("contactPerson")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Email*/}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("email")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Phone*/}
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("phone")}</FormLabel>
+                <FormControl>
+                  <PhoneNumberInput
+                    {...field}
+                    inputComponent={Input}
+                    international
+                    autoComplete="off"
+                    data-test="phone"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <div className="space-y-4">
           <div className="flex flex-row items-center border-b pb-2 space-x-2">
             <Package className="w-8 h-8" />
