@@ -238,6 +238,39 @@ export const getRFQSchema = (t: TranslateFunction) => {
         }),
       })
       .min(new Date(Date.now()), t("invalidDate")),
+    contactPerson: z.string({
+      required_error: t("invalidContactPerson"),
+      invalid_type_error: t("invalidContactPerson"),
+    }),
+    email: z
+      .string({
+        required_error: t("invalidEmail"),
+        invalid_type_error: t("invalidEmail"),
+      })
+      .email({
+        message: t("invalidEmail"),
+      }),
+    phone: z
+      .string({
+        required_error: t("invalidPhone"),
+        invalid_type_error: t("invalidPhone"),
+      })
+      .transform((arg, ctx) => {
+        const phone = parsePhoneNumberFromString(arg, {
+          extract: false,
+        });
+
+        if (phone && phone.isValid()) {
+          return phone.number;
+        }
+
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("invalidPhone"),
+        });
+
+        return z.NEVER;
+      }),
     description: z.string().default(""),
     deliveryAddress: z.string().default(""),
     deliveryTerms: z.string().default(""),
@@ -307,6 +340,39 @@ export const getQuotationSchema = (t: TranslateFunction) => {
         invalid_type_error: t("invalidCurrency"),
       })
       .min(1, t("invalidCurrency")),
+    contactPerson: z.string({
+      required_error: t("invalidContactPerson"),
+      invalid_type_error: t("invalidContactPerson"),
+    }),
+    email: z
+      .string({
+        required_error: t("invalidEmail"),
+        invalid_type_error: t("invalidEmail"),
+      })
+      .email({
+        message: t("invalidEmail"),
+      }),
+    phone: z
+      .string({
+        required_error: t("invalidPhone"),
+        invalid_type_error: t("invalidPhone"),
+      })
+      .transform((arg, ctx) => {
+        const phone = parsePhoneNumberFromString(arg, {
+          extract: false,
+        });
+
+        if (phone && phone.isValid()) {
+          return phone.number;
+        }
+
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("invalidPhone"),
+        });
+
+        return z.NEVER;
+      }),
     description: z.string().default(""),
     items: z.array(getQuotationItemSchema(t)).min(1, t("invalidProducts")),
   });

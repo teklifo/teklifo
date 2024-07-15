@@ -91,7 +91,7 @@ const EditRFQ = async ({ params: { id } }: Props) => {
         <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>
       </div>
       <div className="mt-4">
-        <RFQForm rfq={rfq} />
+        <RFQForm rfq={rfq} currentCompany={company} />
       </div>
     </MaxWidthWrapper>
   );

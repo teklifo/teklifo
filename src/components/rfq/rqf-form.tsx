@@ -1,4 +1,5 @@
 "use client";
+import "react-phone-number-input/style.css";
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -7,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
+import PhoneNumberInput from "react-phone-number-input";
 import {
   Plus,
   CalendarIcon,
@@ -14,8 +16,9 @@ import {
   Info,
   Package,
   Text,
+  Phone,
 } from "lucide-react";
-import type { Prisma } from "@prisma/client";
+import type { Prisma, Company as CompanyType } from "@prisma/client";
 import RFQItem from "./rfq-item";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,9 +56,10 @@ type RFQType = Prisma.RequestForQuotationGetPayload<{
 
 type RFQFormProps = {
   rfq?: RFQType;
+  currentCompany: CompanyType;
 };
 
-const RFQForm = ({ rfq }: RFQFormProps) => {
+const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
   const t = useTranslations("RFQForm");
 
   const locale = useLocale();
@@ -71,19 +75,22 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: rfq?.id,
-      title: rfq?.title,
-      privateRequest: rfq?.privateRequest,
-      currency: rfq?.currency,
+      id: rfq?.id ?? "",
+      title: rfq?.title ?? "",
+      privateRequest: rfq?.privateRequest ?? false,
+      currency: rfq?.currency ?? "",
       endDate: rfq?.endDate,
-      description: rfq?.description,
-      deliveryAddress: rfq?.deliveryAddress,
-      deliveryTerms: rfq?.deliveryTerms,
-      paymentTerms: rfq?.paymentTerms,
+      contactPerson: rfq?.contactPerson ?? "",
+      email: rfq ? rfq?.email : currentCompany.email,
+      phone: rfq ? rfq?.phone : currentCompany.phone,
+      description: rfq?.description ?? "",
+      deliveryAddress: rfq?.deliveryAddress ?? "",
+      deliveryTerms: rfq?.deliveryTerms ?? "",
+      paymentTerms: rfq?.paymentTerms ?? "",
       items: rfq?.items.map((rfqItem) => {
         return {
-          id: rfqItem.id,
-          productName: rfqItem.productName,
+          id: rfqItem.id ?? "",
+          productName: rfqItem.productName ?? "",
           productId: rfqItem.productId ?? undefined,
           product: rfqItem.product || undefined,
           quantity: Number(rfqItem.quantity),
@@ -244,6 +251,62 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
             )}
           />
         </div>
+        <div className="space-y-4">
+          <div className="flex flex-row items-center border-b pb-2 space-x-2">
+            <Phone className="w-8 h-8" />
+            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+              {t("contacts")}
+            </h3>
+          </div>
+          {/* Contact person*/}
+          <FormField
+            control={form.control}
+            name="contactPerson"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("contactPerson")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Email*/}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("email")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Phone*/}
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("phone")}</FormLabel>
+                <FormControl>
+                  <PhoneNumberInput
+                    {...field}
+                    inputComponent={Input}
+                    international
+                    autoComplete="off"
+                    data-test="phone"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         {/* Items */}
         <div className="space-y-4">
           <div className="flex flex-row items-center border-b pb-2 space-x-2">
@@ -272,8 +335,13 @@ const RFQForm = ({ rfq }: RFQFormProps) => {
               type="button"
               className="space-x-2"
               onClick={() =>
-                // @ts-ignore
-                items.append()
+                items.append({
+                  productName: "",
+                  quantity: 0,
+                  price: 0,
+                  deliveryDate: new Date(),
+                  comment: "",
+                })
               }
             >
               <Plus />

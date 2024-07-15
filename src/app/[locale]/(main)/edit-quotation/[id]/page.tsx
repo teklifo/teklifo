@@ -100,7 +100,11 @@ const EditQuotation = async ({ params: { id } }: Props) => {
       </div>
       <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
         <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
-          <QuotationForm quotation={quotation} rfq={quotation.rfq} />
+          <QuotationForm
+            quotation={quotation}
+            rfq={quotation.rfq}
+            currentCompany={company}
+          />
         </div>
         <div className="order-first col-span-4 space-y-6 lg:order-none">
           <RFQMainInfo rfq={quotation.rfq} displayRfqLink={true} />

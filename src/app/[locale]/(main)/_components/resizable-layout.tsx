@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/resizable";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type ResizableLayoutProps = {
   defaultCollapsed: boolean;
@@ -74,11 +75,13 @@ const ResizableLayout = ({
               "min-w-[50px] transition-all duration-300 ease-in-out"
           )}
         >
-          <Menu
-            isCollapsed={isCollapsed}
-            defaultCompany={defaultCompany}
-            userCompanies={userCompanies}
-          />
+          <ScrollArea className="h-full">
+            <Menu
+              isCollapsed={isCollapsed}
+              defaultCompany={defaultCompany}
+              userCompanies={userCompanies}
+            />
+          </ScrollArea>
         </ResizablePanel>
         <ResizableHandle withHandle className="hidden xl:flex" />
         <ResizablePanel
