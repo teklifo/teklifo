@@ -2,18 +2,14 @@ import { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { FileInput } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import QuotationForm from "@/components/quotation/quotation-form";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
-import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
-import { Link } from "@/navigation";
-import { cn } from "@/lib/utils";
 
 type Props = {
   params: { locale: string; id: string };

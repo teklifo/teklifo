@@ -2,14 +2,13 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ArrowRightCircle } from "lucide-react";
-import type { Prisma } from "@prisma/client";
+import { BriefcaseBusiness } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import QuotationCard from "@/components/quotation/quotation-card";
+import RFQCard from "@/components/rfq/rfq-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import request from "@/lib/request";
-import { PaginationType } from "@/types";
+import { PaginationType, RFQWithQuotationsType } from "@/types";
 
 type Props = {
   params: { locale: string };
@@ -18,24 +17,8 @@ type Props = {
   };
 };
 
-type QuotationType = Prisma.QuotationGetPayload<{
-  include: {
-    company: true;
-    rfq: {
-      include: {
-        company: true;
-      };
-    };
-    items: {
-      include: {
-        product: true;
-      };
-    };
-  };
-}>;
-
 type PaginatedData = {
-  result: QuotationType[];
+  result: RFQWithQuotationsType[];
   pagination: PaginationType;
 };
 
@@ -45,19 +28,19 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("incomingQuotationTitle"),
-    description: t("incomingQuotationDescription"),
+    title: t("myQuotationsTitle"),
+    description: t("myQuotationsDescription"),
   };
 };
 
-const getIncomingQuotations = async (companyId: string, page: number) => {
+const getMyQuotations = async (companyId: string, page: number) => {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/quotation?rfqCompanyId=${companyId}&page=${page}&limit=10`,
+      `/api/rfq?participantId=${companyId}&page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -71,16 +54,16 @@ const getIncomingQuotations = async (companyId: string, page: number) => {
   }
 };
 
-const IncomingQuotation = async ({ searchParams: { page } }: Props) => {
+const MyQuotations = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
-  const data = await getIncomingQuotations(company.id, page ?? 1);
+  const data = await getMyQuotations(company.id, page ?? 1);
   if (!data) return notFound();
 
   const { result, pagination } = data;
 
-  const t = await getTranslations("IncomingQuotations");
+  const t = await getTranslations("MyQuotations");
 
   return (
     <MaxWidthWrapper className="my-8">
@@ -93,30 +76,23 @@ const IncomingQuotation = async ({ searchParams: { page } }: Props) => {
       <div className="mt-4">
         {result.length > 0 ? (
           <div className="flex flex-col space-y-3 pt-4">
-            {result.map((quotation) => (
-              <QuotationCard
-                key={quotation.id}
-                quotation={quotation}
-                currentCompany={company}
-              />
+            {result.map((rfq) => (
+              <RFQCard key={rfq.id} rfq={rfq} currentCompany={company} />
             ))}
           </div>
         ) : (
           <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-            <ArrowRightCircle className="w-48 h-48" />
+            <BriefcaseBusiness className="w-48 h-48" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
-              {t("noIncomingQuotation")}
+              {t("noMyQuotations")}
             </h2>
           </div>
         )}
-        <PaginationBar
-          href={`/incoming-quotation?page=`}
-          pagination={pagination}
-        />
+        <PaginationBar href={`/my-quotations?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>
   );
 };
 
-export default IncomingQuotation;
+export default MyQuotations;

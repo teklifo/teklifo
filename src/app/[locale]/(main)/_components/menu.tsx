@@ -11,9 +11,7 @@ import {
   Warehouse,
   Coins,
   FileInput,
-  FileOutput,
-  ArrowRightCircle,
-  ArrowLeftCircle,
+  BriefcaseBusiness,
 } from "lucide-react";
 import Nav from "./nav";
 import CompanySwitcher from "./company-switcher";
@@ -59,16 +57,16 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
         isCollapsed={isCollapsed}
         links={[
           {
-            title: t("myPurchases"),
+            title: t("myRFQ"),
             label: "",
             icon: FileInput,
-            href: `/my-purchases`,
+            href: `/my-rfq`,
           },
           {
-            title: t("sales"),
+            title: t("myQuotations"),
             label: "",
-            icon: FileOutput,
-            href: 'incoming-rfq',
+            icon: BriefcaseBusiness,
+            href: "/my-quotations",
           },
         ]}
       />
