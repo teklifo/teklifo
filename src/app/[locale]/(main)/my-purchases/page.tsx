@@ -33,8 +33,8 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("outgoingRfqTitle"),
-    description: t("outgoingRfqDescription"),
+    title: t("myPurchasesTitle"),
+    description: t("myPurchasesDescription"),
   };
 };
 
@@ -59,7 +59,7 @@ const getCompanyRFQ = async (companyId: string, page: number) => {
   }
 };
 
-const OutgoingRFQ = async ({ searchParams: { page } }: Props) => {
+const MyPurchases = async ({ searchParams: { page } }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
@@ -70,7 +70,7 @@ const OutgoingRFQ = async ({ searchParams: { page } }: Props) => {
 
   const { result, pagination } = data;
 
-  const t = await getTranslations("OutgoingRFQ");
+  const t = await getTranslations("MyPurchases");
 
   return (
     <MaxWidthWrapper className="my-8">
@@ -94,19 +94,19 @@ const OutgoingRFQ = async ({ searchParams: { page } }: Props) => {
           <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
             <FileOutput className="w-48 h-48" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
-              {t("noOutgoingRFQ")}
+              {t("noMyPurchases")}
             </h2>
             {isAdmin && (
               <>
                 <span className="leading-7 tracking-tight max-w-sm text-muted-foreground">
-                  {t("noOutgoingRFQHint")}
+                  {t("noMyPurchasesHint")}
                 </span>
                 <NewRFQLink />
               </>
             )}
           </div>
         )}
-        <PaginationBar href={`/outgoing-rfq?page=`} pagination={pagination} />
+        <PaginationBar href={`/my-purchases?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>
@@ -114,7 +114,7 @@ const OutgoingRFQ = async ({ searchParams: { page } }: Props) => {
 };
 
 async function NewRFQLink() {
-  const t = await getTranslations("OutgoingRFQ");
+  const t = await getTranslations("MyPurchases");
 
   return (
     <Link
@@ -127,4 +127,4 @@ async function NewRFQLink() {
   );
 }
 
-export default OutgoingRFQ;
+export default MyPurchases;

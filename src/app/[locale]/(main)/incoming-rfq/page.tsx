@@ -88,7 +88,7 @@ const IncomingRFQ = async ({ searchParams: { page } }: Props) => {
             </h2>
           </div>
         )}
-        <PaginationBar href={`/outgoing-rfq?page=`} pagination={pagination} />
+        <PaginationBar href={`/incoming-rfq?page=`} pagination={pagination} />
         <div />
       </div>
     </MaxWidthWrapper>

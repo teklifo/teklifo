@@ -65,7 +65,7 @@ const DeleteRFQ = ({ rfq }: Props) => {
 
       setOpen(false);
 
-      window.location.href = "/outgoing-rfq";
+      window.location.href = "/my-purchases";
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;

@@ -44,7 +44,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
       </div>
       <Separator />
       <Nav
-        label={t("main")}
         isCollapsed={isCollapsed}
         links={[
           {
@@ -57,45 +56,24 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
       />
       <Separator />
       <Nav
-        label={t("purchases")}
         isCollapsed={isCollapsed}
         links={[
           {
-            title: t("outgoingRfq"),
-            label: "",
-            icon: FileOutput,
-            href: `/outgoing-rfq`,
-          },
-          {
-            title: t("incomingQuotation"),
-            label: "",
-            icon: ArrowRightCircle,
-            href: `/incoming-quotation`,
-          },
-        ]}
-      />
-      <Separator />
-      <Nav
-        label={t("sales")}
-        isCollapsed={isCollapsed}
-        links={[
-          {
-            title: t("incomingRfq"),
+            title: t("myPurchases"),
             label: "",
             icon: FileInput,
-            href: `/incoming-rfq`,
+            href: `/my-purchases`,
           },
           {
-            title: t("outgoingQuotation"),
+            title: t("sales"),
             label: "",
-            icon: ArrowLeftCircle,
-            href: `/outgoing-quotation`,
+            icon: FileOutput,
+            href: 'incoming-rfq',
           },
         ]}
       />
       <Separator />
       <Nav
-        label={t("catalogs")}
         isCollapsed={isCollapsed}
         links={[
           {
@@ -120,7 +98,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
       />
       <Separator />
       <Nav
-        label={t("team")}
         isCollapsed={isCollapsed}
         links={[
           {
