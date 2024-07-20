@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { cn, getAvatarFallback, localizedRelativeDate } from "@/lib/utils";
 import { RFQDateInfo } from "../rfq/rfq-main-info";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -41,54 +40,6 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
     currentCompany?.id === rfq.company.id ? company : rfq.company;
 
   return (
-    // <Link href={`/quotation/${id}`}>
-    //   <Card
-    //     className={cn(
-    //       "h-full w-full",
-    //       !rfq.latestVersion && "text-muted-foreground"
-    //     )}
-    //   >
-    //     <CardHeader>
-    //       <QuotationOutdated
-    //         rfq={rfq}
-    //         currentCompanyId={currentCompany?.id}
-    //         className="mb-2"
-    //       />
-    //       <CardTitle>{rfq.title}</CardTitle>
-    //       <CardDescription>{`${t("quotation")} #${id}`}</CardDescription>
-    //     </CardHeader>
-    //     <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
-    //       {currentCompany?.id === rfq.company.id ? (
-    //         <CompanyInfo
-    //           company={company}
-    //           icon={<Briefcase />}
-    //           title={t("quotationCompany")}
-    //           view="horizontal"
-    //         />
-    //       ) : (
-    //         <CompanyInfo
-    //           company={rfq.company}
-    //           icon={<Building2 />}
-    //           title={t("requestCompany")}
-    //           view="horizontal"
-    //         />
-    //       )}
-    //       <Separator />
-    //       <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
-    //       <Separator />
-    //       <QuotationTotal quotation={quotation} view="horizontal" />
-    //       <Separator />
-    //       <CardDescription>
-    //         {`${t("updatedAt")}: ${localizedRelativeDate(
-    //           new Date(updatedAt),
-    //           new Date(),
-    //           locale
-    //         )}`}
-    //       </CardDescription>
-    //     </CardContent>
-    //   </Card>
-    // </Link>
-
     <Card
       className={cn(
         "grid grid-cols-1 gap-0 md:grid-cols-12 md:gap-4",
@@ -108,9 +59,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
           </CardHeader>
           <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
             <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
-            <Separator />
             <QuotationTotal quotation={quotation} view="horizontal" />
-            <Separator />
             <CardDescription>
               {`${t("updatedAt")}: ${localizedRelativeDate(
                 new Date(updatedAt),

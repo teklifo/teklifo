@@ -32,9 +32,14 @@ const CompanyHoverCard = ({
       <HoverCardTrigger asChild>
         <Link
           href={`/company/${id}`}
-          className="scroll-m-20 text-lg font-semibold tracking-tight break-all"
+          className="flex flex-row space-x-2 items-center"
         >
-          {name}
+          <Avatar>
+            <AvatarFallback>{getAvatarFallback(name)}</AvatarFallback>
+          </Avatar>
+          <span className="scroll-m-20 text-lg font-semibold tracking-tight break-all">
+            {name}
+          </span>
         </Link>
       </HoverCardTrigger>
       <HoverCardContent className="w-80">

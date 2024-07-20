@@ -25,9 +25,6 @@ const CompanyInfo = ({ company, icon, title, view }: CompanyInfoProps) => {
         content={<CompanyHoverCard company={company} />}
         view={view}
       />
-      <Avatar>
-        <AvatarFallback>{getAvatarFallback(company.name)}</AvatarFallback>
-      </Avatar>
     </div>
   );
 };
