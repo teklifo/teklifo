@@ -139,7 +139,7 @@ const ConfirmQuotation = ({ rfq, quotation }: ConfirmQuotationProps) => {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>
-        <Button size="lg" className="w-full space-x-2">
+        <Button size="lg" className="space-x-2">
           <BriefcaseBusiness />
           <span>{t("sendQuotation")}</span>
         </Button>

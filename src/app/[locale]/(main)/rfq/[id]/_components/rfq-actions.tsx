@@ -5,6 +5,7 @@ import { Link } from "@/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
+import QuotationForm from "@/components/quotation/quotation-form";
 import DeleteRFQ from "./delete-rfq";
 import ShareRFQ from "./share-rfq";
 
@@ -44,17 +45,8 @@ const RFQActions = async ({ rfq }: RFQActions) => {
 
   return (
     <div className="flex flex-col space-y-2">
-      {companyIsParticipant && !completed && (
-        <Link
-          href={`/new-quotation/${rfq.id}`}
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "text-center whitespace-normal h-auto space-x-2 lg:w-full"
-          )}
-        >
-          <BriefcaseBusiness />
-          <span>{t("createQuotation")}</span>
-        </Link>
+      {company && companyIsParticipant && !completed && (
+        <QuotationForm rfq={rfq} currentCompany={company} />
       )}
       {companyIsRequester && <ShareRFQ />}
       {companyIsRequester && isAdmin && !completed && (

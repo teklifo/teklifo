@@ -342,10 +342,12 @@ export const getQuotationSchema = (t: TranslateFunction) => {
         invalid_type_error: t("invalidCurrency"),
       })
       .min(1, t("invalidCurrency")),
-    contactPerson: z.string({
-      required_error: t("invalidContactPerson"),
-      invalid_type_error: t("invalidContactPerson"),
-    }),
+    contactPerson: z
+      .string({
+        required_error: t("invalidContactPerson"),
+        invalid_type_error: t("invalidContactPerson"),
+      })
+      .min(1, t("invalidContactPerson")),
     email: z
       .string({
         required_error: t("invalidEmail"),
