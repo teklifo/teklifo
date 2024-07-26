@@ -6,7 +6,7 @@ import { getCookie } from "cookies-next";
 import * as z from "zod";
 import type { Prisma } from "@prisma/client";
 import { useFormContext } from "react-hook-form";
-import { ArrowRightCircle } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -140,7 +140,7 @@ const ConfirmQuotation = ({ rfq, quotation }: ConfirmQuotationProps) => {
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>
         <Button size="lg" className="w-full space-x-2">
-          <ArrowRightCircle />
+          <BriefcaseBusiness />
           <span>{t("sendQuotation")}</span>
         </Button>
       </AlertDialogTrigger>

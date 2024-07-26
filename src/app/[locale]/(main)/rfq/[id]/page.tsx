@@ -9,11 +9,15 @@ import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
 import { localizedRelativeDate } from "@/lib/utils";
 import RFQActions from "./_components/rfq-actions";
+import RFQData from "./_components/rfq-data";
 import RFQItemCard from "./_components/rfq-item-card";
 import SentQuotations from "./_components/sent-quotations";
 
 type Props = {
   params: { locale: string; id: string };
+  searchParams: {
+    page?: number;
+  };
 };
 
 export const generateMetadata = async ({
@@ -36,7 +40,7 @@ export const generateMetadata = async ({
   };
 };
 
-const RFQ = async ({ params: { id } }: Props) => {
+const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
   const t = await getTranslations("RFQ");
 
   const locale = useLocale();
@@ -52,25 +56,16 @@ const RFQ = async ({ params: { id } }: Props) => {
     return notFound();
   }
 
-  const {
-    title,
-    number,
-    description,
-    currency,
-    items,
-    paymentTerms,
-    deliveryAddress,
-    deliveryTerms,
-  } = rfq;
+  const { title, number, currency, items } = rfq;
 
   return (
-    <MaxWidthWrapper className="my-8">
+    <MaxWidthWrapper className="mt-8 mb-20">
       <div className="space-y-2">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {title}
         </h1>
-        <p className="text-lg text-muted-foreground">
-          {`${t("rfq")} #${number}`}
+        <p className="text-sm text-muted-foreground">
+          {`${t("rfqNumber")}: ${number}`}
         </p>
       </div>
       <div className="grid grid-cols-1 mt-6 gap-0 gap-y-6 lg:grid-cols-12 lg:gap-4">
@@ -88,7 +83,10 @@ const RFQ = async ({ params: { id } }: Props) => {
           </p>
         </div>
       </div>
-      <Tabs defaultValue="main" className="mt-8">
+      <Tabs
+        defaultValue={(page ?? 0) > 1 ? "quotations" : "main"}
+        className="mt-8"
+      >
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="main">{t("main")}</TabsTrigger>
           <TabsTrigger value="items">
@@ -97,45 +95,10 @@ const RFQ = async ({ params: { id } }: Props) => {
           <TabsTrigger value="quotations">{t("quotations")}</TabsTrigger>
         </TabsList>
         <TabsContent value="main">
-          {(paymentTerms || deliveryTerms || deliveryAddress) && (
-            <div className="space-y-4">
-              {description && (
-                <div className="space-y-2">
-                  <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    {t("description")}
-                  </h3>
-                  <div className="whitespace-pre-line">{description}</div>
-                </div>
-              )}
-              {paymentTerms && (
-                <div className="space-y-2">
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    {t("paymentTerms")}
-                  </h4>
-                  <p className="whitespace-pre-line">{paymentTerms}</p>
-                </div>
-              )}
-              {deliveryTerms && (
-                <div className="space-y-2">
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    {t("deliveryTerms")}
-                  </h4>
-                  <p className="whitespace-pre-line">{deliveryTerms}</p>
-                </div>
-              )}
-              {deliveryAddress && (
-                <div className="space-y-2">
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    {t("deliveryAddress")}
-                  </h4>
-                  <p className="whitespace-pre-line">{deliveryAddress}</p>
-                </div>
-              )}
-            </div>
-          )}
+          <RFQData rfq={rfq} />
         </TabsContent>
         <TabsContent value="items">
-          <div className="space-y-4">
+          <div className="space-y-4 mt-4">
             {items.map((item, index) => (
               <RFQItemCard
                 key={index}
@@ -147,7 +110,7 @@ const RFQ = async ({ params: { id } }: Props) => {
           </div>
         </TabsContent>
         <TabsContent value="quotations">
-          <SentQuotations rfqId={rfq.id} rfqVersionId={rfq.versionId} />
+          <SentQuotations rfqId={rfq.id} page={page ?? 1} />
         </TabsContent>
       </Tabs>
     </MaxWidthWrapper>

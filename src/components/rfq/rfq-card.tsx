@@ -33,18 +33,18 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
         <Link href={`/rfq/${id}`}>
           <CardHeader>
             <CardTitle>{title}</CardTitle>
-            <CardDescription>{`${t("rfq")} #${number}`}</CardDescription>
+            <CardDescription>{`${t("rfqNumber")}: ${number}`}</CardDescription>
           </CardHeader>
-          <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
+          <CardContent className="space-y-4 p-4 pt-0 md:p-6 md:pt-0">
             {currentCompany?.id === rfq.company.id ? (
               <Badge variant="outline">
                 {`${t("quotationsRecieved", {
                   count: _count.quotations,
                 })}`}
               </Badge>
-            ) : (
-              <>{_count.quotations && <Badge>{t("quotationsIsSent")}</Badge>}</>
-            )}
+            ) : _count.quotations ? (
+              <Badge>{t("quotationsIsSent")}</Badge>
+            ) : null}
             <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
             <CardDescription>
               {`${t("updatedAt")}: ${localizedRelativeDate(

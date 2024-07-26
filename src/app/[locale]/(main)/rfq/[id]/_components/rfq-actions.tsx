@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Pencil, ArrowRightCircle } from "lucide-react";
+import { Pencil, BriefcaseBusiness } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
 import { buttonVariants } from "@/components/ui/button";
@@ -52,7 +52,7 @@ const RFQActions = async ({ rfq }: RFQActions) => {
             "text-center whitespace-normal h-auto space-x-2 lg:w-full"
           )}
         >
-          <ArrowRightCircle />
+          <BriefcaseBusiness />
           <span>{t("createQuotation")}</span>
         </Link>
       )}
