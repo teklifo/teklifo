@@ -7,16 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
-import PhoneNumberInput, { type Value } from "react-phone-number-input";
-import { BriefcaseBusiness, List, Package, Phone } from "lucide-react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import type { Value } from "react-phone-number-input";
+import { BriefcaseBusiness } from "lucide-react";
+import { Form } from "@/components/ui/form";
 import {
   Dialog,
   DialogContent,
@@ -26,12 +19,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import QuotationItem from "./quotation-item";
 import ConfirmQuotation from "./confirm-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
+import QuotationFormContatcs from "./quotation-form-contacts";
+import QuotationFormAdditional from "./quotation-form-additional";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -134,107 +128,38 @@ const QuotationForm = ({
         </DialogHeader>
         <Form {...form}>
           <form className="flex-auto overflow-auto p-4 space-y-10">
-            <div className="space-y-4">
-              <div className="flex flex-row items-center border-b pb-2 space-x-2">
-                <Phone className="w-8 h-8" />
-                <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-                  {t("contacts")}
-                </h3>
-              </div>
-              {/* Contact person*/}
-              <FormField
-                control={form.control}
-                name="contactPerson"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("contactPerson")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} autoComplete="off" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* Email*/}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("email")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} autoComplete="off" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* Phone*/}
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("phone")}</FormLabel>
-                    <FormControl>
-                      <PhoneNumberInput
-                        {...field}
-                        inputComponent={Input}
-                        international
-                        autoComplete="off"
-                        data-test="phone"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="space-y-4">
-              <div className="flex flex-row items-center border-b pb-2 space-x-2">
-                <Package className="w-8 h-8" />
-                <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-                  {`${t("items")} (${form.getValues("items")?.length || 0})`}
-                </h3>
-              </div>
-              {items.fields.map((productField, index) => {
-                const rfqItem = rfq.items.find(
-                  (e) => e.id === productField.rfqItemId
-                );
-                if (!rfqItem) return null;
+            <Tabs defaultValue="contacts">
+              <TabsList className="grid max-w-max grid-cols-3">
+                <TabsTrigger value="contacts">{t("contacts")}</TabsTrigger>
+                <TabsTrigger value="items">{t("items")}</TabsTrigger>
+                <TabsTrigger value="additional">{t("additional")}</TabsTrigger>
+              </TabsList>
+              <TabsContent value="contacts">
+                <QuotationFormContatcs />
+              </TabsContent>
+              <TabsContent value="items">
+                <div className="space-y-4">
+                  {items.fields.map((productField, index) => {
+                    const rfqItem = rfq.items.find(
+                      (e) => e.id === productField.rfqItemId
+                    );
+                    if (!rfqItem) return null;
 
-                return (
-                  <QuotationItem
-                    rfqItem={rfqItem}
-                    key={index}
-                    productField={productField}
-                    index={index}
-                  />
-                );
-              })}
-            </div>
-            <div className="space-y-4">
-              <div className="flex flex-row items-center border-b pb-2 space-x-2">
-                <List className="w-8 h-8" />
-                <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-                  {t("additional")}
-                </h3>
-              </div>
-              {/* Description*/}
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("description")}</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} rows={10} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                    return (
+                      <QuotationItem
+                        rfqItem={rfqItem}
+                        key={index}
+                        productField={productField}
+                        index={index}
+                      />
+                    );
+                  })}
+                </div>
+              </TabsContent>
+              <TabsContent value="additional">
+                <QuotationFormAdditional />
+              </TabsContent>
+            </Tabs>
           </form>
           <DialogFooter>
             <ConfirmQuotation rfq={rfq} quotation={quotation} />

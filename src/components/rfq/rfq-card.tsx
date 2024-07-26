@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getAvatarFallback, localizedRelativeDate } from "@/lib/utils";
 import { RFQWithQuotationsType } from "@/types";
