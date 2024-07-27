@@ -4,7 +4,7 @@ import "react-phone-number-input/style.css";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
 import type { Value } from "react-phone-number-input";
@@ -21,11 +21,12 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import QuotationItem from "./quotation-item";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import QuotationFormContatcs from "./quotation-form-contacts";
+import QuotationItemsTable from "./quotation-form-items-table";
+import QuotationFormAdditional from "./quotation-form-additional";
 import ConfirmQuotation from "./confirm-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
-import QuotationFormContatcs from "./quotation-form-contacts";
-import QuotationFormAdditional from "./quotation-form-additional";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -88,7 +89,7 @@ const QuotationForm = ({
           productId: rfqItem.productId ?? 0,
           product: rfqItem.product ?? undefined,
           quantity: Number(quotationItem?.quantity ?? rfqItem.quantity),
-          price: Number(quotationItem?.price ?? rfqItem.price),
+          price: Number(quotationItem?.price ?? 0),
           amount: Number(quotationItem?.amount ?? 0),
           vatRate: quotationItem?.vatRate ?? "NOVAT",
           vatIncluded: quotationItem?.vatIncluded ?? false,
@@ -108,11 +109,6 @@ const QuotationForm = ({
     );
   }, [currentCompany.email, currentCompany.phone, form, quotation]);
 
-  const items = useFieldArray({
-    control: form.control,
-    name: "items",
-  });
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -121,47 +117,34 @@ const QuotationForm = ({
           <span>{t("createQuotation")}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="flex flex-col space-y-8 max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%]">
+      <DialogContent className="px-0 flex flex-col space-y-8 max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%] sm:p-6">
         <DialogHeader className="flex-initial">
           <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>{t("subtitle")}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="flex-auto overflow-auto p-4 space-y-10">
-            <Tabs defaultValue="contacts">
-              <TabsList className="grid max-w-max grid-cols-3">
-                <TabsTrigger value="contacts">{t("contacts")}</TabsTrigger>
+          <form className="flex-auto p-4 space-y-10">
+            <Tabs defaultValue="items" className="h-full">
+              <TabsList className="max-w-max">
                 <TabsTrigger value="items">{t("items")}</TabsTrigger>
+                <TabsTrigger value="contacts">{t("contacts")}</TabsTrigger>
                 <TabsTrigger value="additional">{t("additional")}</TabsTrigger>
               </TabsList>
+              <TabsContent value="items" className="h-full">
+                <ScrollArea className="w-full min-h-full">
+                  <QuotationItemsTable rfq={rfq} />
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </TabsContent>
               <TabsContent value="contacts">
                 <QuotationFormContatcs />
-              </TabsContent>
-              <TabsContent value="items">
-                <div className="space-y-4">
-                  {items.fields.map((productField, index) => {
-                    const rfqItem = rfq.items.find(
-                      (e) => e.id === productField.rfqItemId
-                    );
-                    if (!rfqItem) return null;
-
-                    return (
-                      <QuotationItem
-                        rfqItem={rfqItem}
-                        key={index}
-                        productField={productField}
-                        index={index}
-                      />
-                    );
-                  })}
-                </div>
               </TabsContent>
               <TabsContent value="additional">
                 <QuotationFormAdditional />
               </TabsContent>
             </Tabs>
           </form>
-          <DialogFooter>
+          <DialogFooter className="px-6">
             <ConfirmQuotation rfq={rfq} quotation={quotation} />
           </DialogFooter>
         </Form>
