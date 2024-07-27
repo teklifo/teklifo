@@ -1,19 +1,23 @@
-import { InputHTMLAttributes, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Control, FieldArrayWithId, useFormContext } from "react-hook-form";
+import {
+  Control,
+  ControllerRenderProps,
+  FieldArrayWithId,
+  useFormContext,
+} from "react-hook-form";
 import * as z from "zod";
-import { CalendarIcon, HelpCircle } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { RequestForQuotationItem, VatRates } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TableCell, TableRow } from "@/components/ui/table";
 import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
+  useFormField,
 } from "@/components/ui/form";
 import {
   Select,
@@ -22,6 +26,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -30,8 +40,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { getQuotationSchema } from "@/lib/schemas";
 import { cn, dateFnsLocale } from "@/lib/utils";
 import {
@@ -52,6 +60,11 @@ type CellFieldProps = {
   value?: string | number | readonly string[] | undefined;
 };
 
+type TableInputProps = {
+  field: ControllerRenderProps<any, string>;
+  value?: string | number | readonly string[] | undefined;
+};
+
 const Cell = ({ children }: { children: React.ReactNode }) => {
   return <TableCell className="p-0 border-none">{children}</TableCell>;
 };
@@ -64,16 +77,38 @@ const CellField = ({ control, name, value }: CellFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormControl>
-            <Input
-              {...field}
-              value={value || field.value}
-              autoComplete="off"
-              className="border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
+            <TableInput field={field} value={value} />
           </FormControl>
         </FormItem>
       )}
     />
+  );
+};
+
+const TableInput = ({ field, value }: TableInputProps) => {
+  const { error } = useFormField();
+
+  return (
+    <TooltipProvider>
+      <Tooltip delayDuration={100}>
+        <TooltipTrigger asChild>
+          <Input
+            {...field}
+            value={value || field.value}
+            autoComplete="off"
+            className={cn(
+              "border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0",
+              error && "bg-red-300"
+            )}
+          />
+        </TooltipTrigger>
+        {error && (
+          <TooltipContent side="bottom">
+            <p>{error?.message}</p>
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 
@@ -137,7 +172,9 @@ const QuotationItem = ({
         <CellField control={form.control} name={`items.${index}.price`} />
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.amount`} />
+        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+          {Number(amount).toFixed(2)}
+        </div>
       </Cell>
       <Cell>
         <FormField
@@ -164,18 +201,14 @@ const QuotationItem = ({
         />
       </Cell>
       <Cell>
-        <CellField
-          control={form.control}
-          name={`items.${index}.vatAmount`}
-          value={Number(vatAmount).toFixed(2)}
-        />
+        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+          {Number(vatAmount).toFixed(2)}
+        </div>
       </Cell>
       <Cell>
-        <CellField
-          control={form.control}
-          name={`items.${index}.amountWithVat`}
-          value={Number(amountWithVat).toFixed(2)}
-        />
+        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+          {Number(amountWithVat).toFixed(2)}
+        </div>
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
