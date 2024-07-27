@@ -28,7 +28,7 @@ const CheckEmail = () => {
     <MaxWidthWrapper>
       <div className="flex flex-col items-center justify-center h-[80vh] space-y-12 lg:flex-row lg:space-y-0">
         <div className="w-full flex justify-center items-center text-center">
-          <div className="max-w-md space-y-8">
+          <div className="space-y-3">
             <h1 className="scroll-m-20 text-4xl font-bold tracking-tight text-foreground">
               {t("title")}
             </h1>
@@ -43,8 +43,8 @@ const CheckEmail = () => {
             src={`/illustrations/light/email.svg`}
             alt="Check email"
             priority
-            width={600}
-            height={600}
+            width={400}
+            height={400}
           />
         </div>
       </div>

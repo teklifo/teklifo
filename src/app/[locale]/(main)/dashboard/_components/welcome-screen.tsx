@@ -37,8 +37,8 @@ const WelcomeScreen = async () => {
             src="/illustrations/light/invitation.svg"
             alt="Company suggestion"
             priority
-            width={600}
-            height={600}
+            width={400}
+            height={400}
           />
         </div>
       </div>

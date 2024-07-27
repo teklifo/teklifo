@@ -113,8 +113,8 @@ const SupplierGuide = async ({ params: { rfqId } }: Props) => {
               src="/illustrations/light/email.svg"
               alt="Supplier guide"
               priority
-              width={600}
-              height={600}
+              width={400}
+              height={400}
             />
           </div>
         </div>
