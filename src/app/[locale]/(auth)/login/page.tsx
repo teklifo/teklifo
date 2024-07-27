@@ -1,8 +1,8 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import Logo from "@/components/logo";
 import LoginForm from "./_components/login-form";
+import ClientImage from "@/components/client-image";
+import Logo from "@/components/logo";
 
 type Props = {
   params: { locale: string };
@@ -33,12 +33,12 @@ const Login = async () => {
             {t("title")}
           </h3>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
-          <LoginForm />         
+          <LoginForm />
         </div>
       </div>
       <div className="hidden w-full bg-muted rounded-2xl h-full items-center justify-center px-8 lg:flex lg:flex-col lg:space-y-12">
-        <Image
-          src="/illustrations/login.svg"
+        <ClientImage
+          src="/illustrations/light/login.svg"
           alt="Login"
           priority
           width="600"

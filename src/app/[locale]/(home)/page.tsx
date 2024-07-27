@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import {
@@ -11,6 +10,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link } from "@/navigation";
+import ClientImage from "@/components/client-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -57,7 +57,7 @@ const Home = async () => {
 
   return (
     <MaxWidthWrapper>
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+      <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
       <div className="grid lg:grid-cols-2 place-items-center pt-16 pb-8 md:pt-12 md:pb-24">
         <div>
           <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
@@ -84,8 +84,8 @@ const Home = async () => {
           </div>
         </div>
         <div className="min-h-[50vh] hidden justify-center items-center py-6 md:flex">
-          <Image
-            src="/illustrations/hero.svg"
+          <ClientImage
+            src={`/illustrations/light/hero.svg`}
             alt="Main image"
             priority
             width={800}

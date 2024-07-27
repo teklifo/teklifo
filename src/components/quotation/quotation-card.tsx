@@ -38,7 +38,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
   return (
     <Card
       className={cn(
-        "md:transition-shadow md:hover:shadow-lg",
+        "md:transition-shadow md:hover:shadow-lg md:hover:dark:bg-muted",
         !rfq.latestVersion && "text-muted-foreground"
       )}
     >

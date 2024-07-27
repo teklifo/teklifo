@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { useTranslations } from "next-intl";
+import ClientImage from "@/components/client-image";
 
 const NotFound = () => {
   const t = useTranslations("NotFound");
@@ -15,8 +15,8 @@ const NotFound = () => {
         </h1>
         <p className="text-xl text-muted-foreground">{t("notFoundSubitle")}</p>
       </div>
-      <Image
-        src="/illustrations/404.svg"
+      <ClientImage
+        src="/illustrations/light/404.svg"
         alt="Not found"
         priority
         width={400}

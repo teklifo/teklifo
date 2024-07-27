@@ -27,7 +27,7 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
   const { id, number, title, company, createdAt, _count } = rfq;
 
   return (
-    <Card className="grid grid-cols-1 gap-0 md:grid-cols-12 md:gap-4 md:transition-shadow md:hover:shadow-lg">
+    <Card className="grid grid-cols-1 gap-0 md:grid-cols-12 md:gap-4 md:transition-shadow md:hover:shadow-lg md:hover:dark:bg-muted">
       <div className="px-2 col-span-9 space-y-6">
         <Link href={`/rfq/${id}`}>
           <CardHeader>
