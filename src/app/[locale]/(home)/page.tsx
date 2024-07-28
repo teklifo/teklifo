@@ -133,7 +133,7 @@ const Home = async () => {
           icon={RefreshCcw}
         />
       </div>
-      <div className="flex flex-col items-center text-center bg-foreground rounded-2xl p-8 md:p-20 mt-20 mx-auto space-y-5">
+      <div className="flex flex-col items-center text-center bg-primary rounded-2xl p-8 md:p-20 mt-20 mx-auto space-y-5">
         <h2 className="text-background scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
           {t("suppliersTitle")}
         </h2>
@@ -142,7 +142,7 @@ const Home = async () => {
           href={`/dashboard`}
           className={cn(
             buttonVariants({ variant: "default", size: "lg" }),
-            "bg-background text-foreground hover:bg-background hover:text-foreground space-x-2"
+            "bg-background text-primary hover:bg-background hover:text-primary space-x-2"
           )}
         >
           <span>{t("startSelling")}</span>

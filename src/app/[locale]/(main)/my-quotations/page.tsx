@@ -82,7 +82,7 @@ const MyQuotations = async ({ searchParams: { page } }: Props) => {
           </div>
         ) : (
           <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-            <BriefcaseBusiness className="w-48 h-48" />
+            <BriefcaseBusiness className="w-48 h-48 text-primary" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noMyQuotations")}
             </h2>

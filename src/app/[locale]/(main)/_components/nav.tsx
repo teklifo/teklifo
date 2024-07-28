@@ -64,8 +64,6 @@ const Nav = ({ links, isCollapsed }: NavProps) => {
               href={link.href}
               className={cn(
                 buttonVariants({ variant, size: "sm" }),
-                variant === "default" &&
-                  "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                 "justify-start"
               )}
             >
