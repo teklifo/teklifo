@@ -2,16 +2,16 @@ import { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
 import { useLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import RFQActions from "./_components/rfq-actions";
+import RFQData from "./_components/rfq-data";
+import RFQItemCard from "./_components/rfq-item-card";
+import SentQuotations from "./_components/sent-quotations";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
 import { localizedRelativeDate } from "@/lib/utils";
-import RFQActions from "./_components/rfq-actions";
-import RFQData from "./_components/rfq-data";
-import RFQItemCard from "./_components/rfq-item-card";
-import SentQuotations from "./_components/sent-quotations";
 
 type Props = {
   params: { locale: string; id: string };
@@ -110,7 +110,7 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
           </div>
         </TabsContent>
         <TabsContent value="quotations">
-          <SentQuotations rfqId={rfq.id} page={page ?? 1} />
+          <SentQuotations rfq={rfq} page={page ?? 1} />
         </TabsContent>
       </Tabs>
     </MaxWidthWrapper>

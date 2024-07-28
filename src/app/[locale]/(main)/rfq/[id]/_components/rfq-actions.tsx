@@ -1,13 +1,13 @@
 import { getTranslations } from "next-intl/server";
-import { Pencil, BriefcaseBusiness } from "lucide-react";
+import { Pencil } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
+import DeleteRFQ from "./delete-rfq";
+import ShareRFQ from "./share-rfq";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
-import QuotationForm from "@/components/quotation/quotation-form";
-import DeleteRFQ from "./delete-rfq";
-import ShareRFQ from "./share-rfq";
+import StartQuotation from "./start-quotation";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -46,7 +46,7 @@ const RFQActions = async ({ rfq }: RFQActions) => {
   return (
     <div className="flex flex-col space-y-2">
       {company && companyIsParticipant && !completed && (
-        <QuotationForm rfq={rfq} currentCompany={company} />
+        <StartQuotation rfq={rfq} company={company} />
       )}
       {companyIsRequester && <ShareRFQ />}
       {companyIsRequester && isAdmin && !completed && (

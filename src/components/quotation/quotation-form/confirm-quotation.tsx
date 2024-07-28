@@ -45,10 +45,15 @@ type RFQType = Prisma.RequestForQuotationGetPayload<{
 
 type ConfirmQuotationProps = {
   rfq: RFQType;
+  closeDialog: () => void;
   quotation?: QuotationType;
 };
 
-const ConfirmQuotation = ({ rfq, quotation }: ConfirmQuotationProps) => {
+const ConfirmQuotation = ({
+  rfq,
+  quotation,
+  closeDialog,
+}: ConfirmQuotationProps) => {
   const t = useTranslations("QuotationForm");
 
   const update = quotation !== undefined;
@@ -94,34 +99,26 @@ const ConfirmQuotation = ({ rfq, quotation }: ConfirmQuotationProps) => {
 
     try {
       if (update) {
-        const updatedQuotation = await request<QuotationType>(
-          `/api/quotation/${quotation.id}`,
-          config
-        );
+        await request<QuotationType>(`/api/quotation/${quotation.id}`, config);
 
         toast({
           title: t("quotationIsUpdated"),
           description: t("quotationIsUpdatedHint"),
         });
-
-        window.location.href = `/quotation/${updatedQuotation.id}`;
       } else {
         if (!rfq.privateRequest) {
           await confirmParticipation();
         }
 
-        const newQuotation = await request<QuotationType>(
-          `/api/quotation/`,
-          config
-        );
+        await request<QuotationType>(`/api/quotation/`, config);
 
         toast({
           title: t("newQuotationIsCreated"),
           description: t("newQuotationHint"),
         });
-
-        window.location.href = `/quotation/${newQuotation.id}`;
       }
+
+      closeDialog();
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;

@@ -1,10 +1,22 @@
 import { headers, cookies } from "next/headers";
-import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
 import QuotationCard from "@/components/quotation/quotation-card";
 import PaginationBar from "@/components/ui/pagination-bar";
+import getCurrentCompany from "@/app/actions/get-current-company";
+
+type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
+  include: {
+    company: true;
+    items: {
+      include: {
+        product: true;
+      };
+    };
+    participants: true;
+  };
+}>;
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -23,7 +35,7 @@ type PaginatedData = {
 };
 
 type SentQuotationsProps = {
-  rfqId: string;
+  rfq: RequestForQuotationType;
   page: number;
 };
 
@@ -34,7 +46,7 @@ async function getRFQQuotations(rfqId: string, page: number) {
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/quotation?rfqId=${rfqId}&page=${page}&limit=10`,
+      `/api/quotation?rfqId=${rfqId}&onlyRelevant=true&page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -48,22 +60,30 @@ async function getRFQQuotations(rfqId: string, page: number) {
   }
 }
 
-const SentQuotations = async ({ rfqId, page }: SentQuotationsProps) => {
-  const data = await getRFQQuotations(rfqId, page);
+const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
+  const data = await getRFQQuotations(rfq.id, page);
   if (!data) return null;
 
-  const t = await getTranslations("RFQ");
-
   const { result, pagination } = data;
+
+  const currentCompany = await getCurrentCompany();
+  if (!currentCompany) return;
 
   return (
     <>
       <div className="space-y-3 mt-4">
         {result.map((quotation) => {
-          return <QuotationCard key={quotation.id} quotation={quotation} />;
+          return (
+            <QuotationCard
+              key={quotation.id}
+              currentCompany={currentCompany}
+              rfq={rfq}
+              quotation={quotation}
+            />
+          );
         })}
       </div>
-      <PaginationBar href={`/rfq/${rfqId}?page=`} pagination={pagination} />
+      <PaginationBar href={`/rfq/${rfq.id}?page=`} pagination={pagination} />
     </>
   );
 };

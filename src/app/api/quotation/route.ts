@@ -41,7 +41,16 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { rfqVersionId, rfqId, currency, description, items } = test.data;
+    const {
+      rfqVersionId,
+      rfqId,
+      currency,
+      description,
+      items,
+      contactPerson,
+      phone,
+      email,
+    } = test.data;
 
     // Check RFQ
     const rfq = await db.requestForQuotation.findUnique({
@@ -125,6 +134,9 @@ export async function POST(request: NextRequest) {
         rfqId,
         userId: company.users[0].userId,
         currency,
+        contactPerson,
+        phone,
+        email,
         description,
         totalAmount,
         items: quotationProducts,

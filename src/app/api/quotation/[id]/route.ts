@@ -104,7 +104,16 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const { rfqVersionId, rfqId, currency, description, items } = test.data;
+    const {
+      rfqVersionId,
+      rfqId,
+      currency,
+      description,
+      items,
+      contactPerson,
+      phone,
+      email,
+    } = test.data;
 
     // Find quotation
     const existingQuotation = await db.quotation.findUnique({
@@ -193,6 +202,9 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         rfqId,
         userId: company.users[0].userId,
         currency,
+        contactPerson,
+        phone,
+        email,
         description,
         totalAmount,
         items: quotationProducts,

@@ -15,7 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import QuotationItem from "./quotation-item";
+import QuotationItem from "../quotation-item";
 import { getQuotationSchema } from "@/lib/schemas";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
