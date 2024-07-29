@@ -28,12 +28,16 @@ const Login = async () => {
         <Logo />
       </div>
       <div className="w-full flex justify-center items-center">
-        <div className="max-w-sm space-y-4 mt-20 md:mt-0">
-          <h3 className="text-3xl font-bold tracking-tight md:text-4xl">
-            {t("title")}
-          </h3>
-          <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
-          <LoginForm />
+        <div className="max-w-sm mt-20 md:mt-0">
+          <div className="space-y-4">
+            <h3 className="text-3xl font-bold tracking-tight md:text-4xl">
+              {t("title")}
+            </h3>
+            <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
+          </div>
+          <div className="mt-4">
+            <LoginForm />
+          </div>
         </div>
       </div>
       <div className="hidden w-full bg-muted rounded-2xl h-full items-center justify-center px-8 lg:flex lg:flex-col lg:space-y-12">

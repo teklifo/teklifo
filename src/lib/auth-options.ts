@@ -3,6 +3,7 @@ import { NextAuthOptions } from "next-auth";
 import EmailProvider, {
   SendVerificationRequestParams,
 } from "next-auth/providers/email";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
@@ -44,6 +45,11 @@ const authOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
       sendVerificationRequest,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       credentials: {

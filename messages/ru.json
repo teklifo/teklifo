@@ -118,7 +118,9 @@
     "password": "Пароль",
     "invalidCredentials": "Неверные данные авторизации",
     "serverError": "Произошла ошибка",
-    "error": "Не удалось авторизоваться"
+    "error": "Не удалось авторизоваться",
+    "or": "или",
+    "loginWithGoogle": "Войти с Google"
   },
   "CheckEmail": {
     "title": "Проверьте ваш почтовый ящик",
