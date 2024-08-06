@@ -7,7 +7,7 @@ type Props = {
 
 const QuotationItemsTable = ({ items }: Props) => {
   return (
-    <div className="mx-auto">
+    <div className="mt-4">
       <DataTable columns={columns} data={items} />
     </div>
   );

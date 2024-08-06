@@ -3,10 +3,11 @@
 import { useTranslations } from "next-intl";
 import { Prisma } from "@prisma/client";
 import { ColumnDef, HeaderContext } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
 import { format } from "date-fns";
+import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
+import { cn } from "@/lib/utils";
 
 export type QuotationItemType = Prisma.QuotationItemGetPayload<{
   include: {
@@ -23,10 +24,13 @@ function getTableHeader(lable: string) {
     return (
       <Button
         variant="ghost"
+        className={cn(
+          "inline-flex items-center justify-center whitespace-normal text-xs"
+        )}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        {t(lable)}
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+        <span>{t(lable)}</span>
+        <ChevronsUpDown className="block ml-2 shrink-0 h-4 w-4" />
       </Button>
     );
   };
@@ -37,7 +41,7 @@ function getTableHeader(lable: string) {
 function getVatRateCell(varRate: string) {
   const VatRateCell = () => {
     const t = useTranslations("QuotationItems");
-    return <div className="text-center">{t(varRate)}</div>;
+    return <>{t(varRate)}</>;
   };
 
   return VatRateCell;
@@ -46,9 +50,7 @@ function getVatRateCell(varRate: string) {
 function getVatIncludedCell(vatIncluded: boolean) {
   const VatIncludedCell = () => {
     const t = useTranslations("QuotationItems");
-    return (
-      <div className="text-center">{vatIncluded ? t("yes") : t("no")}</div>
-    );
+    return <>{vatIncluded ? t("yes") : t("no")}</>;
   };
 
   return VatIncludedCell;
@@ -59,9 +61,7 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "rfqItem.lineNumber",
     header: getTableHeader("lineNumber"),
     cell: (info) => {
-      return (
-        <div className="text-center">{(info.getValue() as number) + 1}</div>
-      );
+      return <>{(info.getValue() as number) + 1}</>;
     },
   },
   {
@@ -71,80 +71,51 @@ export const columns: ColumnDef<QuotationItemType>[] = [
       const rfqItem = info.getValue() as any;
 
       return rfqItem.productId ? (
-        <Link
-          href={`/product/${rfqItem.productId}`}
-          className="block w-full text-center "
-        >
+        <Link href={`/product/${rfqItem.productId}`} className="block w-full">
           <span className="underline underline-offset-4">
             {rfqItem.productName}
           </span>
         </Link>
       ) : (
-        <div className="text-center">{rfqItem.productName}</div>
+        <>{rfqItem.productName}</>
       );
     },
-    size: 820,
+    size: 500,
   },
   {
     accessorKey: "rfqItem.quantity",
     header: getTableHeader("rfqQuantity"),
     cell: (info) => {
-      return (
-        <div className="text-center">{Number(info.getValue()).toFixed(3)}</div>
-      );
-    },
-  },
-  {
-    accessorKey: "rfqItem.price",
-    header: getTableHeader("rfqPrice"),
-    cell: (info) => {
-      return (
-        <div className="text-center">{Number(info.getValue()).toFixed(2)}</div>
-      );
-    },
-  },
-  {
-    accessorKey: "rfqItem.deliveryDate",
-    header: getTableHeader("rfqDeliveryDate"),
-    cell: (info) => {
-      return (
-        <div className="text-center">
-          {format(info.getValue() as string, "dd.MM.yyyy")}
-        </div>
-      );
+      return <>{Number(info.getValue()).toFixed(3)}</>;
     },
   },
   {
     accessorKey: "quantity",
     header: getTableHeader("quantity"),
     cell: ({ row }) => {
-      return (
-        <div className="text-center">
-          {Number(row.getValue("quantity")).toFixed(3)}
-        </div>
-      );
+      return <>{Number(row.getValue("quantity")).toFixed(3)}</>;
+    },
+  },
+  {
+    accessorKey: "rfqItem.price",
+    header: getTableHeader("rfqPrice"),
+    cell: (info) => {
+      return <>{Number(info.getValue()).toFixed(2)}</>;
     },
   },
   {
     accessorKey: "price",
     header: getTableHeader("price"),
     cell: ({ row }) => {
-      return (
-        <div className="text-center">
-          {Number(row.getValue("price")).toFixed(2)}
-        </div>
-      );
+      return <>{Number(row.getValue("price")).toFixed(2)}</>;
     },
   },
+
   {
     accessorKey: "amount",
     header: getTableHeader("amount"),
     cell: ({ row }) => {
-      return (
-        <div className="text-center">
-          {Number(row.getValue("amount")).toFixed(2)}
-        </div>
-      );
+      return <>{Number(row.getValue("amount")).toFixed(2)}</>;
     },
   },
   {
@@ -159,11 +130,7 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "vatAmount",
     header: getTableHeader("vatAmount"),
     cell: ({ row }) => {
-      return (
-        <div className="text-center">
-          {Number(row.getValue("vatAmount")).toFixed(2)}
-        </div>
-      );
+      return <>{Number(row.getValue("vatAmount")).toFixed(2)}</>;
     },
   },
   {
@@ -178,22 +145,21 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "amountWithVat",
     header: getTableHeader("amountWithVat"),
     cell: ({ row }) => {
-      return (
-        <div className="text-center">
-          {Number(row.getValue("amountWithVat")).toFixed(2)}
-        </div>
-      );
+      return <>{Number(row.getValue("amountWithVat")).toFixed(2)}</>;
+    },
+  },
+  {
+    accessorKey: "rfqItem.deliveryDate",
+    header: getTableHeader("rfqDeliveryDate"),
+    cell: (info) => {
+      return <>{format(info.getValue() as string, "dd.MM.yyyy")}</>;
     },
   },
   {
     accessorKey: "deliveryDate",
     header: getTableHeader("deliveryDate"),
     cell: ({ row }) => {
-      return (
-        <div className="text-center">
-          {format(row.getValue("deliveryDate"), "dd.MM.yyyy")}
-        </div>
-      );
+      return <>{format(row.getValue("deliveryDate"), "dd.MM.yyyy")}</>;
     },
   },
 ];

@@ -71,7 +71,7 @@ th,
   position: absolute;
   top: 0;
   height: 100%;
-  width: 5px;
+  width: 3px;
   background: rgba(0, 0, 0, 0.5);
   cursor: col-resize;
   user-select: none;
@@ -87,7 +87,7 @@ th,
 }
 
 .resizer.isResizing {
-  background: blue;
+  background: rgba(0, 0, 0, 0.5);
   opacity: 1;
 }
 

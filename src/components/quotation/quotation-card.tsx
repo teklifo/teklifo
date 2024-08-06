@@ -79,7 +79,7 @@ const QuotationCard = ({
             !rfq.latestVersion && "text-muted-foreground"
           )}
         >
-          <div className="px-2 space-y-6">
+          <div className="px-2">
             <CardHeader>
               <QuotationOutdated
                 rfq={rfq}
@@ -128,7 +128,7 @@ const QuotationCard = ({
               <DialogTitle>{t("viewTitle")}</DialogTitle>
               <DialogDescription>{t("viewSubtitle")}</DialogDescription>
             </DialogHeader>
-            <QuotationView />
+            <QuotationView quotationId={quotation.id} />
           </>
         )}
       </DialogContent>

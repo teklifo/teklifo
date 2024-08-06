@@ -31,7 +31,6 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DatatableProps<TData, TValue>) {
-
   const t = useTranslations("Layout");
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -65,13 +64,13 @@ export function DataTable<TData, TValue>({
           },
         }}
       >
-        <TableHeader className="sticky top-[-1px] bg-secondary">
+        <TableHeader className="sticky top-[-1px]">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableHead
                   key={header.id}
-                  className="border"
+                  className="border h-15"
                   {...{
                     colSpan: header.colSpan,
                     style: {
@@ -120,7 +119,7 @@ export function DataTable<TData, TValue>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className="border"
+                    className="px-3 py-2 text-sm border"
                     {...{
                       style: {
                         width: cell.column.getSize(),
@@ -138,7 +137,7 @@ export function DataTable<TData, TValue>({
                 colSpan={columns.length}
                 className="h-24 text-center border"
               >
-               {t('noData')}
+                {t("noData")}
               </TableCell>
             </TableRow>
           )}
