@@ -117,7 +117,7 @@ const QuotationItem = ({
   productField,
   index,
 }: QuotationItemProps) => {
-  const t = useTranslations("QuotationForm");
+  const t = useTranslations("Quotation");
 
   const locale = useLocale();
 

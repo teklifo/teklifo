@@ -22,7 +22,6 @@ import request from "@/lib/request";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
-    company: true;
     items: {
       include: {
         product: true;
@@ -58,7 +57,7 @@ const DeleteQuotation = ({ quotation }: Props) => {
       await request(`/api/quotation/${id}`, config);
 
       toast({
-        title: t("quotationDeleted", { id }),
+        title: t("quotationDeleted"),
         description: t("quotationDeletedHint"),
       });
 
@@ -70,7 +69,7 @@ const DeleteQuotation = ({ quotation }: Props) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("deleteError", { id }),
+        title: t("deleteError"),
         description: message,
         variant: "destructive",
       });
@@ -89,9 +88,7 @@ const DeleteQuotation = ({ quotation }: Props) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            {t("quotationDeleteTitle", { id })}
-          </AlertDialogTitle>
+          <AlertDialogTitle>{t("quotationDeleteTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("quotationDeleteSubtitle")}
           </AlertDialogDescription>

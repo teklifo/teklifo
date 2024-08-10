@@ -7,12 +7,10 @@ import {
   Globe,
   HelpCircle,
   Banknote,
-  Building2,
   FileInput,
 } from "lucide-react";
 import { Link } from "@/navigation";
 import MainInfoItem from "@/components/main-info-item";
-import CompanyInfo from "@/components/company/company-info";
 import {
   Tooltip,
   TooltipContent,
@@ -107,13 +105,6 @@ const RFQMainInfo = ({ rfq, displayRfqLink }: RFQMainInfoProps) => {
 
   return (
     <div className="w-full pr-4 space-y-4">
-      <CompanyInfo
-        icon={<Building2 />}
-        company={company}
-        title={t("company")}
-        view="horizontal"
-      />
-      <Separator />
       <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
       <Separator />
       <MainInfoItem

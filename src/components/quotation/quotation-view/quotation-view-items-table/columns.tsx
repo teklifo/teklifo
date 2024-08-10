@@ -20,7 +20,7 @@ function getTableHeader(lable: string) {
   const TableHeader = ({
     column,
   }: HeaderContext<QuotationItemType, unknown>) => {
-    const t = useTranslations("QuotationItems");
+    const t = useTranslations("Quotation");
     return (
       <Button
         variant="ghost"
@@ -40,7 +40,7 @@ function getTableHeader(lable: string) {
 
 function getVatRateCell(varRate: string) {
   const VatRateCell = () => {
-    const t = useTranslations("QuotationItems");
+    const t = useTranslations("Quotation");
     return <>{t(varRate)}</>;
   };
 
@@ -49,7 +49,7 @@ function getVatRateCell(varRate: string) {
 
 function getVatIncludedCell(vatIncluded: boolean) {
   const VatIncludedCell = () => {
-    const t = useTranslations("QuotationItems");
+    const t = useTranslations("Quotation");
     return <>{vatIncluded ? t("yes") : t("no")}</>;
   };
 

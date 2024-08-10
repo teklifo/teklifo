@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getAvatarFallback, localizedRelativeDate } from "@/lib/utils";
 import { RFQWithQuotationsType } from "@/types";
+import CompanyAvatar from "../company/company-avatar";
 
 type RFQCardProps = {
   rfq: RFQWithQuotationsType;
@@ -56,17 +57,10 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
         </Link>
       </div>
       <div className="p-2 col-span-3 space-y-6">
-        <Link
-          href={`/company/${company.id}`}
+        <CompanyAvatar
+          company={company}
           className="h-full flex flex-col justify-center items-center space-y-2"
-        >
-          <Avatar className="md:h-20 md:w-20">
-            <AvatarFallback>{getAvatarFallback(company.name)}</AvatarFallback>
-          </Avatar>
-          <h5 className="text-center scroll-m-20 text-sm tracking-tight break-all">
-            {company.name}
-          </h5>
-        </Link>
+        />
       </div>
     </Card>
   );

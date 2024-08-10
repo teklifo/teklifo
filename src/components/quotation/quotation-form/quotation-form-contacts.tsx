@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { getQuotationSchema } from "@/lib/schemas";
 
 const QuotationFormContatcs = () => {
-  const t = useTranslations("QuotationForm");
+  const t = useTranslations("Quotation");
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);

@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { getQuotationSchema } from "@/lib/schemas";
 
 const QuotationFormAdditional = () => {
-  const t = useTranslations("QuotationForm");
+  const t = useTranslations("Quotation");
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);

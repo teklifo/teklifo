@@ -16,6 +16,7 @@ import QuotationFormContatcs from "./quotation-form-contacts";
 import QuotationFormItemsTable from "./quotation-form-items-table";
 import QuotationFormAdditional from "./quotation-form-additional";
 import ConfirmQuotation from "./confirm-quotation";
+import DeleteQuotation from "../delete-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
@@ -51,7 +52,7 @@ const QuotationForm = ({
   closeDialog,
   quotation,
 }: QuotationFormProps) => {
-  const t = useTranslations("QuotationForm");
+  const t = useTranslations("Quotation");
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
@@ -119,7 +120,7 @@ const QuotationForm = ({
           <TabsContent value="items" className="h-full">
             <ScrollArea className="w-full min-h-full">
               <QuotationFormItemsTable rfq={rfq} />
-              <ScrollBar orientation="horizontal" />
+              <ScrollBar orientation="horizontal" className="h-4" />
             </ScrollArea>
           </TabsContent>
           <TabsContent value="contacts">
@@ -131,6 +132,7 @@ const QuotationForm = ({
         </Tabs>
       </form>
       <DialogFooter className="px-6">
+        {quotation && <DeleteQuotation quotation={quotation} />}
         <ConfirmQuotation
           rfq={rfq}
           quotation={quotation}

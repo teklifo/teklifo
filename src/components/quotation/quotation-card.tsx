@@ -58,7 +58,7 @@ const QuotationCard = ({
   quotation,
   currentCompany,
 }: QuotationCardProps) => {
-  const t = useTranslations("QuotationForm");
+  const t = useTranslations("Quotation");
 
   const locale = useLocale();
 
@@ -108,7 +108,7 @@ const QuotationCard = ({
           </div>
         </Card>
       </DialogTrigger>
-      <DialogContent className="px-0 flex flex-col space-y-8 max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%] sm:p-6">
+      <DialogContent className="mt-0 px-0 flex flex-col max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%] sm:p-6">
         {currentCompany?.id === company.id ? (
           <>
             <DialogHeader className="flex-initial">

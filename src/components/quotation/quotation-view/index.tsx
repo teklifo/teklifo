@@ -4,24 +4,18 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Loader } from "lucide-react";
 import { Prisma } from "@prisma/client";
+import CompanyAvatar from "@/components/company/company-avatar";
+import QuotationViewContatcs from "./quotation-view-contacts";
+import QuotationViewAdditional from "./quotation-view-additional";
 import QuotationViewItemsTable from "../quotation-view/quotation-view-items-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import request from "@/lib/request";
 import { DialogFooter } from "@/components/ui/dialog";
-
-type RFQType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    items: {
-      include: {
-        product: true;
-      };
-    };
-  };
-}>;
+import request from "@/lib/request";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
+    company: true;
     items: {
       include: {
         product: true;
@@ -46,7 +40,7 @@ async function getQuotation(quotationId: number) {
 }
 
 const QuotationView = ({ quotationId }: QuotationViewProps) => {
-  const t = useTranslations("QuotationForm");
+  const t = useTranslations("Quotation");
 
   const [loading, setLoading] = useState<boolean>(true);
   const [quotation, setQuotation] = useState<QuotationType>();
@@ -75,23 +69,27 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
 
   return (
     <>
+      <CompanyAvatar
+        company={quotation.company}
+        className="flex flex-row justify-start items-center space-x-4"
+      />
       <Tabs defaultValue="items" className="h-full">
         <TabsList className="max-w-max">
           <TabsTrigger value="items">{t("items")}</TabsTrigger>
           <TabsTrigger value="contacts">{t("contacts")}</TabsTrigger>
           <TabsTrigger value="additional">{t("additional")}</TabsTrigger>
         </TabsList>
-        <TabsContent value="items" className="h-full">
+        <TabsContent value="items" className="!mt-0 h-full">
           <ScrollArea className="w-full min-h-full">
             <QuotationViewItemsTable items={quotation.items} />
-            <ScrollBar orientation="horizontal" />
+            <ScrollBar orientation="horizontal" className="h-4" />
           </ScrollArea>
         </TabsContent>
         <TabsContent value="contacts">
-          {/* <QuotationViewContatcs /> */}
+          <QuotationViewContatcs quotation={quotation} />
         </TabsContent>
         <TabsContent value="additional">
-          {/* <QuotationViewAdditional /> */}
+          <QuotationViewAdditional quotation={quotation} />
         </TabsContent>
       </Tabs>
       <DialogFooter className="px-6"></DialogFooter>

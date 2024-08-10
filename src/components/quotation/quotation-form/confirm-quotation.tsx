@@ -54,7 +54,7 @@ const ConfirmQuotation = ({
   quotation,
   closeDialog,
 }: ConfirmQuotationProps) => {
-  const t = useTranslations("QuotationForm");
+  const t = useTranslations("Quotation");
 
   const update = quotation !== undefined;
   const { toast } = useToast();

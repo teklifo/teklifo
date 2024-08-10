@@ -15,7 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import QuotationItem from "../quotation-item";
+import QuotationItem from "./quotation-item";
 import { getQuotationSchema } from "@/lib/schemas";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
@@ -33,7 +33,7 @@ type QuotationFormItemsTableProps = {
 };
 
 const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
-  const t = useTranslations("QuotationForm");
+  const t = useTranslations("Quotation");
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);

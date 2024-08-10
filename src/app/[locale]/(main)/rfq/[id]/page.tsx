@@ -8,6 +8,8 @@ import RFQItemCard from "./_components/rfq-item-card";
 import SentQuotations from "./_components/sent-quotations";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
+import CompanyAvatar from "@/components/company/company-avatar";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
@@ -69,50 +71,56 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
         </p>
       </div>
       <div className="grid grid-cols-1 mt-6 gap-0 gap-y-6 lg:grid-cols-12 lg:gap-4">
-        <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
+        <div className="col-span-8 space-y-6 mt-4 order-2 lg:order-1 lg:mt-0">
           <RFQMainInfo rfq={rfq} displayRfqLink={false} />
+          <Tabs
+            defaultValue={(page ?? 0) > 1 ? "quotations" : "main"}
+            className="mt-8"
+          >
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="main">{t("main")}</TabsTrigger>
+              <TabsTrigger value="items">
+                {`${t("items")} (${items.length || 0})`}
+              </TabsTrigger>
+              <TabsTrigger value="quotations">{t("quotations")}</TabsTrigger>
+            </TabsList>
+            <TabsContent value="main">
+              <RFQData rfq={rfq} />
+            </TabsContent>
+            <TabsContent value="items">
+              <div className="space-y-4 mt-4">
+                {items.map((item, index) => (
+                  <RFQItemCard
+                    key={index}
+                    number={index + 1}
+                    currency={currency}
+                    item={item}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="quotations">
+              <SentQuotations rfq={rfq} page={page ?? 1} />
+            </TabsContent>
+          </Tabs>
         </div>
-        <div className="col-span-4 space-y-2">
-          <RFQActions rfq={rfq} />
-          <p className="text-center text-sm text-muted-foreground">
-            {`${t("updatedAt")}: ${localizedRelativeDate(
-              new Date(rfq.createdAt),
-              new Date(),
-              locale
-            )}`}
-          </p>
+        <div className="col-span-4 relative order-1 lg:order-2">
+          <div className="sticky top-0 p-2 space-y-4">
+            <CompanyAvatar
+              company={rfq.company}
+              className="flex flex-col justify-center items-center"
+            />
+            <RFQActions rfq={rfq} />
+            <p className="text-center text-sm text-muted-foreground">
+              {`${t("updatedAt")}: ${localizedRelativeDate(
+                new Date(rfq.createdAt),
+                new Date(),
+                locale
+              )}`}
+            </p>
+          </div>
         </div>
       </div>
-      <Tabs
-        defaultValue={(page ?? 0) > 1 ? "quotations" : "main"}
-        className="mt-8"
-      >
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="main">{t("main")}</TabsTrigger>
-          <TabsTrigger value="items">
-            {`${t("items")} (${items.length || 0})`}
-          </TabsTrigger>
-          <TabsTrigger value="quotations">{t("quotations")}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="main">
-          <RFQData rfq={rfq} />
-        </TabsContent>
-        <TabsContent value="items">
-          <div className="space-y-4 mt-4">
-            {items.map((item, index) => (
-              <RFQItemCard
-                key={index}
-                number={index + 1}
-                currency={currency}
-                item={item}
-              />
-            ))}
-          </div>
-        </TabsContent>
-        <TabsContent value="quotations">
-          <SentQuotations rfq={rfq} page={page ?? 1} />
-        </TabsContent>
-      </Tabs>
     </MaxWidthWrapper>
   );
 };
