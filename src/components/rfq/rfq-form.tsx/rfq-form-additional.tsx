@@ -15,7 +15,7 @@ import { getRFQSchema } from "@/lib/schemas";
 const RFQFormAdditional = () => {
   const t = useTranslations("RFQForm");
 
-  const st = useTranslations("Schemas.quotationSchema");
+  const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
   const form = useFormContext<z.infer<typeof formSchema>>();
 

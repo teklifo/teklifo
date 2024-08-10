@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
 import { useLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { Briefcase, FileText, Package } from "lucide-react";
 import RFQActions from "./_components/rfq-actions";
 import RFQData from "./_components/rfq-data";
 import RFQItemCard from "./_components/rfq-item-card";
@@ -9,7 +10,6 @@ import SentQuotations from "./_components/sent-quotations";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import CompanyAvatar from "@/components/company/company-avatar";
-import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
@@ -78,11 +78,20 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
             className="mt-8"
           >
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="main">{t("main")}</TabsTrigger>
-              <TabsTrigger value="items">
-                {`${t("items")} (${items.length || 0})`}
+              <TabsTrigger value="main">
+                <FileText className="w-4 h-4 md:hidden" />
+                <span className="hidden md:block">{t("main")}</span>
               </TabsTrigger>
-              <TabsTrigger value="quotations">{t("quotations")}</TabsTrigger>
+              <TabsTrigger value="items">
+                <Package className="w-4 h-4 md:hidden" />
+                <span className="hidden md:block">{`${t("items")} (${
+                  items.length || 0
+                })`}</span>
+              </TabsTrigger>
+              <TabsTrigger value="quotations">
+                <Briefcase className="w-4 h-4 md:hidden" />
+                <span className="hidden md:block">{t("quotations")}</span>
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="main">
               <RFQData rfq={rfq} />

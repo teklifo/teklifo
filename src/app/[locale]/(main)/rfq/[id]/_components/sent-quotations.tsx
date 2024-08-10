@@ -46,7 +46,7 @@ async function getRFQQuotations(rfqId: string, page: number) {
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/quotation?rfqId=${rfqId}&onlyRelevant=true&page=${page}&limit=10`,
+      `/api/quotation?rfqId=${rfqId}&onlyRelevant=false&page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,

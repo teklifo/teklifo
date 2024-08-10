@@ -28,7 +28,7 @@ const RFQFormMain = () => {
 
   const locale = useLocale();
 
-  const st = useTranslations("Schemas.quotationSchema");
+  const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
   const form = useFormContext<z.infer<typeof formSchema>>();
 

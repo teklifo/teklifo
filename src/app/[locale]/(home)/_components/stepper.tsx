@@ -27,7 +27,7 @@ const Stepper = () => {
   const t = useTranslations("Home");
 
   return (
-    <div className="mt-16 mb-24 md:mt-0">
+    <div className="mt-16 md:mb-24 md:mt-0">
       <h2 className="scroll-m-20 text-center text-3xl font-semibold tracking-tight mb-8">
         {t("howItWorks")}
       </h2>

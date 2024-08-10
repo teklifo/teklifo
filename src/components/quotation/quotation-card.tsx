@@ -76,13 +76,13 @@ const QuotationCard = ({
         <Card
           className={cn(
             "cursor-pointer md:transition-shadow md:hover:shadow-lg md:hover:dark:bg-muted",
-            !rfq.latestVersion && "text-muted-foreground"
+            !quotation.rfq.latestVersion && "text-muted-foreground"
           )}
         >
           <div className="px-2">
             <CardHeader>
               <QuotationOutdated
-                rfq={rfq}
+                rfq={quotation.rfq}
                 currentCompanyId={currentCompany?.id}
                 className="mb-2"
               />
@@ -109,7 +109,7 @@ const QuotationCard = ({
         </Card>
       </DialogTrigger>
       <DialogContent className="mt-0 px-0 flex flex-col max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%] sm:p-6">
-        {currentCompany?.id === company.id ? (
+        {currentCompany?.id === company.id && quotation.rfq.latestVersion ? (
           <>
             <DialogHeader className="flex-initial">
               <DialogTitle>{t("title")}</DialogTitle>

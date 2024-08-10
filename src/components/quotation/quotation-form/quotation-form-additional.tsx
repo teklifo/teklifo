@@ -19,7 +19,7 @@ const QuotationFormAdditional = () => {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="mt-4 p-2 space-y-4">
       {/* Description*/}
       <FormField
         control={form.control}

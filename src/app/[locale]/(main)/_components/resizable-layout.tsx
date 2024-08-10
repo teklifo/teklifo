@@ -89,7 +89,7 @@ const ResizableLayout = ({
           minSize={30}
           className="!overflow-auto"
         >
-          <div className="container mt-8">{children}</div>
+          <div className="mt-8">{children}</div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>

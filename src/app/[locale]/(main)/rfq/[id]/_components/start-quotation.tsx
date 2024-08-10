@@ -23,6 +23,11 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
         product: true;
       };
     };
+    _count: {
+      select: {
+        quotations: true;
+      };
+    };
     participants: true;
   };
 }>;
@@ -44,10 +49,20 @@ const StartQuotation = ({ rfq, company }: StartQuotationProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="text-center whitespace-normal h-auto space-x-2 lg:w-full">
-          <BriefcaseBusiness />
-          <span>{t("createQuotation")}</span>
-        </Button>
+        {rfq._count.quotations > 0 ? (
+          <Button
+            variant="outline"
+            className="text-center whitespace-normal h-auto space-x-2 lg:w-full"
+          >
+            <BriefcaseBusiness />
+            <span>{t("createAlternativeQuotation")}</span>
+          </Button>
+        ) : (
+          <Button className="text-center whitespace-normal h-auto space-x-2 lg:w-full">
+            <BriefcaseBusiness />
+            <span>{t("createQuotation")}</span>
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="px-0 flex flex-col space-y-8 max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%] sm:p-6">
         <DialogHeader className="flex-initial">

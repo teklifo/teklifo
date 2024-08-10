@@ -98,7 +98,7 @@ export const RFQType = ({ privateRequest }: { privateRequest: boolean }) => {
   );
 };
 
-const RFQMainInfo = ({ rfq, displayRfqLink }: RFQMainInfoProps) => {
+const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
   const t = useTranslations("RFQ");
 
   const { company, privateRequest, currency } = rfq;
@@ -115,18 +115,6 @@ const RFQMainInfo = ({ rfq, displayRfqLink }: RFQMainInfoProps) => {
       />
       <Separator />
       <RFQType privateRequest={privateRequest} />
-      {displayRfqLink && (
-        <Link
-          href={`/rfq/${rfq.id}`}
-          className={cn(
-            buttonVariants({ variant: "secondary" }),
-            "text-center whitespace-normal h-auto space-x-2 lg:w-full"
-          )}
-        >
-          <FileInput />
-          <span>{t("viewRfq")}</span>
-        </Link>
-      )}
     </div>
   );
 };

@@ -16,7 +16,7 @@ import { getRFQSchema } from "@/lib/schemas";
 const RFQFormItemsTable = () => {
   const t = useTranslations("RFQForm");
 
-  const st = useTranslations("Schemas.quotationSchema");
+  const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
   const form = useFormContext<z.infer<typeof formSchema>>();
 
@@ -38,6 +38,7 @@ const RFQFormItemsTable = () => {
             price: 0,
             deliveryDate: new Date(),
             comment: "",
+            externalId: Date.now().toString(),
           })
         }
       >
@@ -57,12 +58,20 @@ const RFQFormItemsTable = () => {
             <TableHead className="border min-w-[100px]">
               {t("comment")}
             </TableHead>
+            <TableHead className="border min-w-[100px]" />
           </TableRow>
         </TableHeader>
         <TableBody>
           {items.fields.map((productField, index) => {
             return (
-              <RFQItem key={index} productField={productField} index={index} />
+              <RFQItem
+                key={productField.externalId}
+                productField={productField}
+                index={index}
+                removeProduct={() => {
+                  items.remove(index);
+                }}
+              />
             );
           })}
         </TableBody>

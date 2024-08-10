@@ -48,6 +48,24 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             lineNumber: "asc",
           },
         },
+        _count: {
+          select: {
+            quotations: {
+              where: {
+                OR: [
+                  {
+                    companyId: company?.id ?? "",
+                  },
+                  {
+                    rfq: {
+                      companyId: company?.id ?? "",
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
         participants: {
           where: {
             companyId: company?.id,

@@ -11,7 +11,7 @@ const SupplierHeroSection = () => {
   return (
     <div
       id="suppliers-hero-section"
-      className="grid lg:grid-cols-2 place-items-center pt-16 pb-8 md:pt-12 md:pb-24"
+      className="grid lg:grid-cols-2 place-items-center mt-16 md:mb-24 md:mt-0"
     >
       <div className="min-h-[50vh] hidden justify-center items-center py-6 md:flex">
         <ClientImage
@@ -22,7 +22,7 @@ const SupplierHeroSection = () => {
           height={500}
         />
       </div>
-      <div>
+      <div className="text-center md:text-left">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
           {t("suppliersTitle")}
         </h1>

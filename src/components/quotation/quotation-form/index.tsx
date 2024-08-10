@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { Contact, Info, Package } from "lucide-react";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
 import type { Value } from "react-phone-number-input";
 import { Form } from "@/components/ui/form";
@@ -110,14 +111,23 @@ const QuotationForm = ({
 
   return (
     <Form {...form}>
-      <form className="flex-auto p-4 space-y-10">
+      <form className="flex-auto space-y-10">
         <Tabs defaultValue="items" className="h-full">
-          <TabsList className="max-w-max">
-            <TabsTrigger value="items">{t("items")}</TabsTrigger>
-            <TabsTrigger value="contacts">{t("contacts")}</TabsTrigger>
-            <TabsTrigger value="additional">{t("additional")}</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 md:max-w-max">
+            <TabsTrigger value="items">
+              <Package className="w-4 h-4 md:hidden" />
+              <span className="hidden md:block">{t("items")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="contacts">
+              <Contact className="w-4 h-4 md:hidden" />
+              <span className="hidden md:block">{t("contacts")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="additional">
+              <Info className="w-4 h-4 md:hidden" />
+              <span className="hidden md:block">{t("additional")}</span>
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="items" className="h-full">
+          <TabsContent value="items" className="!mt-0 h-full">
             <ScrollArea className="w-full min-h-full">
               <QuotationFormItemsTable rfq={rfq} />
               <ScrollBar orientation="horizontal" className="h-4" />

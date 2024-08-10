@@ -1,24 +1,25 @@
 "use client";
 import "react-phone-number-input/style.css";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { type Value } from "react-phone-number-input";
+import { Contact, FileText, Info, Package } from "lucide-react";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
+import RFQFormContatcs from "./rfq-form-contacts";
+import RFQFormMain from "./rfq-form-main";
+import RFQFormAdditional from "./rfq-form-additional";
+import RFQFormItemsTable from "./rfq-form-items-table";
+import ConfirmRFQ from "./confirm-rfq";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { getRFQSchema } from "@/lib/schemas";
-import request from "@/lib/request";
-import RFQFormContatcs from "./rfq-form-contacts";
-import RFQFormMain from "./rfq-form-main";
-import RFQFormAdditional from "./rfq-form-additional";
-import RFQFormItemsTable from "./rfq-form-items-table";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -41,7 +42,6 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
   const update = rfq !== undefined;
 
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -81,61 +81,27 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
     form.setValue("phone", (rfq ? rfq.phone : currentCompany.phone) as Value);
   }, [currentCompany.email, currentCompany.phone, form, rfq]);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setLoading(true);
-
-    const config = {
-      method: update ? "put" : "post",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept-Language": getCookie("NEXT_LOCALE"),
-      },
-      body: JSON.stringify(values),
-    };
-
-    try {
-      if (update) {
-        const updatedRfq = await request<RFQType>(`/api/rfq/${rfq.id}`, config);
-
-        toast({
-          title: t("rfqIsUpdated"),
-          description: t("rfqIsUpdatedHint"),
-        });
-
-        window.location.href = `/rfq/${updatedRfq.id}`;
-      } else {
-        const newRfq = await request<RFQType>(`/api/rfq/`, config);
-
-        toast({
-          title: t("newRFQIsCreated"),
-          description: t("newRFQHint"),
-        });
-
-        window.location.href = `/rfq/${newRfq.id}`;
-      }
-    } catch (error) {
-      let message = "";
-      if (error instanceof Error) message = error.message;
-      else message = String(error);
-      toast({
-        title: update ? t("updateError") : t("error"),
-        description: message,
-        variant: "destructive",
-      });
-    }
-
-    setLoading(false);
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+      <form className="space-y-10">
         <Tabs defaultValue="main" className="h-full">
-          <TabsList className="max-w-max">
-            <TabsTrigger value="main">{t("main")}</TabsTrigger>
-            <TabsTrigger value="items">{t("items")}</TabsTrigger>
-            <TabsTrigger value="contacts">{t("contacts")}</TabsTrigger>
-            <TabsTrigger value="additional">{t("additional")}</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 md:max-w-max">
+            <TabsTrigger value="main">
+              <FileText className="w-4 h-4 md:hidden" />
+              <span className="hidden md:block">{t("main")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="items">
+              <Package className="w-4 h-4 md:hidden" />
+              <span className="hidden md:block">{t("items")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="contacts">
+              <Contact className="w-4 h-4 md:hidden" />
+              <span className="hidden md:block">{t("contacts")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="additional">
+              <Info className="w-4 h-4 md:hidden" />
+              <span className="hidden md:block">{t("additional")}</span>
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="main">
             <RFQFormMain />
@@ -153,6 +119,7 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
             <RFQFormAdditional />
           </TabsContent>
         </Tabs>
+        <ConfirmRFQ rfq={rfq} />
       </form>
     </Form>
   );

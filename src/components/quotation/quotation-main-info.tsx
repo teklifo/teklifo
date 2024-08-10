@@ -52,11 +52,6 @@ export const QuotationOutdated = ({
     <Alert variant="destructive" className={className}>
       <AlertCircle className="h-4 w-4" />
       <AlertTitle>{t("outdated")}</AlertTitle>
-      <AlertDescription>
-        {currentCompanyId === companyId
-          ? t("outdatedHintRequest")
-          : t("outdatedHintQuotation")}
-      </AlertDescription>
     </Alert>
   ) : null;
 };

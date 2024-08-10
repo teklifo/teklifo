@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Loader } from "lucide-react";
+import { Contact, Info, Loader, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import CompanyAvatar from "@/components/company/company-avatar";
 import QuotationViewContatcs from "./quotation-view-contacts";
@@ -71,13 +71,22 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
     <>
       <CompanyAvatar
         company={quotation.company}
-        className="flex flex-row justify-start items-center space-x-4"
+        className="flex flex-row justify-center items-center space-x-4 md:justify-start"
       />
       <Tabs defaultValue="items" className="h-full">
-        <TabsList className="max-w-max">
-          <TabsTrigger value="items">{t("items")}</TabsTrigger>
-          <TabsTrigger value="contacts">{t("contacts")}</TabsTrigger>
-          <TabsTrigger value="additional">{t("additional")}</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 md:max-w-max">
+          <TabsTrigger value="items">
+            <Package className="w-4 h-4 md:hidden" />
+            <span className="hidden md:block">{t("items")}</span>
+          </TabsTrigger>
+          <TabsTrigger value="contacts">
+            <Contact className="w-4 h-4 md:hidden" />
+            <span className="hidden md:block">{t("contacts")}</span>
+          </TabsTrigger>
+          <TabsTrigger value="additional">
+            <Info className="w-4 h-4 md:hidden" />
+            <span className="hidden md:block">{t("additional")}</span>
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="items" className="!mt-0 h-full">
           <ScrollArea className="w-full min-h-full">

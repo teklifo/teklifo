@@ -22,7 +22,7 @@ const QuotationViewContacts = ({ quotation }: QuotationViewContactsProps) => {
   const t = useTranslations("Quotation");
 
   return (
-    <div className="mt-4 space-y-2">
+    <div className="mt-4 p-2 space-y-2">
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
         {t("contacts")}
       </h4>

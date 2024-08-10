@@ -184,7 +184,7 @@ const QuotationItem = ({
             <FormItem>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0">
+                  <SelectTrigger className="border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                     <SelectValue placeholder={t("selectVatRate")} />
                   </SelectTrigger>
                 </FormControl>
