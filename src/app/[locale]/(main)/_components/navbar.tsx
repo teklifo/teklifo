@@ -6,6 +6,7 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Logo from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentUser from "@/app/actions/get-current-user";
+import ThemeToggle from "@/components/theme-toggle";
 
 type NavbarProps = {
   defaultCompany: CompanyType | null;
@@ -23,20 +24,23 @@ const Navbar = async ({ defaultCompany, userCompanies }: NavbarProps) => {
         <MaxWidthWrapper>
           <div className="flex h-16 justify-between items-center">
             <Logo />
-            {user ? (
-              <UserDropdown
-                user={user}
-                defaultCompany={defaultCompany}
-                userCompanies={userCompanies}
-              />
-            ) : (
-              <Link
-                href="/login"
-                className={buttonVariants({ variant: "default" })}
-              >
-                {t("login")}
-              </Link>
-            )}
+            <div className="flex flex-row space-x-2">
+              {user ? (
+                <UserDropdown
+                  user={user}
+                  defaultCompany={defaultCompany}
+                  userCompanies={userCompanies}
+                />
+              ) : (
+                <Link
+                  href="/login"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                  {t("login")}
+                </Link>
+              )}
+              <ThemeToggle />
+            </div>
           </div>
         </MaxWidthWrapper>
       </header>

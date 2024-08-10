@@ -1,8 +1,8 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import Logo from "@/components/logo";
 import LoginForm from "./_components/login-form";
+import ClientImage from "@/components/client-image";
+import Logo from "@/components/logo";
 
 type Props = {
   params: { locale: string };
@@ -28,21 +28,25 @@ const Login = async () => {
         <Logo />
       </div>
       <div className="w-full flex justify-center items-center">
-        <div className="max-w-sm space-y-4 mt-20 md:mt-0">
-          <h3 className="text-3xl font-bold tracking-tight md:text-4xl">
-            {t("title")}
-          </h3>
-          <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
-          <LoginForm />         
+        <div className="max-w-sm mt-20 md:mt-0">
+          <div className="space-y-4">
+            <h3 className="text-3xl font-bold tracking-tight md:text-4xl">
+              {t("title")}
+            </h3>
+            <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
+          </div>
+          <div className="mt-4">
+            <LoginForm />
+          </div>
         </div>
       </div>
       <div className="hidden w-full bg-muted rounded-2xl h-full items-center justify-center px-8 lg:flex lg:flex-col lg:space-y-12">
-        <Image
-          src="/illustrations/login.svg"
+        <ClientImage
+          src="/illustrations/light/login.svg"
           alt="Login"
           priority
-          width="600"
-          height="600"
+          width="400"
+          height="400"
         />
         <div className="max-w-2xl space-y-4 text-center">
           <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">

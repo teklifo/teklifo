@@ -1,22 +1,25 @@
 import { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
+import { useLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { Package, Pencil, ArrowRightCircle } from "lucide-react";
-import { Link } from "@/navigation";
+import { Briefcase, FileText, Package } from "lucide-react";
+import RFQActions from "./_components/rfq-actions";
+import RFQData from "./_components/rfq-data";
+import RFQItemCard from "./_components/rfq-item-card";
+import SentQuotations from "./_components/sent-quotations";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQMainInfo from "@/components/rfq/rfq-main-info";
-import { buttonVariants } from "@/components/ui/button";
-import getCurrentCompany from "@/app/actions/get-current-company";
+import CompanyAvatar from "@/components/company/company-avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
-import { cn } from "@/lib/utils";
-import RFQItemCard from "./_components/rfq-item-card";
-import DeleteRFQ from "./_components/delete-rfq";
-import ShareRFQ from "./_components/share-rfq";
-import SentQuotations from "./_components/sent-quotations";
+import { localizedRelativeDate } from "@/lib/utils";
 
 type Props = {
   params: { locale: string; id: string };
+  searchParams: {
+    page?: number;
+  };
 };
 
 export const generateMetadata = async ({
@@ -39,8 +42,10 @@ export const generateMetadata = async ({
   };
 };
 
-const RFQ = async ({ params: { id } }: Props) => {
+const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
   const t = await getTranslations("RFQ");
+
+  const locale = useLocale();
 
   const rfq = await getRFQ(id);
 
@@ -53,140 +58,76 @@ const RFQ = async ({ params: { id } }: Props) => {
     return notFound();
   }
 
-  const company = await getCurrentCompany();
-
-  const isAdmin =
-    company !== null ? company.users[0].companyRole.default : false;
-
-  const companyIsRequester = rfq.companyId === company?.id;
-  const companyIsParticipant =
-    rfq.participants.find(
-      (participant) => participant.companyId === company?.id
-    ) !== undefined ||
-    (!rfq.privateRequest && !companyIsRequester);
-
-  const {
-    title,
-    number,
-    description,
-    currency,
-    items,
-    paymentTerms,
-    deliveryAddress,
-    deliveryTerms,
-  } = rfq;
-
-  const completed = new Date(rfq.endDate) < new Date();
+  const { title, number, currency, items } = rfq;
 
   return (
-    <MaxWidthWrapper className="my-8 space-y-6">
-      <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
-        <div className="space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {title}
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            {`${t("rfq")} #${number}`}
-          </p>
-        </div>
-        {companyIsRequester && isAdmin && (
-          <div className="flex space-x-2">
-            {!completed && (
-              <Link
-                href={`/edit-rfq/${rfq.id}`}
-                className={cn(
-                  "space-x-2",
-                  buttonVariants({ variant: "outline" })
-                )}
-              >
-                <Pencil className="h-4 w-4" />
-                <span>{t("edit")}</span>
-              </Link>
-            )}
-            <DeleteRFQ rfq={rfq} />
-          </div>
-        )}
+    <MaxWidthWrapper className="mt-8 mb-20">
+      <div className="space-y-2">
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+          {title}
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          {`${t("rfqNumber")}: ${number}`}
+        </p>
       </div>
-      <div className="grid grid-cols-1 gap-0 lg:grid-cols-12 lg:gap-4">
-        <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
-          {companyIsParticipant && (
-            <SentQuotations rfqId={rfq.id} rfqVersionId={rfq.versionId} />
-          )}
-          {description && (
-            <div className="space-y-2">
-              <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                {t("description")}
-              </h3>
-              <div className="whitespace-pre-line">{description}</div>
-            </div>
-          )}
-          <div className="flex flex-row items-center border-b pb-2 space-x-2">
-            <Package className="w-8 h-8" />
-            <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-              {`${t("items")} (${items.length || 0})`}
-            </h3>
-          </div>
-          {items.map((item, index) => (
-            <RFQItemCard
-              key={index}
-              number={index + 1}
-              currency={currency}
-              item={item}
-            />
-          ))}
-          {(paymentTerms || deliveryTerms || deliveryAddress) && (
-            <>
-              <h3 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                {t("additional")}
-              </h3>
-              {paymentTerms && (
-                <div className="space-y-2">
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    {t("paymentTerms")}
-                  </h4>
-                  <p className="whitespace-pre-line">{paymentTerms}</p>
-                </div>
-              )}
-              {deliveryTerms && (
-                <div className="space-y-2">
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    {t("deliveryTerms")}
-                  </h4>
-                  <p className="whitespace-pre-line">{deliveryTerms}</p>
-                </div>
-              )}
-              {deliveryAddress && (
-                <div className="space-y-2">
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    {t("deliveryAddress")}
-                  </h4>
-                  <p className="whitespace-pre-line">{deliveryAddress}</p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-        <div className="order-first col-span-4 space-y-6 lg:order-none">
+      <div className="grid grid-cols-1 mt-6 gap-0 gap-y-6 lg:grid-cols-12 lg:gap-4">
+        <div className="col-span-8 space-y-6 mt-4 order-2 lg:order-1 lg:mt-0">
           <RFQMainInfo rfq={rfq} displayRfqLink={false} />
-          {companyIsParticipant && !completed && (
-            <div className="absolute m-auto left-0 right-0 bottom-8 flex justify-center lg:bottom-0 lg:relative">
-              <Link
-                href={`/new-quotation/${id}`}
-                className={cn(
-                  buttonVariants({ variant: "default" }),
-                  "text-center whitespace-normal h-auto space-x-2 lg:w-full"
-                )}
-              >
-                <ArrowRightCircle />
-                <span>{t("createQuotation")}</span>
-              </Link>
-            </div>
-          )}
-          {companyIsRequester && (
-            <div className="absolute m-auto left-0 right-0 bottom-8 flex justify-center lg:bottom-0 lg:relative">
-              <ShareRFQ />
-            </div>
-          )}
+          <Tabs
+            defaultValue={(page ?? 0) > 1 ? "quotations" : "main"}
+            className="mt-8"
+          >
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="main">
+                <FileText className="w-4 h-4 md:hidden" />
+                <span className="hidden md:block">{t("main")}</span>
+              </TabsTrigger>
+              <TabsTrigger value="items">
+                <Package className="w-4 h-4 md:hidden" />
+                <span className="hidden md:block">{`${t("items")} (${
+                  items.length || 0
+                })`}</span>
+              </TabsTrigger>
+              <TabsTrigger value="quotations">
+                <Briefcase className="w-4 h-4 md:hidden" />
+                <span className="hidden md:block">{t("quotations")}</span>
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="main">
+              <RFQData rfq={rfq} />
+            </TabsContent>
+            <TabsContent value="items">
+              <div className="space-y-4 mt-4">
+                {items.map((item, index) => (
+                  <RFQItemCard
+                    key={index}
+                    number={index + 1}
+                    currency={currency}
+                    item={item}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="quotations">
+              <SentQuotations rfq={rfq} page={page ?? 1} />
+            </TabsContent>
+          </Tabs>
+        </div>
+        <div className="col-span-4 relative order-1 lg:order-2">
+          <div className="sticky top-0 p-2 space-y-4">
+            <CompanyAvatar
+              company={rfq.company}
+              className="flex flex-col justify-center items-center"
+            />
+            <RFQActions rfq={rfq} />
+            <p className="text-center text-sm text-muted-foreground">
+              {`${t("updatedAt")}: ${localizedRelativeDate(
+                new Date(rfq.createdAt),
+                new Date(),
+                locale
+              )}`}
+            </p>
+          </div>
         </div>
       </div>
     </MaxWidthWrapper>

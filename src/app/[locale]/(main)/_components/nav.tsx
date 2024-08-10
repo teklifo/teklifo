@@ -19,10 +19,9 @@ interface NavProps {
     icon: LucideIcon;
     href: string;
   }[];
-  label?: string;
 }
 
-const Nav = ({ links, isCollapsed, label }: NavProps) => {
+const Nav = ({ links, isCollapsed }: NavProps) => {
   const pathname = usePathname();
 
   return (
@@ -30,10 +29,6 @@ const Nav = ({ links, isCollapsed, label }: NavProps) => {
       data-collapsed={isCollapsed}
       className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
     >
-      {!isCollapsed && label && (
-        <h2 className="px-6 text-lg font-semibold tracking-tight">{label}</h2>
-      )}
-
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) => {
           const variant = link.href === pathname ? "default" : "ghost";
@@ -69,8 +64,6 @@ const Nav = ({ links, isCollapsed, label }: NavProps) => {
               href={link.href}
               className={cn(
                 buttonVariants({ variant, size: "sm" }),
-                variant === "default" &&
-                  "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                 "justify-start"
               )}
             >

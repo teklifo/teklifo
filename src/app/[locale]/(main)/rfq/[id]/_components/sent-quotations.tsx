@@ -1,17 +1,29 @@
 import { headers, cookies } from "next/headers";
-import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
-import { Link } from "@/navigation";
-import { cn } from "@/lib/utils";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
+import QuotationCard from "@/components/quotation/quotation-card";
+import PaginationBar from "@/components/ui/pagination-bar";
+import getCurrentCompany from "@/app/actions/get-current-company";
 
-type QuotationType = Prisma.QuotationGetPayload<{
+type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
     company: true;
     items: {
       include: {
         product: true;
+      };
+    };
+    participants: true;
+  };
+}>;
+
+type QuotationType = Prisma.QuotationGetPayload<{
+  include: {
+    company: true;
+    rfq: {
+      include: {
+        company: true;
       };
     };
   };
@@ -23,18 +35,18 @@ type PaginatedData = {
 };
 
 type SentQuotationsProps = {
-  rfqId: string;
-  rfqVersionId: string;
+  rfq: RequestForQuotationType;
+  page: number;
 };
 
-async function getRFQQuotations(rfqId: string) {
+async function getRFQQuotations(rfqId: string, page: number) {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/quotation?rfqId=${rfqId}&page=1&limit=999`,
+      `/api/quotation?rfqId=${rfqId}&onlyRelevant=false&page=${page}&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -48,54 +60,31 @@ async function getRFQQuotations(rfqId: string) {
   }
 }
 
-const SentQuotations = async ({ rfqId, rfqVersionId }: SentQuotationsProps) => {
-  const data = await getRFQQuotations(rfqId);
+const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
+  const data = await getRFQQuotations(rfq.id, page);
   if (!data) return null;
 
-  const t = await getTranslations("RFQ");
+  const { result, pagination } = data;
 
-  const { result } = data;
+  const currentCompany = await getCurrentCompany();
+  if (!currentCompany) return;
 
   return (
-    <div>
-      {result.length > 0 ? (
-        <div className="">
-          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {`${t("sentQuotations")}:`}
-          </h3>
-          <ul className="ml-5 flex flex-col space-y-2 list-disc [&>li]:mt-2">
-            {result.map((quotation) => {
-              const outdated = quotation.rfqVersionId !== rfqVersionId;
-              return (
-                <li key={quotation.id}>
-                  <Link
-                    href={`/quotation/${quotation.id}`}
-                    target="_blank"
-                    className={cn(
-                      "scroll-m-20 underline text-lg font-semibold tracking-tight break-all",
-                      outdated && "text-destructive"
-                    )}
-                  >
-                    {t(
-                      outdated
-                        ? "sentOutdatedQuotationTitle"
-                        : "sentQuotationTitle",
-                      {
-                        id: quotation.id,
-                        amount: Number(quotation.totalAmount).toFixed(2),
-                        currency: quotation.currency,
-                      }
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ) : (
-        <div className="">No data</div>
-      )}
-    </div>
+    <>
+      <div className="space-y-3 mt-4">
+        {result.map((quotation) => {
+          return (
+            <QuotationCard
+              key={quotation.id}
+              currentCompany={currentCompany}
+              rfq={rfq}
+              quotation={quotation}
+            />
+          );
+        })}
+      </div>
+      <PaginationBar href={`/rfq/${rfq.id}?page=`} pagination={pagination} />
+    </>
   );
 };
 

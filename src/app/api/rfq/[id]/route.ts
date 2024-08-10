@@ -48,6 +48,24 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             lineNumber: "asc",
           },
         },
+        _count: {
+          select: {
+            quotations: {
+              where: {
+                OR: [
+                  {
+                    companyId: company?.id ?? "",
+                  },
+                  {
+                    rfq: {
+                      companyId: company?.id ?? "",
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
         participants: {
           where: {
             companyId: company?.id,
@@ -101,6 +119,9 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       privateRequest,
       currency,
       endDate,
+      contactPerson,
+      email,
+      phone,
       description,
       deliveryAddress,
       deliveryTerms,
@@ -154,6 +175,9 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         privateRequest,
         currency,
         endDate: endDate,
+        contactPerson,
+        email,
+        phone,
         description,
         deliveryAddress,
         deliveryTerms,

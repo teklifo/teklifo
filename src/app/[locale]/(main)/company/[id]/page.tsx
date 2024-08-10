@@ -124,7 +124,7 @@ const Company = async ({ params: { locale, id } }: Props) => {
         <div className="whitespace-pre-line">{description}</div>
       ) : (
         <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-          <CircleHelp className="w-48 h-48" />
+          <CircleHelp className="w-48 h-48 text-primary" />
           <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {t("noDescription")}
           </h2>

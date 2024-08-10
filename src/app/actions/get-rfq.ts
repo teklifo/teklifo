@@ -10,6 +10,11 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
         product: true;
       };
     };
+    _count: {
+      select: {
+        quotations: true;
+      };
+    };
     participants: true;
   };
 }>;

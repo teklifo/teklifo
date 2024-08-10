@@ -3,6 +3,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import * as loc from "date-fns/locale";
 import { formatRelative } from "date-fns";
+import { useTheme } from "next-themes";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

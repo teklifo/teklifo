@@ -238,10 +238,12 @@ export const getRFQSchema = (t: TranslateFunction) => {
         }),
       })
       .min(new Date(Date.now()), t("invalidDate")),
-    contactPerson: z.string({
-      required_error: t("invalidContactPerson"),
-      invalid_type_error: t("invalidContactPerson"),
-    }),
+    contactPerson: z
+      .string({
+        required_error: t("invalidContactPerson"),
+        invalid_type_error: t("invalidContactPerson"),
+      })
+      .min(1, t("invalidContactPerson")),
     email: z
       .string({
         required_error: t("invalidEmail"),
@@ -272,7 +274,7 @@ export const getRFQSchema = (t: TranslateFunction) => {
         return z.NEVER;
       }),
     description: z.string().default(""),
-    deliveryAddress: z.string().default(""),
+    deliveryAddress: z.string().min(1, t("invalidDeliveryAddress")),
     deliveryTerms: z.string().default(""),
     paymentTerms: z.string().default(""),
     items: z.array(getRFQItemSchema(t)).min(1, t("invalidProducts")),
@@ -340,10 +342,12 @@ export const getQuotationSchema = (t: TranslateFunction) => {
         invalid_type_error: t("invalidCurrency"),
       })
       .min(1, t("invalidCurrency")),
-    contactPerson: z.string({
-      required_error: t("invalidContactPerson"),
-      invalid_type_error: t("invalidContactPerson"),
-    }),
+    contactPerson: z
+      .string({
+        required_error: t("invalidContactPerson"),
+        invalid_type_error: t("invalidContactPerson"),
+      })
+      .min(1, t("invalidContactPerson")),
     email: z
       .string({
         required_error: t("invalidEmail"),

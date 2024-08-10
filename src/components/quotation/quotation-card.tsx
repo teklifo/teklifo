@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { Prisma, Company as CompanyType } from "@prisma/client";
-import { Link } from "@/navigation";
+import QuotationView from "./quotation-view";
+import QuotationEditForm from "./quotation-form/quotation-edit-form";
 import { QuotationOutdated, QuotationTotal } from "./quotation-main-info";
 import {
   Card,
@@ -9,10 +13,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn, getAvatarFallback, localizedRelativeDate } from "@/lib/utils";
-import { RFQDateInfo } from "../rfq/rfq-main-info";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+
+type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
+  include: {
+    company: true;
+    items: {
+      include: {
+        product: true;
+      };
+    };
+    participants: true;
+  };
+}>;
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -26,117 +48,91 @@ type QuotationType = Prisma.QuotationGetPayload<{
 }>;
 
 type QuotationCardProps = {
+  rfq: RequestForQuotationType;
   quotation: QuotationType;
   currentCompany?: CompanyType;
 };
 
-const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
+const QuotationCard = ({
+  rfq,
+  quotation,
+  currentCompany,
+}: QuotationCardProps) => {
   const t = useTranslations("Quotation");
 
   const locale = useLocale();
 
-  const { id, company, rfq, updatedAt } = quotation;
+  const [open, setOpen] = useState(false);
 
-  const displayCompany =
-    currentCompany?.id === rfq.company.id ? company : rfq.company;
+  const closeDialog = () => {
+    setOpen(false);
+  };
+
+  const { company, updatedAt } = quotation;
 
   return (
-    // <Link href={`/quotation/${id}`}>
-    //   <Card
-    //     className={cn(
-    //       "h-full w-full",
-    //       !rfq.latestVersion && "text-muted-foreground"
-    //     )}
-    //   >
-    //     <CardHeader>
-    //       <QuotationOutdated
-    //         rfq={rfq}
-    //         currentCompanyId={currentCompany?.id}
-    //         className="mb-2"
-    //       />
-    //       <CardTitle>{rfq.title}</CardTitle>
-    //       <CardDescription>{`${t("quotation")} #${id}`}</CardDescription>
-    //     </CardHeader>
-    //     <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
-    //       {currentCompany?.id === rfq.company.id ? (
-    //         <CompanyInfo
-    //           company={company}
-    //           icon={<Briefcase />}
-    //           title={t("quotationCompany")}
-    //           view="horizontal"
-    //         />
-    //       ) : (
-    //         <CompanyInfo
-    //           company={rfq.company}
-    //           icon={<Building2 />}
-    //           title={t("requestCompany")}
-    //           view="horizontal"
-    //         />
-    //       )}
-    //       <Separator />
-    //       <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
-    //       <Separator />
-    //       <QuotationTotal quotation={quotation} view="horizontal" />
-    //       <Separator />
-    //       <CardDescription>
-    //         {`${t("updatedAt")}: ${localizedRelativeDate(
-    //           new Date(updatedAt),
-    //           new Date(),
-    //           locale
-    //         )}`}
-    //       </CardDescription>
-    //     </CardContent>
-    //   </Card>
-    // </Link>
-
-    <Card
-      className={cn(
-        "grid grid-cols-1 gap-0 md:grid-cols-12 md:gap-4",
-        !rfq.latestVersion && "text-muted-foreground"
-      )}
-    >
-      <div className="px-2 col-span-9 space-y-6">
-        <Link href={`/quotation/${id}`}>
-          <CardHeader>
-            <QuotationOutdated
-              rfq={rfq}
-              currentCompanyId={currentCompany?.id}
-              className="mb-2"
-            />
-            <CardTitle>{rfq.title}</CardTitle>
-            <CardDescription>{`${t("quotation")} #${id}`}</CardDescription>
-          </CardHeader>
-          <CardContent className="min-h-[150px] space-y-4 p-4 pt-0 md:p-6 md:pt-0">
-            <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
-            <Separator />
-            <QuotationTotal quotation={quotation} view="horizontal" />
-            <Separator />
-            <CardDescription>
-              {`${t("updatedAt")}: ${localizedRelativeDate(
-                new Date(updatedAt),
-                new Date(),
-                locale
-              )}`}
-            </CardDescription>
-          </CardContent>
-        </Link>
-      </div>
-      <div className="p-2 col-span-3 space-y-6">
-        <Link
-          href={`/company/${displayCompany.id}`}
-          className="h-full flex flex-col justify-center items-center space-y-2"
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Card
+          className={cn(
+            "cursor-pointer md:transition-shadow md:hover:shadow-lg md:hover:dark:bg-muted",
+            !quotation.rfq.latestVersion && "text-muted-foreground"
+          )}
         >
-          <Avatar className="md:h-20 md:w-20">
-            <AvatarFallback>
-              {getAvatarFallback(displayCompany.name)}
-            </AvatarFallback>
-          </Avatar>
-          <h5 className="text-center scroll-m-20 text-sm tracking-tight break-all">
-            {displayCompany.name}
-          </h5>
-        </Link>
-      </div>
-    </Card>
+          <div className="px-2">
+            <CardHeader>
+              <QuotationOutdated
+                rfq={quotation.rfq}
+                currentCompanyId={currentCompany?.id}
+                className="mb-2"
+              />
+              <div className="flex flex-row justify-start items-center space-x-4">
+                <Avatar className="md:h-20 md:w-20">
+                  <AvatarFallback>
+                    {getAvatarFallback(company.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <CardTitle>{company.name}</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4 p-4 pt-0 md:p-6 md:pt-0">
+              <QuotationTotal quotation={quotation} view="horizontal" />
+              <CardDescription>
+                {`${t("updatedAt")}: ${localizedRelativeDate(
+                  new Date(updatedAt),
+                  new Date(),
+                  locale
+                )}`}
+              </CardDescription>
+            </CardContent>
+          </div>
+        </Card>
+      </DialogTrigger>
+      <DialogContent className="mt-0 px-0 flex flex-col max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%] sm:p-6">
+        {currentCompany?.id === company.id && quotation.rfq.latestVersion ? (
+          <>
+            <DialogHeader className="flex-initial">
+              <DialogTitle>{t("title")}</DialogTitle>
+              <DialogDescription>{t("subtitle")}</DialogDescription>
+            </DialogHeader>
+            <QuotationEditForm
+              currentCompany={currentCompany}
+              rfq={rfq}
+              quotationId={quotation.id}
+              closeDialog={closeDialog}
+            />
+          </>
+        ) : (
+          <>
+            <DialogHeader className="flex-initial">
+              <DialogTitle>{t("viewTitle")}</DialogTitle>
+              <DialogDescription>{t("viewSubtitle")}</DialogDescription>
+            </DialogHeader>
+            <QuotationView quotationId={quotation.id} />
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 

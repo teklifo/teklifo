@@ -1,4 +1,4 @@
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { Prisma } from "@prisma/client";
 import { differenceInDays, format } from "date-fns";
 import {
@@ -7,12 +7,10 @@ import {
   Globe,
   HelpCircle,
   Banknote,
-  Building2,
   FileInput,
 } from "lucide-react";
 import { Link } from "@/navigation";
 import MainInfoItem from "@/components/main-info-item";
-import CompanyInfo from "@/components/company/company-info";
 import {
   Tooltip,
   TooltipContent,
@@ -20,9 +18,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { buttonVariants } from "@/components/ui/button";
-import { cn, localizedRelativeDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { Separator } from "../ui/separator";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -79,25 +77,6 @@ export const RFQDateInfo = ({
   );
 };
 
-export const QuotationCurrency = ({
-  currency,
-  view,
-}: {
-  currency: string;
-  view: "horizontal" | "vertical";
-}) => {
-  const t = useTranslations("RFQ");
-
-  return (
-    <MainInfoItem
-      icon={<Banknote />}
-      title={t("currency")}
-      content={currency}
-      view={view}
-    />
-  );
-};
-
 export const RFQType = ({ privateRequest }: { privateRequest: boolean }) => {
   const t = useTranslations("RFQ");
 
@@ -119,52 +98,23 @@ export const RFQType = ({ privateRequest }: { privateRequest: boolean }) => {
   );
 };
 
-const RFQMainInfo = ({ rfq, displayRfqLink }: RFQMainInfoProps) => {
+const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
   const t = useTranslations("RFQ");
 
-  const locale = useLocale();
-
-  const { company, privateRequest, currency, createdAt } = rfq;
+  const { company, privateRequest, currency } = rfq;
 
   return (
-    <div className="w-full space-y-4 border bg-card shadow-sm rounded-xl p-4 lg:p-6">
-      <CompanyInfo
-        icon={<Building2 />}
-        company={company}
-        title={t("company")}
-        view="vertical"
-      />
-      <Separator />
-      <RFQType privateRequest={privateRequest} />
-      <Separator />
-      <RFQDateInfo endDate={rfq.endDate} view="vertical" />
+    <div className="w-full pr-4 space-y-4">
+      <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
       <Separator />
       <MainInfoItem
         icon={<Banknote />}
         title={t("currency")}
         content={currency}
-        view="vertical"
+        view="horizontal"
       />
       <Separator />
-      <p className="text-sm text-muted-foreground">
-        {`${t("updatedAt")}: ${localizedRelativeDate(
-          new Date(createdAt),
-          new Date(),
-          locale
-        )}`}
-      </p>
-      {displayRfqLink && (
-        <Link
-          href={`/rfq/${rfq.id}`}
-          className={cn(
-            buttonVariants({ variant: "secondary" }),
-            "text-center whitespace-normal h-auto space-x-2 lg:w-full"
-          )}
-        >
-          <FileInput />
-          <span>{t("viewRfq")}</span>
-        </Link>
-      )}
+      <RFQType privateRequest={privateRequest} />
     </div>
   );
 };

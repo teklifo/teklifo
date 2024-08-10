@@ -65,7 +65,7 @@ const DeleteRFQ = ({ rfq }: Props) => {
 
       setOpen(false);
 
-      window.location.href = "/outgoing-rfq";
+      window.location.href = "/my-rfq";
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;
@@ -83,7 +83,10 @@ const DeleteRFQ = ({ rfq }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="justify-start">
+        <Button
+          variant="outline"
+          className="text-center whitespace-normal h-auto space-x-2 lg:w-full"
+        >
           <Trash className="mr-2 h-4 w-4" />
           <span>{t("delete")}</span>
         </Button>

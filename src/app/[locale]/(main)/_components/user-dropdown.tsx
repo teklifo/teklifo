@@ -4,7 +4,7 @@ import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import type { User as UserType, Company as CompanyType } from "@prisma/client";
-import { Building2, Settings, LogOut } from "lucide-react";
+import { Building2, Settings, LogOut, MenuIcon } from "lucide-react";
 import { Link } from "@/navigation";
 import Menu from "./menu";
 import Nav from "./nav";
@@ -51,10 +51,15 @@ const UserDropdown = ({
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" className="space-x-2">
-              <Avatar>
-                <AvatarImage src={user.image ?? ""} />
-                <AvatarFallback>{getAvatarFallback(userName)}</AvatarFallback>
-              </Avatar>
+              <div className="block md:hiddent">
+                <MenuIcon />
+              </div>
+              <div className="hidden md:block">
+                <Avatar>
+                  <AvatarImage src={user.image ?? ""} />
+                  <AvatarFallback>{getAvatarFallback(userName)}</AvatarFallback>
+                </Avatar>
+              </div>
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="px-2 py-8 overflow-auto">

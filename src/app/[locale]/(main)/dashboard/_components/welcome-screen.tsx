@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Plus, Search } from "lucide-react";
+import ClientImage from "@/components/client-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -33,12 +33,12 @@ const WelcomeScreen = async () => {
           </div>
         </div>
         <div className="w-full h-auto flex items-center justify-center lg:h-full lg:flex-col lg:space-y-12">
-          <Image
-            src="/illustrations/invitation.svg"
+          <ClientImage
+            src="/illustrations/light/invitation.svg"
             alt="Company suggestion"
             priority
-            width={600}
-            height={600}
+            width={400}
+            height={400}
           />
         </div>
       </div>
