@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import RFQForm from "@/components/rfq/rqf-form";
+import RFQForm from "@/components/rfq/rfq-form.tsx";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
