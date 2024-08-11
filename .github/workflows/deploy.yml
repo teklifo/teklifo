@@ -19,6 +19,7 @@ jobs:
           script: |
             cd apps/teklifo
             git pull origin main
+            pm2 stop 0
             npm install
             npm run build
             pm2 restart 0
