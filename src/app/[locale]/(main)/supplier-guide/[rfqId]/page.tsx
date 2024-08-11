@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import GuideStep from "./_components/guide-steps";
 import ExternalLink from "./_components/external-link";
 import ConfirmParticipation from "./_components/confirm-participation";
-import ClientImage from "@/components/client-image";
+import ThemedImage from "@/components/client-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getCurrentCompany from "@/app/actions/get-current-company";
@@ -109,7 +109,7 @@ const SupplierGuide = async ({ params: { rfqId } }: Props) => {
             </div>
           </div>
           <div className="w-full h-auto flex items-center justify-center mx-4 lg:h-full lg:flex-col lg:space-y-12">
-            <ClientImage
+            <ThemedImage
               src="/illustrations/light/email.svg"
               alt="Supplier guide"
               priority
