@@ -109,7 +109,7 @@ const ConfirmRFQ = ({ rfq }: ConfirmRFQProps) => {
       <AlertDialogTrigger asChild>
         <Button size="lg" className="space-x-2">
           <FileInput />
-          <span>{rfq ? t("create") : t("update")}</span>
+          <span>{rfq ? t("update") : t("create")}</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -127,7 +127,7 @@ const ConfirmRFQ = ({ rfq }: ConfirmRFQProps) => {
             disabled={loading}
             onClick={() => form.handleSubmit(onSubmit)()}
           >
-            {rfq ? t("create") : t("update")}
+            {rfq ? t("update") : t("create")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

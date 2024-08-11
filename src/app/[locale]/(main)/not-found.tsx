@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import ClientImage from "@/components/client-image";
+import ThemedImage from "@/components/client-image";
 
 const NotFound = () => {
   const t = useTranslations("NotFound");
@@ -15,7 +15,7 @@ const NotFound = () => {
         </h1>
         <p className="text-xl text-muted-foreground">{t("notFoundSubitle")}</p>
       </div>
-      <ClientImage
+      <ThemedImage
         src="/illustrations/light/404.svg"
         alt="Not found"
         priority

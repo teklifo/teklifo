@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import LoginForm from "./_components/login-form";
-import ClientImage from "@/components/client-image";
+import ThemedImage from "@/components/client-image";
 import Logo from "@/components/logo";
 
 type Props = {
@@ -41,7 +41,7 @@ const Login = async () => {
         </div>
       </div>
       <div className="hidden w-full bg-muted rounded-2xl h-full items-center justify-center px-8 lg:flex lg:flex-col lg:space-y-12">
-        <ClientImage
+        <ThemedImage
           src="/illustrations/light/login.svg"
           alt="Login"
           priority

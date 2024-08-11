@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
-import ClientImage from "@/components/client-image";
+import ThemedImage from "@/components/client-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -39,7 +39,7 @@ const CheckEmail = () => {
           </div>
         </div>
         <div className="w-full h-auto flex items-center justify-center lg:h-full lg:flex-col lg:space-y-12">
-          <ClientImage
+          <ThemedImage
             src={`/illustrations/light/email.svg`}
             alt="Check email"
             priority

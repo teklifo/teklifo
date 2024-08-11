@@ -1,12 +1,6 @@
-"use client";
-
 import Image from "next/image";
-import { useTheme } from "next-themes";
 
-const ClientImage = ({ ...props }) => {
-  const { theme } = useTheme();
-  console.log(theme);
-
+const ThemedImage = ({ ...props }) => {
   return (
     <>
       <Image
@@ -25,4 +19,4 @@ const ClientImage = ({ ...props }) => {
   );
 };
 
-export default ClientImage;
+export default ThemedImage;

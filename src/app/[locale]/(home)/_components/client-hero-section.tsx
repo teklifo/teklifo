@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/navigation";
-import ClientImage from "@/components/client-image";
+import ThemedImage from "@/components/client-image";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +35,7 @@ const ClientHeroSection = () => {
         </div>
       </div>
       <div className="min-h-[50vh] hidden justify-center items-center py-6 md:flex">
-        <ClientImage
+        <ThemedImage
           src={`/illustrations/light/hero.svg`}
           alt="Main image"
           priority
