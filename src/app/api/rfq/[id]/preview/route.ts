@@ -31,7 +31,6 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       },
     });
 
-    // RFQ not found
     if (!rfq) {
       return getErrorResponse(t("invalidRFQId"), 404);
     }
