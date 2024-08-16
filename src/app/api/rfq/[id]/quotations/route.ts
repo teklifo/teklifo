@@ -31,30 +31,60 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     if (!page || !limit)
       return getErrorResponse(t("pageAndlimitAreRequired"), 400);
 
-    const filters: Prisma.QuotationWhereInput = {};
-    filters.rfqId = id;
-    filters.rfq = {
-      latestVersion: true,
-    };
-
     const [total, result] = await db.$transaction([
       db.quotation.count({
-        where: filters,
+        where: {
+          rfq: {
+            id,
+            latestVersion: true,
+          },
+        },
       }),
-      db.quotation.findMany({
-        take: limit,
-        skip: startIndex,
-        where: filters,
+      db.requestForQuotationItem.findMany({
+        where: {
+          requestForQuotation: {
+            id,
+            latestVersion: true,
+          },
+        },
         include: {
-          company: true,
-          items: {
-            include: {
-              product: true,
+          product: {
+            select: {
+              productId: true,
             },
+          },
+          quotationItems: {
+            take: limit,
+            skip: startIndex,
+            include: {
+              quotation: {
+                select: {
+                  id: true,
+                  company: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: [
+              {
+                quotation: {
+                  totalAmount: "asc",
+                },
+              },
+              {
+                quotation: {
+                  id: "asc",
+                },
+              },
+            ],
           },
         },
         orderBy: {
-          totalAmount: "asc",
+          lineNumber: "asc",
         },
       }),
     ]);

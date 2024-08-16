@@ -3,15 +3,14 @@ import { headers, cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ArrowRightCircle } from "lucide-react";
-import type { Prisma } from "@prisma/client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import QuotationCard from "@/components/quotation/quotation-card";
+import RFQQuotationsTable from "./_components/rfq-quotations-table";
 import PaginationBar from "@/components/ui/pagination-bar";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
 import request from "@/lib/request";
-import { PaginationType } from "@/types";
+import { QuotationsByRFQItemType, PaginationType } from "@/types";
 
 type Props = {
   params: { locale: string; id: string };
@@ -20,19 +19,8 @@ type Props = {
   };
 };
 
-type QuotationType = Prisma.QuotationGetPayload<{
-  include: {
-    company: true;
-    items: {
-      include: {
-        product: true;
-      };
-    };
-  };
-}>;
-
 type PaginatedData = {
-  result: QuotationType[];
+  result: QuotationsByRFQItemType[];
   pagination: PaginationType;
 };
 
@@ -42,7 +30,11 @@ export const generateMetadata = async ({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   const rfq = await getRFQ(id);
-  if (!rfq) return;
+  if (!rfq)
+    return {
+      title: `${t("projectName")}`,
+      description: "",
+    };
 
   return {
     title: t("quotationsCompareTitle", { title: rfq.title }),
@@ -110,9 +102,7 @@ const QuotationsCompare = async ({
       <div className="mt-4">
         {result.length > 0 ? (
           <div className="flex flex-col space-y-3 pt-4">
-            {result.map((quotation) => (
-              <div key={quotation.id} />
-            ))}
+            <RFQQuotationsTable rfqQuotations={result} />
           </div>
         ) : (
           <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">

@@ -46,6 +46,31 @@ export type RFQWithQuotationsType = Prisma.RequestForQuotationGetPayload<{
   };
 }>;
 
+export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
+  include: {
+    product: {
+      select: {
+        productId: true;
+      };
+    };
+    quotationItems: {
+      include: {
+        quotation: {
+          select: {
+            id: true;
+            company: {
+              select: {
+                id: true;
+                name: true;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}>;
+
 // CML TYPES
 
 export type CML_Import = {
