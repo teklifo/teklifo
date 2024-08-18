@@ -17,11 +17,7 @@ const RFQQuotationsTable = ({ rfqQuotations }: Props) => {
       : [];
   const columns = createColumns(quotationsCompanies);
 
-  return (
-    <div className="mx-auto">
-      <DataTable columns={columns} data={rfqQuotations} />
-    </div>
-  );
+  return <DataTable columns={columns} data={rfqQuotations} />;
 };
 
 export default RFQQuotationsTable;

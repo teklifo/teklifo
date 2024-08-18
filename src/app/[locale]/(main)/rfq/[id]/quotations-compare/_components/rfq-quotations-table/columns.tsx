@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
 import { ColumnDef, HeaderContext } from "@tanstack/react-table";
 import { QuotationsByRFQItemType } from "@/types";
+import QuotationCell from "./quotation-cell";
+import ProductCell from "./product-cell";
 
 type QuotationCompany = { id: string; name: string };
 
@@ -23,7 +25,17 @@ function getQuotationCompanyHeader(quotationCompany: QuotationCompany) {
     column,
   }: HeaderContext<QuotationsByRFQItemType, unknown>) => {
     const t = useTranslations("QuotationsCompare");
-    return <span>{quotationCompany.name}</span>;
+    return (
+      <div className="p-4">
+        <Link
+          href={`/company/${quotationCompany.id}`}
+          target="_blank"
+          className="text-lg font-semibold"
+        >
+          {quotationCompany.name}
+        </Link>
+      </div>
+    );
   };
 
   return TableHeader;
@@ -38,8 +50,13 @@ export function createColumns(
     const quotationColumn: ColumnDef<QuotationsByRFQItemType> = {
       accessorKey: `quotationItem${quotationCompany.id}`,
       header: getQuotationCompanyHeader(quotationCompany),
-      cell: (info) => {
-        return <>{(info.getValue() as number) + 1}</>;
+      cell: ({ row }) => {
+        const quotationRow = row.original.quotationItems.find(
+          (item) => item.quotation.company.id === quotationCompany.id
+        );
+        if (!quotationRow) return "-";
+
+        return <QuotationCell quotationRow={quotationRow} />;
       },
     };
 
@@ -53,51 +70,16 @@ export function createColumns(
       cell: (info) => {
         return <>{(info.getValue() as number) + 1}</>;
       },
+      size: 0,
     },
     {
       accessorKey: "product",
       header: getTableHeader("product"),
       cell: ({ row }) => {
-        const product = row.original.product;
-        const productName = row.original.productName;
-
-        return product?.productId ? (
-          <Link href={`/product/${product.productId}`} className="block w-full">
-            <span className="underline underline-offset-4">{productName}</span>
-          </Link>
-        ) : (
-          <>{productName}</>
-        );
+        return <ProductCell row={row.original} />;
       },
       size: 500,
     },
     ...quotationsColumns,
   ];
 }
-
-export const columns: ColumnDef<QuotationsByRFQItemType>[] = [
-  {
-    accessorKey: "lineNumber",
-    header: getTableHeader("lineNumber"),
-    cell: (info) => {
-      return <>{(info.getValue() as number) + 1}</>;
-    },
-  },
-  {
-    accessorKey: "product",
-    header: getTableHeader("product"),
-    cell: ({ row }) => {
-      const product = row.original.product;
-      const productName = row.original.productName;
-
-      return product?.productId ? (
-        <Link href={`/product/${product.productId}`} className="block w-full">
-          <span className="underline underline-offset-4">{productName}</span>
-        </Link>
-      ) : (
-        <>{productName}</>
-      );
-    },
-    size: 500,
-  },
-];

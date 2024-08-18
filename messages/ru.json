@@ -597,8 +597,10 @@
   "QuotationsCompare": {
     "title": "Сравнение предложений",
     "subtitle": "Анализ коммерческих предложений от поставщиков",
+    "more": "Подробнее",
     "lineNumber": "#",
-    "product": "Товар"
+    "product": "Товар",
+    "quantity": "Количество"
   },
   "Schemas": {
     "companySchema": {

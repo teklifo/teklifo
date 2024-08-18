@@ -58,6 +58,11 @@ export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
         quotation: {
           select: {
             id: true;
+            rfq: {
+              select: {
+                latestVersion: true;
+              };
+            };
             company: {
               select: {
                 id: true;

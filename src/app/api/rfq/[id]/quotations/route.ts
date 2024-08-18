@@ -60,6 +60,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
               quotation: {
                 select: {
                   id: true,
+                  rfq: {
+                    select: {
+                      latestVersion: true,
+                    },
+                  },
                   company: {
                     select: {
                       id: true,

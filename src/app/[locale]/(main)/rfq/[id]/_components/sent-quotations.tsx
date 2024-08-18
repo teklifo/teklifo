@@ -2,6 +2,7 @@ import { headers, cookies } from "next/headers";
 import type { Prisma } from "@prisma/client";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
+import QuotationModal from "@/components/quotation/quotation-modal";
 import QuotationCard from "@/components/quotation/quotation-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import getCurrentCompany from "@/app/actions/get-current-company";
@@ -74,12 +75,17 @@ const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
       <div className="space-y-3 mt-4">
         {result.map((quotation) => {
           return (
-            <QuotationCard
+            <QuotationModal
               key={quotation.id}
               currentCompany={currentCompany}
               rfq={rfq}
               quotation={quotation}
-            />
+            >
+              <QuotationCard
+                currentCompany={currentCompany}
+                quotation={quotation}
+              />
+            </QuotationModal>
           );
         })}
       </div>
