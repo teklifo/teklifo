@@ -3,7 +3,6 @@ import { headers, cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ArrowRightCircle } from "lucide-react";
-import MaxWidthWrapper from "@/components/max-width-wrapper";
 import RFQQuotationsTable from "./_components/rfq-quotations-table";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -93,36 +92,34 @@ const QuotationsCompare = async ({
   const t = await getTranslations("QuotationsCompare");
 
   return (
-    <MaxWidthWrapper className="my-8">
+    <div className="mt-4 md:mx-8">
       <div className="space-y-2">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("title")}
         </h1>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
-      <div className="mt-4">
-        {result.length > 0 ? (
-          <div className="flex flex-col space-y-3 pt-4">
-            <ScrollArea className="w-full min-h-full">
-              <RFQQuotationsTable rfqQuotations={result} />
-              <ScrollBar orientation="horizontal" className="h-4" />
-            </ScrollArea>
-          </div>
-        ) : (
-          <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-            <ArrowRightCircle className="w-48 h-48" />
-            <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
-              {t("noIncomingQuotation")}
-            </h2>
-          </div>
-        )}
-        <PaginationBar
-          href={`/rfq/${id}/quotations-compare?page=`}
-          pagination={pagination}
-        />
-        <div />
-      </div>
-    </MaxWidthWrapper>
+      {result.length > 0 ? (
+        <div className="flex flex-col space-y-3 pt-4">
+          <ScrollArea className="w-full min-h-full">
+            <RFQQuotationsTable rfqQuotations={result} />
+            <ScrollBar orientation="horizontal" className="h-4" />
+          </ScrollArea>
+        </div>
+      ) : (
+        <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
+          <ArrowRightCircle className="w-48 h-48" />
+          <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            {t("noIncomingQuotation")}
+          </h2>
+        </div>
+      )}
+      <PaginationBar
+        href={`/rfq/${id}/quotations-compare?page=`}
+        pagination={pagination}
+      />
+      <div />
+    </div>
   );
 };
 

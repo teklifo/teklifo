@@ -600,7 +600,11 @@
     "more": "Подробнее",
     "lineNumber": "#",
     "product": "Товар",
-    "quantity": "Количество"
+    "quantity": "Количество",
+    "price": "Цена",
+    "rfqPrice": "Максимальная цена",
+    "rfqAmount": "Максимальная сумма",
+    "amountWithVat": "Итого"
   },
   "Schemas": {
     "companySchema": {

@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import QuotationModal from "@/components/quotation/quotation-modal";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 
 export type QuotationByRFQItemType = Prisma.QuotationItemGetPayload<{
   include: {
@@ -29,17 +29,30 @@ type QuotationCellProps = {
 };
 
 const QuotationCell = ({
-  quotationRow: { quotation, amountWithVat, quantity },
+  quotationRow: { quotation, quantity, price, amountWithVat },
 }: QuotationCellProps) => {
   const t = useTranslations("QuotationsCompare");
+  const format = useFormatter();
 
   return (
     <div className="p-4 group">
-      <p className="leading-7 [&:not(:first-child)]:mt-6">
-        {Number(amountWithVat).toFixed(2)}
+      <p className="leading-7 font-semibold">
+        {`${t("amountWithVat")}: ${format.number(Number(amountWithVat), {
+          style: "decimal",
+          minimumFractionDigits: 2,
+        })}`}
       </p>
       <p className="text-sm text-muted-foreground">
-        {`${t("quantity")}: ${Number(quantity).toFixed(3)}`}
+        {`${t("price")}: ${format.number(Number(price), {
+          style: "decimal",
+          minimumFractionDigits: 3,
+        })}`}
+      </p>
+      <p className="text-sm text-muted-foreground">
+        {`${t("quantity")}: ${format.number(Number(quantity), {
+          style: "decimal",
+          minimumFractionDigits: 3,
+        })}`}
       </p>
       <QuotationModal quotation={quotation}>
         <Button

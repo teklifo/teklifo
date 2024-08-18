@@ -72,7 +72,7 @@ const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
 
   return (
     <>
-      <div className="space-y-3 mt-4">
+      <div className="flex flex-col space-y-3 mt-4">
         {result.map((quotation) => {
           return (
             <QuotationModal

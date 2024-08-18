@@ -37,7 +37,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
   return (
     <Card
       className={cn(
-        "cursor-pointer md:transition-shadow md:hover:shadow-lg md:hover:dark:bg-muted",
+        "text-start cursor-pointer md:transition-shadow md:hover:shadow-lg md:hover:dark:bg-muted",
         !quotation.rfq.latestVersion && "text-muted-foreground"
       )}
     >
