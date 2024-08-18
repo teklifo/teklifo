@@ -1,19 +1,9 @@
 import { useFormatter, useTranslations } from "next-intl";
-import { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
-
-export type RFQRow = Prisma.RequestForQuotationItemGetPayload<{
-  include: {
-    product: {
-      select: {
-        productId: true;
-      };
-    };
-  };
-}>;
+import { QuotationsByRFQItemType } from "@/types";
 
 type ProductCellProps = {
-  row: RFQRow;
+  row: QuotationsByRFQItemType;
 };
 
 const ProductCell = ({ row }: ProductCellProps) => {
@@ -23,7 +13,7 @@ const ProductCell = ({ row }: ProductCellProps) => {
   const { product, productName, price, quantity } = row;
 
   return (
-    <div className="p-4">
+    <div className="p-4 space-y-2">
       {product?.productId ? (
         <Link href={`/product/${product.productId}`} className="block w-full">
           <span className="underline underline-offset-4 text-xl">

@@ -9,13 +9,9 @@ type Props = {
 };
 
 const RFQQuotationsTable = ({ rfqQuotations }: Props) => {
-  const quotationsCompanies =
-    rfqQuotations.length > 0
-      ? rfqQuotations[0].quotationItems.map(
-          (quotationItem) => quotationItem.quotation.company
-        )
-      : [];
-  const columns = createColumns(quotationsCompanies);
+  const quotationItems =
+    rfqQuotations.length > 0 ? rfqQuotations[0].quotationItems : [];
+  const columns = createColumns(quotationItems);
 
   return <DataTable columns={columns} data={rfqQuotations} />;
 };

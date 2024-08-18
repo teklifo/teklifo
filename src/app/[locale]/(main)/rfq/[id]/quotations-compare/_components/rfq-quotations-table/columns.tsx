@@ -3,9 +3,31 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
 import { ColumnDef, HeaderContext } from "@tanstack/react-table";
-import { QuotationsByRFQItemType } from "@/types";
+import { Prisma } from "@prisma/client";
 import QuotationCell from "./quotation-cell";
 import ProductCell from "./product-cell";
+import { QuotationsByRFQItemType } from "@/types";
+
+export type QuotationsItemType = Prisma.QuotationItemGetPayload<{
+  include: {
+    quotation: {
+      select: {
+        id: true;
+        rfq: {
+          select: {
+            latestVersion: true;
+          };
+        };
+        company: {
+          select: {
+            id: true;
+            name: true;
+          };
+        };
+      };
+    };
+  };
+}>;
 
 type QuotationCompany = { id: string; name: string };
 
@@ -42,21 +64,21 @@ function getQuotationCompanyHeader(quotationCompany: QuotationCompany) {
 }
 
 export function createColumns(
-  quotationCompanies: QuotationCompany[]
+  quotationItems: QuotationsItemType[]
 ): ColumnDef<QuotationsByRFQItemType>[] {
   const quotationsColumns: ColumnDef<QuotationsByRFQItemType>[] = [];
 
-  quotationCompanies.map((quotationCompany) => {
+  quotationItems.map((quotationItem) => {
     const quotationColumn: ColumnDef<QuotationsByRFQItemType> = {
-      accessorKey: `quotationItem${quotationCompany.id}`,
-      header: getQuotationCompanyHeader(quotationCompany),
+      accessorKey: `quotationItem${quotationItem.id}`,
+      header: getQuotationCompanyHeader(quotationItem.quotation.company),
       cell: ({ row }) => {
-        const quotationRow = row.original.quotationItems.find(
-          (item) => item.quotation.company.id === quotationCompany.id
+        return (
+          <QuotationCell
+            row={row.original}
+            quotationId={quotationItem.quotationId}
+          />
         );
-        if (!quotationRow) return "-";
-
-        return <QuotationCell quotationRow={quotationRow} />;
       },
     };
 
