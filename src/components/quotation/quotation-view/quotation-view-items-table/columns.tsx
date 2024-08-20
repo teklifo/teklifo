@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { Prisma } from "@prisma/client";
 import { ColumnDef, HeaderContext } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -56,6 +56,32 @@ function getVatIncludedCell(vatIncluded: boolean) {
   return VatIncludedCell;
 }
 
+function getMoneyCell(number: number) {
+  const MoneyCell = () => {
+    const format = useFormatter();
+    return (
+      <span>
+        {format.number(number, { style: "decimal", minimumFractionDigits: 2 })}
+      </span>
+    );
+  };
+
+  return MoneyCell;
+}
+
+function getQuantityCell(number: number) {
+  const QuantityCell = () => {
+    const format = useFormatter();
+    return (
+      <span>
+        {format.number(number, { style: "decimal", minimumFractionDigits: 3 })}
+      </span>
+    );
+  };
+
+  return QuantityCell;
+}
+
 export const columns: ColumnDef<QuotationItemType>[] = [
   {
     accessorKey: "rfqItem.lineNumber",
@@ -63,6 +89,7 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     cell: (info) => {
       return <>{(info.getValue() as number) + 1}</>;
     },
+    size: 0,
   },
   {
     accessorKey: "rfqItem",
@@ -85,29 +112,33 @@ export const columns: ColumnDef<QuotationItemType>[] = [
   {
     accessorKey: "rfqItem.quantity",
     header: getTableHeader("rfqQuantity"),
-    cell: (info) => {
-      return <>{Number(info.getValue()).toFixed(3)}</>;
+    cell: ({ row }) => {
+      const Cell = getQuantityCell(Number(row.original.rfqItem.quantity));
+      return <Cell />;
     },
   },
   {
     accessorKey: "quantity",
     header: getTableHeader("quantity"),
     cell: ({ row }) => {
-      return <>{Number(row.getValue("quantity")).toFixed(3)}</>;
+      const Cell = getQuantityCell(Number(row.original.quantity));
+      return <Cell />;
     },
   },
   {
     accessorKey: "rfqItem.price",
     header: getTableHeader("rfqPrice"),
-    cell: (info) => {
-      return <>{Number(info.getValue()).toFixed(2)}</>;
+    cell: ({ row }) => {
+      const Cell = getMoneyCell(Number(row.original.rfqItem.price));
+      return <Cell />;
     },
   },
   {
     accessorKey: "price",
     header: getTableHeader("price"),
     cell: ({ row }) => {
-      return <>{Number(row.getValue("price")).toFixed(2)}</>;
+      const Cell = getMoneyCell(Number(row.original.price));
+      return <Cell />;
     },
   },
 
@@ -115,7 +146,8 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "amount",
     header: getTableHeader("amount"),
     cell: ({ row }) => {
-      return <>{Number(row.getValue("amount")).toFixed(2)}</>;
+      const Cell = getMoneyCell(Number(row.original.amount));
+      return <Cell />;
     },
   },
   {
@@ -130,7 +162,8 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "vatAmount",
     header: getTableHeader("vatAmount"),
     cell: ({ row }) => {
-      return <>{Number(row.getValue("vatAmount")).toFixed(2)}</>;
+      const Cell = getMoneyCell(Number(row.original.vatAmount));
+      return <Cell />;
     },
   },
   {
@@ -145,7 +178,8 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "amountWithVat",
     header: getTableHeader("amountWithVat"),
     cell: ({ row }) => {
-      return <>{Number(row.getValue("amountWithVat")).toFixed(2)}</>;
+      const Cell = getMoneyCell(Number(row.original.amountWithVat));
+      return <Cell />;
     },
   },
   {

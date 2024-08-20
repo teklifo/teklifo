@@ -1,15 +1,7 @@
 import { useTranslations } from "next-intl";
 import type { Prisma } from "@prisma/client";
 import { differenceInDays, format } from "date-fns";
-import {
-  Calendar,
-  Lock,
-  Globe,
-  HelpCircle,
-  Banknote,
-  FileInput,
-} from "lucide-react";
-import { Link } from "@/navigation";
+import { Calendar, Lock, Globe, HelpCircle, Banknote } from "lucide-react";
 import MainInfoItem from "@/components/main-info-item";
 import {
   Tooltip,

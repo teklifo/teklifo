@@ -37,7 +37,7 @@ const ShareRFQ = () => {
     >
       <DialogTrigger asChild>
         <Button
-          variant="default"
+          variant="outline"
           className="text-center whitespace-normal h-auto space-x-2 lg:w-full"
         >
           <LinkIcon />

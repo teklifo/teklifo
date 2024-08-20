@@ -78,18 +78,18 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
             className="mt-8"
           >
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="main">
-                <FileText className="w-4 h-4 md:hidden" />
+              <TabsTrigger value="main" className="space-x-2">
+                <FileText className="w-4 h-4" />
                 <span className="hidden md:block">{t("main")}</span>
               </TabsTrigger>
-              <TabsTrigger value="items">
-                <Package className="w-4 h-4 md:hidden" />
+              <TabsTrigger value="items" className="space-x-2">
+                <Package className="w-4 h-4" />
                 <span className="hidden md:block">{`${t("items")} (${
                   items.length || 0
                 })`}</span>
               </TabsTrigger>
-              <TabsTrigger value="quotations">
-                <Briefcase className="w-4 h-4 md:hidden" />
+              <TabsTrigger value="quotations" className="space-x-2">
+                <Briefcase className="w-4 h-4" />
                 <span className="hidden md:block">{t("quotations")}</span>
               </TabsTrigger>
             </TabsList>

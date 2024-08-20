@@ -75,16 +75,16 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
       />
       <Tabs defaultValue="items" className="h-full">
         <TabsList className="grid w-full grid-cols-3 md:max-w-max">
-          <TabsTrigger value="items">
-            <Package className="w-4 h-4 md:hidden" />
+          <TabsTrigger value="items" className="space-x-2">
+            <Package className="w-4 h-4" />
             <span className="hidden md:block">{t("items")}</span>
           </TabsTrigger>
-          <TabsTrigger value="contacts">
-            <Contact className="w-4 h-4 md:hidden" />
+          <TabsTrigger value="contacts" className="space-x-2">
+            <Contact className="w-4 h-4" />
             <span className="hidden md:block">{t("contacts")}</span>
           </TabsTrigger>
-          <TabsTrigger value="additional">
-            <Info className="w-4 h-4 md:hidden" />
+          <TabsTrigger value="additional" className="space-x-2">
+            <Info className="w-4 h-4" />
             <span className="hidden md:block">{t("additional")}</span>
           </TabsTrigger>
         </TabsList>

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   Control,
   ControllerRenderProps,
@@ -118,6 +118,7 @@ const QuotationItem = ({
   index,
 }: QuotationItemProps) => {
   const t = useTranslations("Quotation");
+  const intlFormat = useFormatter();
 
   const locale = useLocale();
 
@@ -157,7 +158,10 @@ const QuotationItem = ({
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
-          {Number(rfqItem.quantity).toFixed(3)}
+          {intlFormat.number(Number(rfqItem.quantity), {
+            style: "decimal",
+            minimumFractionDigits: 3,
+          })}
         </div>
       </Cell>
       <Cell>
@@ -165,7 +169,10 @@ const QuotationItem = ({
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
-          {Number(rfqItem.price).toFixed(2)}
+          {intlFormat.number(Number(rfqItem.price), {
+            style: "decimal",
+            minimumFractionDigits: 2,
+          })}
         </div>
       </Cell>
       <Cell>
@@ -173,7 +180,10 @@ const QuotationItem = ({
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {Number(amount).toFixed(2)}
+          {intlFormat.number(Number(amount), {
+            style: "decimal",
+            minimumFractionDigits: 2,
+          })}
         </div>
       </Cell>
       <Cell>
@@ -202,12 +212,18 @@ const QuotationItem = ({
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {Number(vatAmount).toFixed(2)}
+          {intlFormat.number(Number(vatAmount), {
+            style: "decimal",
+            minimumFractionDigits: 2,
+          })}
         </div>
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {Number(amountWithVat).toFixed(2)}
+          {intlFormat.number(Number(amountWithVat), {
+            style: "decimal",
+            minimumFractionDigits: 2,
+          })}
         </div>
       </Cell>
       <Cell>

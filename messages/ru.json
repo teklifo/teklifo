@@ -51,7 +51,9 @@
     "supplierGuideDescription": "Подтвердите участие в закрытом запросе цен",
     "updateQuotationTitle": "Изменить коммерческое предложение клиенту #{id}",
     "updateQuotationDescription": "Измените существующее коммерческое предложение клиенту",
-    "quotation": "Коммерческое предложение"
+    "quotation": "Коммерческое предложение",
+    "quotationsCompareTitle": "Анализ предложений | {title}",
+    "quotationsCompareDescription": "Сравнение коммерческих предложений от поставщиков"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -472,7 +474,8 @@
     "createQuotation": "Подготовить предложение",
     "createAlternativeQuotation": "Подготовить альтернативное предложение",
     "quotationTitle": "Коммерческое предложение клиенту",
-    "quotationSubtitle": "Отправьте коммерческое предложение клиенту в ответ на полученный запрос цен"
+    "quotationSubtitle": "Отправьте коммерческое предложение клиенту в ответ на полученный запрос цен",
+    "compareQuotations": "Сравнить предложения"
   },
   "SupplierGuide": {
     "title": "Поздравляем! Вы перешли по ссылке закрытого запроса цен",
@@ -590,6 +593,41 @@
     "joinNowSubtitle": "Вы можете пользоваться всеми основными возможностями сервиса абсолютно бесплатно: не нужно подвязывать банковские карточки или платить комиссию. Присоединитесь и убедитесь в этом сами.",
     "join": "Оптимизировать свой бизнес",
     "footer": "Teklifo © 2024"
+  },
+  "QuotationsCompare": {
+    "title": "Сравнение предложений",
+    "subtitle": "Анализ коммерческих предложений от поставщиков",
+    "more": "Подробнее",
+    "lineNumber": "#",
+    "product": "Товар",
+    "quantity": "Количество",
+    "price": "Цена",
+    "rfqPrice": "Максимальная цена",
+    "rfqAmount": "Максимальная сумма",
+    "amountWithVat": "Итого",
+    "vat": "НДС",
+    "position1": "Самое выгодное предложение по данной позиции",
+    "position2": "Второе по выгоде предложение по данной позиции",
+    "position3": "Третье по выгоде предложение по данной позиции",
+    "quantitySurplus": "Предложено на {quantityDifference} ед. больше, чем было запрошено",
+    "quantityDisadvantage": "Предложено на {quantityDifference} ед. меньше, чем было запрошено",
+    "priceLowerThanRequested": "Цена дороже, чем было запрошено на {percentage}%",
+    "priceHigherThanRequested": "Цена дешевле, чем было запрошено на {percentage}%",
+    "deliveredEarlier": "Доставка раньше запрошенной даты на {daysDifference} дн.",
+    "deliveredLater": "Доставка позже запрошенной на {daysDifference} дн.",
+    "vatIncluded": "вкл.",
+    "vatNotIncluded": "выкл.",
+    "NOVAT": "Без НДС",
+    "VAT0": "НДС 0%",
+    "VAT18": "НСД 18%",
+    "VAT20": "НДС 20%",
+    "order": "Сортировка",
+    "orderByAmountAsc": "Сначала выгодные",
+    "orderByAmountDesc": "Выгодные в конце",
+    "orderByDateAsc": "Сначла старые, потом новые",
+    "orderByDateDesc": "Сначала новые, потом старые",
+    "totalAmount": "Итого",
+    "deliveryDate": "Дата доставки"
   },
   "Schemas": {
     "companySchema": {

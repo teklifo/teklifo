@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { useFormatter, useTranslations } from "next-intl";
 import type { Prisma } from "@prisma/client";
 import { format } from "date-fns";
 import {
@@ -18,12 +18,13 @@ type RFQItemCardProps = {
   item: RequestForQuotationItemType;
 };
 
-const RFQItemCard = async ({
+const RFQItemCard = ({
   number,
   currency,
   item: { productName, product, quantity, price, deliveryDate, comment },
 }: RFQItemCardProps) => {
-  const t = await getTranslations("RFQ");
+  const t = useTranslations("RFQ");
+  const intlFormat = useFormatter();
 
   return (
     <Card className="w-full">
@@ -52,13 +53,21 @@ const RFQItemCard = async ({
         <div className="flex flex-col space-y-2 md:flex-row md:space-x-8 md:space-y-0">
           <div className="flex flex-col items-start">
             <span className="text-muted-foreground">{`${t("quantity")}`}</span>
-            <span className="font-semibold">{Number(quantity).toFixed(3)}</span>
+            <span className="font-semibold">
+              {intlFormat.number(Number(quantity), {
+                style: "decimal",
+                minimumFractionDigits: 3,
+              })}
+            </span>
           </div>
           <div className="flex flex-col items-start">
             <span className="text-muted-foreground">{`${t("price")}`}</span>
-            <span className="font-semibold">{`${Number(price).toFixed(
-              2
-            )} ${currency}`}</span>
+            <span className="font-semibold">
+              {intlFormat.number(Number(price), {
+                style: "currency",
+                currency,
+              })}
+            </span>
           </div>
           <div className="flex flex-col items-start">
             <span className="text-muted-foreground">{`${t(

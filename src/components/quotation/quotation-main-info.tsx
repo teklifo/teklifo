@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import type {
   Prisma,
   RequestForQuotation as RequestForQuotationType,
@@ -26,12 +26,16 @@ export const QuotationTotal = ({
   view: "horizontal" | "vertical";
 }) => {
   const t = useTranslations("Quotation");
+  const format = useFormatter();
 
   return (
     <MainInfoItem
       icon={<CircleDollarSign />}
       title={t("totalAmount")}
-      content={`${Number(totalAmount).toFixed(2)} ${currency}`}
+      content={`${format.number(Number(totalAmount), {
+        style: "currency",
+        currency,
+      })}`}
       view={view}
     />
   );
