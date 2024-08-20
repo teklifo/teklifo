@@ -1,5 +1,10 @@
 import { useTranslations } from "next-intl";
-import { CircleMinus, CirclePlus } from "lucide-react";
+import {
+  AlarmClockMinus,
+  AlarmClockPlus,
+  CircleMinus,
+  CirclePlus,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
@@ -9,19 +14,19 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
-type QuantityBadgeProps = {
-  quantityDifference: number;
+type DeliveryDateBadgeProps = {
+  daysDifference: number;
 };
 
-const QuantityBadge = ({ quantityDifference }: QuantityBadgeProps) => {
+const DeliveryDateBadge = ({ daysDifference }: DeliveryDateBadgeProps) => {
   const t = useTranslations("QuotationsCompare");
 
-  if (quantityDifference === 0) return null;
+  if (daysDifference === 0) return null;
 
   const tooltip =
-    quantityDifference > 0
-      ? t("quantitySurplus", { quantityDifference })
-      : t("quantityDisadvantage", { quantityDifference: -quantityDifference });
+    daysDifference > 0
+      ? t("deliveredLater", { daysDifference })
+      : t("deliveredEarlier", { daysDifference: -daysDifference });
 
   return (
     <TooltipProvider>
@@ -30,14 +35,14 @@ const QuantityBadge = ({ quantityDifference }: QuantityBadgeProps) => {
           <Badge
             variant="outline"
             className={cn(
-              quantityDifference < 0 ? "text-destructive" : "text-green-500",
+              daysDifference > 0 ? "text-destructive" : "text-green-500",
               "font-semibold"
             )}
           >
-            {quantityDifference < 0 ? (
-              <CircleMinus className="h-4 w-4" />
+            {daysDifference > 0 ? (
+              <AlarmClockMinus className="h-4 w-4" />
             ) : (
-              <CirclePlus className="h-4 w-4" />
+              <AlarmClockPlus className="h-4 w-4" />
             )}
           </Badge>
         </TooltipTrigger>
@@ -49,4 +54,4 @@ const QuantityBadge = ({ quantityDifference }: QuantityBadgeProps) => {
   );
 };
 
-export default QuantityBadge;
+export default DeliveryDateBadge;

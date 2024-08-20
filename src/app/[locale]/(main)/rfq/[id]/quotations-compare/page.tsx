@@ -3,6 +3,7 @@ import { headers, cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ArrowRightCircle } from "lucide-react";
+import RFQQuotationOrder from "./_components/rfq-quotations-order";
 import RFQQuotationsTable from "./_components/rfq-quotations-table";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -12,11 +13,14 @@ import getRFQPreview from "@/app/actions/get-rfq-preview";
 import request from "@/lib/request";
 import { QuotationsByRFQItemType, PaginationType } from "@/types";
 
+type SearchParams = {
+  order?: string;
+  page?: number;
+};
+
 type Props = {
   params: { locale: string; id: string };
-  searchParams: {
-    page?: number;
-  };
+  searchParams: SearchParams;
 };
 
 type PaginatedData = {
@@ -42,14 +46,18 @@ export const generateMetadata = async ({
   };
 };
 
-const getRFQQuotations = async (rfqId: string, page: number) => {
+const getRFQQuotations = async (rfqId: string, searchParams: SearchParams) => {
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
+    const { order, page } = searchParams;
+
     return await request<PaginatedData>(
-      `/api/rfq/${rfqId}/quotations?page=${page}&limit=10`,
+      `/api/rfq/${rfqId}/quotations?order=${order ?? "amountAsc"}&page=${
+        page ?? 1
+      }&limit=10`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -63,10 +71,7 @@ const getRFQQuotations = async (rfqId: string, page: number) => {
   }
 };
 
-const QuotationsCompare = async ({
-  params: { id },
-  searchParams: { page },
-}: Props) => {
+const QuotationsCompare = async ({ params: { id }, searchParams }: Props) => {
   const rfq = await getRFQ(id);
 
   if (!rfq) {
@@ -84,7 +89,7 @@ const QuotationsCompare = async ({
     return notFound();
   }
 
-  const data = await getRFQQuotations(id, page ?? 1);
+  const data = await getRFQQuotations(id, searchParams);
   if (!data) return notFound();
 
   const { result, pagination } = data;
@@ -92,13 +97,14 @@ const QuotationsCompare = async ({
   const t = await getTranslations("QuotationsCompare");
 
   return (
-    <div className="mt-4 md:mx-8">
-      <div className="space-y-2">
+    <div className="mt-4 mx-2 md:mx-8">
+      <div className="space-y-2 mb-8">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("title")}
         </h1>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
+      <RFQQuotationOrder id={id} defaultValue={searchParams.order} />
       {result.length > 0 ? (
         <div className="flex flex-col space-y-3 pt-4">
           <ScrollArea className="w-full min-h-full">

@@ -31,6 +31,14 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
     if (!page || !limit)
       return getErrorResponse(t("pageAndlimitAreRequired"), 400);
 
+    const order = request.nextUrl.searchParams.get("order");
+    let orderBy: Prisma.QuotationOrderByWithRelationInput = {
+      totalAmount: "asc",
+    };
+    if (order === "amountDesc") orderBy = { totalAmount: "desc" };
+    if (order === "dateDesc") orderBy = { updatedAt: "desc" };
+    if (order === "dateAsc") orderBy = { updatedAt: "asc" };
+
     const [total, result] = await db.$transaction([
       db.quotation.count({
         where: {
@@ -50,7 +58,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         include: {
           product: {
             select: {
-              productId: true,
+              id: true,
             },
           },
           quotationItems: {
@@ -60,6 +68,8 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
               quotation: {
                 select: {
                   id: true,
+                  totalAmount: true,
+                  currency: true,
                   rfq: {
                     select: {
                       latestVersion: true,
@@ -77,7 +87,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             orderBy: [
               {
                 quotation: {
-                  totalAmount: "asc",
+                  ...orderBy,
                 },
               },
               {

@@ -50,7 +50,7 @@ export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
   include: {
     product: {
       select: {
-        productId: true;
+        id: true;
       };
     };
     quotationItems: {
@@ -58,6 +58,8 @@ export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
         quotation: {
           select: {
             id: true;
+            totalAmount: true;
+            currency: true;
             rfq: {
               select: {
                 latestVersion: true;

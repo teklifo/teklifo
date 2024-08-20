@@ -1,18 +1,23 @@
+import { useMemo } from "react";
 import { useFormatter, useTranslations } from "next-intl";
+import { format, differenceInDays } from "date-fns";
 import { Prisma } from "@prisma/client";
-import QuantityBadge from "../quantity-badge";
+import RatingBadge from "../rating-badge";
 import PricePercentageBadge from "../price-percentage-badge";
+import DeliveryDateBadge from "../delivery-date-badge";
+import QuantityBadge from "../quantity-badge";
 import QuotationModal from "@/components/quotation/quotation-modal";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { QuotationsByRFQItemType } from "@/types";
-import RatingBadge from "../rating-badge";
 
 type QuotationItemType = Prisma.QuotationItemGetPayload<{
   include: {
     quotation: {
       select: {
         id: true;
+        totalAmount: true;
+        currency: true;
         rfq: {
           select: {
             latestVersion: true;
@@ -57,18 +62,32 @@ function getQuotationRow(
 
 const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
   const t = useTranslations("QuotationsCompare");
-  const format = useFormatter();
+  const intlFormat = useFormatter();
 
-  const { quotationItems, price: rfqPrice, quantity: rfqQuantity } = row;
+  const {
+    quotationItems,
+    price: rfqPrice,
+    quantity: rfqQuantity,
+    deliveryDate: rfqDeliveryDate,
+  } = row;
 
-  const { quotationRow, quotationIndex } = getQuotationRow(
-    quotationId,
-    quotationItems
+  const { quotationRow, quotationIndex } = useMemo(
+    () => getQuotationRow(quotationId, quotationItems),
+    [quotationId, quotationItems]
   );
 
   if (!quotationRow) return "-";
 
-  const { quotation, quantity, price, amountWithVat } = quotationRow;
+  const {
+    quotation,
+    quantity,
+    price,
+    vatAmount,
+    vatRate,
+    vatIncluded,
+    amountWithVat,
+    deliveryDate,
+  } = quotationRow;
 
   const pricePercentage = calculatePricePercentage(
     Number(rfqPrice),
@@ -77,11 +96,20 @@ const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
 
   const quantityDifference = Number(quantity) - Number(rfqQuantity);
 
+  const vatRateLabel = t(vatRate);
+  const vatIncludedLabel = vatIncluded ? t("vatIncluded") : t("vatNotIncluded");
+  const vatAmountLabel = intlFormat.number(Number(vatAmount), {
+    style: "decimal",
+    minimumFractionDigits: 2,
+  });
+
+  const daysDifference = differenceInDays(deliveryDate, rfqDeliveryDate);
+
   return (
     <div className="p-4 group space-y-2">
       <div className="flex flex-row items-center space-x-2">
         <p className="leading-7 font-semibold">
-          {`${t("amountWithVat")}: ${format.number(Number(amountWithVat), {
+          {`${t("amountWithVat")}: ${intlFormat.number(Number(amountWithVat), {
             style: "decimal",
             minimumFractionDigits: 2,
           })}`}
@@ -90,7 +118,7 @@ const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
       </div>
       <div className="flex flex-row items-center space-x-2">
         <p className="text-sm text-muted-foreground">
-          {`${t("price")}: ${format.number(Number(price), {
+          {`${t("price")}: ${intlFormat.number(Number(price), {
             style: "decimal",
             minimumFractionDigits: 3,
           })}`}
@@ -99,12 +127,25 @@ const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
       </div>
       <div className="flex flex-row items-center space-x-2">
         <p className="text-sm text-muted-foreground">
-          {`${t("quantity")}: ${format.number(Number(quantity), {
+          {Number(vatAmount) > 0
+            ? `${vatRateLabel}, ${vatIncludedLabel}, ${vatAmountLabel}`
+            : vatRateLabel}
+        </p>
+      </div>
+      <div className="flex flex-row items-center space-x-2">
+        <p className="text-sm text-muted-foreground">
+          {`${t("quantity")}: ${intlFormat.number(Number(quantity), {
             style: "decimal",
             minimumFractionDigits: 3,
           })}`}
         </p>
         <QuantityBadge quantityDifference={quantityDifference} />
+      </div>
+      <div className="flex flex-row items-center space-x-2">
+        <p className="text-sm text-muted-foreground">
+          {`${t("deliveryDate")}: ${format(deliveryDate, "dd.MM.yyyy")}`}
+        </p>
+        <DeliveryDateBadge daysDifference={daysDifference} />
       </div>
       <QuotationModal quotation={quotation}>
         <div
