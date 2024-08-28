@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Product as ProductType } from "@prisma/client";
 import { useTranslations, useLocale } from "next-intl";
-import { Control, FieldArrayWithId, useFormContext } from "react-hook-form";
+import {
+  Control,
+  ControllerRenderProps,
+  useFormContext,
+} from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
 import { MoreHorizontal, Trash, X, CalendarIcon } from "lucide-react";
@@ -27,31 +31,29 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Input, InputProps } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn, dateFnsLocale } from "@/lib/utils";
 
 type RFQItemProps = {
-  productField: FieldArrayWithId;
   index: number;
   removeProduct: () => void;
 };
 
-type CellFieldProps = {
+interface CellFieldProps extends React.ComponentPropsWithoutRef<"input"> {
   control: Control<any>;
   name: string;
-  fieldProps?: InputProps;
-};
+}
 
-type TableInputProps = {
-  field: InputProps;
-};
+interface TableInputProps extends React.ComponentPropsWithoutRef<"input"> {
+  field: ControllerRenderProps<any, string>;
+}
 
 const Cell = ({ children }: { children: React.ReactNode }) => {
   return <TableCell className="p-0 border-none">{children}</TableCell>;
 };
 
-const CellField = ({ control, name, fieldProps }: CellFieldProps) => {
+const CellField = ({ control, name, ...props }: CellFieldProps) => {
   return (
     <FormField
       control={control}
@@ -59,7 +61,7 @@ const CellField = ({ control, name, fieldProps }: CellFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormControl>
-            <TableInput field={{ ...field, ...fieldProps }} />
+            <TableInput field={field} {...props} />
           </FormControl>
         </FormItem>
       )}
@@ -67,7 +69,7 @@ const CellField = ({ control, name, fieldProps }: CellFieldProps) => {
   );
 };
 
-const TableInput = ({ field }: TableInputProps) => {
+const TableInput = ({ field, ...props }: TableInputProps) => {
   const { error } = useFormField();
 
   return (
@@ -76,7 +78,12 @@ const TableInput = ({ field }: TableInputProps) => {
         <TooltipTrigger asChild>
           <Input
             {...field}
+            {...props}
+            value={field.value}
             autoComplete="off"
+            onBlur={undefined}
+            onFocus={(e) => e.target.select()}
+            onWheel={(e) => e.currentTarget.blur()}
             className={cn(
               "border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0",
               error && "bg-red-300"
@@ -93,7 +100,7 @@ const TableInput = ({ field }: TableInputProps) => {
   );
 };
 
-const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
+const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
   const t = useTranslations("RFQForm");
 
   const locale = useLocale();
@@ -133,9 +140,6 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
           ) : (
             <div className="w-full">
               <CellField
-                fieldProps={{
-                  placeholder: t("productInputHint"),
-                }}
                 control={form.control}
                 name={`items.${index}.productName`}
               />
@@ -185,10 +189,18 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
         </div>
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.quantity`} />
+        <CellField
+          control={form.control}
+          name={`items.${index}.quantity`}
+          type="number"
+        />
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.price`} />
+        <CellField
+          control={form.control}
+          name={`items.${index}.price`}
+          type="number"
+        />
       </Cell>
       <Cell>
         <FormField

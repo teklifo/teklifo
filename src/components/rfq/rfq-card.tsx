@@ -10,8 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { getAvatarFallback, localizedRelativeDate } from "@/lib/utils";
+import { localizedRelativeDate } from "@/lib/utils";
 import { RFQWithQuotationsType } from "@/types";
 import CompanyAvatar from "../company/company-avatar";
 
@@ -56,7 +55,7 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
           </CardContent>
         </Link>
       </div>
-      <div className="p-2 col-span-3 space-y-6">
+      <div className="p-4 col-span-3 space-y-6">
         <CompanyAvatar
           company={company}
           className="h-full flex flex-col justify-center items-center space-y-2"

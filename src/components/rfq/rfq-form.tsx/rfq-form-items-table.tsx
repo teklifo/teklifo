@@ -69,7 +69,6 @@ const RFQFormItemsTable = () => {
             return (
               <RFQItem
                 key={productField.id}
-                productField={productField}
                 index={index}
                 removeProduct={() => {
                   items.remove(index);

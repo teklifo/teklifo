@@ -57,10 +57,11 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
             index={index}
             control={form.control}
             rfqItem={rfqItem}
+            setValue={form.setValue}
           />
         );
       }),
-    [form.control, items.fields, rfq.items]
+    [form.control, form.setValue, items.fields, rfq.items]
   );
 
   return (
