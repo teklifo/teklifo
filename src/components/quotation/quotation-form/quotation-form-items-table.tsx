@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import * as z from "zod";
@@ -44,6 +45,24 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
     name: "items",
   });
 
+  const memorizedItems = useMemo(
+    () =>
+      items.fields.map((productField, index) => {
+        const rfqItem = rfq.items.find((e) => e.id === productField.rfqItemId);
+        if (!rfqItem) return null;
+
+        return (
+          <QuotationItem
+            key={productField.id}
+            index={index}
+            control={form.control}
+            rfqItem={rfqItem}
+          />
+        );
+      }),
+    [form.control, items.fields, rfq.items]
+  );
+
   return (
     <Table className="mt-4">
       <TableHeader>
@@ -88,16 +107,7 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
           </TooltipProvider>
         </TableRow>
       </TableHeader>
-      <TableBody>
-        {items.fields.map((productField, index) => {
-          const rfqItem = rfq.items.find(
-            (e) => e.id === productField.rfqItemId
-          );
-          if (!rfqItem) return null;
-
-          return <QuotationItem rfqItem={rfqItem} key={index} index={index} />;
-        })}
-      </TableBody>
+      <TableBody>{memorizedItems}</TableBody>
     </Table>
   );
 };

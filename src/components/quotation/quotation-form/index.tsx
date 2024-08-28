@@ -60,8 +60,8 @@ const QuotationForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
     defaultValues: {
       id: quotation?.id ?? 0,
       rfqVersionId: rfq.versionId ?? "",

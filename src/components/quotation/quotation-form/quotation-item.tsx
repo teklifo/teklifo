@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   Control,
   ControllerRenderProps,
   FieldArrayWithId,
   useFormContext,
+  useWatch,
 } from "react-hook-form";
 import * as z from "zod";
 import { CalendarIcon } from "lucide-react";
@@ -48,26 +49,25 @@ import {
 } from "@/lib/calculations";
 
 type QuotationItemProps = {
-  rfqItem: RequestForQuotationItem;
   index: number;
+  control: Control<any>;
+  rfqItem: RequestForQuotationItem;
 };
 
 type CellFieldProps = {
   control: Control<any>;
   name: string;
-  value?: string | number | readonly string[] | undefined;
 };
 
 type TableInputProps = {
   field: ControllerRenderProps<any, string>;
-  value?: string | number | readonly string[] | undefined;
 };
 
 const Cell = ({ children }: { children: React.ReactNode }) => {
   return <TableCell className="p-0 border-none">{children}</TableCell>;
 };
 
-const CellField = ({ control, name, value }: CellFieldProps) => {
+const CellField = ({ control, name }: CellFieldProps) => {
   return (
     <FormField
       control={control}
@@ -75,7 +75,7 @@ const CellField = ({ control, name, value }: CellFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormControl>
-            <TableInput field={field} value={value} />
+            <TableInput field={field} />
           </FormControl>
         </FormItem>
       )}
@@ -83,36 +83,35 @@ const CellField = ({ control, name, value }: CellFieldProps) => {
   );
 };
 
-const TableInput = ({ field, value }: TableInputProps) => {
-  const { error } = useFormField();
+const TableInput = ({ field }: TableInputProps) => {
+  // const { error } = useFormField();
+  const error = undefined;
 
   return (
-    <TooltipProvider>
-      <Tooltip delayDuration={100}>
-        <TooltipTrigger asChild>
-          <Input
-            {...field}
-            value={value || field.value}
-            autoComplete="off"
-            className={cn(
-              "border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0",
-              error && "bg-red-300"
-            )}
-          />
-        </TooltipTrigger>
-        {error && (
-          <TooltipContent side="bottom">
-            <p>{error?.message}</p>
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
+    // <TooltipProvider>
+    //   <Tooltip delayDuration={100}>
+    //     <TooltipTrigger asChild>
+    <Input
+      {...field}
+      value={field.value}
+      autoComplete="off"
+      className={cn(
+        "border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0",
+        error && "bg-red-300"
+      )}
+    />
+    //     </TooltipTrigger>
+    //     {error && (
+    //       <TooltipContent side="bottom">
+    //         <p>{error?.message}</p>
+    //       </TooltipContent>
+    //     )}
+    //   </Tooltip>
+    // </TooltipProvider>
   );
 };
 
-const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
-  console.log(index);
-
+const QuotationItem = ({ index, control, rfqItem }: QuotationItemProps) => {
   const t = useTranslations("Quotation");
   const intlFormat = useFormatter();
 
@@ -121,29 +120,28 @@ const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
 
-  const form = useFormContext<z.infer<typeof formSchema>>();
-  const setValue = form.setValue;
+  // const form = useFormContext<z.infer<typeof formSchema>>();
+  // const setValue = form.setValue;
 
-  const productName = form.watch(`items.${index}.productName`);
-  const product = form.getValues(`items.${index}.product`);
-  const quantity = form.watch(`items.${index}.quantity`);
-  const price = form.watch(`items.${index}.price`);
-  const amount = form.watch(`items.${index}.amount`);
-  const vatIncluded = form.watch(`items.${index}.vatIncluded`);
-  const vatRate = form.watch(`items.${index}.vatRate`);
+  const productName = useWatch({ name: `items.${index}.productName` });
+  const product = useWatch({ name: `items.${index}.product` });
+  const quantity = useWatch({ name: `items.${index}.quantity` });
+  const price = useWatch({ name: `items.${index}.price` });
+  const amount = useWatch({ name: `items.${index}.amount` });
+  const vatIncluded = useWatch({ name: `items.${index}.vatIncluded` });
+  const vatRate = useWatch({ name: `items.${index}.vatRate` });
+  const skip = useWatch({ name: `items.${index}.skip` });
+
   const vatRateInfo = getVatRatePercentage(vatRate);
   const vatAmount =
     calculateVatAmount(amount, vatRateInfo.vatRatePercentage) ?? 0;
-
   const amountWithVat =
     calculateAmountWithVat(amount, vatAmount, vatIncluded) ?? 0;
 
-  const skip = form.watch(`items.${index}.skip`);
-
-  useEffect(() => {
-    const value = quantity * price;
-    setValue(`items.${index}.amount`, value ?? 0);
-  }, [index, setValue, price, quantity]);
+  // useEffect(() => {
+  //   const value = quantity * price;
+  //   setValue(`items.${index}.amount`, value ?? 0);
+  // }, [index, setValue, price, quantity]);
 
   return (
     <TableRow className="border-none">
@@ -161,7 +159,7 @@ const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
         </div>
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.quantity`} />
+        <CellField control={control} name={`items.${index}.quantity`} />
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
@@ -172,7 +170,7 @@ const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
         </div>
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.price`} />
+        <CellField control={control} name={`items.${index}.price`} />
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border">
@@ -184,7 +182,7 @@ const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
       </Cell>
       <Cell>
         <FormField
-          control={form.control}
+          control={control}
           name={`items.${index}.vatRate`}
           render={({ field }) => (
             <FormItem>
@@ -229,7 +227,7 @@ const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
       </Cell>
       <Cell>
         <FormField
-          control={form.control}
+          control={control}
           name={`items.${index}.deliveryDate`}
           render={({ field }) => (
             <FormItem>
@@ -269,12 +267,12 @@ const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
         />
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.comment`} />
+        <CellField control={control} name={`items.${index}.comment`} />
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border">
           <FormField
-            control={form.control}
+            control={control}
             name={`items.${index}.skip`}
             render={({ field }) => (
               <FormItem className="flex flex-row items-end text-muted-foreground space-x-3 space-y-0">
@@ -293,4 +291,4 @@ const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
   );
 };
 
-export default QuotationItem;
+export default memo(QuotationItem);

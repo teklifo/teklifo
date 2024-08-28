@@ -68,7 +68,7 @@ const RFQFormItemsTable = () => {
           {items.fields.map((productField, index) => {
             return (
               <RFQItem
-                key={productField.externalId}
+                key={productField.id}
                 productField={productField}
                 index={index}
                 removeProduct={() => {
