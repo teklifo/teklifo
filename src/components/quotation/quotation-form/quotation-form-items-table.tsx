@@ -95,14 +95,7 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
           );
           if (!rfqItem) return null;
 
-          return (
-            <QuotationItem
-              rfqItem={rfqItem}
-              key={index}
-              productField={productField}
-              index={index}
-            />
-          );
+          return <QuotationItem rfqItem={rfqItem} key={index} index={index} />;
         })}
       </TableBody>
     </Table>

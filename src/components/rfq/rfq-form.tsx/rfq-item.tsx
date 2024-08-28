@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Product as ProductType } from "@prisma/client";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Control, FieldArrayWithId, useFormContext } from "react-hook-form";
 import * as z from "zod";
-import { MoreHorizontal, Trash, X } from "lucide-react";
+import { format } from "date-fns";
+import { MoreHorizontal, Trash, X, CalendarIcon } from "lucide-react";
 import ProductSelect from "@/components/product/product-select";
 import { TableCell, TableRow } from "@/components/ui/table";
 import {
@@ -19,10 +20,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input, InputProps } from "@/components/ui/input";
 import { getRFQSchema } from "@/lib/schemas";
-import { cn } from "@/lib/utils";
+import { cn, dateFnsLocale } from "@/lib/utils";
 
 type RFQItemProps = {
   productField: FieldArrayWithId;
@@ -88,6 +95,8 @@ const TableInput = ({ field }: TableInputProps) => {
 
 const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
   const t = useTranslations("RFQForm");
+
+  const locale = useLocale();
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -180,6 +189,47 @@ const RFQItem = ({ productField, index, removeProduct }: RFQItemProps) => {
       </Cell>
       <Cell>
         <CellField control={form.control} name={`items.${index}.price`} />
+      </Cell>
+      <Cell>
+        <FormField
+          control={form.control}
+          name={`items.${index}.deliveryDate`}
+          render={({ field }) => (
+            <FormItem>
+              <Popover>
+                <PopoverTrigger asChild className="rounded-none">
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP", {
+                          locale: dateFnsLocale(locale),
+                        })
+                      ) : (
+                        <span>{t("pickDate")}</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </FormItem>
+          )}
+        />
       </Cell>
       <Cell>
         <CellField control={form.control} name={`items.${index}.comment`} />

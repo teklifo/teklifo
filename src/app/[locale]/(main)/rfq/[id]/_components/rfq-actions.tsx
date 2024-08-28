@@ -53,32 +53,42 @@ const RFQActions = async ({ rfq }: RFQActions) => {
       {company && companyIsParticipant && !completed && (
         <StartQuotation rfq={rfq} company={company} />
       )}
-      {companyIsRequester && isAdmin && !completed && (
+      {companyIsRequester && (
         <>
-          <Link
-            href={`/rfq/${rfq.id}/quotations-compare`}
-            className={cn(
-              buttonVariants({ variant: "default" }),
-              "text-center whitespace-normal h-auto space-x-2 lg:w-full"
-            )}
-          >
-            <BarChart className="h-4 w-4" />
-            <span>{t("compareQuotations")}</span>
-          </Link>
-          <Link
-            href={`/edit-rfq/${rfq.id}`}
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              "text-center whitespace-normal h-auto space-x-2 lg:w-full"
-            )}
-          >
-            <Pencil className="h-4 w-4" />
-            <span>{t("edit")}</span>
-          </Link>
-          <DeleteRFQ rfq={rfq} />
+          {isAdmin && (
+            <Link
+              href={`/rfq/${rfq.id}/quotations-compare`}
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "text-center whitespace-normal h-auto space-x-2 lg:w-full"
+              )}
+            >
+              <BarChart className="h-4 w-4" />
+              <span>{t("compareQuotations")}</span>
+            </Link>
+          )}
+          {!completed && (
+            <>
+              {isAdmin && (
+                <>
+                  <Link
+                    href={`/edit-rfq/${rfq.id}`}
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "text-center whitespace-normal h-auto space-x-2 lg:w-full"
+                    )}
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span>{t("edit")}</span>
+                  </Link>
+                  <DeleteRFQ rfq={rfq} />
+                </>
+              )}
+              <ShareRFQ />
+            </>
+          )}
         </>
       )}
-      {companyIsRequester && <ShareRFQ />}
     </div>
   );
 };

@@ -20,29 +20,27 @@ const Navbar = async ({ defaultCompany, userCompanies }: NavbarProps) => {
 
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16 border-b">
-      <header className="relative bg-background border-b">
-        <MaxWidthWrapper>
-          <div className="flex h-16 justify-between items-center">
-            <Logo />
-            <div className="flex flex-row space-x-2">
-              {user ? (
-                <UserDropdown
-                  user={user}
-                  defaultCompany={defaultCompany}
-                  userCompanies={userCompanies}
-                />
-              ) : (
-                <Link
-                  href="/login"
-                  className={buttonVariants({ variant: "default" })}
-                >
-                  {t("login")}
-                </Link>
-              )}
-              <ThemeToggle />
-            </div>
+      <header className="relative bg-background border-b px-10">
+        <div className="flex h-16 justify-between items-center">
+          <Logo />
+          <div className="flex flex-row space-x-2">
+            {user ? (
+              <UserDropdown
+                user={user}
+                defaultCompany={defaultCompany}
+                userCompanies={userCompanies}
+              />
+            ) : (
+              <Link
+                href="/login"
+                className={buttonVariants({ variant: "default" })}
+              >
+                {t("login")}
+              </Link>
+            )}
+            <ThemeToggle />
           </div>
-        </MaxWidthWrapper>
+        </div>
       </header>
     </div>
   );

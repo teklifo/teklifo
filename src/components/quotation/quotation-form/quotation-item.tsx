@@ -16,7 +16,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
   useFormField,
 } from "@/components/ui/form";
 import {
@@ -50,7 +49,6 @@ import {
 
 type QuotationItemProps = {
   rfqItem: RequestForQuotationItem;
-  productField: FieldArrayWithId;
   index: number;
 };
 
@@ -112,11 +110,9 @@ const TableInput = ({ field, value }: TableInputProps) => {
   );
 };
 
-const QuotationItem = ({
-  rfqItem,
-  productField,
-  index,
-}: QuotationItemProps) => {
+const QuotationItem = ({ rfqItem, index }: QuotationItemProps) => {
+  console.log(index);
+
   const t = useTranslations("Quotation");
   const intlFormat = useFormatter();
 

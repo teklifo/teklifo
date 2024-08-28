@@ -56,6 +56,9 @@ const RFQFormItemsTable = () => {
             </TableHead>
             <TableHead className="border min-w-[100px]">{t("price")}</TableHead>
             <TableHead className="border min-w-[100px]">
+              {t("deliveryDate")}
+            </TableHead>
+            <TableHead className="border min-w-[100px]">
               {t("comment")}
             </TableHead>
             <TableHead className="border min-w-[100px]" />

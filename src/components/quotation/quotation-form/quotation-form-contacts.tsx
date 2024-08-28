@@ -29,7 +29,7 @@ const QuotationFormContatcs = () => {
           <FormItem>
             <FormLabel>{t("contactPerson")}</FormLabel>
             <FormControl>
-              <Input {...field} autoComplete="off" />
+              <Input {...field} autoComplete="off" className="max-w-md" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -43,7 +43,7 @@ const QuotationFormContatcs = () => {
           <FormItem>
             <FormLabel>{t("email")}</FormLabel>
             <FormControl>
-              <Input {...field} autoComplete="off" />
+              <Input {...field} autoComplete="off" className="max-w-md" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -62,7 +62,7 @@ const QuotationFormContatcs = () => {
                 inputComponent={Input}
                 international
                 autoComplete="off"
-                data-test="phone"
+                className="max-w-md"
               />
             </FormControl>
             <FormMessage />

@@ -28,7 +28,7 @@ const QuotationFormAdditional = () => {
           <FormItem>
             <FormLabel>{t("description")}</FormLabel>
             <FormControl>
-              <Textarea {...field} rows={10} />
+              <Textarea {...field} rows={10} className="max-w-4xl" />
             </FormControl>
             <FormMessage />
           </FormItem>

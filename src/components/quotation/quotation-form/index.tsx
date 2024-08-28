@@ -112,7 +112,7 @@ const QuotationForm = ({
   return (
     <Form {...form}>
       <form className="flex-auto space-y-10">
-        <Tabs defaultValue="items" className="h-full">
+        <Tabs defaultValue="items">
           <TabsList className="grid w-full grid-cols-3 md:max-w-max">
             <TabsTrigger value="items" className="space-x-2">
               <Package className="w-4 h-4" />
@@ -127,10 +127,11 @@ const QuotationForm = ({
               <span className="hidden md:block">{t("additional")}</span>
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="items" className="!mt-0 h-full">
-            <ScrollArea className="w-full min-h-full">
+          <TabsContent value="items">
+            <ScrollArea className="w-full h-[35rem]">
               <QuotationFormItemsTable rfq={rfq} />
               <ScrollBar orientation="horizontal" className="h-4" />
+              <ScrollBar orientation="vertical" className="w-4" />
             </ScrollArea>
           </TabsContent>
           <TabsContent value="contacts">
