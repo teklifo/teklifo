@@ -10,13 +10,15 @@ export const getCompanySchema = (t: TranslateFunction) => {
         invalid_type_error: t("invalidId"),
       })
       .min(1, t("invalidId"))
+      .max(20, t("invalidIdLength"))
       .regex(/^[a-z]+(-[a-z]+)*$/, t("invalidIdFormat")),
     name: z
       .string({
         required_error: t("invalidName"),
         invalid_type_error: t("invalidName"),
       })
-      .min(1, t("invalidName")),
+      .min(1, t("invalidName"))
+      .max(50, t("invalidNameLength")),
     tin: z
       .string({
         required_error: t("invalidTin"),

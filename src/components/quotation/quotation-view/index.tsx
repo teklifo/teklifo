@@ -72,6 +72,7 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
       <CompanyAvatar
         company={quotation.company}
         className="flex flex-row justify-center items-center space-x-4 md:justify-start"
+        titleClass="text-start"
       />
       <Tabs defaultValue="items" className="h-full">
         <TabsList className="grid w-full grid-cols-3 md:max-w-max">
