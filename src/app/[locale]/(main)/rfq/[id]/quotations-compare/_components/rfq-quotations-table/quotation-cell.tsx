@@ -16,7 +16,17 @@ type QuotationItemType = Prisma.QuotationItemGetPayload<{
     quotation: {
       select: {
         id: true;
+        createdAt: true;
         totalAmount: true;
+        _count: {
+          select: {
+            items: {
+              where: {
+                skip: true;
+              };
+            };
+          };
+        };
         currency: true;
         rfq: {
           select: {
@@ -48,9 +58,21 @@ function getQuotationRow(
   quotationItems: QuotationItemType[]
 ) {
   const sortedQuotations = quotationItems.sort((a, b) => {
-    if (a.amountWithVat > b.amountWithVat) return 1;
-    if (a.amountWithVat < b.amountWithVat) return -1;
-    return 0;
+    if (a.skip !== b.skip) {
+      return Number(a.skip) - Number(b.skip);
+    }
+
+    if (a.amount !== b.amount) {
+      return Number(a.amountWithVat) - Number(b.amountWithVat);
+    }
+
+    if (a.quotation._count.items !== b.quotation._count.items) {
+      return (
+        Number(a.quotation._count.items) - Number(b.quotation._count.items)
+      );
+    }
+
+    return Number(a.quotation.createdAt) - Number(b.quotation.createdAt);
   });
 
   const quotationIndex = sortedQuotations.findIndex(
@@ -87,6 +109,7 @@ const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
     vatIncluded,
     amountWithVat,
     deliveryDate,
+    skip,
   } = quotationRow;
 
   const pricePercentage = calculatePricePercentage(
@@ -107,46 +130,58 @@ const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
 
   return (
     <div className="p-4 group space-y-2">
-      <div className="flex flex-row items-center space-x-2">
-        <p className="leading-7 font-semibold">
-          {`${t("amountWithVat")}: ${intlFormat.number(Number(amountWithVat), {
-            style: "decimal",
-            minimumFractionDigits: 2,
-          })}`}
+      {skip ? (
+        <p className="text-start text-sm text-muted-foreground">
+          {t("noQuotation")}
         </p>
-        <RatingBadge position={quotationIndex} />
-      </div>
-      <div className="flex flex-row items-center space-x-2">
-        <p className="text-sm text-muted-foreground">
-          {`${t("price")}: ${intlFormat.number(Number(price), {
-            style: "decimal",
-            minimumFractionDigits: 3,
-          })}`}
-        </p>
-        <PricePercentageBadge percentage={pricePercentage} />
-      </div>
-      <div className="flex flex-row items-center space-x-2">
-        <p className="text-sm text-muted-foreground">
-          {Number(vatAmount) > 0
-            ? `${vatRateLabel}, ${vatIncludedLabel}, ${vatAmountLabel}`
-            : vatRateLabel}
-        </p>
-      </div>
-      <div className="flex flex-row items-center space-x-2">
-        <p className="text-sm text-muted-foreground">
-          {`${t("quantity")}: ${intlFormat.number(Number(quantity), {
-            style: "decimal",
-            minimumFractionDigits: 3,
-          })}`}
-        </p>
-        <QuantityBadge quantityDifference={quantityDifference} />
-      </div>
-      <div className="flex flex-row items-center space-x-2">
-        <p className="text-sm text-muted-foreground">
-          {`${t("deliveryDate")}: ${format(deliveryDate, "dd.MM.yyyy")}`}
-        </p>
-        <DeliveryDateBadge daysDifference={daysDifference} />
-      </div>
+      ) : (
+        <>
+          <div className="flex flex-row items-center space-x-2">
+            <p className="leading-7 font-semibold">
+              {`${t("amountWithVat")}: ${intlFormat.number(
+                Number(amountWithVat),
+                {
+                  style: "decimal",
+                  minimumFractionDigits: 2,
+                }
+              )}`}
+            </p>
+            <RatingBadge position={quotationIndex} />
+          </div>
+          <div className="flex flex-row items-center space-x-2">
+            <p className="text-sm text-muted-foreground">
+              {`${t("price")}: ${intlFormat.number(Number(price), {
+                style: "decimal",
+                minimumFractionDigits: 3,
+              })}`}
+            </p>
+            <PricePercentageBadge percentage={pricePercentage} />
+          </div>
+          <div className="flex flex-row items-center space-x-2">
+            <p className="text-sm text-muted-foreground">
+              {Number(vatAmount) > 0
+                ? `${vatRateLabel}, ${vatIncludedLabel}, ${vatAmountLabel}`
+                : vatRateLabel}
+            </p>
+          </div>
+          <div className="flex flex-row items-center space-x-2">
+            <p className="text-sm text-muted-foreground">
+              {`${t("quantity")}: ${intlFormat.number(Number(quantity), {
+                style: "decimal",
+                minimumFractionDigits: 3,
+              })}`}
+            </p>
+            <QuantityBadge quantityDifference={quantityDifference} />
+          </div>
+          <div className="flex flex-row items-center space-x-2">
+            <p className="text-sm text-muted-foreground">
+              {`${t("deliveryDate")}: ${format(deliveryDate, "dd.MM.yyyy")}`}
+            </p>
+            <DeliveryDateBadge daysDifference={daysDifference} />
+          </div>
+        </>
+      )}
+
       <QuotationModal quotation={quotation}>
         <div
           className={cn(

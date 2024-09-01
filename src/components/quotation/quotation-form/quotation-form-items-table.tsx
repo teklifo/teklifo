@@ -93,6 +93,9 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
           <TableHead className="border min-w-[100px]">
             {t("deliveryDate")}
           </TableHead>
+          <TableHead className="border min-w-[100px] bg-muted">
+            {t("rfqComment")}
+          </TableHead>
           <TableHead className="border min-w-[100px]">{t("comment")}</TableHead>
           <TooltipProvider>
             <Tooltip>

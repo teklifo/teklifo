@@ -54,12 +54,12 @@ const StartQuotation = ({ rfq, company }: StartQuotationProps) => {
             variant="outline"
             className="text-center whitespace-normal h-auto space-x-2 lg:w-full"
           >
-            <BriefcaseBusiness />
+            <BriefcaseBusiness className="mr-2 h-4 w-4" />
             <span>{t("createAlternativeQuotation")}</span>
           </Button>
         ) : (
           <Button className="text-center whitespace-normal h-auto space-x-2 lg:w-full">
-            <BriefcaseBusiness />
+            <BriefcaseBusiness className="mr-2 h-4 w-4" />
             <span>{t("createQuotation")}</span>
           </Button>
         )}

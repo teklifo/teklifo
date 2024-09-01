@@ -8,6 +8,7 @@ import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
 import StartQuotation from "./start-quotation";
+import ConfirmParticipation from "./confirm-participation";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -43,16 +44,20 @@ const RFQActions = async ({ rfq }: RFQActions) => {
   const companyIsParticipant =
     rfq.participants.find(
       (participant) => participant.companyId === company?.id
-    ) !== undefined ||
-    (!rfq.privateRequest && !companyIsRequester);
+    ) !== undefined;
 
   const completed = new Date(rfq.endDate) < new Date();
 
   return (
     <div className="flex flex-col space-y-2">
-      {company && companyIsParticipant && !completed && (
-        <StartQuotation rfq={rfq} company={company} />
-      )}
+      {company &&
+        !companyIsRequester &&
+        !completed &&
+        (companyIsParticipant ? (
+          <StartQuotation rfq={rfq} company={company} />
+        ) : (
+          <ConfirmParticipation id={rfq.id} />
+        ))}
       {companyIsRequester && (
         <>
           {isAdmin && (

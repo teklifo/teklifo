@@ -130,7 +130,6 @@ const QuotationItem = ({
   const locale = useLocale();
 
   const productName = useWatch({ name: `items.${index}.productName` });
-  const product = useWatch({ name: `items.${index}.product` });
   const quantity = useWatch({ name: `items.${index}.quantity` });
   const price = useWatch({ name: `items.${index}.price` });
   const amount = useWatch({ name: `items.${index}.amount` });
@@ -310,6 +309,11 @@ const QuotationItem = ({
             )}
           />
         )}
+      </Cell>
+      <Cell>
+        <div className="h-10 max-w-xs px-3 py-2 text-sm border-input border bg-muted truncate overflow-hidden">
+          {rfqItem.comment}
+        </div>
       </Cell>
       <Cell>
         <CellField control={control} name={`items.${index}.comment`} />

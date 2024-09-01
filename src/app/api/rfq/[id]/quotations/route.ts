@@ -81,6 +81,16 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
                       name: true,
                     },
                   },
+                  createdAt: true,
+                  _count: {
+                    select: {
+                      items: {
+                        where: {
+                          skip: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },

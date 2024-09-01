@@ -15,6 +15,16 @@ export type QuotationsItemType = Prisma.QuotationItemGetPayload<{
       select: {
         id: true;
         totalAmount: true;
+        createdAt: true;
+        _count: {
+          select: {
+            items: {
+              where: {
+                skip: true;
+              };
+            };
+          };
+        };
         currency: true;
         rfq: {
           select: {

@@ -77,17 +77,6 @@ const ConfirmQuotation = ({
     setOpen(openAlert);
   };
 
-  async function confirmParticipation() {
-    const config = {
-      method: "PATCH",
-      headers: {
-        "Accept-Language": getCookie("NEXT_LOCALE"),
-      },
-    };
-
-    await request(`/api/rfq/${rfq.id}/participation`, config);
-  }
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
 
@@ -109,10 +98,6 @@ const ConfirmQuotation = ({
           description: t("quotationIsUpdatedHint"),
         });
       } else {
-        if (!rfq.privateRequest) {
-          await confirmParticipation();
-        }
-
         await request<QuotationType>(`/api/quotation/`, config);
 
         toast({
