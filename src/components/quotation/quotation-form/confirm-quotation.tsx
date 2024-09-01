@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { getQuotationSchema } from "@/lib/schemas";
 import request from "@/lib/request";
+import { useRouter } from "next/navigation";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -55,6 +56,8 @@ const ConfirmQuotation = ({
   closeDialog,
 }: ConfirmQuotationProps) => {
   const t = useTranslations("Quotation");
+
+  const router = useRouter();
 
   const update = quotation !== undefined;
   const { toast } = useToast();
@@ -130,6 +133,8 @@ const ConfirmQuotation = ({
       });
     }
 
+    router.refresh();
+
     setLoading(false);
   };
 
@@ -137,7 +142,7 @@ const ConfirmQuotation = ({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>
         <Button size="lg" className="space-x-2">
-          <BriefcaseBusiness />
+          <BriefcaseBusiness className="h-4 w-4" />
           <span>{t("sendQuotation")}</span>
         </Button>
       </AlertDialogTrigger>

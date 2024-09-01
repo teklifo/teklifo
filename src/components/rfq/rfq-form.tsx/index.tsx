@@ -3,7 +3,6 @@ import "react-phone-number-input/style.css";
 
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { getCookie } from "cookies-next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -14,11 +13,11 @@ import RFQFormContatcs from "./rfq-form-contacts";
 import RFQFormMain from "./rfq-form-main";
 import RFQFormAdditional from "./rfq-form-additional";
 import RFQFormItemsTable from "./rfq-form-items-table";
+import RFQFormInvalidMessage from "./rfq-form-invalid-message";
 import ConfirmRFQ from "./confirm-rfq";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Form } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
 import { getRFQSchema } from "@/lib/schemas";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
@@ -38,10 +37,6 @@ type RFQFormProps = {
 
 const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
   const t = useTranslations("RFQForm");
-
-  const update = rfq !== undefined;
-
-  const { toast } = useToast();
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -119,6 +114,7 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
             <RFQFormAdditional />
           </TabsContent>
         </Tabs>
+        <RFQFormInvalidMessage />
         <ConfirmRFQ rfq={rfq} />
       </form>
     </Form>

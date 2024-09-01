@@ -16,6 +16,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import QuotationFormContatcs from "./quotation-form-contacts";
 import QuotationFormItemsTable from "./quotation-form-items-table";
 import QuotationFormAdditional from "./quotation-form-additional";
+import QuotationFormInvalidMessage from "./quotation-form-invalid-message";
 import ConfirmQuotation from "./confirm-quotation";
 import DeleteQuotation from "../delete-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
@@ -140,9 +141,10 @@ const QuotationForm = ({
           <TabsContent value="additional">
             <QuotationFormAdditional />
           </TabsContent>
+          <QuotationFormInvalidMessage />
         </Tabs>
       </form>
-      <DialogFooter className="px-6">
+      <DialogFooter className="px-6 space-y-reverse space-y-2">
         {quotation && <DeleteQuotation quotation={quotation} />}
         <ConfirmQuotation
           rfq={rfq}

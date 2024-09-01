@@ -81,7 +81,7 @@ const DeleteQuotation = ({ quotation }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="justify-start">
+        <Button size="lg" variant="outline">
           <Trash className="mr-2 h-4 w-4" />
           <span>{t("delete")}</span>
         </Button>
