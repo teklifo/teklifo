@@ -59,17 +59,7 @@ export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
           select: {
             id: true;
             totalAmount: true;
-            createdAt: true;
             currency: true;
-            _count: {
-              select: {
-                items: {
-                  where: {
-                    skip: true;
-                  };
-                };
-              };
-            };
             rfq: {
               select: {
                 latestVersion: true;

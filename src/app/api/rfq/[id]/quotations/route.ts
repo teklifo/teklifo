@@ -11,9 +11,25 @@ type Props = {
 
 export async function GET(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
+
   const company = await getCurrentCompany();
   if (!company) {
     return getErrorResponse(t("invalidCompanyId"), 404);
+  }
+
+  const rfq = await db.requestForQuotation.findFirst({
+    where: {
+      id: id ?? "",
+      latestVersion: true,
+    },
+  });
+
+  if (!rfq) {
+    return getErrorResponse(t("invalidRFQId"), 404);
+  }
+
+  if (rfq.companyId !== company.id) {
+    return getErrorResponse(t("notAllowed"), 401);
   }
 
   try {
@@ -79,16 +95,6 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
                     select: {
                       id: true,
                       name: true,
-                    },
-                  },
-                  createdAt: true,
-                  _count: {
-                    select: {
-                      items: {
-                        where: {
-                          skip: true,
-                        },
-                      },
                     },
                   },
                 },

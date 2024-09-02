@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { getTopQuotationItemsPerRFQ } from "@prisma/client/sql";
 import { ArrowRightCircle } from "lucide-react";
 import RFQQuotationOrder from "./_components/rfq-quotations-order";
 import RFQQuotationsTable from "./_components/rfq-quotations-table";
@@ -71,6 +72,27 @@ const getRFQQuotations = async (rfqId: string, searchParams: SearchParams) => {
   }
 };
 
+const getTopQuotationItems = async (rfqId: string) => {
+  try {
+    const cookieStore = cookies();
+    const headersList = headers();
+    const cookie = headersList.get("cookie");
+
+    return await request<getTopQuotationItemsPerRFQ.Result[]>(
+      `/api/rfq/${rfqId}/quotations/top`,
+      {
+        headers: {
+          "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
+          Cookie: cookie,
+        },
+        next: { revalidate: 0 },
+      }
+    );
+  } catch (error) {
+    return [];
+  }
+};
+
 const QuotationsCompare = async ({ params: { id }, searchParams }: Props) => {
   const rfq = await getRFQ(id);
 
@@ -96,6 +118,8 @@ const QuotationsCompare = async ({ params: { id }, searchParams }: Props) => {
 
   const t = await getTranslations("QuotationsCompare");
 
+  const topQuotations = await getTopQuotationItems(id);
+
   return (
     <div className="mt-4 mx-2 md:mx-8">
       <div className="space-y-2 mb-8">
@@ -108,7 +132,10 @@ const QuotationsCompare = async ({ params: { id }, searchParams }: Props) => {
       {result.length > 0 ? (
         <div className="flex flex-col space-y-3 pt-4">
           <ScrollArea className="w-full min-h-full">
-            <RFQQuotationsTable rfqQuotations={result} />
+            <RFQQuotationsTable
+              rfqQuotations={result}
+              topQuotations={topQuotations}
+            />
             <ScrollBar orientation="horizontal" className="h-4" />
           </ScrollArea>
         </div>

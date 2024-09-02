@@ -16,17 +16,7 @@ type QuotationItemType = Prisma.QuotationItemGetPayload<{
     quotation: {
       select: {
         id: true;
-        createdAt: true;
         totalAmount: true;
-        _count: {
-          select: {
-            items: {
-              where: {
-                skip: true;
-              };
-            };
-          };
-        };
         currency: true;
         rfq: {
           select: {
@@ -47,6 +37,7 @@ type QuotationItemType = Prisma.QuotationItemGetPayload<{
 type QuotationCellProps = {
   row: QuotationsByRFQItemType;
   quotationId: number;
+  position: number;
 };
 
 function calculatePricePercentage(rfqPrice: number, price: number) {
@@ -57,32 +48,14 @@ function getQuotationRow(
   quotationId: number,
   quotationItems: QuotationItemType[]
 ) {
-  const sortedQuotations = quotationItems.sort((a, b) => {
-    if (a.skip !== b.skip) {
-      return Number(a.skip) - Number(b.skip);
-    }
-
-    if (a.amount !== b.amount) {
-      return Number(a.amountWithVat) - Number(b.amountWithVat);
-    }
-
-    if (a.quotation._count.items !== b.quotation._count.items) {
-      return (
-        Number(a.quotation._count.items) - Number(b.quotation._count.items)
-      );
-    }
-
-    return Number(a.quotation.createdAt) - Number(b.quotation.createdAt);
-  });
-
-  const quotationIndex = sortedQuotations.findIndex(
+  const quotationIndex = quotationItems.findIndex(
     (item) => item.quotation.id === quotationId
   );
 
-  return { quotationRow: sortedQuotations[quotationIndex], quotationIndex };
+  return quotationItems[quotationIndex];
 }
 
-const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
+const QuotationCell = ({ row, quotationId, position }: QuotationCellProps) => {
   const t = useTranslations("QuotationsCompare");
   const intlFormat = useFormatter();
 
@@ -93,7 +66,7 @@ const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
     deliveryDate: rfqDeliveryDate,
   } = row;
 
-  const { quotationRow, quotationIndex } = useMemo(
+  const quotationRow = useMemo(
     () => getQuotationRow(quotationId, quotationItems),
     [quotationId, quotationItems]
   );
@@ -146,7 +119,7 @@ const QuotationCell = ({ row, quotationId }: QuotationCellProps) => {
                 }
               )}`}
             </p>
-            <RatingBadge position={quotationIndex} />
+            <RatingBadge position={position} />
           </div>
           <div className="flex flex-row items-center space-x-2">
             <p className="text-sm text-muted-foreground">

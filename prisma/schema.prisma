@@ -4,6 +4,7 @@
 generator client {
   provider = "prisma-client-js"
   seed     = "prisma/seed.ts"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
