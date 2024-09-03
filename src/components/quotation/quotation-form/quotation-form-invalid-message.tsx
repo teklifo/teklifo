@@ -7,7 +7,7 @@ import { getQuotationSchema } from "@/lib/schemas";
 const QuotationFormInvalidMessage = () => {
   const t = useTranslations("Quotation");
 
-  const st = useTranslations("Schemas.rfqSchema");
+  const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
   const form = useFormContext<z.infer<typeof formSchema>>();
 

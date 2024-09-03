@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { Contact, Info, Loader, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import CompanyAvatar from "@/components/company/company-avatar";
@@ -41,6 +41,7 @@ async function getQuotation(quotationId: number) {
 
 const QuotationView = ({ quotationId }: QuotationViewProps) => {
   const t = useTranslations("Quotation");
+  const format = useFormatter();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [quotation, setQuotation] = useState<QuotationType>();
@@ -69,40 +70,53 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
 
   return (
     <>
-      <CompanyAvatar
-        company={quotation.company}
-        className="flex flex-row justify-center items-center space-x-4 md:justify-start"
-        titleClass="text-start"
-      />
-      <Tabs defaultValue="items" className="h-full">
-        <TabsList className="grid w-full grid-cols-3 md:max-w-max">
-          <TabsTrigger value="items" className="space-x-2">
-            <Package className="w-4 h-4" />
-            <span className="hidden md:block">{t("items")}</span>
-          </TabsTrigger>
-          <TabsTrigger value="contacts" className="space-x-2">
-            <Contact className="w-4 h-4" />
-            <span className="hidden md:block">{t("contacts")}</span>
-          </TabsTrigger>
-          <TabsTrigger value="additional" className="space-x-2">
-            <Info className="w-4 h-4" />
-            <span className="hidden md:block">{t("additional")}</span>
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="items" className="!mt-0 h-full">
-          <ScrollArea className="w-full min-h-full">
-            <QuotationViewItemsTable items={quotation.items} />
-            <ScrollBar orientation="horizontal" className="h-4" />
-          </ScrollArea>
-        </TabsContent>
-        <TabsContent value="contacts">
-          <QuotationViewContatcs quotation={quotation} />
-        </TabsContent>
-        <TabsContent value="additional">
-          <QuotationViewAdditional quotation={quotation} />
-        </TabsContent>
-      </Tabs>
-      <DialogFooter className="px-6"></DialogFooter>
+      <div className="flex-auto space-y-6">
+        <CompanyAvatar
+          company={quotation.company}
+          className="flex flex-row justify-center items-center space-x-4 md:justify-start"
+          titleClass="text-start"
+        />
+        <Tabs defaultValue="items">
+          <TabsList className="grid w-full grid-cols-3 md:max-w-max">
+            <TabsTrigger value="items" className="space-x-2">
+              <Package className="w-4 h-4" />
+              <span className="hidden md:block">{t("items")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="contacts" className="space-x-2">
+              <Contact className="w-4 h-4" />
+              <span className="hidden md:block">{t("contacts")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="additional" className="space-x-2">
+              <Info className="w-4 h-4" />
+              <span className="hidden md:block">{t("additional")}</span>
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="items">
+            <ScrollArea className="w-full h-[35rem]">
+              <QuotationViewItemsTable items={quotation.items} />
+              <ScrollBar orientation="horizontal" className="h-4" />
+              <ScrollBar orientation="vertical" className="w-4" />
+            </ScrollArea>
+          </TabsContent>
+          <TabsContent value="contacts">
+            <QuotationViewContatcs quotation={quotation} />
+          </TabsContent>
+          <TabsContent value="additional">
+            <QuotationViewAdditional quotation={quotation} />
+          </TabsContent>
+        </Tabs>
+      </div>
+      <DialogFooter className="px-6">
+        <div className="flex flex-row justify-start items-center space-x-2 px-2">
+          <span>{`${t("totalAmount")}:`}</span>
+          <span className="font-semibold">
+            {format.number(Number(quotation.totalAmount), {
+              style: "currency",
+              currency: quotation.currency,
+            })}
+          </span>
+        </div>
+      </DialogFooter>
     </>
   );
 };

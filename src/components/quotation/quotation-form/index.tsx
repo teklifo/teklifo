@@ -17,6 +17,7 @@ import QuotationFormContatcs from "./quotation-form-contacts";
 import QuotationFormItemsTable from "./quotation-form-items-table";
 import QuotationFormAdditional from "./quotation-form-additional";
 import QuotationFormInvalidMessage from "./quotation-form-invalid-message";
+import QuotationTotalAmount from "./quotation-total-amount";
 import ConfirmQuotation from "./confirm-quotation";
 import DeleteQuotation from "../delete-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
@@ -144,13 +145,16 @@ const QuotationForm = ({
           <QuotationFormInvalidMessage />
         </Tabs>
       </form>
-      <DialogFooter className="px-6 space-y-reverse space-y-2">
-        {quotation && <DeleteQuotation quotation={quotation} />}
-        <ConfirmQuotation
-          rfq={rfq}
-          quotation={quotation}
-          closeDialog={closeDialog}
-        />
+      <DialogFooter className="flex !justify-between px-6">
+        <QuotationTotalAmount />
+        <div className="flex flex-col-reverse space-y-reverse space-y-2 mb-2 md:space-x-2 md:space-y-0 md:flex-row md:mb-0">
+          {quotation && <DeleteQuotation quotation={quotation} />}
+          <ConfirmQuotation
+            rfq={rfq}
+            quotation={quotation}
+            closeDialog={closeDialog}
+          />
+        </div>
       </DialogFooter>
     </Form>
   );

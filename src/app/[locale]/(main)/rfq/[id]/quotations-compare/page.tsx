@@ -6,6 +6,7 @@ import { getTopQuotationItemsPerRFQ } from "@prisma/client/sql";
 import { ArrowRightCircle } from "lucide-react";
 import RFQQuotationOrder from "./_components/rfq-quotations-order";
 import RFQQuotationsTable from "./_components/rfq-quotations-table";
+import RFQLink from "./_components/rfq-link";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import getCurrentCompany from "@/app/actions/get-current-company";
@@ -121,16 +122,17 @@ const QuotationsCompare = async ({ params: { id }, searchParams }: Props) => {
   const topQuotations = await getTopQuotationItems(id);
 
   return (
-    <div className="mt-4 mx-2 md:mx-8">
-      <div className="space-y-2 mb-8">
+    <div className="mt-4 mx-2 space-y-8 md:mx-8">
+      <div className="space-y-2">
+        <RFQLink id={id} />
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {t("title")}
+          {`${t("title")}: ${rfq.title}`}
         </h1>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
       <RFQQuotationOrder id={id} defaultValue={searchParams.order} />
       {result.length > 0 ? (
-        <div className="flex flex-col space-y-3 pt-4">
+        <div className="flex flex-col space-y-3">
           <ScrollArea className="w-full min-h-full">
             <RFQQuotationsTable
               rfqQuotations={result}

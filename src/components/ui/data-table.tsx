@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
           },
         }}
       >
-        <TableHeader className="sticky top-[-1px]">
+        <TableHeader className="sticky top-[-1px] bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (

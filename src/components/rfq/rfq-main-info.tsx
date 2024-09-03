@@ -10,7 +10,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 
@@ -28,27 +27,16 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
 
 type RFQMainInfoProps = {
   rfq: RequestForQuotationType;
-  displayRfqLink: boolean;
 };
 
-export const RFQDateInfo = ({
-  endDate,
-  view,
-}: {
-  endDate: Date;
-  view: "horizontal" | "vertical";
-}) => {
+export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
   const t = useTranslations("RFQ");
 
   const daysLeft = differenceInDays(endDate, new Date());
 
   return (
     <>
-      <div
-        className={cn(
-          view === "horizontal" ? "md:flex md:flex-row md:space-x-2" : ""
-        )}
-      >
+      <div className="md:flex md:flex-row md:space-x-2">
         <MainInfoItem
           icon={<Calendar />}
           title={t("endDate")}
@@ -62,7 +50,6 @@ export const RFQDateInfo = ({
               )}
             </div>
           }
-          view={view}
         />
       </div>
     </>
@@ -93,17 +80,16 @@ export const RFQType = ({ privateRequest }: { privateRequest: boolean }) => {
 const RFQMainInfo = ({ rfq }: RFQMainInfoProps) => {
   const t = useTranslations("RFQ");
 
-  const { company, privateRequest, currency } = rfq;
+  const { privateRequest, currency } = rfq;
 
   return (
     <div className="w-full pr-4 space-y-4">
-      <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
+      <RFQDateInfo endDate={rfq.endDate} />
       <Separator />
       <MainInfoItem
         icon={<Banknote />}
         title={t("currency")}
         content={currency}
-        view="horizontal"
       />
       <Separator />
       <RFQType privateRequest={privateRequest} />

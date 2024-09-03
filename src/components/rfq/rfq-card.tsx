@@ -44,7 +44,7 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
             ) : _count.quotations ? (
               <Badge>{t("quotationsIsSent")}</Badge>
             ) : null}
-            <RFQDateInfo endDate={rfq.endDate} view="horizontal" />
+            <RFQDateInfo endDate={rfq.endDate} />
             <CardDescription>
               {`${t("updatedAt")}: ${localizedRelativeDate(
                 new Date(createdAt),

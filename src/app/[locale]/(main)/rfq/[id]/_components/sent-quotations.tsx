@@ -85,10 +85,7 @@ const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
               rfq={rfq}
               quotation={quotation}
             >
-              <QuotationCard
-                currentCompany={currentCompany}
-                quotation={quotation}
-              />
+              <QuotationCard quotation={quotation} />
             </QuotationModal>
           );
         })}

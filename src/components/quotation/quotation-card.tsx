@@ -24,10 +24,9 @@ type QuotationType = Prisma.QuotationGetPayload<{
 
 type QuotationCardProps = {
   quotation: QuotationType;
-  currentCompany?: CompanyType;
 };
 
-const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
+const QuotationCard = ({ quotation }: QuotationCardProps) => {
   const t = useTranslations("Quotation");
 
   const locale = useLocale();
@@ -43,11 +42,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
     >
       <div className="px-2">
         <CardHeader>
-          <QuotationOutdated
-            rfq={quotation.rfq}
-            currentCompanyId={currentCompany?.id}
-            className="mb-2"
-          />
+          <QuotationOutdated rfq={quotation.rfq} className="mb-2" />
           <div className="flex flex-row justify-start items-center space-x-4">
             <Avatar className="md:h-20 md:w-20">
               <AvatarFallback>{getAvatarFallback(company.name)}</AvatarFallback>
@@ -56,7 +51,7 @@ const QuotationCard = ({ quotation, currentCompany }: QuotationCardProps) => {
           </div>
         </CardHeader>
         <CardContent className="space-y-4 p-4 pt-0 md:p-6 md:pt-0">
-          <QuotationTotal quotation={quotation} view="horizontal" />
+          <QuotationTotal quotation={quotation} />
           <CardDescription>
             {`${t("updatedAt")}: ${localizedRelativeDate(
               new Date(updatedAt),
