@@ -214,5 +214,10 @@ export const columns: ColumnDef<QuotationItemType>[] = [
   {
     accessorKey: "comment",
     header: getTableHeader("comment"),
+    cell: (info) => {
+      return (
+        <p className="max-w-sm line-clamp-1">{info.getValue() as string}</p>
+      );
+    },
   },
 ];

@@ -62,7 +62,7 @@ const QuotationForm = ({
   const ref = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    setHeight((ref.current?.clientHeight ?? 0) - 80);
+    setHeight((ref.current?.clientHeight ?? 0) - 90);
   }, []);
 
   const st = useTranslations("Schemas.quotationSchema");

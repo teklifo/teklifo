@@ -64,7 +64,7 @@ const StartQuotation = ({ rfq, company }: StartQuotationProps) => {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="px-0 flex flex-col space-y-8 max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%] sm:p-6">
+      <DialogContent className="px-0 flex flex-col space-y-2 max-w-[100%] h-[100%] md:space-y-8 md:max-w-[90%] md:h-[95%] sm:p-6">
         <DialogHeader className="flex-initial">
           <DialogTitle>{t("quotationTitle")}</DialogTitle>
           <DialogDescription>{t("quotationSubtitle")}</DialogDescription>

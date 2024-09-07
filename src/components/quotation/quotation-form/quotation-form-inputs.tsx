@@ -19,7 +19,7 @@ const QuotationFormInputs = () => {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
   return (
-    <div className="my-4">
+    <div className="my-4 px-2">
       <FormField
         control={form.control}
         name="vatIncluded"
