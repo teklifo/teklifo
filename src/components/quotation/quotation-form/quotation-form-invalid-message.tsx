@@ -13,7 +13,11 @@ const QuotationFormInvalidMessage = () => {
 
   const formIsInvalid = Object.keys(form.formState.errors).length > 0;
 
-  return formIsInvalid && <FormMessage>{t("invalidForm")}</FormMessage>;
+  return (
+    formIsInvalid && (
+      <FormMessage className="px-2">{t("invalidForm")}</FormMessage>
+    )
+  );
 };
 
 export default QuotationFormInvalidMessage;

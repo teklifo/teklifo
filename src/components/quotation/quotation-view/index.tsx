@@ -50,8 +50,10 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
-    setHeight((ref.current?.clientHeight ?? 0) - 150);
-  }, [ref.current?.clientHeight]);
+    if (!loading) {
+      setHeight((ref.current?.clientHeight ?? 0) - 150);
+    }
+  }, [loading]);
 
   useEffect(() => {
     const fetchQuotation = async () => {
