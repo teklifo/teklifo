@@ -42,6 +42,10 @@ export async function PATCH(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(t("rfqIsCompleted"), 400);
     }
 
+    if (rfq.companyId === company.id) {
+      return getErrorResponse(t("requesterCantParticipate"), 400);
+    }
+
     const updatedRfq = await db.requestForQuotation.update({
       where: {
         versionId: rfq.versionId,

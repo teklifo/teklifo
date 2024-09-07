@@ -72,7 +72,7 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
       </div>
       <div className="grid grid-cols-1 mt-6 gap-0 gap-y-6 lg:grid-cols-12 lg:gap-4">
         <div className="col-span-8 space-y-6 mt-4 order-2 lg:order-1 lg:mt-0">
-          <RFQMainInfo rfq={rfq} displayRfqLink={false} />
+          <RFQMainInfo rfq={rfq} />
           <Tabs
             defaultValue={(page ?? 0) > 1 ? "quotations" : "main"}
             className="mt-8"

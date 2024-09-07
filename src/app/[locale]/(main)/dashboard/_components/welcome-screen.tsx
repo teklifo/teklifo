@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Plus, Search } from "lucide-react";
-import ThemedImage from "@/components/client-image";
+import ThemedImage from "@/components/themed-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

@@ -20,10 +20,8 @@ type QuotationType = Prisma.QuotationGetPayload<{
 
 export const QuotationTotal = ({
   quotation: { totalAmount, currency },
-  view,
 }: {
   quotation: QuotationType;
-  view: "horizontal" | "vertical";
 }) => {
   const t = useTranslations("Quotation");
   const format = useFormatter();
@@ -36,18 +34,15 @@ export const QuotationTotal = ({
         style: "currency",
         currency,
       })}`}
-      view={view}
     />
   );
 };
 
 export const QuotationOutdated = ({
-  rfq: { companyId, latestVersion },
-  currentCompanyId,
+  rfq: { latestVersion },
   className,
 }: {
   rfq: RequestForQuotationType;
-  currentCompanyId?: string;
   className: string;
 }) => {
   const t = useTranslations("Quotation");

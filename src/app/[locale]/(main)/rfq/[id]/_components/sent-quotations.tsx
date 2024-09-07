@@ -6,6 +6,8 @@ import QuotationModal from "@/components/quotation/quotation-modal";
 import QuotationCard from "@/components/quotation/quotation-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import getCurrentCompany from "@/app/actions/get-current-company";
+import ThemedImage from "@/components/themed-image";
+import { getTranslations } from "next-intl/server";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -62,6 +64,8 @@ async function getRFQQuotations(rfqId: string, page: number) {
 }
 
 const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
+  const t = await getTranslations("RFQ");
+
   const data = await getRFQQuotations(rfq.id, page);
   if (!data) return null;
 
@@ -70,7 +74,7 @@ const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
   const currentCompany = await getCurrentCompany();
   if (!currentCompany) return;
 
-  return (
+  return result.length > 0 ? (
     <>
       <div className="flex flex-col space-y-3 mt-4">
         {result.map((quotation) => {
@@ -81,16 +85,26 @@ const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
               rfq={rfq}
               quotation={quotation}
             >
-              <QuotationCard
-                currentCompany={currentCompany}
-                quotation={quotation}
-              />
+              <QuotationCard quotation={quotation} />
             </QuotationModal>
           );
         })}
       </div>
       <PaginationBar href={`/rfq/${rfq.id}?page=`} pagination={pagination} />
     </>
+  ) : (
+    <div className="flex flex-col justify-center items-center py-2 space-y-4">
+      <ThemedImage
+        src={`/illustrations/light/documents.svg`}
+        alt="No quotations"
+        priority
+        width={200}
+        height={200}
+      />
+      <p className="leading-7 tracking-tight max-w-sm text-muted-foreground">
+        {t("noQuotations")}
+      </p>
+    </div>
   );
 };
 

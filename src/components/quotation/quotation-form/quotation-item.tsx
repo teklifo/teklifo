@@ -1,12 +1,11 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   Control,
   ControllerRenderProps,
-  FieldArrayWithId,
-  useFormContext,
+  UseFormSetValue,
+  useWatch,
 } from "react-hook-form";
-import * as z from "zod";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { RequestForQuotationItem, VatRates } from "@prisma/client";
@@ -16,7 +15,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
   useFormField,
 } from "@/components/ui/form";
 import {
@@ -40,7 +38,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { getQuotationSchema } from "@/lib/schemas";
 import { cn, dateFnsLocale } from "@/lib/utils";
 import {
   calculateAmountWithVat,
@@ -49,27 +46,26 @@ import {
 } from "@/lib/calculations";
 
 type QuotationItemProps = {
-  rfqItem: RequestForQuotationItem;
-  productField: FieldArrayWithId;
   index: number;
+  control: Control<any>;
+  rfqItem: RequestForQuotationItem;
+  setValue: UseFormSetValue<any>;
 };
 
-type CellFieldProps = {
+interface CellFieldProps extends React.ComponentPropsWithoutRef<"input"> {
   control: Control<any>;
   name: string;
-  value?: string | number | readonly string[] | undefined;
-};
+}
 
-type TableInputProps = {
+interface TableInputProps extends React.ComponentPropsWithoutRef<"input"> {
   field: ControllerRenderProps<any, string>;
-  value?: string | number | readonly string[] | undefined;
-};
+}
 
 const Cell = ({ children }: { children: React.ReactNode }) => {
   return <TableCell className="p-0 border-none">{children}</TableCell>;
 };
 
-const CellField = ({ control, name, value }: CellFieldProps) => {
+const CellField = ({ control, name, ...props }: CellFieldProps) => {
   return (
     <FormField
       control={control}
@@ -77,7 +73,7 @@ const CellField = ({ control, name, value }: CellFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormControl>
-            <TableInput field={field} value={value} />
+            <TableInput field={field} {...props} />
           </FormControl>
         </FormItem>
       )}
@@ -85,7 +81,7 @@ const CellField = ({ control, name, value }: CellFieldProps) => {
   );
 };
 
-const TableInput = ({ field, value }: TableInputProps) => {
+const TableInput = ({ field, ...props }: TableInputProps) => {
   const { error } = useFormField();
 
   return (
@@ -94,8 +90,12 @@ const TableInput = ({ field, value }: TableInputProps) => {
         <TooltipTrigger asChild>
           <Input
             {...field}
-            value={value || field.value}
+            {...props}
+            value={field.value}
             autoComplete="off"
+            onBlur={undefined}
+            onFocus={(e) => e.target.select()}
+            onWheel={(e) => e.currentTarget.blur()}
             className={cn(
               "border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0",
               error && "bg-red-300"
@@ -112,37 +112,36 @@ const TableInput = ({ field, value }: TableInputProps) => {
   );
 };
 
+const EmptyCell = () => {
+  return (
+    <p className="h-10 w-full px-3 py-2 text-center border-input border">-</p>
+  );
+};
+
 const QuotationItem = ({
-  rfqItem,
-  productField,
   index,
+  control,
+  rfqItem,
+  setValue,
 }: QuotationItemProps) => {
   const t = useTranslations("Quotation");
   const intlFormat = useFormatter();
 
   const locale = useLocale();
 
-  const st = useTranslations("Schemas.quotationSchema");
-  const formSchema = getQuotationSchema(st);
+  const productName = useWatch({ name: `items.${index}.productName` });
+  const quantity = useWatch({ name: `items.${index}.quantity` });
+  const price = useWatch({ name: `items.${index}.price` });
+  const amount = useWatch({ name: `items.${index}.amount` });
+  const vatIncluded = useWatch({ name: `vatIncluded` });
+  const vatRate = useWatch({ name: `items.${index}.vatRate` });
+  const skip = useWatch({ name: `items.${index}.skip` });
 
-  const form = useFormContext<z.infer<typeof formSchema>>();
-  const setValue = form.setValue;
-
-  const productName = form.watch(`items.${index}.productName`);
-  const product = form.getValues(`items.${index}.product`);
-  const quantity = form.watch(`items.${index}.quantity`);
-  const price = form.watch(`items.${index}.price`);
-  const amount = form.watch(`items.${index}.amount`);
-  const vatIncluded = form.watch(`items.${index}.vatIncluded`);
-  const vatRate = form.watch(`items.${index}.vatRate`);
   const vatRateInfo = getVatRatePercentage(vatRate);
   const vatAmount =
     calculateVatAmount(amount, vatRateInfo.vatRatePercentage) ?? 0;
-
   const amountWithVat =
     calculateAmountWithVat(amount, vatAmount, vatIncluded) ?? 0;
-
-  const skip = form.watch(`items.${index}.skip`);
 
   useEffect(() => {
     const value = quantity * price;
@@ -165,7 +164,15 @@ const QuotationItem = ({
         </div>
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.quantity`} />
+        {skip ? (
+          <EmptyCell />
+        ) : (
+          <CellField
+            control={control}
+            name={`items.${index}.quantity`}
+            type="number"
+          />
+        )}
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
@@ -176,55 +183,82 @@ const QuotationItem = ({
         </div>
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.price`} />
+        {skip ? (
+          <EmptyCell />
+        ) : (
+          <CellField
+            control={control}
+            name={`items.${index}.price`}
+            type="number"
+          />
+        )}
       </Cell>
       <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {intlFormat.number(Number(amount), {
-            style: "decimal",
-            minimumFractionDigits: 2,
-          })}
-        </div>
+        {skip ? (
+          <EmptyCell />
+        ) : (
+          <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+            {intlFormat.number(Number(amount), {
+              style: "decimal",
+              minimumFractionDigits: 2,
+            })}
+          </div>
+        )}
       </Cell>
       <Cell>
-        <FormField
-          control={form.control}
-          name={`items.${index}.vatRate`}
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
-                    <SelectValue placeholder={t("selectVatRate")} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Object.keys(VatRates).map((key) => (
-                    <SelectItem key={key} value={key}>
-                      {t(key)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
+        {skip ? (
+          <EmptyCell />
+        ) : (
+          <FormField
+            control={control}
+            name={`items.${index}.vatRate`}
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                      <SelectValue placeholder={t("selectVatRate")} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Object.keys(VatRates).map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {t(key)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+        )}
       </Cell>
       <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {intlFormat.number(Number(vatAmount), {
-            style: "decimal",
-            minimumFractionDigits: 2,
-          })}
-        </div>
+        {skip ? (
+          <EmptyCell />
+        ) : (
+          <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+            {intlFormat.number(Number(vatAmount), {
+              style: "decimal",
+              minimumFractionDigits: 2,
+            })}
+          </div>
+        )}
       </Cell>
       <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {intlFormat.number(Number(amountWithVat), {
-            style: "decimal",
-            minimumFractionDigits: 2,
-          })}
-        </div>
+        {skip ? (
+          <EmptyCell />
+        ) : (
+          <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+            {intlFormat.number(Number(amountWithVat), {
+              style: "decimal",
+              minimumFractionDigits: 2,
+            })}
+          </div>
+        )}
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
@@ -232,53 +266,62 @@ const QuotationItem = ({
         </div>
       </Cell>
       <Cell>
-        <FormField
-          control={form.control}
-          name={`items.${index}.deliveryDate`}
-          render={({ field }) => (
-            <FormItem>
-              <Popover>
-                <PopoverTrigger asChild className="rounded-none">
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP", {
-                          locale: dateFnsLocale(locale),
-                        })
-                      ) : (
-                        <span>{t("pickDate")}</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </FormItem>
-          )}
-        />
+        {skip ? (
+          <EmptyCell />
+        ) : (
+          <FormField
+            control={control}
+            name={`items.${index}.deliveryDate`}
+            render={({ field }) => (
+              <FormItem>
+                <Popover>
+                  <PopoverTrigger asChild className="rounded-none">
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP", {
+                            locale: dateFnsLocale(locale),
+                          })
+                        ) : (
+                          <span>{t("pickDate")}</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </FormItem>
+            )}
+          />
+        )}
       </Cell>
       <Cell>
-        <CellField control={form.control} name={`items.${index}.comment`} />
+        <div className="h-10 max-w-xs px-3 py-2 text-sm border-input border bg-muted truncate overflow-hidden">
+          {rfqItem.comment}
+        </div>
+      </Cell>
+      <Cell>
+        <CellField control={control} name={`items.${index}.comment`} />
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border">
           <FormField
-            control={form.control}
+            control={control}
             name={`items.${index}.skip`}
             render={({ field }) => (
               <FormItem className="flex flex-row items-end text-muted-foreground space-x-3 space-y-0">
@@ -297,4 +340,4 @@ const QuotationItem = ({
   );
 };
 
-export default QuotationItem;
+export default memo(QuotationItem);

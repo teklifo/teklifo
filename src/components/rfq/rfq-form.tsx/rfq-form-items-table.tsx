@@ -56,6 +56,9 @@ const RFQFormItemsTable = () => {
             </TableHead>
             <TableHead className="border min-w-[100px]">{t("price")}</TableHead>
             <TableHead className="border min-w-[100px]">
+              {t("deliveryDate")}
+            </TableHead>
+            <TableHead className="border min-w-[100px]">
               {t("comment")}
             </TableHead>
             <TableHead className="border min-w-[100px]" />
@@ -65,8 +68,7 @@ const RFQFormItemsTable = () => {
           {items.fields.map((productField, index) => {
             return (
               <RFQItem
-                key={productField.externalId}
-                productField={productField}
+                key={productField.id}
                 index={index}
                 removeProduct={() => {
                   items.remove(index);

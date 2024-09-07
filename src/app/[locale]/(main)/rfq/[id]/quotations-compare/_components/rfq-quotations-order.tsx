@@ -32,7 +32,6 @@ const RFQQuotationOrder = ({ id, defaultValue }: RFQQuotationOrderProps) => {
       onValueChange={onValueChange}
       defaultValue={defaultValue ?? "amountAsc"}
     >
-      <Label>{t("order")}</Label>
       <SelectTrigger className="max-w-sm">
         <SelectValue />
       </SelectTrigger>

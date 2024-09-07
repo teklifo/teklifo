@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import * as z from "zod";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   FormControl,
   FormField,
@@ -8,10 +9,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import { getQuotationSchema } from "@/lib/schemas";
 
-const QuotationFormAdditional = () => {
+const QuotationFormInputs = () => {
   const t = useTranslations("Quotation");
 
   const st = useTranslations("Schemas.quotationSchema");
@@ -19,17 +19,21 @@ const QuotationFormAdditional = () => {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
   return (
-    <div className="mt-4 p-2 space-y-4">
-      {/* Description*/}
+    <div className="my-4">
       <FormField
         control={form.control}
-        name="description"
+        name="vatIncluded"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>{t("description")}</FormLabel>
+          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
             <FormControl>
-              <Textarea {...field} rows={10} className="max-w-4xl" />
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
             </FormControl>
+            <FormLabel className="text-sm font-normal">
+              {t("vatIncluded")}
+            </FormLabel>
             <FormMessage />
           </FormItem>
         )}
@@ -38,4 +42,4 @@ const QuotationFormAdditional = () => {
   );
 };
 
-export default QuotationFormAdditional;
+export default QuotationFormInputs;

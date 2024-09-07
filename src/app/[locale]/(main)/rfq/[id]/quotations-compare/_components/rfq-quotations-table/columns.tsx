@@ -4,6 +4,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/navigation";
 import { ColumnDef, HeaderContext } from "@tanstack/react-table";
 import { Prisma } from "@prisma/client";
+import { getTopQuotationItemsPerRFQ } from "@prisma/client/sql";
 import QuotationCell from "./quotation-cell";
 import ProductCell from "./product-cell";
 import { QuotationsByRFQItemType } from "@/types";
@@ -16,6 +17,7 @@ export type QuotationsItemType = Prisma.QuotationItemGetPayload<{
         id: true;
         totalAmount: true;
         currency: true;
+        vatIncluded: true;
         rfq: {
           select: {
             latestVersion: true;
@@ -82,7 +84,8 @@ function getQuotationCompanyHeader(quotation: QuotationType) {
 }
 
 export function createColumns(
-  quotationItems: QuotationsItemType[]
+  quotationItems: QuotationsItemType[],
+  topQuotations: getTopQuotationItemsPerRFQ.Result[]
 ): ColumnDef<QuotationsByRFQItemType>[] {
   const quotationsColumns: ColumnDef<QuotationsByRFQItemType>[] = [];
 
@@ -91,10 +94,19 @@ export function createColumns(
       accessorKey: `quotationItem${quotationItem.id}`,
       header: getQuotationCompanyHeader(quotationItem.quotation),
       cell: ({ row }) => {
+        const topQuotationsByRow = topQuotations.filter(
+          (topQuotation) => topQuotation.id === row.original.id
+        );
+        const position = topQuotationsByRow.findIndex(
+          (topQuotationByRow) =>
+            topQuotationByRow.quotationid === quotationItem.quotation.id
+        );
+
         return (
           <QuotationCell
             row={row.original}
             quotationId={quotationItem.quotationId}
+            position={position}
           />
         );
       },

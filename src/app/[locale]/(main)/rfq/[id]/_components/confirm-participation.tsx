@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import type { Prisma } from "@prisma/client";
 import { getCookie } from "cookies-next";
-import { Trash } from "lucide-react";
+import { Handshake } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,46 +18,37 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import request from "@/lib/request";
-
-type QuotationType = Prisma.QuotationGetPayload<{
-  include: {
-    items: {
-      include: {
-        product: true;
-      };
-    };
-  };
-}>;
+import { useRouter } from "@/navigation";
 
 type Props = {
-  quotation: QuotationType;
+  id: string;
 };
 
-const DeleteQuotation = ({ quotation }: Props) => {
-  const t = useTranslations("Quotation");
+const ConfirmParticipation = ({ id }: Props) => {
+  const t = useTranslations("RFQ");
+
+  const router = useRouter();
 
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { id } = quotation;
-
-  const deleteQuotation = async () => {
+  const confirmParticipation = async () => {
     setLoading(true);
 
     const config = {
-      method: "delete",
+      method: "PATCH",
       headers: {
         "Accept-Language": getCookie("NEXT_LOCALE"),
       },
     };
 
     try {
-      await request(`/api/quotation/${id}`, config);
+      await request(`/api/rfq/${id}/participation`, config);
 
       toast({
-        title: t("quotationDeleted"),
-        description: t("quotationDeletedHint"),
+        title: t("participationConfirmed"),
+        description: t("participationConfirmedHint"),
       });
 
       setOpen(false);
@@ -67,11 +57,13 @@ const DeleteQuotation = ({ quotation }: Props) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("deleteError"),
+        title: t("participationError"),
         description: message,
         variant: "destructive",
       });
     }
+
+    router.refresh();
 
     setLoading(false);
   };
@@ -79,24 +71,24 @@ const DeleteQuotation = ({ quotation }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button size="lg" variant="outline">
-          <Trash className="mr-2 h-4 w-4" />
-          <span>{t("delete")}</span>
+        <Button className="text-center whitespace-normal h-auto space-x-2 lg:w-full">
+          <Handshake className="mr-2 h-4 w-4" />
+          <span>{t("confirmParticipation")}</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("quotationDeleteTitle")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("participationTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("quotationDeleteSubtitle")}
+            {t("participationSubtitle")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>
             {t("cancel")}
           </AlertDialogCancel>
-          <AlertDialogAction disabled={loading} onClick={deleteQuotation}>
-            {t("delete")}
+          <AlertDialogAction disabled={loading} onClick={confirmParticipation}>
+            {t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -104,4 +96,4 @@ const DeleteQuotation = ({ quotation }: Props) => {
   );
 };
 
-export default DeleteQuotation;
+export default ConfirmParticipation;

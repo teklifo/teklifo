@@ -133,6 +133,20 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Name */}
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("name")}</FormLabel>
+              <FormControl>
+                <Input {...field} autoComplete="off" data-test="name" />
+              </FormControl>
+              <FormMessage data-test="name-error" />
+            </FormItem>
+          )}
+        />
         {/* ID */}
         <FormField
           control={form.control}
@@ -145,20 +159,6 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
               </FormControl>
               <FormDescription>{t("idDescription")}</FormDescription>
               <FormMessage data-test="id-error" />
-            </FormItem>
-          )}
-        />
-        {/* Name */}
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("name")}</FormLabel>
-              <FormControl>
-                <Input {...field} autoComplete="off" data-test="name" />
-              </FormControl>
-              <FormMessage data-test="name-error" />
             </FormItem>
           )}
         />

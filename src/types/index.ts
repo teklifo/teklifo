@@ -60,6 +60,7 @@ export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
             id: true;
             totalAmount: true;
             currency: true;
+            vatIncluded: true;
             rfq: {
               select: {
                 latestVersion: true;

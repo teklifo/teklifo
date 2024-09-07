@@ -10,13 +10,15 @@ export const getCompanySchema = (t: TranslateFunction) => {
         invalid_type_error: t("invalidId"),
       })
       .min(1, t("invalidId"))
+      .max(20, t("invalidIdLength"))
       .regex(/^[a-z]+(-[a-z]+)*$/, t("invalidIdFormat")),
     name: z
       .string({
         required_error: t("invalidName"),
         invalid_type_error: t("invalidName"),
       })
-      .min(1, t("invalidName")),
+      .min(1, t("invalidName"))
+      .max(50, t("invalidNameLength")),
     tin: z
       .string({
         required_error: t("invalidTin"),
@@ -377,6 +379,7 @@ export const getQuotationSchema = (t: TranslateFunction) => {
 
         return z.NEVER;
       }),
+    vatIncluded: z.boolean().default(true),
     description: z.string().default(""),
     items: z.array(getQuotationItemSchema(t)).min(1, t("invalidProducts")),
   });
@@ -427,7 +430,6 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
         required_error: t("invalidVatRate"),
         invalid_type_error: t("invalidVatRate"),
       }),
-      vatIncluded: z.boolean().default(true),
       deliveryDate: z.coerce.date({
         errorMap: (issue, { defaultError }) => ({
           message:

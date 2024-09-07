@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import GuideStep from "./_components/guide-steps";
 import ExternalLink from "./_components/external-link";
 import ConfirmParticipation from "./_components/confirm-participation";
-import ThemedImage from "@/components/client-image";
+import ThemedImage from "@/components/themed-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import getCurrentUser from "@/app/actions/get-current-user";
 import getCurrentCompany from "@/app/actions/get-current-company";

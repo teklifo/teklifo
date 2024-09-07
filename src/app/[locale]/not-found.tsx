@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import ThemedImage from "@/components/client-image";
+import ThemedImage from "@/components/themed-image";
 
 const NotFound = () => {
   const t = useTranslations("NotFound");

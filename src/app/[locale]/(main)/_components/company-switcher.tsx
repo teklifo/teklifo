@@ -32,7 +32,7 @@ const CompanySwitcher = ({
     setCookie("user-company", company.id, {
       expires: new Date(3999, 1, 1),
     });
-    router.refresh();
+    window.location.reload();
   };
 
   return (
@@ -45,17 +45,22 @@ const CompanySwitcher = ({
         )}
       >
         <SelectValue>
-          <Avatar className="h-7 w-7">
-            <AvatarFallback>
-              {getAvatarFallback(defaultCompany.name)}
-            </AvatarFallback>
-          </Avatar>
-          <span className={cn("ml-2", isCollapsed && "hidden")}>
-            {
-              userCompanies.find((company) => company.id === defaultCompany.id)
-                ?.name
-            }
-          </span>
+          <div className="relative w-7 h-7">
+            <div className="absolute flex justify-center items-center">
+              <Avatar className="h-7 w-7">
+                <AvatarFallback>
+                  {getAvatarFallback(defaultCompany.name)}
+                </AvatarFallback>
+              </Avatar>
+              <div className={cn("ml-2", isCollapsed && "hidden")}>
+                {
+                  userCompanies.find(
+                    (company) => company.id === defaultCompany.id
+                  )?.name
+                }
+              </div>
+            </div>
+          </div>
         </SelectValue>
       </SelectTrigger>
       <SelectContent>

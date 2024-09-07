@@ -7,6 +7,7 @@ import Logo from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentUser from "@/app/actions/get-current-user";
 import ThemeToggle from "@/components/theme-toggle";
+import Sidebar from "./sidebar";
 
 type NavbarProps = {
   defaultCompany: CompanyType | null;
@@ -20,17 +21,20 @@ const Navbar = async ({ defaultCompany, userCompanies }: NavbarProps) => {
 
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16 border-b">
-      <header className="relative bg-background border-b">
-        <MaxWidthWrapper>
-          <div className="flex h-16 justify-between items-center">
-            <Logo />
-            <div className="flex flex-row space-x-2">
+      <header className="relative bg-background border-b px-2 md:px-10">
+        <div className="flex h-16 justify-between items-center">
+          <Logo />
+          <div className="flex flex-row space-x-2">
+            <div className="block xl:hidden">
+              <Sidebar
+                user={user || undefined}
+                defaultCompany={defaultCompany}
+                userCompanies={userCompanies}
+              />
+            </div>
+            <div className="hidden xl:flex justify-center items-center space-x-2">
               {user ? (
-                <UserDropdown
-                  user={user}
-                  defaultCompany={defaultCompany}
-                  userCompanies={userCompanies}
-                />
+                <UserDropdown user={user} />
               ) : (
                 <Link
                   href="/login"
@@ -42,7 +46,7 @@ const Navbar = async ({ defaultCompany, userCompanies }: NavbarProps) => {
               <ThemeToggle />
             </div>
           </div>
-        </MaxWidthWrapper>
+        </div>
       </header>
     </div>
   );

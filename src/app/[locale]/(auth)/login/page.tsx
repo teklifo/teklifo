@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import LoginForm from "./_components/login-form";
-import ThemedImage from "@/components/client-image";
+import ThemedImage from "@/components/themed-image";
 import Logo from "@/components/logo";
 
 type Props = {

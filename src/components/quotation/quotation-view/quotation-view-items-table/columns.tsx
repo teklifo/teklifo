@@ -47,15 +47,6 @@ function getVatRateCell(varRate: string) {
   return VatRateCell;
 }
 
-function getVatIncludedCell(vatIncluded: boolean) {
-  const VatIncludedCell = () => {
-    const t = useTranslations("Quotation");
-    return <>{vatIncluded ? t("yes") : t("no")}</>;
-  };
-
-  return VatIncludedCell;
-}
-
 function getMoneyCell(number: number) {
   const MoneyCell = () => {
     const format = useFormatter();
@@ -81,6 +72,10 @@ function getQuantityCell(number: number) {
 
   return QuantityCell;
 }
+
+const EmptyCell = () => {
+  return <p className="text-center">-</p>;
+};
 
 export const columns: ColumnDef<QuotationItemType>[] = [
   {
@@ -112,15 +107,28 @@ export const columns: ColumnDef<QuotationItemType>[] = [
   {
     accessorKey: "rfqItem.quantity",
     header: getTableHeader("rfqQuantity"),
-    cell: ({ row }) => {
-      const Cell = getQuantityCell(Number(row.original.rfqItem.quantity));
+    cell: (info) => {
+      const Cell = getQuantityCell(Number(info.row.original.rfqItem.quantity));
       return <Cell />;
+    },
+    meta: {
+      getCellContext: (context: any) => {
+        return {
+          style: {
+            fontWeight: "bold",
+            minWidth: "30%",
+            textTransform: "uppercase",
+          },
+          className: "bold",
+        };
+      },
     },
   },
   {
     accessorKey: "quantity",
     header: getTableHeader("quantity"),
     cell: ({ row }) => {
+      if (row.original.skip) return <EmptyCell />;
       const Cell = getQuantityCell(Number(row.original.quantity));
       return <Cell />;
     },
@@ -137,6 +145,7 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "price",
     header: getTableHeader("price"),
     cell: ({ row }) => {
+      if (row.original.skip) return <EmptyCell />;
       const Cell = getMoneyCell(Number(row.original.price));
       return <Cell />;
     },
@@ -146,6 +155,7 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "amount",
     header: getTableHeader("amount"),
     cell: ({ row }) => {
+      if (row.original.skip) return <EmptyCell />;
       const Cell = getMoneyCell(Number(row.original.amount));
       return <Cell />;
     },
@@ -154,6 +164,7 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "vatRate",
     header: getTableHeader("vatRate"),
     cell: ({ row }) => {
+      if (row.original.skip) return <EmptyCell />;
       const VatRateCell = getVatRateCell(row.getValue("vatRate"));
       return <VatRateCell />;
     },
@@ -162,22 +173,16 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "vatAmount",
     header: getTableHeader("vatAmount"),
     cell: ({ row }) => {
+      if (row.original.skip) return <EmptyCell />;
       const Cell = getMoneyCell(Number(row.original.vatAmount));
       return <Cell />;
-    },
-  },
-  {
-    accessorKey: "vatIncluded",
-    header: getTableHeader("vatIncluded"),
-    cell: ({ row }) => {
-      const VatIncludedCell = getVatIncludedCell(row.getValue("vatIncluded"));
-      return <VatIncludedCell />;
     },
   },
   {
     accessorKey: "amountWithVat",
     header: getTableHeader("amountWithVat"),
     cell: ({ row }) => {
+      if (row.original.skip) return <EmptyCell />;
       const Cell = getMoneyCell(Number(row.original.amountWithVat));
       return <Cell />;
     },
@@ -193,7 +198,21 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "deliveryDate",
     header: getTableHeader("deliveryDate"),
     cell: ({ row }) => {
+      if (row.original.skip) return <EmptyCell />;
       return <>{format(row.getValue("deliveryDate"), "dd.MM.yyyy")}</>;
     },
+  },
+  {
+    accessorKey: "rfqItem.comment",
+    header: getTableHeader("rfqComment"),
+    cell: (info) => {
+      return (
+        <p className="max-w-sm line-clamp-1">{info.getValue() as string}</p>
+      );
+    },
+  },
+  {
+    accessorKey: "comment",
+    header: getTableHeader("comment"),
   },
 ];

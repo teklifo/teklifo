@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import * as z from "zod";
@@ -44,9 +45,28 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
     name: "items",
   });
 
+  const memorizedItems = useMemo(
+    () =>
+      items.fields.map((productField, index) => {
+        const rfqItem = rfq.items.find((e) => e.id === productField.rfqItemId);
+        if (!rfqItem) return null;
+
+        return (
+          <QuotationItem
+            key={productField.id}
+            index={index}
+            control={form.control}
+            rfqItem={rfqItem}
+            setValue={form.setValue}
+          />
+        );
+      }),
+    [form.control, form.setValue, items.fields, rfq.items]
+  );
+
   return (
-    <Table className="mt-4">
-      <TableHeader>
+    <Table className="mb-4">
+      <TableHeader className="sticky top-[-1px] bg-background z-10">
         <TableRow>
           <TableHead className="border min-w-[400px]">{t("product")}</TableHead>
           <TableHead className="border min-w-[100px] bg-muted">
@@ -73,6 +93,9 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
           <TableHead className="border min-w-[100px]">
             {t("deliveryDate")}
           </TableHead>
+          <TableHead className="border min-w-[100px] bg-muted">
+            {t("rfqComment")}
+          </TableHead>
           <TableHead className="border min-w-[100px]">{t("comment")}</TableHead>
           <TooltipProvider>
             <Tooltip>
@@ -88,23 +111,7 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
           </TooltipProvider>
         </TableRow>
       </TableHeader>
-      <TableBody>
-        {items.fields.map((productField, index) => {
-          const rfqItem = rfq.items.find(
-            (e) => e.id === productField.rfqItemId
-          );
-          if (!rfqItem) return null;
-
-          return (
-            <QuotationItem
-              rfqItem={rfqItem}
-              key={index}
-              productField={productField}
-              index={index}
-            />
-          );
-        })}
-      </TableBody>
+      <TableBody>{memorizedItems}</TableBody>
     </Table>
   );
 };

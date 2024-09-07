@@ -4,7 +4,7 @@ import { headers, cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import type { Prisma } from "@prisma/client";
 import AcceptInvitation from "./_components/accept-invitation";
-import ThemedImage from "@/components/client-image";
+import ThemedImage from "@/components/themed-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import request from "@/lib/request";
 

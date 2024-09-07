@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { getQuotationSchema } from "@/lib/schemas";
 import request from "@/lib/request";
+import { useRouter } from "next/navigation";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -33,28 +34,18 @@ type QuotationType = Prisma.QuotationGetPayload<{
   };
 }>;
 
-type RFQType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    items: {
-      include: {
-        product: true;
-      };
-    };
-  };
-}>;
-
 type ConfirmQuotationProps = {
-  rfq: RFQType;
   closeDialog: () => void;
   quotation?: QuotationType;
 };
 
 const ConfirmQuotation = ({
-  rfq,
   quotation,
   closeDialog,
 }: ConfirmQuotationProps) => {
   const t = useTranslations("Quotation");
+
+  const router = useRouter();
 
   const update = quotation !== undefined;
   const { toast } = useToast();
@@ -73,17 +64,6 @@ const ConfirmQuotation = ({
     }
     setOpen(openAlert);
   };
-
-  async function confirmParticipation() {
-    const config = {
-      method: "PATCH",
-      headers: {
-        "Accept-Language": getCookie("NEXT_LOCALE"),
-      },
-    };
-
-    await request(`/api/rfq/${rfq.id}/participation`, config);
-  }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
@@ -106,10 +86,6 @@ const ConfirmQuotation = ({
           description: t("quotationIsUpdatedHint"),
         });
       } else {
-        if (!rfq.privateRequest) {
-          await confirmParticipation();
-        }
-
         await request<QuotationType>(`/api/quotation/`, config);
 
         toast({
@@ -130,6 +106,8 @@ const ConfirmQuotation = ({
       });
     }
 
+    router.refresh();
+
     setLoading(false);
   };
 
@@ -137,7 +115,7 @@ const ConfirmQuotation = ({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>
         <Button size="lg" className="space-x-2">
-          <BriefcaseBusiness />
+          <BriefcaseBusiness className="h-4 w-4" />
           <span>{t("sendQuotation")}</span>
         </Button>
       </AlertDialogTrigger>

@@ -40,7 +40,7 @@ const ShareRFQ = () => {
           variant="outline"
           className="text-center whitespace-normal h-auto space-x-2 lg:w-full"
         >
-          <LinkIcon />
+          <LinkIcon className="h-4 w-4" />
           <span>{t("shareRfq")}</span>
         </Button>
       </DialogTrigger>
