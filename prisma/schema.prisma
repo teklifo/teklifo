@@ -322,6 +322,7 @@ model Quotation {
   contactPerson String              @default("")
   email         String              @default("")
   phone         String              @default("")
+  vatIncluded   Boolean             @default(false)
   description   String
   items         QuotationItem[]
   totalAmount   Decimal             @db.Decimal(15, 2)
@@ -345,7 +346,6 @@ model QuotationItem {
   amount           Decimal                 @db.Decimal(15, 2)
   vatRate          VatRates
   vatAmount        Decimal                 @db.Decimal(15, 2)
-  vatIncluded      Boolean
   amountWithVat    Decimal                 @db.Decimal(15, 2)
   deliveryDate     DateTime
   comment          String

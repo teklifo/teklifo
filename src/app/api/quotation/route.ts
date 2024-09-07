@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
       contactPerson,
       phone,
       email,
+      vatIncluded,
     } = test.data;
 
     // Check RFQ
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest) {
         const amountWithVat = calculateAmountWithVat(
           item.amount,
           vatAmount,
-          item.vatIncluded
+          vatIncluded
         );
 
         totalAmount = totalAmount + (item.skip ? 0 : amountWithVat);
@@ -118,7 +119,6 @@ export async function POST(request: NextRequest) {
           amount: item.amount,
           vatRate,
           vatAmount,
-          vatIncluded: item.vatIncluded,
           amountWithVat,
           deliveryDate: item.deliveryDate,
           comment: item.comment,
@@ -138,6 +138,7 @@ export async function POST(request: NextRequest) {
         phone,
         email,
         description,
+        vatIncluded,
         totalAmount,
         items: quotationProducts,
       },

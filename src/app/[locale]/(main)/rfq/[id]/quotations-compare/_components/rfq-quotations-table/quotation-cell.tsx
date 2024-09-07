@@ -18,6 +18,7 @@ type QuotationItemType = Prisma.QuotationItemGetPayload<{
         id: true;
         totalAmount: true;
         currency: true;
+        vatIncluded: true;
         rfq: {
           select: {
             latestVersion: true;
@@ -79,7 +80,6 @@ const QuotationCell = ({ row, quotationId, position }: QuotationCellProps) => {
     price,
     vatAmount,
     vatRate,
-    vatIncluded,
     amountWithVat,
     deliveryDate,
     skip,
@@ -93,7 +93,9 @@ const QuotationCell = ({ row, quotationId, position }: QuotationCellProps) => {
   const quantityDifference = Number(quantity) - Number(rfqQuantity);
 
   const vatRateLabel = t(vatRate);
-  const vatIncludedLabel = vatIncluded ? t("vatIncluded") : t("vatNotIncluded");
+  const vatIncludedLabel = quotation.vatIncluded
+    ? t("vatIncluded")
+    : t("vatNotIncluded");
   const vatAmountLabel = intlFormat.number(Number(vatAmount), {
     style: "decimal",
     minimumFractionDigits: 2,

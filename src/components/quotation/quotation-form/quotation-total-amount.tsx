@@ -11,6 +11,7 @@ const QuotationTotalAmount = () => {
   const format = useFormatter();
 
   const currency = useWatch({ name: "currency" });
+  const vatIncluded = useWatch({ name: "vatIncluded" });
   const items = useWatch({ name: "items" });
 
   let totalAmount = 0;
@@ -28,7 +29,7 @@ const QuotationTotalAmount = () => {
       calculateAmountWithVat(
         Number(item.amount),
         Number(vatAmount),
-        item.vatIncluded
+        vatIncluded
       );
   });
 
@@ -44,7 +45,7 @@ const QuotationTotalAmount = () => {
         </span>
       </div>
       <div className="flex flex-row justify-start items-center space-x-2 px-2 md:px-0">
-        <span>{`${t("vatAmount")}:`}</span>
+        <span>{`${vatIncluded ? t("totalVatIncluded") : t("totalVat")}:`}</span>
         <span className="font-semibold">
           {format.number(totalVatAmount, {
             style: "currency",

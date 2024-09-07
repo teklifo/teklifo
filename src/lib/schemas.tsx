@@ -379,6 +379,7 @@ export const getQuotationSchema = (t: TranslateFunction) => {
 
         return z.NEVER;
       }),
+    vatIncluded: z.boolean().default(true),
     description: z.string().default(""),
     items: z.array(getQuotationItemSchema(t)).min(1, t("invalidProducts")),
   });
@@ -429,7 +430,6 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
         required_error: t("invalidVatRate"),
         invalid_type_error: t("invalidVatRate"),
       }),
-      vatIncluded: z.boolean().default(true),
       deliveryDate: z.coerce.date({
         errorMap: (issue, { defaultError }) => ({
           message:

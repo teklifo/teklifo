@@ -65,7 +65,7 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
   );
 
   return (
-    <Table className="my-4">
+    <Table className="mb-4">
       <TableHeader className="sticky top-[-1px] bg-background z-10">
         <TableRow>
           <TableHead className="border min-w-[400px]">{t("product")}</TableHead>

@@ -86,6 +86,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
                   id: true,
                   totalAmount: true,
                   currency: true,
+                  vatIncluded: true,
                   rfq: {
                     select: {
                       latestVersion: true,

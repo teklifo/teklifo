@@ -113,6 +113,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       contactPerson,
       phone,
       email,
+      vatIncluded,
     } = test.data;
 
     // Find quotation
@@ -157,7 +158,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         const amountWithVat = calculateAmountWithVat(
           item.amount,
           vatAmount,
-          item.vatIncluded
+          vatIncluded
         );
 
         totalAmount = totalAmount + (item.skip ? 0 : amountWithVat);
@@ -183,7 +184,6 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
           amount: item.amount,
           vatRate,
           vatAmount,
-          vatIncluded: item.vatIncluded,
           amountWithVat,
           deliveryDate: item.deliveryDate,
           comment: item.comment,
@@ -206,6 +206,7 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
         phone,
         email,
         description,
+        vatIncluded,
         totalAmount,
         items: quotationProducts,
       },

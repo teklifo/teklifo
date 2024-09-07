@@ -133,7 +133,7 @@ const QuotationItem = ({
   const quantity = useWatch({ name: `items.${index}.quantity` });
   const price = useWatch({ name: `items.${index}.price` });
   const amount = useWatch({ name: `items.${index}.amount` });
-  const vatIncluded = useWatch({ name: `items.${index}.vatIncluded` });
+  const vatIncluded = useWatch({ name: `vatIncluded` });
   const vatRate = useWatch({ name: `items.${index}.vatRate` });
   const skip = useWatch({ name: `items.${index}.skip` });
 

@@ -21,6 +21,7 @@ import QuotationTotalAmount from "./quotation-total-amount";
 import ConfirmQuotation from "./confirm-quotation";
 import DeleteQuotation from "../delete-quotation";
 import { getQuotationSchema } from "@/lib/schemas";
+import QuotationFormInputs from "./quotation-form-inputs";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -61,7 +62,7 @@ const QuotationForm = ({
   const ref = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    setHeight((ref.current?.clientHeight ?? 0) - 40);
+    setHeight((ref.current?.clientHeight ?? 0) - 80);
   }, []);
 
   const st = useTranslations("Schemas.quotationSchema");
@@ -76,6 +77,7 @@ const QuotationForm = ({
       rfqVersionId: rfq.versionId ?? "",
       rfqId: rfq.id ?? "",
       currency: quotation?.currency ?? rfq.currency,
+      vatIncluded: quotation?.vatIncluded ?? false,
       contactPerson: quotation?.contactPerson ?? "",
       email: "",
       phone: "",
@@ -95,7 +97,6 @@ const QuotationForm = ({
           price: Number(quotationItem?.price ?? 0),
           amount: Number(quotationItem?.amount ?? 0),
           vatRate: quotationItem?.vatRate ?? "NOVAT",
-          vatIncluded: quotationItem?.vatIncluded ?? false,
           deliveryDate: quotationItem?.deliveryDate ?? rfqItem.deliveryDate,
           comment: quotationItem?.comment ?? "",
           skip: quotationItem?.skip ?? false,
@@ -137,6 +138,7 @@ const QuotationForm = ({
             </TabsTrigger>
           </TabsList>
           <TabsContent value="items">
+            <QuotationFormInputs />
             {height > 0 && (
               <ScrollArea className="w-full" style={{ height }}>
                 <QuotationFormItemsTable rfq={rfq} />

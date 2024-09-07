@@ -17,6 +17,7 @@ export type QuotationsItemType = Prisma.QuotationItemGetPayload<{
         id: true;
         totalAmount: true;
         currency: true;
+        vatIncluded: true;
         rfq: {
           select: {
             latestVersion: true;

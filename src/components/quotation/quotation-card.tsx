@@ -47,7 +47,9 @@ const QuotationCard = ({ quotation }: QuotationCardProps) => {
             <Avatar className="md:h-20 md:w-20">
               <AvatarFallback>{getAvatarFallback(company.name)}</AvatarFallback>
             </Avatar>
-            <CardTitle>{company.name}</CardTitle>
+            <CardTitle className="break-words line-clamp-2">
+              {company.name}
+            </CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4 p-4 pt-0 md:p-6 md:pt-0">

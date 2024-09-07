@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Contact, Info, Loader, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import CompanyAvatar from "@/components/company/company-avatar";
 import QuotationViewContatcs from "./quotation-view-contacts";
 import QuotationViewAdditional from "./quotation-view-additional";
 import QuotationViewItemsTable from "../quotation-view/quotation-view-items-table";
+import QuotationViewFooter from "./quotation-view-footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -41,7 +42,6 @@ async function getQuotation(quotationId: number) {
 
 const QuotationView = ({ quotationId }: QuotationViewProps) => {
   const t = useTranslations("Quotation");
-  const format = useFormatter();
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -116,15 +116,7 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
         </Tabs>
       </div>
       <DialogFooter className="px-6">
-        <div className="flex flex-row justify-start items-center space-x-2 px-2">
-          <span>{`${t("totalAmount")}:`}</span>
-          <span className="font-semibold">
-            {format.number(Number(quotation.totalAmount), {
-              style: "currency",
-              currency: quotation.currency,
-            })}
-          </span>
-        </div>
+        <QuotationViewFooter quotation={quotation} />
       </DialogFooter>
     </>
   );
