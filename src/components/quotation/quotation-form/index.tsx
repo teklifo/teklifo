@@ -1,7 +1,7 @@
 "use client";
 import "react-phone-number-input/style.css";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -56,6 +56,13 @@ const QuotationForm = ({
   quotation,
 }: QuotationFormProps) => {
   const t = useTranslations("Quotation");
+
+  const [height, setHeight] = useState(0);
+  const ref = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    setHeight((ref.current?.clientHeight ?? 0) - 40);
+  }, []);
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
@@ -113,7 +120,7 @@ const QuotationForm = ({
 
   return (
     <Form {...form}>
-      <form className="flex-auto space-y-10">
+      <form className="flex-auto space-y-10" ref={ref}>
         <Tabs defaultValue="items">
           <TabsList className="grid w-full grid-cols-3 md:max-w-max">
             <TabsTrigger value="items" className="space-x-2">
@@ -130,11 +137,13 @@ const QuotationForm = ({
             </TabsTrigger>
           </TabsList>
           <TabsContent value="items">
-            <ScrollArea className="w-full h-[35rem]">
-              <QuotationFormItemsTable rfq={rfq} />
-              <ScrollBar orientation="horizontal" className="h-4" />
-              <ScrollBar orientation="vertical" className="w-4" />
-            </ScrollArea>
+            {height > 0 && (
+              <ScrollArea className="w-full" style={{ height }}>
+                <QuotationFormItemsTable rfq={rfq} />
+                <ScrollBar orientation="horizontal" className="h-4 z-20" />
+                <ScrollBar orientation="vertical" className="w-4 z-20" />
+              </ScrollArea>
+            )}
           </TabsContent>
           <TabsContent value="contacts">
             <QuotationFormContatcs />
@@ -149,11 +158,7 @@ const QuotationForm = ({
         <QuotationTotalAmount />
         <div className="flex flex-col-reverse space-y-reverse space-y-2 mb-2 md:space-x-2 md:space-y-0 md:flex-row md:mb-0">
           {quotation && <DeleteQuotation quotation={quotation} />}
-          <ConfirmQuotation
-            rfq={rfq}
-            quotation={quotation}
-            closeDialog={closeDialog}
-          />
+          <ConfirmQuotation quotation={quotation} closeDialog={closeDialog} />
         </div>
       </DialogFooter>
     </Form>

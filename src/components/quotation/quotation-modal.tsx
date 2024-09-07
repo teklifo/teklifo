@@ -68,7 +68,7 @@ const QuotationCard = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="mt-0 px-0 flex flex-col max-w-[100%] h-[100%] md:max-w-[90%] md:h-[95%] sm:p-6">
+      <DialogContent className="mt-0 px-0 flex flex-col max-w-[100vw] h-[100vh] md:max-w-[90vw] md:h-[95vh] sm:p-6">
         {currentCompany?.id === company.id &&
         rfq &&
         quotation.rfq.latestVersion ? (

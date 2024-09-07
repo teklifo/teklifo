@@ -34,24 +34,12 @@ type QuotationType = Prisma.QuotationGetPayload<{
   };
 }>;
 
-type RFQType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    items: {
-      include: {
-        product: true;
-      };
-    };
-  };
-}>;
-
 type ConfirmQuotationProps = {
-  rfq: RFQType;
   closeDialog: () => void;
   quotation?: QuotationType;
 };
 
 const ConfirmQuotation = ({
-  rfq,
   quotation,
   closeDialog,
 }: ConfirmQuotationProps) => {

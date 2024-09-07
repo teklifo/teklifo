@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Contact, Info, Loader, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
@@ -43,8 +43,15 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
   const t = useTranslations("Quotation");
   const format = useFormatter();
 
+  const ref = useRef<HTMLDivElement>(null);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [quotation, setQuotation] = useState<QuotationType>();
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    setHeight((ref.current?.clientHeight ?? 0) - 150);
+  }, [ref.current?.clientHeight]);
 
   useEffect(() => {
     const fetchQuotation = async () => {
@@ -70,7 +77,7 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
 
   return (
     <>
-      <div className="flex-auto space-y-6">
+      <div className="flex-auto space-y-6" ref={ref}>
         <CompanyAvatar
           company={quotation.company}
           className="flex flex-row justify-center items-center space-x-4 md:justify-start"
@@ -92,11 +99,13 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="items">
-            <ScrollArea className="w-full h-[35rem]">
-              <QuotationViewItemsTable items={quotation.items} />
-              <ScrollBar orientation="horizontal" className="h-4" />
-              <ScrollBar orientation="vertical" className="w-4" />
-            </ScrollArea>
+            {height > 0 && (
+              <ScrollArea className="w-full" style={{ height }}>
+                <QuotationViewItemsTable items={quotation.items} />
+                <ScrollBar orientation="horizontal" className="h-4" />
+                <ScrollBar orientation="vertical" className="w-4" />
+              </ScrollArea>
+            )}
           </TabsContent>
           <TabsContent value="contacts">
             <QuotationViewContatcs quotation={quotation} />
