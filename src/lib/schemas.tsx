@@ -1,5 +1,6 @@
 import * as z from "zod";
 import parsePhoneNumberFromString from "libphonenumber-js";
+import CURRENCIES from "@/lib/currencies";
 import { TranslateFunction } from "@/types";
 
 export const getCompanySchema = (t: TranslateFunction) => {
@@ -84,12 +85,10 @@ export const getPriceTypeSchema = (t: TranslateFunction) => {
         invalid_type_error: t("invalidName"),
       })
       .min(1, t("invalidName")),
-    currency: z
-      .string({
-        required_error: t("invalidCurrency"),
-        invalid_type_error: t("invalidCurrency"),
-      })
-      .min(1, t("invalidCurrency")),
+    currency: z.custom<string>(
+      (val) => CURRENCIES.includes(val as string),
+      t("invalidCurrency")
+    ),
   });
 };
 
@@ -226,12 +225,10 @@ export const getRFQSchema = (t: TranslateFunction) => {
         invalid_type_error: t("invalidPublicRequest"),
       })
       .default(false),
-    currency: z
-      .string({
-        required_error: t("invalidCurrency"),
-        invalid_type_error: t("invalidCurrency"),
-      })
-      .min(1, t("invalidCurrency")),
+    currency: z.custom<string>(
+      (val) => CURRENCIES.includes(val as string),
+      t("invalidCurrency")
+    ),
     endDate: z.coerce
       .date({
         errorMap: (issue, { defaultError }) => ({
@@ -338,12 +335,10 @@ export const getQuotationSchema = (t: TranslateFunction) => {
       required_error: t("invalidRFQId"),
       invalid_type_error: t("invalidRFQId"),
     }),
-    currency: z
-      .string({
-        required_error: t("invalidCurrency"),
-        invalid_type_error: t("invalidCurrency"),
-      })
-      .min(1, t("invalidCurrency")),
+    currency: z.custom<string>(
+      (val) => CURRENCIES.includes(val as string),
+      t("invalidCurrency")
+    ),
     contactPerson: z
       .string({
         required_error: t("invalidContactPerson"),
