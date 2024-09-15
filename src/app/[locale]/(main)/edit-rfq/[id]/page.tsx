@@ -83,7 +83,7 @@ const EditRFQ = async ({ params: { id } }: Props) => {
   const t = await getTranslations("RFQForm");
 
   return (
-    <MaxWidthWrapper className="my-8">
+    <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("updateTitle", { number: rfq.number })}

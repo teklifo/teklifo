@@ -10,7 +10,7 @@ const WelcomeScreen = async () => {
   const t = await getTranslations("WelcomeScreen");
 
   return (
-    <MaxWidthWrapper className="my-8">
+    <MaxWidthWrapper className="mt-8 mb-16">
       <div className="flex flex-col items-center justify-center h-[80vh] space-y-12">
         <div className="w-full flex justify-center items-center text-center">
           <div className="max-w-lg space-y-8">

@@ -94,7 +94,7 @@ const UserCompaniesContent = ({
           </div>
         ) : (
           <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-            <Building2 className="w-48 h-48 text-primary" />
+            <Building2 className="w-48 h-48 text-foreground" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noCompany")}
             </h2>

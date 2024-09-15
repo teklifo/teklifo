@@ -54,7 +54,7 @@ const SupplierGuide = async ({ params: { rfqId } }: Props) => {
   const t = await getTranslations("SupplierGuide");
 
   return (
-    <MaxWidthWrapper className="my-8">
+    <MaxWidthWrapper className="mt-8 mb-16">
       <div className="flex flex-col items-center justify-center space-y-12">
         <div className="flex flex-col justify-center items-center w-full space-y-4">
           <h1 className="text-center max-w-xl text-4xl font-bold tracking-tight text-foreground">
