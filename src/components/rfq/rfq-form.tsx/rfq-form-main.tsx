@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, ChevronsUpDown } from "lucide-react";
 import {
   FormControl,
   FormDescription,
@@ -16,12 +17,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn, dateFnsLocale } from "@/lib/utils";
+import CURRENCIES from "@/lib/currencies";
 
 const RFQFormMain = () => {
   const t = useTranslations("RFQForm");
@@ -31,6 +41,8 @@ const RFQFormMain = () => {
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
   const form = useFormContext<z.infer<typeof formSchema>>();
+
+  const [currencyOpen, setCurrencyOpen] = useState(false);
 
   return (
     <div className="mt-4 space-y-4">
@@ -98,11 +110,53 @@ const RFQFormMain = () => {
         control={form.control}
         name="currency"
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="flex flex-col">
             <FormLabel>{t("currency")}</FormLabel>
-            <FormControl>
-              <Input {...field} className="w-[240px]" autoComplete="off" />
-            </FormControl>
+            <Popover
+              open={currencyOpen}
+              onOpenChange={setCurrencyOpen}
+              modal={true}
+            >
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="w-[240px]"
+                  >
+                    {field.value ? field.value : t("selectCurrency")}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandInput
+                    placeholder={t("currencySearch")}
+                    className="h-9"
+                  />
+                  <CommandList>
+                    <CommandEmpty>{t("currencyNotFound")}</CommandEmpty>
+                    <CommandGroup>
+                      <div className="overflow-hidden">
+                        {CURRENCIES.map((currency) => (
+                          <CommandItem
+                            value={currency}
+                            key={currency}
+                            onSelect={() => {
+                              form.setValue("currency", currency);
+                              setCurrencyOpen(false);
+                            }}
+                          >
+                            {currency}
+                          </CommandItem>
+                        ))}
+                      </div>
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
             <FormMessage />
           </FormItem>
         )}

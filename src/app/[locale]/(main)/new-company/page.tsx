@@ -22,7 +22,7 @@ const NewCompany = async () => {
   const t = await getTranslations("CompanyForm");
 
   return (
-    <MaxWidthWrapper className="my-8">
+    <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("createTitle")}

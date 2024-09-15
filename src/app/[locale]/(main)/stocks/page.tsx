@@ -84,7 +84,7 @@ const Stocks = async ({ searchParams: { page } }: Props) => {
   const t = await getTranslations("Stock");
 
   return (
-    <MaxWidthWrapper className="my-8">
+    <MaxWidthWrapper className="mt-8 mb-16">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
@@ -130,7 +130,7 @@ const Stocks = async ({ searchParams: { page } }: Props) => {
           </div>
         ) : (
           <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-            <Warehouse className="w-48 h-48 text-primary" />
+            <Warehouse className="w-48 h-48 text-foreground" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noStocks")}
             </h2>

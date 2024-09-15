@@ -66,7 +66,7 @@ const MyQuotations = async ({ searchParams: { page } }: Props) => {
   const t = await getTranslations("MyQuotations");
 
   return (
-    <MaxWidthWrapper className="my-8">
+    <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("title")}
@@ -82,7 +82,7 @@ const MyQuotations = async ({ searchParams: { page } }: Props) => {
           </div>
         ) : (
           <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-            <BriefcaseBusiness className="w-48 h-48 text-primary" />
+            <BriefcaseBusiness className="w-48 h-48 text-foreground" />
             <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {t("noMyQuotations")}
             </h2>

@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { PriceType as PriceTypeType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,10 +26,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { getPriceTypeSchema } from "@/lib/schemas";
 import request from "@/lib/request";
+import CURRENCIES from "@/lib/currencies";
 
 type PriceTypeFormProps = {
   companyId: String;
@@ -44,6 +58,7 @@ const PriceTypeForm = ({ companyId, priceType }: PriceTypeFormProps) => {
   const router = useRouter();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const st = useTranslations("Schemas.priceTypeSchema");
@@ -154,11 +169,49 @@ const PriceTypeForm = ({ companyId, priceType }: PriceTypeFormProps) => {
               control={form.control}
               name="currency"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>{t("currency")}</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
+                  <Popover
+                    open={currencyOpen}
+                    onOpenChange={setCurrencyOpen}
+                    modal={true}
+                  >
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button variant="outline" role="combobox">
+                          {field.value ? field.value : t("selectCurrency")}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder={t("currencySearch")}
+                          className="h-9"
+                        />
+                        <CommandList>
+                          <CommandEmpty>{t("currencyNotFound")}</CommandEmpty>
+                          <CommandGroup>
+                            <div className="overflow-hidden">
+                              {CURRENCIES.map((currency) => (
+                                <CommandItem
+                                  value={currency}
+                                  key={currency}
+                                  onSelect={() => {
+                                    form.setValue("currency", currency);
+                                    setCurrencyOpen(false);
+                                  }}
+                                >
+                                  {currency}
+                                </CommandItem>
+                              ))}
+                            </div>
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
