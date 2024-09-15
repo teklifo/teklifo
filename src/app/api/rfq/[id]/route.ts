@@ -24,12 +24,12 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         latestVersion: true,
         OR: [
           {
-            companyId: company?.id,
+            companyId: company?.id ?? "",
           },
           {
             participants: {
               some: {
-                companyId: company?.id,
+                companyId: company?.id ?? "",
               },
             },
           },

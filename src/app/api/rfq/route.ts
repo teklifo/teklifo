@@ -129,12 +129,12 @@ export async function GET(request: NextRequest) {
       {
         participants: {
           some: {
-            companyId: company ? company.id : undefined,
+            companyId: company ? company.id : "",
           },
         },
       },
       {
-        companyId: company ? company.id : undefined,
+        companyId: company ? company.id : "",
       },
     ];
 
