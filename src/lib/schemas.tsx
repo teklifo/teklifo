@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { addDays } from "date-fns";
 import parsePhoneNumberFromString from "libphonenumber-js";
 import CURRENCIES from "@/lib/currencies";
 import { TranslateFunction } from "@/types";
@@ -471,4 +472,32 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
         });
       }
     });
+};
+
+export const getRFQqFiltersSchema = (t: TranslateFunction) => {
+  return z.object({
+    company: z.array(z.string()),
+    date: z
+      .object(
+        {
+          from: z.coerce.date({
+            errorMap: (issue, { defaultError }) => ({
+              message:
+                issue.code === "invalid_date" ? t("invalidDate") : defaultError,
+            }),
+          }),
+          to: z.coerce.date({
+            errorMap: (issue, { defaultError }) => ({
+              message:
+                issue.code === "invalid_date" ? t("invalidDate") : defaultError,
+            }),
+          }),
+        },
+        {
+          required_error: t("invalidDate"),
+          invalid_type_error: t("invalidDate"),
+        }
+      )
+      .refine((data) => data.from > addDays(new Date(), -1), t("invalidDate")),
+  });
 };

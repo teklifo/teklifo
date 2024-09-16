@@ -22,17 +22,7 @@ const Navbar = async ({ defaultCompany, userCompanies }: NavbarProps) => {
     <div className="sticky z-50 top-0 inset-x-0 h-16 border-b">
       <header className="relative bg-background border-b px-2 md:px-10">
         <div className="flex h-16 justify-between items-center">
-          <div className="flex flex-row space-x-16">
-            <Logo />
-            <nav className="flex items-center gap-4 text-sm lg:gap-6">
-              <Link
-                href="/rfq"
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-              >
-                {t("rfqSearch")}
-              </Link>
-            </nav>
-          </div>
+          <Logo />
           <div className="flex flex-row space-x-2">
             <div className="block xl:hidden">
               <Sidebar

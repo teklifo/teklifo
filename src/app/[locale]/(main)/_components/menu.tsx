@@ -12,6 +12,7 @@ import {
   Coins,
   FileInput,
   BriefcaseBusiness,
+  FileSearch,
 } from "lucide-react";
 import Nav from "./nav";
 import CompanySwitcher from "./company-switcher";
@@ -19,18 +20,18 @@ import { cn } from "@/lib/utils";
 
 type MenuProps = {
   isCollapsed: boolean;
-  defaultCompany: CompanyType;
+  defaultCompany: CompanyType | null;
   userCompanies: CompanyType[];
 };
 
 const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
   const t = useTranslations("Layout");
 
-  return (
-    <>
+  return defaultCompany ? (
+    <div className="mt-2">
       <div
         className={cn(
-          "flex h-[52px] items-center justify-center mt-2",
+          "flex h-[52px] items-center justify-center",
           isCollapsed ? "h-[52px]" : "px-2"
         )}
       >
@@ -49,6 +50,18 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
             label: "",
             icon: LayoutGrid,
             href: `/dashboard`,
+          },
+        ]}
+      />
+      <Separator />
+      <Nav
+        isCollapsed={isCollapsed}
+        links={[
+          {
+            title: t("rfqSearch"),
+            label: "",
+            icon: FileSearch,
+            href: `/rfq`,
           },
         ]}
       />
@@ -112,7 +125,21 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-    </>
+    </div>
+  ) : (
+    <div className="mt-8">
+      <Nav
+        isCollapsed={isCollapsed}
+        links={[
+          {
+            title: t("rfqSearch"),
+            label: "",
+            icon: FileSearch,
+            href: `/rfq`,
+          },
+        ]}
+      />
+    </div>
   );
 };
 
