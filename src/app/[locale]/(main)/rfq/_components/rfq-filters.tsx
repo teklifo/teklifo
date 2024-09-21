@@ -20,14 +20,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { getRFQqFiltersSchema } from "@/lib/schemas";
+import CompanyFilter from "@/components/filters/company-filter";
+import { getRFQFiltersSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
 const RFQFilters = () => {
   const t = useTranslations("RFQSearch");
 
   const st = useTranslations("Schemas.rfqFiltersSchema");
-  const rfqFiltersSchema = getRFQqFiltersSchema(st);
+  const rfqFiltersSchema = getRFQFiltersSchema(st);
   const form = useForm<z.infer<typeof rfqFiltersSchema>>({
     resolver: zodResolver(rfqFiltersSchema),
   });
@@ -39,6 +40,11 @@ const RFQFilters = () => {
       <div className="mt-16 px-4 py-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+              {t("filters")}
+            </h4>
+            {/* Company */}
+            <CompanyFilter />
             {/* Period */}
             <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
               <FormField

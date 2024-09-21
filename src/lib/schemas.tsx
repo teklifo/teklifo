@@ -474,7 +474,7 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
     });
 };
 
-export const getRFQqFiltersSchema = (t: TranslateFunction) => {
+export const getRFQFiltersSchema = (t: TranslateFunction) => {
   return z.object({
     company: z.array(z.string()),
     date: z
