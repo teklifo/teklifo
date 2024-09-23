@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PaginationBarClient from "@/components/ui/pagintion-bar-client";
@@ -30,12 +31,21 @@ type PaginatedData = {
   pagination: PaginationType;
 };
 
-const CompanyFilter = () => {
+type CompanyFilterProps = {
+  defaultValues: CompanyType[];
+  onSaveCallback: (value: CompanyType[]) => void;
+};
+
+const CompanyFilter = ({
+  defaultValues,
+  onSaveCallback,
+}: CompanyFilterProps) => {
   const t = useTranslations("CompanyFilter");
 
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const [companies, setCompanies] = useState<CompanyType[]>([]);
+  const [companies, setCompanies] = useState<CompanyType[]>(defaultValues);
   const [selectedCompanies, setSelectedCompanies] = useState<CompanyType[]>([]);
   const [pagination, setPagination] = useState<PaginationType>({
     current: 1,
@@ -84,18 +94,33 @@ const CompanyFilter = () => {
     );
   }
 
-  function onOpenChange(open: boolean) {
-    if (!open) {
-      setSelectedCompanies([]);
+  function onOpenChange(value: boolean) {
+    setOpen(value);
+    if (!value) {
+      setSelectedCompanies(defaultValues);
     }
   }
 
+  function onSave() {
+    setOpen(false);
+    onSaveCallback(selectedCompanies);
+  }
+
   return (
-    <Dialog onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <BriefcaseBusiness className="mr-2 h-4 w-4 text-muted-foreground" />
+        <Button
+          variant="outline"
+          className="flex flex-row justify-center items-center space-x-2"
+          onClick={() => setOpen(true)}
+        >
+          <BriefcaseBusiness className="h-4 w-4 text-muted-foreground" />
           <span>{t("company")}</span>
+          <Avatar className="w-8 h-8">
+            <AvatarFallback className="text-sm">
+              {defaultValues.length}
+            </AvatarFallback>
+          </Avatar>
         </Button>
       </DialogTrigger>
       <DialogContent className="overflow-auto h-full flex flex-col md:h-[80vh] max-w-7xl">
@@ -176,6 +201,9 @@ const CompanyFilter = () => {
             </div>
           </div>
         </div>
+        <DialogFooter>
+          <Button onClick={onSave}>{t("save")}</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

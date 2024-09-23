@@ -476,8 +476,10 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
 
 export const getRFQFiltersSchema = (t: TranslateFunction) => {
   return z.object({
-    company: z.array(z.string()),
-    date: z
+    company: z.array(
+      z.object({ id: z.string(), name: z.string(), tin: z.string() })
+    ),
+    endDate: z
       .object(
         {
           from: z.coerce.date({
@@ -498,6 +500,6 @@ export const getRFQFiltersSchema = (t: TranslateFunction) => {
           invalid_type_error: t("invalidDate"),
         }
       )
-      .refine((data) => data.from > addDays(new Date(), -1), t("invalidDate")),
+      .optional(),
   });
 };

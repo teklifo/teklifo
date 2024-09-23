@@ -2,9 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
+import queryString from "query-string";
+import { Company as CompanyType } from "@prisma/client";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,17 +25,44 @@ import {
 import CompanyFilter from "@/components/filters/company-filter";
 import { getRFQFiltersSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
+import { useRouter } from "@/navigation";
 
 const RFQFilters = () => {
   const t = useTranslations("RFQSearch");
+
+  const router = useRouter();
 
   const st = useTranslations("Schemas.rfqFiltersSchema");
   const rfqFiltersSchema = getRFQFiltersSchema(st);
   const form = useForm<z.infer<typeof rfqFiltersSchema>>({
     resolver: zodResolver(rfqFiltersSchema),
+    defaultValues: {
+      company: [],
+    },
   });
 
-  const onSubmit = async (values: z.infer<typeof rfqFiltersSchema>) => {};
+  const company = useWatch({
+    control: form.control,
+    name: "company",
+  }) as CompanyType[];
+
+  function setCompanyFilters(selectedCompanies: CompanyType[]) {
+    form.setValue("company", selectedCompanies);
+  }
+
+  async function onSubmit(values: z.infer<typeof rfqFiltersSchema>) {
+    const queryParams = queryString.stringify(
+      {
+        company: values.company.map((company) => company.tin),
+        endDateFrom:
+          values.endDate && format(values.endDate?.from, "dd-MM-yyyy"),
+        endDateTo: values.endDate && format(values.endDate?.to, "dd-MM-yyyy"),
+      },
+      { arrayFormat: "comma" }
+    );
+
+    router.push(`/rfq?${queryParams}`);
+  }
 
   return (
     <div className="fixed top-0 h-full w-full overflow-hidden">
@@ -44,19 +73,22 @@ const RFQFilters = () => {
               {t("filters")}
             </h4>
             {/* Company */}
-            <CompanyFilter />
+            <CompanyFilter
+              defaultValues={company}
+              onSaveCallback={setCompanyFilters}
+            />
             {/* Period */}
             <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
               <FormField
                 control={form.control}
-                name={`date`}
+                name={`endDate`}
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>{t("date")}</FormLabel>
+                    <FormLabel>{t("endDate")}</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
-                          id="date"
+                          id="endDate"
                           variant={"outline"}
                           className={cn(
                             "w-[300px] justify-start text-left font-normal",
