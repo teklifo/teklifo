@@ -3,18 +3,22 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { FileInput, ListFilter } from "lucide-react";
+import queryString from "query-string";
 import RFQFilters from "./_components/rfq-filters";
 import RFQCard from "@/components/rfq/rfq-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import request from "@/lib/request";
+import getCompanies from "@/app/actions/get-companies";
 import { PaginationType, RFQWithQuotationsType } from "@/types";
-import queryString from "query-string";
 
 type SearchParams = {
-  page?: number;
-  limit?: number;
+  page?: string;
+  limit?: string;
+  endDateTo?: string;
+  endDateFrom?: string;
+  companyId?: string;
 };
 
 type Props = {
@@ -38,7 +42,7 @@ export const generateMetadata = async ({
   };
 };
 
-const getRFQs = async (searchParams: SearchParams) => {
+async function getRFQs(searchParams: SearchParams) {
   try {
     const cookieStore = cookies();
     const headersList = headers();
@@ -56,25 +60,43 @@ const getRFQs = async (searchParams: SearchParams) => {
   } catch (error) {
     return undefined;
   }
-};
+}
 
 function searchParamsString(searchParams: SearchParams) {
   return queryString.stringify(searchParams);
 }
 
+async function getDefaultFilters(searchParams: SearchParams) {
+  const companies = searchParams.companyId
+    ? await getCompanies(searchParams.companyId.split(","))
+    : [];
+
+  return {
+    company: companies,
+    endDate: {
+      from: searchParams.endDateFrom
+        ? new Date(searchParams.endDateFrom)
+        : undefined,
+      to: searchParams.endDateTo ? new Date(searchParams.endDateTo) : undefined,
+    },
+  };
+}
+
 const RFQSearch = async ({ searchParams }: Props) => {
   const data = await getRFQs({
     ...searchParams,
-    limit: 1,
-    page: searchParams.page ?? 1,
+    limit: "10",
+    page: searchParams.page ?? "1",
   });
   if (!data) return notFound();
+
+  const t = await getTranslations("RFQSearch");
 
   const { result, pagination } = data;
 
   const paramsString = searchParamsString({ ...searchParams, page: undefined });
 
-  const t = await getTranslations("RFQSearch");
+  const defaultFilters = await getDefaultFilters(searchParams);
 
   return (
     <div className="relative min-h-screen grid grid-cols-1 gap-0 md:grid-cols-12 md:gap-4">
@@ -113,7 +135,7 @@ const RFQSearch = async ({ searchParams }: Props) => {
         </div>
       </div>
       <div className="hidden sticky top-0 !h-[calc(100vh-4rem)] col-span-3 border md:block">
-        <RFQFilters />
+        <RFQFilters defaultFilters={defaultFilters} />
       </div>
       <Sheet>
         <SheetTrigger asChild>
@@ -124,7 +146,7 @@ const RFQSearch = async ({ searchParams }: Props) => {
           </div>
         </SheetTrigger>
         <SheetContent>
-          <RFQFilters />
+          <RFQFilters defaultFilters={defaultFilters} />
         </SheetContent>
       </Sheet>
     </div>

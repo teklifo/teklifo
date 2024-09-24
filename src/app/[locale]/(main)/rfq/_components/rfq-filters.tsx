@@ -1,10 +1,11 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
+import { DefaultValues, useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
+import { DateRange } from "react-day-picker";
 import { format, formatISO } from "date-fns";
 import queryString from "query-string";
 import { Company as CompanyType } from "@prisma/client";
@@ -26,29 +27,25 @@ import {
 import CompanyFilter from "@/components/filters/company-filter";
 import { getRFQFiltersSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
-import { useRouter } from "@/navigation";
 
-const RFQFilters = () => {
+const rfqFiltersSchema = getRFQFiltersSchema((_) => {
+  return "";
+});
+
+type RFQFiltersProps = {
+  defaultFilters: DefaultValues<z.infer<typeof rfqFiltersSchema>>;
+};
+
+const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
   const t = useTranslations("RFQSearch");
 
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const st = useTranslations("Schemas.rfqFiltersSchema");
   const rfqFiltersSchema = getRFQFiltersSchema(st);
   const form = useForm<z.infer<typeof rfqFiltersSchema>>({
     resolver: zodResolver(rfqFiltersSchema),
-    defaultValues: {
-      company: [],
-      endDate: {
-        from: searchParams.get("endDateTo")
-          ? new Date(searchParams.get("endDateTo")!)
-          : undefined,
-        to: searchParams.get("endDateFrom")
-          ? new Date(searchParams.get("endDateFrom")!)
-          : undefined,
-      },
-    },
+    defaultValues: defaultFilters,
   });
 
   const company = useWatch({
@@ -63,7 +60,7 @@ const RFQFilters = () => {
   function resetFilters() {
     form.reset({
       company: [],
-      endDate: undefined,
+      endDate: {},
     });
     form.handleSubmit(onSubmit)();
   }
@@ -74,8 +71,8 @@ const RFQFilters = () => {
         url: "/",
         query: {
           companyId: values.company.map((company) => company.id),
-          endDateFrom: values.endDate && formatISO(values.endDate?.from),
-          endDateTo: values.endDate && formatISO(values.endDate?.to),
+          endDateFrom: values.endDate?.from && formatISO(values.endDate.from),
+          endDateTo: values.endDate?.to && formatISO(values.endDate.to),
         },
       },
       {
@@ -137,7 +134,7 @@ const RFQFilters = () => {
                         initialFocus
                         mode="range"
                         defaultMonth={field?.value?.from}
-                        selected={field.value}
+                        selected={field.value as DateRange}
                         onSelect={field.onChange}
                         numberOfMonths={2}
                       />

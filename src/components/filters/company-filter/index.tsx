@@ -91,7 +91,6 @@ const CompanyFilter = ({
   }, [debouncedValue, page]);
 
   useEffect(() => {
-    console.log(222);
     setSelectedCompanies(defaultValues);
   }, [defaultValues]);
 
@@ -159,26 +158,34 @@ const CompanyFilter = ({
             ) : (
               <div className="flex flex-col justify-between flex-auto">
                 <div className="overflow-auto flex-auto space-y-4">
-                  {companies.map((company) => (
-                    <CompanyRow
-                      key={company.id}
-                      company={company}
-                      checked={
-                        selectedCompanies.find((e) => e.id === company.id) !==
-                        undefined
-                      }
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedCompanies((prevState) => [
-                            ...prevState,
-                            company,
-                          ]);
-                        } else {
-                          removeCompany(company);
+                  {companies.length > 0 ? (
+                    companies.map((company) => (
+                      <CompanyRow
+                        key={company.id}
+                        company={company}
+                        checked={
+                          selectedCompanies.find((e) => e.id === company.id) !==
+                          undefined
                         }
-                      }}
-                    />
-                  ))}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedCompanies((prevState) => [
+                              ...prevState,
+                              company,
+                            ]);
+                          } else {
+                            removeCompany(company);
+                          }
+                        }}
+                      />
+                    ))
+                  ) : (
+                    <div className="h-full w-full flex justify-center items-center">
+                      <p className="text-sm text-muted-foreground">
+                        {t("noResults")}
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <PaginationBarClient
                   pagination={pagination}
@@ -191,23 +198,31 @@ const CompanyFilter = ({
           </div>
           <div className="flex flex-col col-span-5 md:flex-row">
             <Separator className="w-full h-[0.5px] md:h-full md:w-[0.5px]" />
-            <div className="h-fit p-2 flex flex-wrap overflow-auto">
-              {selectedCompanies.map((company) => {
-                return (
-                  <Button
-                    key={company.id}
-                    variant="secondary"
-                    className="m-2"
-                    onClick={() => removeCompany(company)}
-                  >
-                    <span className="max-w-[200px] truncate">
-                      {company.name}
-                    </span>
-                    <X className="ml-2 w-4 h-4 text-muted-foreground" />
-                  </Button>
-                );
-              })}
-            </div>
+            {selectedCompanies.length > 0 ? (
+              <div className="h-fit p-2 flex flex-wrap overflow-auto">
+                {selectedCompanies.map((company) => {
+                  return (
+                    <Button
+                      key={company.id}
+                      variant="secondary"
+                      className="m-2"
+                      onClick={() => removeCompany(company)}
+                    >
+                      <span className="max-w-[200px] truncate">
+                        {company.name}
+                      </span>
+                      <X className="ml-2 w-4 h-4 text-muted-foreground" />
+                    </Button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="h-full w-full flex justify-center items-center">
+                <p className="text-sm text-muted-foreground">
+                  {t("selectCompanyHint")}
+                </p>
+              </div>
+            )}
           </div>
         </div>
         <DialogFooter>

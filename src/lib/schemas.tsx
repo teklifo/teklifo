@@ -482,18 +482,26 @@ export const getRFQFiltersSchema = (t: TranslateFunction) => {
     endDate: z
       .object(
         {
-          from: z.coerce.date({
-            errorMap: (issue, { defaultError }) => ({
-              message:
-                issue.code === "invalid_date" ? t("invalidDate") : defaultError,
-            }),
-          }),
-          to: z.coerce.date({
-            errorMap: (issue, { defaultError }) => ({
-              message:
-                issue.code === "invalid_date" ? t("invalidDate") : defaultError,
-            }),
-          }),
+          from: z.coerce
+            .date({
+              errorMap: (issue, { defaultError }) => ({
+                message:
+                  issue.code === "invalid_date"
+                    ? t("invalidDate")
+                    : defaultError,
+              }),
+            })
+            .optional(),
+          to: z.coerce
+            .date({
+              errorMap: (issue, { defaultError }) => ({
+                message:
+                  issue.code === "invalid_date"
+                    ? t("invalidDate")
+                    : defaultError,
+              }),
+            })
+            .optional(),
         },
         {
           required_error: t("invalidDate"),
