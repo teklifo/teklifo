@@ -25,6 +25,7 @@ import useDebounce from "@/hooks/useDebounce";
 import { PaginationType } from "@/types";
 import CompanyRow from "./company-row";
 import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type PaginatedData = {
   result: CompanyType[];
@@ -131,14 +132,14 @@ const CompanyFilter = ({
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="overflow-auto h-full flex flex-col md:h-[80vh] max-w-7xl">
+      <DialogContent className="h-full md:h-auto overflow-auto max-w-7xl">
         <DialogHeader>
           <DialogTitle>{t("company")}</DialogTitle>
           <DialogDescription>{t("hint")}</DialogDescription>
         </DialogHeader>
-        <div className="h-full grid grid-cols-1 gap-0 md:grid-cols-12 md:gap-6">
+        <div className="grid grid-cols-1 gap-0 md:grid-cols-12 md:gap-6">
           <div className="flex flex-col col-span-7">
-            <div className="w-full space-y-2 mb-8">
+            <div className="space-y-2 mb-8">
               <Label htmlFor="query">{t("query")}</Label>
               <Input
                 type="text"
@@ -151,50 +152,55 @@ const CompanyFilter = ({
                 autoComplete="off"
               />
             </div>
-            {loading ? (
-              <div className="flex justify-center items-center flex-auto">
-                <Loader className="mr-2 animate-spin" />
-              </div>
-            ) : (
-              <div className="flex flex-col justify-between flex-auto">
-                <div className="overflow-auto flex-auto space-y-4">
-                  {companies.length > 0 ? (
-                    companies.map((company) => (
-                      <CompanyRow
-                        key={company.id}
-                        company={company}
-                        checked={
-                          selectedCompanies.find((e) => e.id === company.id) !==
-                          undefined
-                        }
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedCompanies((prevState) => [
-                              ...prevState,
-                              company,
-                            ]);
-                          } else {
-                            removeCompany(company);
-                          }
-                        }}
-                      />
-                    ))
-                  ) : (
-                    <div className="h-full w-full flex justify-center items-center">
-                      <p className="text-sm text-muted-foreground">
-                        {t("noResults")}
-                      </p>
-                    </div>
-                  )}
+            <div className="h-full md:h-[60vh]">
+              {loading ? (
+                <div className="h-full flex justify-center items-center">
+                  <Loader className="mr-2 animate-spin" />
                 </div>
-                <PaginationBarClient
-                  pagination={pagination}
-                  onPageClick={(newPage) => {
-                    setPage(newPage);
-                  }}
-                />
-              </div>
-            )}
+              ) : (
+                <div className="h-full flex flex-col justify-between">
+                  <ScrollArea>
+                    <div className="space-y-4">
+                      {companies.length > 0 ? (
+                        companies.map((company) => (
+                          <CompanyRow
+                            key={company.id}
+                            company={company}
+                            checked={
+                              selectedCompanies.find(
+                                (e) => e.id === company.id
+                              ) !== undefined
+                            }
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setSelectedCompanies((prevState) => [
+                                  ...prevState,
+                                  company,
+                                ]);
+                              } else {
+                                removeCompany(company);
+                              }
+                            }}
+                          />
+                        ))
+                      ) : (
+                        <div className="h-full w-full flex justify-center items-center">
+                          <p className="text-sm text-muted-foreground">
+                            {t("noResults")}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
+                  <PaginationBarClient
+                    pagination={pagination}
+                    onPageClick={(newPage) => {
+                      setPage(newPage);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex flex-col col-span-5 md:flex-row">
             <Separator className="w-full h-[0.5px] md:h-full md:w-[0.5px]" />
