@@ -16,6 +16,7 @@ const publicPages = [
   "/login",
   "/check-email",
   "/company/*",
+  "/rfq",
   "/rfq/*",
   "/supplier-guide/*",
 ];

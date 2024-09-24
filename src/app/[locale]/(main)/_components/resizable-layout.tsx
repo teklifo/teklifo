@@ -40,7 +40,7 @@ const ResizableLayout = ({
     }
   }, [defaultCompany]);
 
-  return defaultCompany ? (
+  return (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
         direction="horizontal"
@@ -89,12 +89,10 @@ const ResizableLayout = ({
           minSize={30}
           className="!overflow-auto"
         >
-          <div className="mt-8">{children}</div>
+          {children}
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>
-  ) : (
-    <>{children}</>
   );
 };
 

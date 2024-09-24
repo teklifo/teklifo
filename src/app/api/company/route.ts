@@ -149,6 +149,22 @@ export async function GET(request: NextRequest) {
 
     // Filters
     const filters: Prisma.CompanyWhereInput = {};
+    const query = request.nextUrl.searchParams.get("query");
+    if (query)
+      filters.OR = [
+        {
+          name: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+        {
+          tin: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+      ];
     if (request.nextUrl.searchParams.get("userId"))
       filters.users = {
         some: {

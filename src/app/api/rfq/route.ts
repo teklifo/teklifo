@@ -103,15 +103,11 @@ export async function GET(request: NextRequest) {
   const { t } = await getTranslationsFromHeader(request.headers);
   const company = await getCurrentCompany();
 
+  const searchParams = request.nextUrl.searchParams;
+
   try {
-    const page = parseInt(
-      request.nextUrl.searchParams.get("page") as string,
-      10
-    );
-    const limit = parseInt(
-      request.nextUrl.searchParams.get("limit") as string,
-      10
-    );
+    const page = parseInt(searchParams.get("page") as string, 10);
+    const limit = parseInt(searchParams.get("limit") as string, 10);
 
     const startIndex = (page - 1) * limit;
 
@@ -129,22 +125,39 @@ export async function GET(request: NextRequest) {
       {
         participants: {
           some: {
-            companyId: company ? company.id : undefined,
+            companyId: company ? company.id : "",
           },
         },
       },
       {
-        companyId: company ? company.id : undefined,
+        companyId: company ? company.id : "",
       },
     ];
 
-    if (request.nextUrl.searchParams.get("companyId"))
-      filters.companyId = request.nextUrl.searchParams.get("companyId") ?? "";
+    if (searchParams.get("companyId"))
+      filters.companyId = {
+        in: searchParams.get("companyId")?.split(",") ?? [],
+      };
 
-    if (request.nextUrl.searchParams.get("participantId"))
+    if (searchParams.get("endDateFrom") || searchParams.get("endDateFrom")) {
+      filters.AND = [
+        {
+          endDate: {
+            gte: searchParams.get("endDateFrom") || undefined,
+          },
+        },
+        {
+          endDate: {
+            lte: searchParams.get("endDateTo") || undefined,
+          },
+        },
+      ];
+    }
+
+    if (searchParams.get("participantId"))
       filters.participants = {
         some: {
-          companyId: request.nextUrl.searchParams.get("participantId") ?? "",
+          companyId: searchParams.get("participantId") ?? "",
         },
       };
 

@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { Company as CompanyType } from "@prisma/client";
 import { Link } from "@/navigation";
 import UserDropdown from "./user-dropdown";
-import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Logo from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentUser from "@/app/actions/get-current-user";

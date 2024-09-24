@@ -33,7 +33,10 @@ const CheckEmail = () => {
               {t("title")}
             </h1>
             <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
-            <Link href="/" className={buttonVariants({ variant: "default" })}>
+            <Link
+              href="/rfq"
+              className={buttonVariants({ variant: "default" })}
+            >
               {t("home")}
             </Link>
           </div>

@@ -1,6 +1,7 @@
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -17,6 +18,9 @@ const PaginationBar = ({
 }) => {
   if (total === 0) return null;
 
+  const minSkipped = Math.min(skipped, 3);
+  const maxNext = Math.min(total - current, 3);
+
   return (
     <Pagination>
       <PaginationContent className="w-full flex flex-row justify-center items-center py-10 space-x-2">
@@ -28,16 +32,21 @@ const PaginationBar = ({
         )}
         {/* First Page */}
         {skipped > 0 && current - 3 > 1 && (
-          <PaginationItem>
-            <PaginationLink href={`${href}${1}`}>1</PaginationLink>
-          </PaginationItem>
+          <>
+            <PaginationItem>
+              <PaginationLink href={`${href}${1}`}>1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          </>
         )}
         {/* Prev pages */}
         {skipped > 0 &&
-          [...Array(Math.min(skipped, 3))].map((_x, i) => (
+          [...Array(minSkipped)].map((_x, i) => (
             <PaginationItem key={i}>
-              <PaginationLink href={`${href}${current - i - 1}`}>
-                {`${current - i - 1}`}
+              <PaginationLink href={`${href}${current - minSkipped + i}`}>
+                {`${current - minSkipped + i}`}
               </PaginationLink>
             </PaginationItem>
           ))}
@@ -49,7 +58,7 @@ const PaginationBar = ({
           >{`${current}`}</PaginationLink>
         </PaginationItem>
         {/* Next pages */}
-        {[...Array(Math.min(total - current, 3))].map((_x, i) => (
+        {[...Array(maxNext)].map((_x, i) => (
           <PaginationItem key={i}>
             <PaginationLink href={`${href}${current + i + 1}`}>
               {`${current + i + 1}`}
@@ -58,9 +67,14 @@ const PaginationBar = ({
         ))}
         {/* Last page */}
         {current + 3 < total && (
-          <PaginationItem>
-            <PaginationLink href={`${href}${total}`}>{total}</PaginationLink>
-          </PaginationItem>
+          <>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href={`${href}${total}`}>{total}</PaginationLink>
+            </PaginationItem>
+          </>
         )}
         {/* Next button */}
         {current !== total && (

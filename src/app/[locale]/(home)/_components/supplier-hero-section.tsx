@@ -31,7 +31,7 @@ const SupplierHeroSection = () => {
         </p>
         <div className="space-x-2 mt-6">
           <Link
-            href={`/dashboard`}
+            href={`/rfq`}
             className={cn(
               buttonVariants({ variant: "default", size: "lg" }),
               "space-x-2"
