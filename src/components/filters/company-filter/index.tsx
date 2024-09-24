@@ -45,8 +45,9 @@ const CompanyFilter = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const [companies, setCompanies] = useState<CompanyType[]>(defaultValues);
-  const [selectedCompanies, setSelectedCompanies] = useState<CompanyType[]>([]);
+  const [companies, setCompanies] = useState<CompanyType[]>([]);
+  const [selectedCompanies, setSelectedCompanies] =
+    useState<CompanyType[]>(defaultValues);
   const [pagination, setPagination] = useState<PaginationType>({
     current: 1,
     skipped: 0,
@@ -67,13 +68,14 @@ const CompanyFilter = ({
       };
 
       const queryParams = queryString.stringify({
-        page,
         query: debouncedValue,
+        limit: 10,
+        page,
       });
 
       try {
         const resonse = await request<PaginatedData>(
-          `/api/company?limit=10&${queryParams}`,
+          `/api/company?${queryParams}`,
           config
         );
         setCompanies(resonse.result);
@@ -87,6 +89,11 @@ const CompanyFilter = ({
 
     getCompanies();
   }, [debouncedValue, page]);
+
+  useEffect(() => {
+    console.log(222);
+    setSelectedCompanies(defaultValues);
+  }, [defaultValues]);
 
   function removeCompany(company: CompanyType) {
     setSelectedCompanies((prevState) =>
@@ -116,11 +123,13 @@ const CompanyFilter = ({
         >
           <BriefcaseBusiness className="h-4 w-4 text-muted-foreground" />
           <span>{t("company")}</span>
-          <Avatar className="w-8 h-8">
-            <AvatarFallback className="text-sm">
-              {defaultValues.length}
-            </AvatarFallback>
-          </Avatar>
+          {defaultValues.length > 0 && (
+            <Avatar className="w-8 h-8">
+              <AvatarFallback className="text-sm">
+                {defaultValues.length}
+              </AvatarFallback>
+            </Avatar>
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent className="overflow-auto h-full flex flex-col md:h-[80vh] max-w-7xl">
