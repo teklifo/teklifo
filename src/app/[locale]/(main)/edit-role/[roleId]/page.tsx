@@ -41,10 +41,7 @@ export const generateMetadata = async ({
     };
 
   return {
-    title: t("editRoleTitle", {
-      roleName: role.name,
-      companyName: role.company.name,
-    }),
+    title: role.name,
     description: t("editRoleDescription"),
   };
 };

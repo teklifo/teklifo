@@ -14,6 +14,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ThemeToggle from "@/components/theme-toggle";
+import LanguageSwitch from "@/components/language-switch";
 import { getAvatarFallback } from "@/lib/utils";
 
 interface SidebarProps {
@@ -116,7 +117,8 @@ const Sidebar = ({ user, defaultCompany, userCompanies }: SidebarProps) => {
           </>
         )}
         <Separator className="my-6" />
-        <div className="flex flex-row justify-center items-center">
+        <div className="flex flex-row justify-center items-center space-x-2">
+          <LanguageSwitch />
           <ThemeToggle />
         </div>
       </SheetContent>

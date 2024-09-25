@@ -1,8 +1,8 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/theme-toggle";
+import LanguageSwitch from "@/components/language-switch";
 
 const Navbar = async () => {
   const t = await getTranslations("Layout");
@@ -13,7 +13,10 @@ const Navbar = async () => {
         <MaxWidthWrapper>
           <div className="flex h-16 justify-between items-center">
             <Logo />
-            <ThemeToggle />
+            <div className="flex items-center space-x-2">
+              <LanguageSwitch />
+              <ThemeToggle />
+            </div>
           </div>
         </MaxWidthWrapper>
       </header>

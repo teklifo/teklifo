@@ -3,10 +3,11 @@ import { Company as CompanyType } from "@prisma/client";
 import { Link } from "@/navigation";
 import UserDropdown from "./user-dropdown";
 import Logo from "@/components/logo";
+import Sidebar from "./sidebar";
 import { buttonVariants } from "@/components/ui/button";
 import getCurrentUser from "@/app/actions/get-current-user";
 import ThemeToggle from "@/components/theme-toggle";
-import Sidebar from "./sidebar";
+import LanguageSwitch from "@/components/language-switch";
 
 type NavbarProps = {
   defaultCompany: CompanyType | null;
@@ -42,7 +43,10 @@ const Navbar = async ({ defaultCompany, userCompanies }: NavbarProps) => {
                   {t("login")}
                 </Link>
               )}
-              <ThemeToggle />
+              <div className="flex items-center space-x-2">
+                <LanguageSwitch />
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </div>
