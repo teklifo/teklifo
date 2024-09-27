@@ -27,7 +27,7 @@ export const generateMetadata = async ({
     };
 
   return {
-    title: t("newRoleTitle", { companyName: company.name }),
+    title: t("newRoleTitle"),
     description: t("newRoleDescription"),
   };
 };
@@ -48,7 +48,7 @@ const NewRole = async () => {
     <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2 mb-4">
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {t("newRoleTitle", { companyName: company.name })}
+          {t("newRoleTitle")}
         </h1>
         <p className="text-lg text-muted-foreground">{t("newRoleSubtitle")}</p>
       </div>

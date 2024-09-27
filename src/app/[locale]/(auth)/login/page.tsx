@@ -28,7 +28,7 @@ const Login = async () => {
         <Logo />
       </div>
       <div className="w-full flex justify-center items-center">
-        <div className="max-w-sm mt-20 md:mt-0">
+        <div className="min-w-md mt-20 md:mt-0">
           <div className="space-y-4">
             <h3 className="text-3xl font-bold tracking-tight md:text-4xl">
               {t("title")}
