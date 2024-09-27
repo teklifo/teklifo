@@ -85,7 +85,6 @@ const UpdateForm = async ({ params: { roleId } }: Props) => {
         <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
           {t("updateRoleTitle", {
             roleName: role.name,
-            companyName: role.company.name,
           })}
         </h1>
 

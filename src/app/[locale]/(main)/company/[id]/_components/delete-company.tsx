@@ -47,7 +47,7 @@ const DeleteCompany = ({ company }: Props) => {
       await request(`/api/company/${id}`, config);
 
       toast({
-        title: t("companyDeleted", { name, tin }),
+        title: t("companyDeleted"),
         description: t("companyDeletedHint"),
       });
 
@@ -61,7 +61,7 @@ const DeleteCompany = ({ company }: Props) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("deleteError", { name, tin }),
+        title: t("deleteError"),
         description: message,
         variant: "destructive",
       });
@@ -84,9 +84,7 @@ const DeleteCompany = ({ company }: Props) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            {t("companyDeleteTitle", { name, tin })}
-          </AlertDialogTitle>
+          <AlertDialogTitle>{t("companyDeleteTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("companyDeleteSubtitle")}
           </AlertDialogDescription>
