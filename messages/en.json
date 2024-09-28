@@ -54,7 +54,9 @@
     "quotationsCompareTitle": "Quotation analysis | {title}",
     "quotationsCompareDescription": "Comparison of quotations from suppliers",
     "RFQTitle": "RFQ search",
-    "RFQDescription": "Search for RFQ from buyers"
+    "RFQDescription": "Search for RFQ from buyers",
+    "importDataTitle": "Import data",
+    "importDataDescription": "Import data from Excel"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -249,7 +251,7 @@
     "noPriceTypesHint": "Create a new price type right now"
   },
   "Member": {
-    "title": "Participants",
+    "title": "Members",
     "subtitle": "List of company members",
     "invitationIsSent": "The invitation letter has been sent successfully",
     "invitationIsSentHint": "The user will become a member of the company as soon as the confirmation is complete",
@@ -259,7 +261,7 @@
     "add": "Invite",
     "send": "Send invitation",
     "newMemberTitle": "Invitation",
-    "newMemberSubtitle": "Enter the email address for sending the invitation letter, and specify the role you wish to assign to the new member",
+    "newMemberSubtitle": "Type the email address for sending the invitation letter, and specify the role you wish to assign to the new member",
     "openMenu": "Open menu",
     "edit": "Edit",
     "delete": "Remove from the company",
@@ -340,9 +342,11 @@
   "CompanyProducts": {
     "title": "Products",
     "subtitle": "List of company products",
-    "new": "Add product",
+    "add": "Add",
+    "create": "Create product",
+    "import": "Import from Excel",
     "noProducts": "Your company does not yet have a product list",
-    "noProductsHint": "Try to upload products now"
+    "noProductsHint": "Try to import products now"
   },
   "Product": {
     "name": "Name",
@@ -423,7 +427,7 @@
     "phone": "Phone number",
     "contacts": "Contacts",
     "product": "Product",
-    "productInputHint": "Enter manually or select a product from the list",
+    "productInputHint": "Type manually or select a product from the list",
     "cancel": "Cancel",
     "rfqConfirmTitle": "Save RFQ?",
     "rfqConfirmSubtitle": "Once confirmed, you can share the request with suppliers",
@@ -587,7 +591,7 @@
     "totalVatIncluded": "VAT incl."
   },
   "Home": {
-    "title": "Create RFQs and select the best quotations",
+    "title": "Create RFQs and select best quotations",
     "subtitle": "Streamline purchasing in your company",
     "getStarted": "Get started",
     "more": "More",
@@ -665,12 +669,26 @@
   },
   "CompanyFilter": {
     "company": "Company",
-    "hint": "Select the companies you want to filter",
+    "hint": "Select companies you want to filter",
     "query": "Search",
-    "queryHint": "Enter the name or TIN of the company...",
+    "queryHint": "Type company name or TIN...",
     "save": "Save",
     "selectCompanyHint": "Select companies from the list",
     "noResults": "No results"
+  },
+  "ImportData": {
+    "title": "Import data",
+    "subtitle": "Import data from XLS",
+    "noExchangeJobs": "No import history",
+    "noExchangeJobsHint": "Your company hasn't imported any data recently",
+    "uploadFile": "Upload file",
+    "import": "Import",
+    "importType": "Import type",
+    "productsImport": "Products",
+    "productPricesImport": "Prices",
+    "productBalanceImport": "Stock balance",
+    "templateHint": "Download and fill out the XLS template. Then upload the completed file back",
+    "error": "Failed to import the data"
   },
   "Schemas": {
     "companySchema": {
@@ -757,6 +775,10 @@
     },
     "rfqFiltersSchema": {
       "invalidDate": "Invalid RFQ deadline"
+    },
+    "importDataSchema": {
+      "invalidImportType": "Invalid import type",
+      "invalidFile": "Invalid file type"
     }
   },
   "Invitation": {

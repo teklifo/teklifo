@@ -340,7 +340,9 @@
   "CompanyProducts": {
     "title": "Товары",
     "subtitle": "Список товаров организации",
-    "new": "Добавить товар",
+    "add": "Добавить",
+    "create": "Создать товар",
+    "import": "Загрузить из Excel",
     "noProducts": "В вашей организации пока еще не заведен список товаров",
     "noProductsHint": "Попробуйте загрузить товары прямо сейчас"
   },
@@ -672,6 +674,20 @@
     "selectCompanyHint": "Подберите организации из списка",
     "noResults": "Нет результатов"
   },
+  "ImportData": {
+    "title": "Импорт данных",
+    "subtitle": "Импортируйте данные из XLS",
+    "noExchangeJobs": "Нет данных импорта",
+    "noExchangeJobsHint": "Ваша организация не импортировала данные прежде",
+    "uploadFile": "Загрузить файл",
+    "import": "Импортировать",
+    "importType": "Тип импорта",
+    "productsImport": "Товары",
+    "productPricesImport": "Цены",
+    "productBalanceImport": "Остатки на складах",
+    "templateHint": "Скачайте и заполните шаблон XLS, после чего загрузите сформированный файл обратно",
+    "error": "Не удалось импортировать данные"
+  },
   "Schemas": {
     "companySchema": {
       "invalidId": "Укажите идентификатор организации",
@@ -757,6 +773,10 @@
     },
     "rfqFiltersSchema": {
       "invalidDate": "Неверно указан период сбора предложений"
+    },
+    "importDataSchema": {
+      "invalidImportType": "Укажите корректный вид импорта данных",
+      "invalidFile": "Укажите корректный файл данных"
     }
   },
   "Invitation": {

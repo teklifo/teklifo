@@ -2,17 +2,22 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { Package, Plus } from "lucide-react";
+import { Import, Package, Plus } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import ProductCard from "@/components/product/product-card";
 import PaginationBar from "@/components/ui/pagination-bar";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
-import { cn } from "@/lib/utils";
 import { ProductWithPricesAndStocks, PaginationType } from "@/types";
 
 type Props = {
@@ -81,7 +86,7 @@ const Products = async ({ searchParams: { page } }: Props) => {
           </h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
-        {isAdmin && <NewProductLink />}
+        {isAdmin && <ProductsUploadMenu />}
       </div>
       <div className="mt-4">
         {result.length > 0 ? (
@@ -101,7 +106,7 @@ const Products = async ({ searchParams: { page } }: Props) => {
                 <span className="leading-7 tracking-tight max-w-sm text-muted-foreground">
                   {t("noProductsHint")}
                 </span>
-                <NewProductLink />
+                <ProductsUploadMenu />
               </>
             )}
           </div>
@@ -113,17 +118,38 @@ const Products = async ({ searchParams: { page } }: Props) => {
   );
 };
 
-async function NewProductLink() {
+async function ProductsUploadMenu() {
   const t = await getTranslations("CompanyProducts");
 
   return (
-    <Link
-      href={`/new-product`}
-      className={cn(buttonVariants({ variant: "default" }), "space-x-2")}
-    >
-      <Plus />
-      <span>{t("new")}</span>
-    </Link>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="space-x-2">
+          <Plus />
+          <span>{t("add")}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>
+          <Link
+            href={`/new-product`}
+            className="flex items-center w-full space-x-2"
+          >
+            <Plus className="h-4 w-4" />
+            <span>{t("create")}</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link
+            href={`/import-data`}
+            className="flex items-center w-full space-x-2"
+          >
+            <Import className="h-4 w-4" />
+            <span>{t("import")}</span>
+          </Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

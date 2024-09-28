@@ -511,3 +511,13 @@ export const getRFQFiltersSchema = (t: TranslateFunction) => {
       .optional(),
   });
 };
+
+export const getImportDataSchema = (t: TranslateFunction) => {
+  return z.object({
+    importType: z.enum(["products", "prices", "balance"], {
+      required_error: t("invalidImportType"),
+      invalid_type_error: t("invalidImportType"),
+    }),
+    file: z.instanceof(File, { message: t("invalidFile") }),
+  });
+};
