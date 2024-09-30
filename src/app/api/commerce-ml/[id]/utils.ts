@@ -9,8 +9,8 @@ import {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
+import { makeDirectoryFromFullPath } from "@/lib/exchange/exchange-jobs";
 import { getTranslationsFromHeader } from "@/lib/api-utils";
-import { fileExists } from "@/lib/utils";
 
 export const authenticateUser = async (
   companyId: string,
@@ -173,10 +173,7 @@ export const writeFileFromStream = async (
 ) => {
   const { t } = await getTranslationsFromHeader(request.headers);
 
-  const folderPath = path.dirname(fullPath);
-  if (!(await fileExists(folderPath))) {
-    await fs.promises.mkdir(folderPath, { recursive: true });
-  }
+  await makeDirectoryFromFullPath(fullPath);
 
   if (!request.body) {
     return new Response(

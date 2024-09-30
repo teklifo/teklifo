@@ -89,7 +89,9 @@
     "nameIsNotUnique": "The name {name} is already assigned to another company",
     "tinIsNotUnique": "TIN {tin} is already assigned to another company",
     "rfqIsCompleted": "RFQ deadline has passed",
-    "requesterCantParticipate": "You cannot participate in your own RFQ"
+    "requesterCantParticipate": "You cannot participate in your own RFQ",
+    "invalidFileName": "Invalid file name",
+    "invalidExchangeType": "Invalid exchange type"
   },
   "Layout": {
     "login": "Log in",

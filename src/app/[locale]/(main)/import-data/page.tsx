@@ -6,7 +6,6 @@ import type { ExchangeJob as ExchangeJobType } from "@prisma/client";
 import ImportDataForm from "./_components/import-data-form";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PaginationBar from "@/components/ui/pagination-bar";
-import { Separator } from "@/components/ui/separator";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
@@ -83,7 +82,7 @@ const ImportData = async ({ searchParams: { page } }: Props) => {
         <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
           {result.map((exchangeJob) => (
             <div key={exchangeJob.id} className="">
-              {exchangeJob.name}
+              {exchangeJob.status}
             </div>
           ))}
         </div>

@@ -9,6 +9,7 @@ import {
   getExchangeFilePath,
   getExcangeJobStatus,
   createExchangeJob,
+  getExchangeFileType,
 } from "@/lib/exchange/exchange-jobs";
 import {
   authenticateUser,
@@ -52,14 +53,17 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
   }
 }
 
-export async function POST(request: NextRequest, { params: { id } }: Props) {
+export async function POST(
+  request: NextRequest,
+  { params: { id: companyId } }: Props
+) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   const mode = request.nextUrl.searchParams.get("mode") ?? "import";
 
   try {
-    const company = await getUserCompany(id);
-    const isAdmin = await isCompanyAdmin(id);
+    const company = await getUserCompany(companyId);
+    const isAdmin = await isCompanyAdmin(companyId);
     if (!company) {
       return new Response(
         getResponseMessage("ERROR", undefined, t("invalidCompanyId")),
@@ -79,10 +83,21 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
     if (mode === "file") {
       const filename =
         request.nextUrl.searchParams.get("filename") ?? "filename";
-      const filePath = getExchangeFilePath(filename, id);
+      const filePath = getExchangeFilePath(filename, companyId);
       await writeFileFromStream(request, filePath);
+
+      const exchangeType = getExchangeFileType(filePath);
+      if (!exchangeType) {
+        return new Response(
+          getResponseMessage("ERROR", undefined, t("invalidFileName")),
+          {
+            status: 404,
+          }
+        );
+      }
+
       if (filename.includes("xml")) {
-        await createExchangeJob(id, filePath);
+        await createExchangeJob(companyId, filename, filePath, exchangeType);
       }
       return new Response(getResponseMessage("SUCCESS"));
     } else {

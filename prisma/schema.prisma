@@ -246,6 +246,7 @@ model ExchangeJob {
   id        String         @id @default(cuid())
   company   Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId String
+  name      String
   path      String
   type      ExchangeType
   status    ExchangeStatus

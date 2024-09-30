@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
-import { Import, Upload } from "lucide-react";
+import { Import, Loader, Upload } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,6 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { getImportDataSchema } from "@/lib/schemas";
+import request from "@/lib/request";
 
 const ImportDataForm = () => {
   const t = useTranslations("ImportData");
@@ -54,17 +55,22 @@ const ImportDataForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
 
+    const formData = new FormData();
+    formData.append("importType", values.importType);
+    formData.append("file", values.file);
+
     const config = {
       method: "post",
       headers: {
-        "Content-Type": "application/json",
         "Accept-Language": getCookie("NEXT_LOCALE"),
       },
-      body: JSON.stringify(values),
+      body: formData,
     };
 
     try {
       form.reset();
+
+      await request("/api/import-data", config);
 
       router.refresh();
     } catch (error) {
@@ -148,8 +154,14 @@ const ImportDataForm = () => {
           {errors.file && <FormMessage>{errors.file.message}</FormMessage>}
           <div className="flex justify-center items-center w-full space-x-4">
             <Button disabled={!file || loading}>
-              <Import className="mr-2 h-4 w-4" />
-              <span>{t("import")}</span>
+              {loading ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <>
+                  <Import className="mr-2 h-4 w-4" />
+                  <span>{t("import")}</span>
+                </>
+              )}
             </Button>
           </div>
         </form>

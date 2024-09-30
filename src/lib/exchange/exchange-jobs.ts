@@ -11,6 +11,7 @@ import {
 import db from "@/lib/db";
 import { fileExists } from "@/lib/utils";
 import { readCMLImport, readCMLOffers } from "./exchange-cml";
+import { readXLSProducts } from "./exchange-xls";
 import { Log } from "@/types";
 
 const connection = new IORedis({ maxRetriesPerRequest: null });
@@ -66,14 +67,14 @@ export const addReadFileJobToQueue = async (
 
 export const createExchangeJob = async (
   companyId: string,
-  filePath: string
+  filename: string,
+  filePath: string,
+  type: ExchangeType
 ) => {
-  const type = getExchangeFileType(filePath);
-  if (!type) return;
-
   return await db.exchangeJob.create({
     data: {
       companyId,
+      name: filename,
       path: filePath,
       status: "INACTIVE",
       type,
@@ -94,7 +95,14 @@ const upsertReadExchangeQueue = async (
   );
 };
 
-const getExchangeFileType = (filePath: string) => {
+export async function makeDirectoryFromFullPath(fullPath: string) {
+  const folderPath = path.dirname(fullPath);
+  if (!(await fileExists(folderPath))) {
+    await fs.promises.mkdir(folderPath, { recursive: true });
+  }
+}
+
+export const getExchangeFileType = (filePath: string) => {
   if (filePath.includes("import")) return ExchangeType.CML_IMPORT;
   if (filePath.includes("offers")) return ExchangeType.CML_OFFERS;
   if (filePath.includes("products")) return ExchangeType.XLSX_PRODUCTS;
@@ -159,6 +167,8 @@ const findExchangeJob = async (id: string) => {
 const readExchangeFile = async (exchangeJob: ExchangeJob, logs: Log[]) => {
   if (exchangeJob.type === "CML_IMPORT") await readCMLImport(exchangeJob, logs);
   if (exchangeJob.type === "CML_OFFERS") await readCMLOffers(exchangeJob, logs);
+  if (exchangeJob.type === "XLSX_PRODUCTS")
+    await readXLSProducts(exchangeJob, logs);
 };
 
 const updateExchangeJobStatus = async (
