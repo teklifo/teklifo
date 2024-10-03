@@ -1,4 +1,4 @@
-import { useLocale, useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import type { Company as CompanyType } from "@prisma/client";
 import { Link } from "@/navigation";
 import { RFQDateInfo } from "@/components/rfq/rfq-main-info";
@@ -10,9 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { localizedRelativeDate } from "@/lib/utils";
-import { RFQWithQuotationsType } from "@/types";
 import CompanyAvatar from "../company/company-avatar";
+import { RFQWithQuotationsType } from "@/types";
 
 type RFQCardProps = {
   rfq: RFQWithQuotationsType;
@@ -21,8 +20,7 @@ type RFQCardProps = {
 
 const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
   const t = useTranslations("RFQ");
-
-  const locale = useLocale();
+  const format = useFormatter();
 
   const { id, number, title, company, createdAt, _count } = rfq;
 
@@ -46,11 +44,7 @@ const RFQCard = ({ rfq, currentCompany }: RFQCardProps) => {
             ) : null}
             <RFQDateInfo endDate={rfq.endDate} />
             <CardDescription>
-              {`${t("updatedAt")}: ${localizedRelativeDate(
-                new Date(createdAt),
-                new Date(),
-                locale
-              )}`}
+              {`${t("updatedAt")}: ${format.relativeTime(new Date(createdAt))}`}
             </CardDescription>
           </CardContent>
         </Link>

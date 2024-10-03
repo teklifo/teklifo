@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useFormatter, useTranslations } from "next-intl";
-import { format, differenceInDays } from "date-fns";
+import { differenceInDays } from "date-fns";
 import { Prisma } from "@prisma/client";
 import RatingBadge from "../rating-badge";
 import PricePercentageBadge from "../price-percentage-badge";
@@ -150,7 +150,12 @@ const QuotationCell = ({ row, quotationId, position }: QuotationCellProps) => {
           </div>
           <div className="flex flex-row items-center space-x-2">
             <p className="text-sm text-muted-foreground">
-              {`${t("deliveryDate")}: ${format(deliveryDate, "dd.MM.yyyy")}`}
+              {`${t("deliveryDate")}: ${intlFormat.dateTime(
+                new Date(deliveryDate),
+                {
+                  dateStyle: "medium",
+                }
+              )}`}
             </p>
             <DeliveryDateBadge daysDifference={daysDifference} />
           </div>

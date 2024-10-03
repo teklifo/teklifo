@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations, useFormatter } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import * as z from "zod";
-import { format } from "date-fns";
 import { CalendarIcon, ChevronsUpDown } from "lucide-react";
 import {
   FormControl,
@@ -31,13 +30,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Switch } from "@/components/ui/switch";
 import { getRFQSchema } from "@/lib/schemas";
-import { cn, dateFnsLocale } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import CURRENCIES from "@/lib/currencies";
 
 const RFQFormMain = () => {
   const t = useTranslations("RFQForm");
-
-  const locale = useLocale();
+  const format = useFormatter();
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -81,8 +79,8 @@ const RFQFormMain = () => {
                       )}
                     >
                       {field.value ? (
-                        format(field.value, "PPP", {
-                          locale: dateFnsLocale(locale),
+                        format.dateTime(new Date(field.value), {
+                          dateStyle: "medium",
                         })
                       ) : (
                         <span>{t("pickDate")}</span>

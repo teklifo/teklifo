@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { ExchangeJob as ExchangeJobType } from "@prisma/client";
 import ImportDataForm from "./_components/import-data-form";
+import ImportDataTable from "./_components/import-data-table";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PaginationBar from "@/components/ui/pagination-bar";
 import getCurrentCompany, {
@@ -79,12 +80,8 @@ const ImportData = async ({ searchParams: { page } }: Props) => {
       </div>
       {isAdmin && <ImportDataForm />}
       {result.length > 0 ? (
-        <div className="grid grid-flow-row auto-rows-max place-items-center grid-cols-1 gap-4 pt-4 md:place-items-start md:grid-cols-2">
-          {result.map((exchangeJob) => (
-            <div key={exchangeJob.id} className="">
-              {exchangeJob.status}
-            </div>
-          ))}
+        <div className="mt-8">
+          <ImportDataTable exchangeJobs={result} />
         </div>
       ) : (
         <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
@@ -96,7 +93,7 @@ const ImportData = async ({ searchParams: { page } }: Props) => {
           </span>
         </div>
       )}
-      <PaginationBar href={`/price-types?page=`} pagination={pagination} />
+      <PaginationBar href={`/import-data?page=`} pagination={pagination} />
       <div />
     </MaxWidthWrapper>
   );

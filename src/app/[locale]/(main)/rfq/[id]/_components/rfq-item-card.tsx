@@ -1,6 +1,5 @@
 import { useFormatter, useTranslations } from "next-intl";
 import type { Prisma } from "@prisma/client";
-import { format } from "date-fns";
 import {
   Card,
   CardContent,
@@ -74,7 +73,9 @@ const RFQItemCard = ({
               "deliveryDate"
             )}`}</span>
             <span className="font-semibold">
-              {format(deliveryDate, "dd.MM.yyyy")}
+              {intlFormat.dateTime(new Date(deliveryDate), {
+                dateStyle: "medium",
+              })}
             </span>
           </div>
         </div>

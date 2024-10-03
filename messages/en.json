@@ -690,7 +690,11 @@
     "productPricesImport": "Prices",
     "productBalanceImport": "Stock balance",
     "templateHint": "Download and fill out the XLS template. Then upload the completed file back",
-    "error": "Failed to import the data"
+    "error": "Failed to import the data",
+    "date": "Date",
+    "type": "Import type",
+    "name": "File name",
+    "status": "Status"
   },
   "Schemas": {
     "companySchema": {

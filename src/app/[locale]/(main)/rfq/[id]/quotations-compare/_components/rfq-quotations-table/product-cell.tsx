@@ -1,5 +1,4 @@
 import { useFormatter, useTranslations } from "next-intl";
-import { format } from "date-fns";
 import { Link } from "@/navigation";
 import { QuotationsByRFQItemType } from "@/types";
 
@@ -46,7 +45,9 @@ const ProductCell = ({ row }: ProductCellProps) => {
         })}`}
       </p>
       <p className="text-sm text-muted-foreground">
-        {`${t("deliveryDate")}: ${format(deliveryDate, "dd.MM.yyyy")}`}
+        {`${t("deliveryDate")}: ${intlFormat.dateTime(new Date(deliveryDate), {
+          dateStyle: "medium",
+        })}`}
       </p>
     </div>
   );

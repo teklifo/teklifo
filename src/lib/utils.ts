@@ -38,21 +38,3 @@ export function dateFnsLocale(locale: string) {
   if (locale === "ru") datefns = loc.ru;
   return datefns;
 }
-
-export function localizedRelativeDate(
-  date: Date,
-  baseDate: Date,
-  locale: string
-) {
-  const dateLocale = dateFnsLocale(locale);
-
-  return formatRelative(date, baseDate, {
-    locale: {
-      ...dateLocale,
-      formatRelative: (token) =>
-        token === "other"
-          ? "dd.MM.yyyy"
-          : dateLocale.formatRelative(token, date, baseDate),
-    },
-  });
-}

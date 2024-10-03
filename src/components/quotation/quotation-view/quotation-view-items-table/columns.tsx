@@ -3,7 +3,6 @@
 import { useFormatter, useTranslations } from "next-intl";
 import { Prisma } from "@prisma/client";
 import { ColumnDef, HeaderContext } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
@@ -55,6 +54,15 @@ function getMoneyCell(number: number) {
         {format.number(number, { style: "decimal", minimumFractionDigits: 2 })}
       </span>
     );
+  };
+
+  return MoneyCell;
+}
+
+function getDateCell(date: Date) {
+  const MoneyCell = () => {
+    const format = useFormatter();
+    return <span>{format.dateTime(date, { dateStyle: "medium" })}</span>;
   };
 
   return MoneyCell;
@@ -191,7 +199,8 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     accessorKey: "rfqItem.deliveryDate",
     header: getTableHeader("rfqDeliveryDate"),
     cell: (info) => {
-      return <>{format(info.getValue() as string, "dd.MM.yyyy")}</>;
+      const Cell = getDateCell(new Date(info.getValue() as Date));
+      return <Cell />;
     },
   },
   {
@@ -199,7 +208,8 @@ export const columns: ColumnDef<QuotationItemType>[] = [
     header: getTableHeader("deliveryDate"),
     cell: ({ row }) => {
       if (row.original.skip) return <EmptyCell />;
-      return <>{format(row.getValue("deliveryDate"), "dd.MM.yyyy")}</>;
+      const Cell = getDateCell(new Date(row.getValue("deliveryDate")));
+      return <Cell />;
     },
   },
   {

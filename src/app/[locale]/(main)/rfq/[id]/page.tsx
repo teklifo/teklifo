@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { redirect, notFound } from "next/navigation";
-import { useLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { Briefcase, FileText, Package } from "lucide-react";
 import RFQActions from "./_components/rfq-actions";
 import RFQData from "./_components/rfq-data";
@@ -13,7 +12,6 @@ import CompanyAvatar from "@/components/company/company-avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
-import { localizedRelativeDate } from "@/lib/utils";
 
 type Props = {
   params: { locale: string; id: string };
@@ -44,8 +42,7 @@ export const generateMetadata = async ({
 
 const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
   const t = await getTranslations("RFQ");
-
-  const locale = useLocale();
+  const format = await getFormatter();
 
   const rfq = await getRFQ(id);
 
@@ -121,10 +118,8 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
             />
             <RFQActions rfq={rfq} />
             <p className="text-center text-sm text-muted-foreground">
-              {`${t("updatedAt")}: ${localizedRelativeDate(
-                new Date(rfq.createdAt),
-                new Date(),
-                locale
+              {`${t("updatedAt")}: ${format.relativeTime(
+                new Date(rfq.createdAt)
               )}`}
             </p>
           </div>
