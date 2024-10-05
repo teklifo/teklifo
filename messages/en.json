@@ -56,7 +56,9 @@
     "RFQTitle": "RFQ search",
     "RFQDescription": "Search for RFQ from buyers",
     "importDataTitle": "Import data",
-    "importDataDescription": "Import data from Excel"
+    "importDataDescription": "Import data from Excel",
+    "newProductTitle": "New product",
+    "newProductDescription": "Create a new product entry for your company"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -362,7 +364,7 @@
     "stock": "Stock",
     "more": "More",
     "price": "Prices",
-    "balance": "Stock balance",
+    "balance": "Stock levels",
     "externalId": "External ID",
     "description": "Description",
     "noData": "No data",
@@ -375,7 +377,7 @@
   },
   "StockBalance": {
     "stock": "Stock",
-    "balance": "Balance"
+    "balance": "Level"
   },
   "MyRFQ": {
     "title": "My RFQs",
@@ -692,13 +694,34 @@
     "importType": "Import type",
     "productsImport": "Products",
     "productPricesImport": "Prices",
-    "productBalanceImport": "Stock balance",
+    "productBalanceImport": "Stock levels",
     "templateHint": "Download and fill out the XLS template. Then upload the completed file back",
     "error": "Failed to import the data",
     "date": "Date",
     "type": "Import type",
     "name": "File name",
     "status": "Status"
+  },
+  "ProductForm": {
+    "newTitle": "New product",
+    "newSubtitle": "Create a new product entry for your company",
+    "productIsUpdated": "Product is updated",
+    "productIsUpdatedHint": "Product information is successfully updated",
+    "newProductIsCreated": "Product is created",
+    "newProductHint": "You can now specify product prices and stock levels",
+    "updateError": "Failed to update product",
+    "error": "Failed to create the product",
+    "update": "Save",
+    "create": "Create product",
+    "name": "Name",
+    "number": "Number",
+    "unit": "Unit",
+    "brand": "Manufacturer",
+    "brandNumber": "Manufacturer number",
+    "externalId": "External ID",
+    "description": "Description",
+    "archive": "Archive",
+    "archiveHint": "Archive a product if it is no longer in use. Archived products will not appear in the company's product list"
   },
   "Schemas": {
     "companySchema": {

@@ -10,8 +10,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import PhoneNumberInput, { type Value } from "react-phone-number-input";
 import { CheckCircle2 } from "lucide-react";
-import { getCompanySchema } from "@/lib/schemas";
-import request from "@/lib/request";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,6 +24,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import request from "@/lib/request";
+import { getCompanySchema } from "@/lib/schemas";
 
 type CompanyFormProps = {
   company?: CompanyType;
