@@ -362,7 +362,11 @@
     "stock": "Stock",
     "more": "More",
     "price": "Prices",
-    "balance": "Stock balance"
+    "balance": "Stock balance",
+    "externalId": "External ID",
+    "description": "Description",
+    "noData": "No data",
+    "noDescription": "No description"
   },
   "Prices": {
     "priceType": "Price type",

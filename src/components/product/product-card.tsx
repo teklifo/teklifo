@@ -58,7 +58,7 @@ const ProductCard = ({
           children
         ) : (
           <Link
-            href={`/product/${id}`}
+            href={`/products/${id}`}
             className={cn("space-x-2", buttonVariants({ variant: "default" }))}
           >
             {t("more")}

@@ -28,6 +28,12 @@ export type Log = {
 
 export type ProductWithPricesAndStocks = Prisma.ProductGetPayload<{
   include: {
+    company: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
     prices: { include: { priceType: true } };
     stock: { include: { stock: true } };
   };
