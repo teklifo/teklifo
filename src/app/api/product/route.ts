@@ -192,3 +192,65 @@ export async function GET(request: NextRequest) {
     return getErrorResponse(t("serverError"), 500);
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  const { t } = await getTranslationsFromHeader(request.headers);
+
+  const ids = request.nextUrl.searchParams.get("ids");
+  if (!ids) return getErrorResponse(t("idsAreRequired"), 400);
+
+  const productIds = ids.split(",").map((id) => parseInt(id));
+
+  try {
+    const company = await getCurrentCompany();
+    if (!company) {
+      return getErrorResponse(t("invalidCompanyId"), 404);
+    }
+
+    const isAdmin = await isCompanyAdmin(company.id);
+    if (!isAdmin) {
+      return getErrorResponse(t("notAllowed"), 401);
+    }
+
+    const products = await db.product.findMany({
+      where: {
+        id: {
+          in: productIds,
+        },
+      },
+      select: {
+        id: true,
+        companyId: true,
+      },
+    });
+
+    const errors: string[] = [];
+    productIds.map((id) => {
+      const product = products.find((value) => value.id === id);
+      if (!product || product.companyId !== company.id) {
+        errors.push(
+          t("productNotFound", {
+            id,
+          })
+        );
+      }
+    });
+
+    if (errors.length > 0) {
+      return getErrorResponse(errors.join(", "), 400);
+    }
+
+    await db.product.deleteMany({
+      where: {
+        id: {
+          in: productIds,
+        },
+      },
+    });
+
+    return NextResponse.json({ message: t("productsDeleted") });
+  } catch (error) {
+    console.log(error);
+    return getErrorResponse(t("serverError"), 500);
+  }
+}

@@ -2,7 +2,9 @@ import { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
+import { Pencil } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import CompanyAvatar from "@/components/company/company-avatar";
 import PriceTable from "@/components/price-table";
@@ -13,7 +15,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Separator } from "@/components/ui/separator";
+import { buttonVariants } from "@/components/ui/button";
+import getCurrentCompany, {
+  isCompanyAdmin,
+} from "@/app/actions/get-current-company";
+import { cn } from "@/lib/utils";
 import request from "@/lib/request";
 import { ProductWithPricesAndStocks } from "@/types";
 
@@ -38,11 +44,11 @@ export const generateMetadata = async ({
       description: "",
     };
 
-  const { name, number, description } = product;
+  const { name, number, description, company } = product;
 
   return {
-    title: `${name} | ${number} | ${t("projectName")}`,
-    description: `${name} | ${number} | ${description}`,
+    title: `${name} | ${number} | ${company.name}}`,
+    description: `${name} | ${number} | ${company.name} | ${description}`,
   };
 };
 
@@ -68,13 +74,10 @@ const ProductInfo = ({ label, value }: ProductInfoType) => {
   const t = useTranslations("Product");
 
   return (
-    <>
-      <div className="flex flex-row space-x-2">
-        <span>{`${label}:`}</span>
-        <span className="font-semibold">{value || t("noData")}</span>
-      </div>
-      {/* <Separator className="w-full" /> */}
-    </>
+    <div className="flex flex-row space-x-2">
+      <span>{`${label}:`}</span>
+      <span className="font-semibold">{value || t("noData")}</span>
+    </div>
   );
 };
 
@@ -99,32 +102,43 @@ const Product = async ({ params: { id } }: Props) => {
     stock,
   } = product;
 
+  let isAdmin = false;
+  const userCompany = await getCurrentCompany();
+  if (userCompany && userCompany.id === company.id) {
+    isAdmin = await isCompanyAdmin(userCompany.id);
+  }
+
   return (
     <MaxWidthWrapper className="mt-8 mb-20">
-      <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {name}
-        </h1>
+      <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
+        <div className="space-y-2">
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {name}
+          </h1>
+        </div>
+        {isAdmin && (
+          <Link
+            href={`/edit-product/${product.id}`}
+            className={cn(buttonVariants({ variant: "outline" }), "space-x-2")}
+          >
+            <Pencil className="w-4 -h-4" />
+            <span>{t("update")}</span>
+          </Link>
+        )}
       </div>
       <div className="space-y-6">
-        <div className="grid grid-cols-1 mt-6 gap-0 gap-y-6 lg:grid-cols-12 lg:gap-4">
-          <div className="col-span-8 space-y-6 mt-4 lg:mt-0">
-            <div className="space-y-3">
-              <ProductInfo label={t("number")} value={number} />
-              <ProductInfo label={t("unit")} value={unit} />
-              <ProductInfo label={t("brand")} value={brand} />
-              <ProductInfo label={t("brandNumber")} value={brandNumber} />
-            </div>
-          </div>
-          <div className="col-span-4 w-fit lg:w-auto">
-            <p className="text-center font-semibold mb-2">{`${t(
-              "company"
-            )}:`}</p>
-            <CompanyAvatar
-              company={company}
-              className="flex flex-col justify-center items-center"
-            />
-          </div>
+        <div className="mt-6 w-fit">
+          <p className="text-center font-semibold mb-2">{`${t("company")}:`}</p>
+          <CompanyAvatar
+            company={company}
+            className="flex flex-col justify-center items-center"
+          />
+        </div>
+        <div className="space-y-3">
+          <ProductInfo label={t("number")} value={number} />
+          <ProductInfo label={t("unit")} value={unit} />
+          <ProductInfo label={t("brand")} value={brand} />
+          <ProductInfo label={t("brandNumber")} value={brandNumber} />
         </div>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="description">

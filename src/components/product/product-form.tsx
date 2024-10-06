@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Product as ProductType } from "@prisma/client";
+import DeleteProduct from "./delete-product";
 import {
   Form,
   FormControl,
@@ -60,7 +61,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
     setIsLoading(true);
 
     const config = {
-      method: update ? "put" : "post",
+      method: "post",
       headers: {
         "Content-Type": "application/json",
         "Accept-Language": getCookie("NEXT_LOCALE"),
@@ -69,30 +70,15 @@ const ProductForm = ({ product }: ProductFormProps) => {
     };
 
     try {
-      if (update) {
-        const products = await request<ProductType[]>(
-          `/api/product/${product.id}`,
-          config
-        );
+      const products = await request<ProductType[]>("/api/product", config);
 
-        toast({
-          title: t("productIsUpdated"),
-          description: t("productIsUpdatedHint"),
-        });
+      toast({
+        title: update ? t("productIsUpdated") : t("newProductIsCreated"),
+        description: update ? t("productIsUpdatedHint") : t("newProductHint"),
+      });
 
-        router.push(`/products/${products[0].id}`);
-        router.refresh();
-      } else {
-        const products = await request<ProductType[]>("/api/product", config);
-
-        toast({
-          title: t("newProductIsCreated"),
-          description: t("newProductHint"),
-        });
-
-        router.push(`/products/${products[0].id}`);
-        router.refresh();
-      }
+      router.push(`/products/${products[0].id}`);
+      router.refresh();
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;
@@ -108,136 +94,143 @@ const ProductForm = ({ product }: ProductFormProps) => {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Name */}
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("name")}</FormLabel>
-              <FormControl>
-                <Input {...field} autoComplete="off" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Number */}
-        <FormField
-          control={form.control}
-          name="number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("number")}</FormLabel>
-              <FormControl>
-                <Input {...field} autoComplete="off" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Unit */}
-        <FormField
-          control={form.control}
-          name="unit"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("unit")}</FormLabel>
-              <FormControl>
-                <Input {...field} autoComplete="off" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Brand */}
-        <FormField
-          control={form.control}
-          name="brand"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("brand")}</FormLabel>
-              <FormControl>
-                <Input {...field} autoComplete="off" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Brand number */}
-        <FormField
-          control={form.control}
-          name="brandNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("brandNumber")}</FormLabel>
-              <FormControl>
-                <Input {...field} autoComplete="off" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* External ID */}
-        <FormField
-          control={form.control}
-          name="externalId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("externalId")}</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  value={field.value || ""}
-                  autoComplete="off"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Description */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("description")}</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Archive */}
-        <div className="relative">
+    <div className="space-y-3">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Name */}
           <FormField
             control={form.control}
-            name="archive"
+            name="name"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                <div className="space-y-0.5">
-                  <FormLabel>{t("archive")}</FormLabel>
-                  <FormDescription>{t("archiveHint")}</FormDescription>
-                </div>
+              <FormItem>
+                <FormLabel>{t("name")}</FormLabel>
                 <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Input {...field} autoComplete="off" />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
-        </div>
-        <Button type="submit" disabled={isLoading} className="w-full space-x-2">
-          {update ? t("update") : t("create")}
-        </Button>
-      </form>
-    </Form>
+          {/* Number */}
+          <FormField
+            control={form.control}
+            name="number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("number")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Unit */}
+          <FormField
+            control={form.control}
+            name="unit"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("unit")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Brand */}
+          <FormField
+            control={form.control}
+            name="brand"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("brand")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Brand number */}
+          <FormField
+            control={form.control}
+            name="brandNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("brandNumber")}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoComplete="off" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* External ID */}
+          <FormField
+            control={form.control}
+            name="externalId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("externalId")}</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    value={field.value || ""}
+                    autoComplete="off"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Description */}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("description")}</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Archive */}
+          <div className="relative">
+            <FormField
+              control={form.control}
+              name="archive"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                  <div className="space-y-0.5">
+                    <FormLabel>{t("archive")}</FormLabel>
+                    <FormDescription>{t("archiveHint")}</FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full space-x-2"
+          >
+            {update ? t("update") : t("create")}
+          </Button>
+        </form>
+      </Form>
+      {product && <DeleteProduct products={[product]} />}
+    </div>
   );
 };
 

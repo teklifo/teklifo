@@ -24,7 +24,7 @@
     "editRoleDescription": "Update company role",
     "newCompanyTitle": "New company",
     "newCompanyDescription": "Create a new company on Teklifo",
-    "updateCompanyTitle": "{companyName} | Company update",
+    "updateCompanyTitle": "Company update",
     "updateCompanyDescription": "Edit company details",
     "settingsTitle": "{username} | Settings",
     "settingsDescription": "Edit user settings",
@@ -56,9 +56,11 @@
     "RFQTitle": "RFQ search",
     "RFQDescription": "Search for RFQ from buyers",
     "importDataTitle": "Import data",
-    "importDataDescription": "Import data from Excel",
+    "importDataDescription": "Import data from XLSX",
     "newProductTitle": "New product",
-    "newProductDescription": "Create a new product entry for your company"
+    "newProductDescription": "Create a new product entry for your company",
+    "updateProductTitle": "Update product",
+    "updateProductDescription": "Update product information"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -93,7 +95,10 @@
     "rfqIsCompleted": "RFQ deadline has passed",
     "requesterCantParticipate": "You cannot participate in your own RFQ",
     "invalidFileName": "Invalid file name",
-    "invalidExchangeType": "Invalid exchange type"
+    "invalidExchangeType": "Invalid exchange type",
+    "idsAreRequired": "IDs are required",
+    "productNotFound": "Product {id} not found",
+    "productsDeleted": "Products are deleted"
   },
   "Layout": {
     "login": "Log in",
@@ -348,7 +353,7 @@
     "subtitle": "List of company products",
     "add": "Add",
     "create": "Create product",
-    "import": "Import from Excel",
+    "import": "Import from XLSX",
     "noProducts": "Your company does not yet have a product list",
     "noProductsHint": "Try to import products now"
   },
@@ -368,7 +373,15 @@
     "externalId": "External ID",
     "description": "Description",
     "noData": "No data",
-    "noDescription": "No description"
+    "noDescription": "No description",
+    "update": "Update product",
+    "delete": "Delete",
+    "productDeleted": "Selected products are deleted",
+    "productDeletedHint": "Selected products successfully deleted",
+    "deleteError": "Failed to delete selected products",
+    "productDeleteTitle": "Are you sure you want to delete selected products ({productsLength})?",
+    "productDeleteSubtitle": "Once deleted, it cannot be restored.",
+    "cancel": "Cancel"
   },
   "Prices": {
     "priceType": "Price type",
@@ -585,7 +598,7 @@
     "noDescription": "No description",
     "delete": "Delete",
     "quotationDeleteTitle": "Are you sure you want to delete the quotation?",
-    "quotationDeleteSubtitle": "It cannot be restored once deleted. The client who requested this quotation will also lose access to it",
+    "quotationDeleteSubtitle": "Once deleted, it cannot be restored. The client who requested this quotation will also lose access to it",
     "quotationDeleted": "Quotation has been deleted",
     "quotationDeletedHint": "If needed, you can create a new quotation to replace the deleted one",
     "deleteError": "Failed to delete the quotation",
@@ -686,7 +699,7 @@
   },
   "ImportData": {
     "title": "Import data",
-    "subtitle": "Import data from XLS",
+    "subtitle": "Import data from XLSX",
     "noExchangeJobs": "No import history",
     "noExchangeJobsHint": "Your company hasn't imported any data recently",
     "uploadFile": "Upload file",
@@ -695,7 +708,7 @@
     "productsImport": "Products",
     "productPricesImport": "Prices",
     "productBalanceImport": "Stock levels",
-    "templateHint": "Download and fill out the XLS template. Then upload the completed file back",
+    "templateHint": "Download and fill out the XLSX template. Then upload the completed file back",
     "error": "Failed to import the data",
     "date": "Date",
     "type": "Import type",
@@ -705,6 +718,8 @@
   "ProductForm": {
     "newTitle": "New product",
     "newSubtitle": "Create a new product entry for your company",
+    "updateTitle": "Update product",
+    "updateSubtitle": "Update product information",
     "productIsUpdated": "Product is updated",
     "productIsUpdatedHint": "Product information is successfully updated",
     "newProductIsCreated": "Product is created",
