@@ -381,7 +381,10 @@
     "deleteError": "Failed to delete selected products",
     "productDeleteTitle": "Are you sure you want to delete selected products ({productsLength})?",
     "productDeleteSubtitle": "Once deleted, it cannot be restored.",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "edit": "Edit product",
+    "editPrices": "Edit prices",
+    "editStockLevels": "Edit stock levels"
   },
   "Prices": {
     "priceType": "Price type",

@@ -20,7 +20,6 @@ export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
-    // Check company
     const company = await getCurrentCompany();
     if (!company) {
       return getErrorResponse(t("invalidCompanyId"), 404);
@@ -30,7 +29,6 @@ export async function POST(request: NextRequest) {
       return getErrorResponse(t("notAllowed"), 401);
     }
 
-    // Create a new product
     const body = await request.json();
 
     const st = await getTranslations({
@@ -44,42 +42,44 @@ export async function POST(request: NextRequest) {
 
     const result: UpsertResult[] = [];
 
-    await Promise.all(
-      test.data.map(async (productData, index) => {
-        const {
-          id,
-          externalId,
-          name,
-          number,
-          brand,
-          brandNumber,
-          unit,
-          description,
-          archive,
-        } = productData;
+    await prisma.$transaction(async () => {
+      await Promise.all(
+        test.data.map(async (productData, index) => {
+          const {
+            id,
+            externalId,
+            name,
+            number,
+            brand,
+            brandNumber,
+            unit,
+            description,
+            archive,
+          } = productData;
 
-        const data = {
-          id,
-          externalId,
-          name,
-          number,
-          brand,
-          brandNumber,
-          unit,
-          description,
-          archive,
-          companyId: company.id,
-        };
+          const data = {
+            id,
+            externalId,
+            name,
+            number,
+            brand,
+            brandNumber,
+            unit,
+            description,
+            archive,
+            companyId: company.id,
+          };
 
-        const product = await upsertProduct(data);
+          const product = await upsertProduct(data);
 
-        result.push({
-          index,
-          id: product.id,
-          externalId: product.externalId,
-        });
-      })
-    );
+          result.push({
+            index,
+            id: product.id,
+            externalId: product.externalId,
+          });
+        })
+      );
+    });
 
     return NextResponse.json(result);
   } catch (error) {
@@ -137,7 +137,6 @@ export async function GET(request: NextRequest) {
         },
       ];
 
-    // Get allowed products
     const [total, result] = await db.$transaction([
       db.product.count({
         where: filters,

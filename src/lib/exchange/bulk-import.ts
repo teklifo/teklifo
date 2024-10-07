@@ -39,7 +39,7 @@ export const upsertProduct = async (
 export const upsertBalance = async (
   data: Prisma.StockBalanceUncheckedCreateInput
 ) => {
-  await db.stockBalance.upsert({
+  return await db.stockBalance.upsert({
     where: {
       stockId_productId: {
         stockId: data.stockId,

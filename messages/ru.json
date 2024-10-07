@@ -374,14 +374,17 @@
     "description": "Описание",
     "noData": "Нет информации",
     "noDescription": "Нет описания",
-    "update": "Изменить товар",
+    "update": "Изменить",
     "delete": "Удалить",
     "productDeleted": "Выбранные товары удалены",
     "productDeletedHint": "Выбранные товары успешно удалены",
     "deleteError": "Не удалось удалить выбранные товары",
     "productDeleteTitle": "Вы уверены, что хотите удалить выбранные товары ({productsLength})?",
     "productDeleteSubtitle": "После удаления восстановить товары будет уже невозможно.",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "edit": "Изменить товар",
+    "editPrices": "Изменить цены",
+    "editStockLevels": "Изменить остатки на складах"
   },
   "Prices": {
     "priceType": "Вид цены",

@@ -4,7 +4,7 @@ import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
-import { Pencil } from "lucide-react";
+import { Coins, Pencil, Warehouse } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import CompanyAvatar from "@/components/company/company-avatar";
 import PriceTable from "@/components/price-table";
@@ -15,7 +15,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button, buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
@@ -116,15 +122,7 @@ const Product = async ({ params: { id } }: Props) => {
             {name}
           </h1>
         </div>
-        {isAdmin && (
-          <Link
-            href={`/edit-product/${product.id}`}
-            className={cn(buttonVariants({ variant: "outline" }), "space-x-2")}
-          >
-            <Pencil className="w-4 -h-4" />
-            <span>{t("update")}</span>
-          </Link>
-        )}
+        {isAdmin && <ProductsUploadMenu productId={product.id} />}
       </div>
       <div className="space-y-6">
         <div className="mt-6 w-fit">
@@ -164,5 +162,49 @@ const Product = async ({ params: { id } }: Props) => {
     </MaxWidthWrapper>
   );
 };
+
+async function ProductsUploadMenu({ productId }: { productId: number }) {
+  const t = await getTranslations("Product");
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="space-x-2">
+          <Pencil className="h-4 w-4" />
+          <span>{t("edit")}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>
+          <Link
+            href={`/edit-product/${productId}`}
+            className="flex items-center w-full space-x-2"
+          >
+            <Pencil className="w-4 -h-4" />
+            <span>{t("update")}</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link
+            href={`/products/${productId}/prices`}
+            className="flex items-center w-full space-x-2"
+          >
+            <Coins className="h-4 w-4" />
+            <span>{t("editPrices")}</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link
+            href={`/products/${productId}/levels`}
+            className="flex items-center w-full space-x-2"
+          >
+            <Warehouse className="h-4 w-4" />
+            <span>{t("editStockLevels")}</span>
+          </Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 export default Product;
