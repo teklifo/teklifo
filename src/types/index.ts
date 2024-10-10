@@ -85,6 +85,12 @@ export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
   };
 }>;
 
+export type ProductPriceType = Prisma.PriceTypeGetPayload<{
+  include: {
+    prices: true;
+  };
+}>;
+
 // CML TYPES
 
 export type CML_Import = {

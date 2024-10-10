@@ -830,7 +830,8 @@
     "importDataSchema": {
       "invalidImportType": "Invalid import type",
       "invalidFile": "Invalid file type"
-    }
+    },
+    "pricesSchema": {}
   },
   "Invitation": {
     "title": "Wow! You've received an invitation from {companyName}!",

@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
-import PriceTable from "@/components/price-table";
-import BalanceTable from "@/components/stock-balance-table";
+import PriceView from "@/components/price/price-view";
+import StockBalance from "@/components/stock-balance/stock-balance-view";
 import {
   Card,
   CardContent,
@@ -42,13 +42,13 @@ const ProductCard = ({
           <AccordionItem value="price">
             <AccordionTrigger>{t("price")}</AccordionTrigger>
             <AccordionContent>
-              <PriceTable prices={prices} />
+              <PriceView prices={prices} />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="balance">
             <AccordionTrigger>{t("balance")}</AccordionTrigger>
             <AccordionContent>
-              <BalanceTable stock={stock} />
+              <StockBalance stock={stock} />
             </AccordionContent>
           </AccordionItem>
         </Accordion>

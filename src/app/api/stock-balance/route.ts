@@ -3,22 +3,18 @@ import { getTranslations } from "next-intl/server";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
-import { upsertPrices } from "@/lib/exchange/bulk-import";
-import { getPriceSchema } from "@/lib/schemas";
+import { upsertBalance } from "@/lib/exchange/bulk-import";
+import { getBalanceSchema } from "@/lib/schemas";
 import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type UpsertResult = {
   index: number;
   productId: number;
-  priceTypeId: string;
-  price: number;
+  stockId: string;
+  quantity: number;
 };
 
-type Props = {
-  params: { id: string };
-};
-
-export async function POST(request: NextRequest, { params: { id } }: Props) {
+export async function POST(request: NextRequest) {
   const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
@@ -37,7 +33,7 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
       locale,
       namespace: "Schemas.productSchema",
     });
-    const test = getPriceSchema(st).safeParse(body);
+    const test = getBalanceSchema(st).safeParse(body);
     if (!test.success) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
@@ -46,22 +42,22 @@ export async function POST(request: NextRequest, { params: { id } }: Props) {
 
     await prisma.$transaction(async () => {
       await Promise.all(
-        test.data.map(async (productData, index) => {
-          const { productId, priceTypeId, price } = productData;
+        test.data.balance.map(async (productData, index) => {
+          const { productId, stockId, quantity } = productData;
 
           const data = {
-            priceTypeId,
+            stockId,
             productId,
-            price,
+            quantity,
           };
 
-          const productPrice = await upsertPrices(data);
+          const productBalance = await upsertBalance(data);
 
           result.push({
             index,
-            productId: productPrice.productId,
-            priceTypeId: productPrice.priceTypeId,
-            price: Number(productPrice.price),
+            productId: productBalance.productId,
+            stockId: productBalance.stockId,
+            quantity: Number(productBalance.quantity),
           });
         })
       );

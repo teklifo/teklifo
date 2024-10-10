@@ -523,43 +523,49 @@ export const getImportDataSchema = (t: TranslateFunction) => {
 };
 
 export const getPriceSchema = (t: TranslateFunction) => {
-  return z.array(
-    z.object({
-      productId: z.coerce.number({
-        required_error: t("invalidProductId"),
-        invalid_type_error: t("invalidProductId"),
-      }),
-      priceTypeId: z
-        .string({
-          required_error: t("invalidPriceTypeId"),
-          invalid_type_error: t("invalidPriceTypeId"),
-        })
-        .min(1, t("invalidPriceTypeId")),
-      price: z.coerce.number({
-        required_error: t("invalidPrice"),
-        invalid_type_error: t("invalidPrice"),
-      }),
-    })
-  );
+  return z.object({
+    prices: z.array(
+      z.object({
+        productId: z.coerce.number({
+          required_error: t("invalidProductId"),
+          invalid_type_error: t("invalidProductId"),
+        }),
+        priceTypeId: z
+          .string({
+            required_error: t("invalidPriceTypeId"),
+            invalid_type_error: t("invalidPriceTypeId"),
+          })
+          .min(1, t("invalidPriceTypeId")),
+        priceTypeName: z.string().optional(),
+        price: z.coerce.number({
+          required_error: t("invalidPrice"),
+          invalid_type_error: t("invalidPrice"),
+        }),
+      })
+    ),
+  });
 };
 
 export const getBalanceSchema = (t: TranslateFunction) => {
-  return z.array(
-    z.object({
-      productId: z.coerce.number({
-        required_error: t("invalidProductId"),
-        invalid_type_error: t("invalidProductId"),
-      }),
-      stockId: z
-        .string({
-          required_error: t("invalidStockId"),
-          invalid_type_error: t("invalidStockId"),
-        })
-        .min(1, t("invalidStockId")),
-      quantity: z.coerce.number({
-        required_error: t("invalidQuantity"),
-        invalid_type_error: t("invalidQuantity"),
-      }),
-    })
-  );
+  return z.object({
+    balance: z.array(
+      z.object({
+        productId: z.coerce.number({
+          required_error: t("invalidProductId"),
+          invalid_type_error: t("invalidProductId"),
+        }),
+        stockId: z
+          .string({
+            required_error: t("invalidStockId"),
+            invalid_type_error: t("invalidStockId"),
+          })
+          .min(1, t("invalidStockId")),
+        stockName: z.string().optional(),
+        quantity: z.coerce.number({
+          required_error: t("invalidQuantity"),
+          invalid_type_error: t("invalidQuantity"),
+        }),
+      })
+    ),
+  });
 };

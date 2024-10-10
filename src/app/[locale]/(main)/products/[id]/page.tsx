@@ -7,8 +7,8 @@ import { getTranslations } from "next-intl/server";
 import { Coins, Pencil, Warehouse } from "lucide-react";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import CompanyAvatar from "@/components/company/company-avatar";
-import PriceTable from "@/components/price-table";
-import BalanceTable from "@/components/stock-balance-table";
+import PriceView from "@/components/price/price-view";
+import StockBalanceView from "@/components/stock-balance/stock-balance-view";
 import {
   Accordion,
   AccordionContent,
@@ -21,11 +21,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
-import { cn } from "@/lib/utils";
 import request from "@/lib/request";
 import { ProductWithPricesAndStocks } from "@/types";
 
@@ -148,13 +147,13 @@ const Product = async ({ params: { id } }: Props) => {
           <AccordionItem value="price">
             <AccordionTrigger>{t("price")}</AccordionTrigger>
             <AccordionContent>
-              <PriceTable prices={prices} />
+              <PriceView prices={prices} />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="balance">
             <AccordionTrigger>{t("balance")}</AccordionTrigger>
             <AccordionContent>
-              <BalanceTable stock={stock} />
+              <StockBalanceView stock={stock} />
             </AccordionContent>
           </AccordionItem>
         </Accordion>

@@ -5,7 +5,7 @@ type Props = {
   stock: StockBalanceType[];
 };
 
-const BalanceTable = ({ stock }: Props) => {
+const StockBalance = ({ stock }: Props) => {
   return (
     <div className="mx-auto">
       <DataTable columns={columns} data={stock} />
@@ -13,4 +13,4 @@ const BalanceTable = ({ stock }: Props) => {
   );
 };
 
-export default BalanceTable;
+export default StockBalance;
