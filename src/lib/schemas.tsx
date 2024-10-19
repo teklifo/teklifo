@@ -537,6 +537,7 @@ export const getPriceSchema = (t: TranslateFunction) => {
           })
           .min(1, t("invalidPriceTypeId")),
         priceTypeName: z.string().optional(),
+        priceTypeCurrency: z.string().optional(),
         price: z.coerce.number({
           required_error: t("invalidPrice"),
           invalid_type_error: t("invalidPrice"),

@@ -12,28 +12,24 @@ import { ProductPriceType } from "@/types";
 
 type PriceFormProps = {
   productId: number;
-  productPrices: ProductPriceType[];
-  closeDialog: () => void;
+  priceTypes: ProductPriceType[];
 };
 
-const PriceForm = ({
-  productId,
-  productPrices,
-  closeDialog,
-}: PriceFormProps) => {
+const PriceForm = ({ productId, priceTypes }: PriceFormProps) => {
   const st = useTranslations("Schemas.pricesSchema");
   const formSchema = getPriceSchema(st);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      prices: productPrices.map((productPrice) => {
+      prices: priceTypes.map((priceType) => {
         return {
           productId: productId,
-          priceTypeId: productPrice.id,
-          priceTypeName: productPrice.name,
+          priceTypeId: priceType.id,
+          priceTypeName: priceType.name,
+          priceTypeCurrency: priceType.currency,
           price:
-            productPrice.prices.length > 0 ? Number(productPrice.prices[0]) : 0,
+            priceType.prices.length > 0 ? Number(priceType.prices[0].price) : 0,
         };
       }),
     },
@@ -42,8 +38,8 @@ const PriceForm = ({
   return (
     <Form {...form}>
       <form className="space-y-10">
-        <PriceTable productId={productId} />
-        <ConfirmPrices closeDialog={closeDialog} />
+        <PriceTable />
+        <ConfirmPrices />
       </form>
     </Form>
   );

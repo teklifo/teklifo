@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { ZodIssue } from "zod";
 
 export type EmailType = "email-verification";
@@ -90,6 +90,11 @@ export type ProductPriceType = Prisma.PriceTypeGetPayload<{
     prices: true;
   };
 }>;
+
+export type ProductAndPriceTypes = {
+  product: Product;
+  priceTypes: ProductPriceType[];
+};
 
 // CML TYPES
 

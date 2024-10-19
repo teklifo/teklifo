@@ -60,7 +60,9 @@
     "newProductTitle": "Новый товар",
     "newProductDescription": "Создайте новый товар вашей организации",
     "updateProductTitle": "Редактирование товара",
-    "updateProductDescription": "Обновите информацию о товаре"
+    "updateProductDescription": "Обновите информацию о товаре",
+    "pricesTitle": "Цены | {productName}",
+    "pricesDescription": "Обновите цены товара"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -389,7 +391,15 @@
   "Prices": {
     "priceType": "Вид цены",
     "price": "Цена",
-    "currency": "Валюта"
+    "currency": "Валюта",
+    "pricesTitle": "Цены - {productName}",
+    "pricesSubtitle": "Редактирование цен товара",
+    "save": "Сохранить",
+    "savePricesTitle": "Сохранить цены товара?",
+    "savePricesSubtitle": "Все прошлые цены будут удалены",
+    "cancel": "Отмена",
+    "pricesSaved": "Цены сохранены",
+    "pricesSavedHint": "Новые цены успешно сохранены"
   },
   "StockBalance": {
     "stock": "Склад",
@@ -830,6 +840,11 @@
     "importDataSchema": {
       "invalidImportType": "Укажите корректный тип импорта данных",
       "invalidFile": "Укажите корректный файл данных"
+    },
+    "pricesSchema": {
+      "invalidProductId": "Укажите идентификатор товара",
+      "invalidPriceTypeId": "Укажите вид цен",
+      "invalidPrice": "Укажите цену"
     }
   },
   "Invitation": {

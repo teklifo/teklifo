@@ -6,7 +6,7 @@ import { useRouter } from "@/navigation";
 import { getCookie } from "cookies-next";
 import * as z from "zod";
 import { useFormContext } from "react-hook-form";
-import { FileInput } from "lucide-react";
+import { Save } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,11 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { getPriceSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 
-type ConfirmPricesProps = {
-  closeDialog: () => void;
-};
-
-const ConfirmPrices = ({ closeDialog }: ConfirmPricesProps) => {
+const ConfirmPrices = () => {
   const t = useTranslations("Prices");
   const router = useRouter();
 
@@ -87,7 +83,7 @@ const ConfirmPrices = ({ closeDialog }: ConfirmPricesProps) => {
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>
         <Button size="lg" className="space-x-2">
-          <FileInput />
+          <Save />
           <span>{t("save")}</span>
         </Button>
       </AlertDialogTrigger>

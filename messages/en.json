@@ -60,7 +60,9 @@
     "newProductTitle": "New product",
     "newProductDescription": "Create a new product entry for your company",
     "updateProductTitle": "Update product",
-    "updateProductDescription": "Update product information"
+    "updateProductDescription": "Update product information",
+    "pricesTitle": "Prices | {productName}",
+    "pricesDescription": "Update product prices"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -389,7 +391,15 @@
   "Prices": {
     "priceType": "Price type",
     "price": "Price",
-    "currency": "Currency"
+    "currency": "Currency",
+    "pricesTitle": "Prices - {productName}",
+    "pricesSubtitle": "Edit product prices",
+    "save": "Save",
+    "savePricesTitle": "Save product prices?",
+    "savePricesSubtitle": "All previous product prices will be removed",
+    "cancel": "Cancel",
+    "pricesSaved": "Prices saved",
+    "pricesSavedHint": "New prices have been successfully saved"
   },
   "StockBalance": {
     "stock": "Stock",
@@ -831,7 +841,11 @@
       "invalidImportType": "Invalid import type",
       "invalidFile": "Invalid file type"
     },
-    "pricesSchema": {}
+    "pricesSchema": {
+      "invalidProductId": "Invalid product ID",
+      "invalidPriceTypeId": "Price type is required",
+      "invalidPrice": "Price is required"
+    }
   },
   "Invitation": {
     "title": "Wow! You've received an invitation from {companyName}!",

@@ -95,7 +95,10 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
 };
 
 const PriceItem = ({ index }: PriceItemProps) => {
-  const priceTypeName = useWatch({ name: `items.${index}.priceTypeName` });
+  const priceTypeName = useWatch({ name: `prices.${index}.priceTypeName` });
+  const priceTypeCurrency = useWatch({
+    name: `prices.${index}.priceTypeCurrency`,
+  });
 
   const st = useTranslations("Schemas.pricesSchema");
   const formSchema = getPriceSchema(st);
@@ -110,9 +113,14 @@ const PriceItem = ({ index }: PriceItemProps) => {
         </div>
       </Cell>
       <Cell>
+        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+          {priceTypeCurrency}
+        </div>
+      </Cell>
+      <Cell>
         <CellField
           control={form.control}
-          name={`items.${index}.price`}
+          name={`prices.${index}.price`}
           type="number"
         />
       </Cell>
