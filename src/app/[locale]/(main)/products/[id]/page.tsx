@@ -194,7 +194,7 @@ async function ProductsUploadMenu({ productId }: { productId: number }) {
         </DropdownMenuItem>
         <DropdownMenuItem>
           <Link
-            href={`/products/${productId}/levels`}
+            href={`/products/${productId}/stock-levels`}
             className="flex items-center w-full space-x-2"
           >
             <Warehouse className="h-4 w-4" />

@@ -96,6 +96,17 @@ export type ProductAndPriceTypes = {
   priceTypes: ProductPriceType[];
 };
 
+export type ProductStocks = Prisma.StockGetPayload<{
+  include: {
+    balance: true;
+  };
+}>;
+
+export type ProductAndStocks = {
+  product: Product;
+  stocks: ProductStocks[];
+};
+
 // CML TYPES
 
 export type CML_Import = {

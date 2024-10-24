@@ -20,15 +20,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { getPriceSchema } from "@/lib/schemas";
+import { getStockBalanceSchema } from "@/lib/schemas";
 import request from "@/lib/request";
 
-type ConfirmPricesProps = {
+type ConfirmStockBalanceProps = {
   productId: number;
 };
 
-const ConfirmPrices = ({ productId }: ConfirmPricesProps) => {
-  const t = useTranslations("Prices");
+const ConfirmStockBalance = ({ productId }: ConfirmStockBalanceProps) => {
+  const t = useTranslations("StockBalance");
   const router = useRouter();
 
   const { toast } = useToast();
@@ -36,8 +36,8 @@ const ConfirmPrices = ({ productId }: ConfirmPricesProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const st = useTranslations("Schemas.pricesSchema");
-  const formSchema = getPriceSchema(st);
+  const st = useTranslations("Schemas.stockBalanceSchema");
+  const formSchema = getStockBalanceSchema(st);
   const form = useFormContext<z.infer<typeof formSchema>>();
 
   const onOpenChange = async (openAlert: boolean) => {
@@ -61,11 +61,11 @@ const ConfirmPrices = ({ productId }: ConfirmPricesProps) => {
     };
 
     try {
-      await request("/api/price", config);
+      await request("/api/stock-balance", config);
 
       toast({
-        title: t("pricesSaved"),
-        description: t("pricesSavedHint"),
+        title: t("stockBalanceSaved"),
+        description: t("stockBalanceSavedHint"),
       });
 
       router.push(`/products/${productId}`);
@@ -94,9 +94,9 @@ const ConfirmPrices = ({ productId }: ConfirmPricesProps) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("savePricesTitle")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("saveStockBalanceTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("savePricesSubtitle")}
+            {t("saveStockBalanceSubtitle")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -115,4 +115,4 @@ const ConfirmPrices = ({ productId }: ConfirmPricesProps) => {
   );
 };
 
-export default ConfirmPrices;
+export default ConfirmStockBalance;

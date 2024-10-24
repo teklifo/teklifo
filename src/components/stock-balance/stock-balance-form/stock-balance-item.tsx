@@ -20,10 +20,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
-import { getPriceSchema } from "@/lib/schemas";
+import { getStockBalanceSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
-type PriceItemProps = {
+type StockBalanceItemProps = {
   index: number;
 };
 
@@ -87,14 +87,11 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
   );
 };
 
-const PriceItem = ({ index }: PriceItemProps) => {
-  const priceTypeName = useWatch({ name: `prices.${index}.priceTypeName` });
-  const priceTypeCurrency = useWatch({
-    name: `prices.${index}.priceTypeCurrency`,
-  });
+const StockBalanceItem = ({ index }: StockBalanceItemProps) => {
+  const stockName = useWatch({ name: `balance.${index}.stockName` });
 
-  const st = useTranslations("Schemas.pricesSchema");
-  const formSchema = getPriceSchema(st);
+  const st = useTranslations("Schemas.stockBalanceSchema");
+  const formSchema = getStockBalanceSchema(st);
 
   const form = useFormContext<z.infer<typeof formSchema>>();
 
@@ -102,18 +99,13 @@ const PriceItem = ({ index }: PriceItemProps) => {
     <TableRow className="border-none">
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {priceTypeName}
-        </div>
-      </Cell>
-      <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {priceTypeCurrency}
+          {stockName}
         </div>
       </Cell>
       <Cell>
         <CellField
           control={form.control}
-          name={`prices.${index}.price`}
+          name={`balance.${index}.quantity`}
           type="number"
         />
       </Cell>
@@ -121,4 +113,4 @@ const PriceItem = ({ index }: PriceItemProps) => {
   );
 };
 
-export default PriceItem;
+export default StockBalanceItem;

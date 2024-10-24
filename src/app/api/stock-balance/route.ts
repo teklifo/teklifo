@@ -4,7 +4,7 @@ import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import { upsertBalance } from "@/lib/exchange/bulk-import";
-import { getBalanceSchema } from "@/lib/schemas";
+import { getStockBalanceSchema } from "@/lib/schemas";
 import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type UpsertResult = {
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       locale,
       namespace: "Schemas.productSchema",
     });
-    const test = getBalanceSchema(st).safeParse(body);
+    const test = getStockBalanceSchema(st).safeParse(body);
     if (!test.success) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }

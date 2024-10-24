@@ -62,7 +62,9 @@
     "updateProductTitle": "Update product",
     "updateProductDescription": "Update product information",
     "pricesTitle": "Prices | {productName}",
-    "pricesDescription": "Update product prices"
+    "pricesDescription": "Update product prices",
+    "stockBalanceTitle": "Stock levels | {productName}",
+    "stockBalanceDescription": "Update product levels"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -403,7 +405,15 @@
   },
   "StockBalance": {
     "stock": "Stock",
-    "balance": "Level"
+    "quantity": "Quantity",
+    "stockBalanceTitle": "Stock levels - {productName}",
+    "stockBalanceSubtitle": "Edit product levels",
+    "save": "Save",
+    "saveStockBalanceTitle": "Save product levels?",
+    "saveStockBalanceSubtitle": "All previous product levels will be removed",
+    "cancel": "Cancel",
+    "stockBalanceSaved": "Stock levels saved",
+    "stockBalanceSavedHint": "New stock levels have been successfully saved"
   },
   "MyRFQ": {
     "title": "My RFQs",
@@ -845,6 +855,11 @@
       "invalidProductId": "Invalid product ID",
       "invalidPriceTypeId": "Price type is required",
       "invalidPrice": "Price is required"
+    },
+    "stockBalanceSchema": {
+      "invalidProductId": "Invalid product ID",
+      "invalidStockId": "Stock is required",
+      "invalidQuantity": "Quantity is required"
     }
   },
   "Invitation": {

@@ -547,7 +547,7 @@ export const getPriceSchema = (t: TranslateFunction) => {
   });
 };
 
-export const getBalanceSchema = (t: TranslateFunction) => {
+export const getStockBalanceSchema = (t: TranslateFunction) => {
   return z.object({
     balance: z.array(
       z.object({

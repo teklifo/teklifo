@@ -68,6 +68,11 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
           include: {
             priceType: true,
           },
+          orderBy: {
+            priceType: {
+              name: "asc",
+            },
+          },
         },
         stock: {
           where: isAdmin
@@ -81,7 +86,9 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
             stock: true,
           },
           orderBy: {
-            quantity: "desc",
+            stock: {
+              name: "asc",
+            },
           },
         },
       },

@@ -39,7 +39,7 @@ const PriceForm = ({ productId, priceTypes }: PriceFormProps) => {
     <Form {...form}>
       <form className="space-y-10">
         <PriceTable />
-        <ConfirmPrices />
+        <ConfirmPrices productId={productId} />
       </form>
     </Form>
   );

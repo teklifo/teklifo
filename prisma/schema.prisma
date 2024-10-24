@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  seed     = "prisma/seed.ts"
+  provider        = "prisma-client-js"
+  seed            = "prisma/seed.ts"
   previewFeatures = ["typedSql"]
 }
 
@@ -181,7 +181,7 @@ model Stock {
   name         String
   company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId    String
-  products     StockBalance[]
+  balance      StockBalance[]
   companyRoles AvailableData[]
 }
 

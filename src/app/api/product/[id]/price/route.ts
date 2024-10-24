@@ -73,6 +73,9 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
           },
         },
       },
+      orderBy: {
+        name: "asc",
+      },
     });
 
     return NextResponse.json({ product, priceTypes });
