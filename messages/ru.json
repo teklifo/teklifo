@@ -62,7 +62,9 @@
     "updateProductTitle": "Редактирование товара",
     "updateProductDescription": "Обновите информацию о товаре",
     "pricesTitle": "Цены | {productName}",
-    "pricesDescription": "Обновите цены товара"
+    "pricesDescription": "Обновите цены товара",
+    "stockBalanceTitle": "Остатки на складах | {productName}",
+    "stockBalanceDescription": "Обновите остатки товара на складах"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -403,7 +405,15 @@
   },
   "StockBalance": {
     "stock": "Склад",
-    "balance": "Остаток"
+    "quantity": "Количество",
+    "stockBalanceTitle": "Остатки на складах - {productName}",
+    "stockBalanceSubtitle": "Редактирование остатков товара на складах",
+    "save": "Сохранить",
+    "saveStockBalanceTitle": "Сохранить остатки товара на складах?",
+    "saveStockBalanceSubtitle": "Все прошлые остатки будут удалены",
+    "cancel": "Отмена",
+    "stockBalanceSaved": "Остатки на складах успешно сохранены",
+    "stockBalanceSavedHint": "Новые остатки на складах успешно сохранены"
   },
   "MyRFQ": {
     "title": "Мои запросы",
@@ -845,6 +855,11 @@
       "invalidProductId": "Укажите идентификатор товара",
       "invalidPriceTypeId": "Укажите вид цен",
       "invalidPrice": "Укажите цену"
+    },
+    "stockBalanceSchema": {
+      "invalidProductId": "Укажите идентификатор товара",
+      "invalidStockId": "Укажите склад",
+      "invalidQuantity": "Укажите количество"
     }
   },
   "Invitation": {
