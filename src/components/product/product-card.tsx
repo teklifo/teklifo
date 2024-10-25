@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
-import PriceView from "@/components/price/price-view";
-import StockBalance from "@/components/stock-balance/stock-balance-view";
+import { ArrowRight } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -10,12 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ProductWithPricesAndStocks } from "@/types";
@@ -26,7 +19,7 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({
-  product: { id, name, number, description, prices, stock, unit },
+  product: { id, name, number, unit },
   children,
 }: ProductCardProps) => {
   const t = useTranslations("Product");
@@ -35,24 +28,8 @@ const ProductCard = ({
     <Card className="h-full w-full">
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>{number}</CardDescription>
+        <CardDescription>{`${number}, ${unit}`}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="price">
-            <AccordionTrigger>{t("price")}</AccordionTrigger>
-            <AccordionContent>
-              <PriceView prices={prices} />
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="balance">
-            <AccordionTrigger>{t("balance")}</AccordionTrigger>
-            <AccordionContent>
-              <StockBalance stock={stock} />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </CardContent>
       <CardFooter className="flex justify-between">
         {children ? (
           children
@@ -61,7 +38,8 @@ const ProductCard = ({
             href={`/products/${id}`}
             className={cn("space-x-2", buttonVariants({ variant: "default" }))}
           >
-            {t("more")}
+            <span>{t("more")}</span>
+            <ArrowRight className="h-4 w-4" />
           </Link>
         )}
       </CardFooter>

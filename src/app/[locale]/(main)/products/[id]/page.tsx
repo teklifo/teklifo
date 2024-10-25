@@ -125,10 +125,10 @@ const Product = async ({ params: { id } }: Props) => {
       </div>
       <div className="space-y-6">
         <div className="mt-6 w-fit">
-          <p className="text-center font-semibold mb-2">{`${t("company")}:`}</p>
+          <p className="text-start font-semibold mb-2">{`${t("company")}:`}</p>
           <CompanyAvatar
             company={company}
-            className="flex flex-col justify-center items-center"
+            className="flex flex-col justify-center"
           />
         </div>
         <div className="space-y-3">
@@ -168,7 +168,7 @@ async function ProductsUploadMenu({ productId }: { productId: number }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="space-x-2">
+        <Button variant="outline" className="space-x-2">
           <Pencil className="h-4 w-4" />
           <span>{t("edit")}</span>
         </Button>
@@ -180,7 +180,7 @@ async function ProductsUploadMenu({ productId }: { productId: number }) {
             className="flex items-center w-full space-x-2"
           >
             <Pencil className="w-4 -h-4" />
-            <span>{t("update")}</span>
+            <span>{t("editProduct")}</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>

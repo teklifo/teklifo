@@ -380,7 +380,6 @@
     "description": "Description",
     "noData": "No data",
     "noDescription": "No description",
-    "update": "Update product",
     "delete": "Delete",
     "productDeleted": "Selected products are deleted",
     "productDeletedHint": "Selected products successfully deleted",
@@ -388,7 +387,8 @@
     "productDeleteTitle": "Are you sure you want to delete selected products ({productsLength})?",
     "productDeleteSubtitle": "Once deleted, it cannot be restored.",
     "cancel": "Cancel",
-    "edit": "Edit product",
+    "edit": "Edit",
+    "editProduct": "Edit product",
     "editPrices": "Edit prices",
     "editStockLevels": "Edit stock levels"
   },

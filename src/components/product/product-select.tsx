@@ -56,13 +56,14 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
 
       const companyId = getCookie("user-company") || "";
       const queryParams = queryString.stringify({
-        page,
         query: debouncedValue,
+        limit: 10,
+        page: 1,
       });
 
       try {
         const resonse = await request<PaginatedData>(
-          `/api/company/${companyId}/product?limit=10&${queryParams}`,
+          `/api/company/${companyId}/product?${queryParams}`,
           config
         );
         setProducts(resonse.result);
@@ -75,7 +76,37 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
     }
 
     getProducts();
-  }, [debouncedValue, page]);
+  }, [debouncedValue]);
+
+  async function pushToNewPage(pageNumber: number) {
+    setLoading(true);
+
+    const config = {
+      headers: {
+        "Accept-Language": getCookie("NEXT_LOCALE"),
+      },
+    };
+
+    const companyId = getCookie("user-company") || "";
+    const queryParams = queryString.stringify({
+      query: debouncedValue,
+      limit: 10,
+      page: pageNumber,
+    });
+
+    try {
+      const resonse = await request<PaginatedData>(
+        `/api/company/${companyId}/product?${queryParams}`,
+        config
+      );
+      setProducts(resonse.result);
+      setPagination(resonse.pagination);
+    } catch (error) {
+      throw error;
+    }
+
+    setLoading(false);
+  }
 
   return (
     <DialogContent className="h-full flex flex-col md:h-[80vh]">
@@ -119,6 +150,7 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
             pagination={pagination}
             onPageClick={(newPage) => {
               setPage(newPage);
+              pushToNewPage(newPage);
             }}
           />
         </div>

@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
             companyId: company.id,
           };
 
-          const product = await upsertProduct(data);
+          const product = await upsertProduct(data, false);
 
           result.push({
             index,
@@ -82,110 +82,6 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(result);
-  } catch (error) {
-    console.log(error);
-    return getErrorResponse(t("serverError"), 500);
-  }
-}
-
-export async function GET(request: NextRequest) {
-  const { t } = await getTranslationsFromHeader(request.headers);
-
-  try {
-    const page = parseInt(
-      request.nextUrl.searchParams.get("page") as string,
-      10
-    );
-    const limit = parseInt(
-      request.nextUrl.searchParams.get("limit") as string,
-      10
-    );
-
-    const startIndex = (page - 1) * limit;
-
-    if (!page || !limit)
-      return getErrorResponse(t("pageAndlimitAreRequired"), 400);
-
-    let isAdmin = false;
-    let allowedPriceTypes: string[] = [];
-    let allowedStocks: string[] = [];
-
-    const company = await getCurrentCompany();
-    if (company) {
-      const role = company.users[0].companyRole;
-      isAdmin = await isCompanyAdmin(company.id);
-      allowedPriceTypes = role.availableData.map((e) => e.priceTypeId);
-      allowedStocks = role.availableData.map((e) => e.stockId);
-    }
-
-    const filters: Prisma.ProductWhereInput = {};
-
-    const query = request.nextUrl.searchParams.get("query");
-    if (query)
-      filters.OR = [
-        {
-          name: {
-            contains: query,
-            mode: "insensitive",
-          },
-        },
-        {
-          number: {
-            contains: query,
-            mode: "insensitive",
-          },
-        },
-      ];
-
-    const [total, result] = await db.$transaction([
-      db.product.count({
-        where: filters,
-      }),
-      db.product.findMany({
-        take: limit,
-        skip: startIndex,
-        where: filters,
-        include: {
-          prices: {
-            where: isAdmin
-              ? undefined
-              : {
-                  priceTypeId: {
-                    in: allowedPriceTypes,
-                  },
-                },
-            include: {
-              priceType: true,
-            },
-          },
-          stock: {
-            where: isAdmin
-              ? undefined
-              : {
-                  stockId: {
-                    in: allowedStocks,
-                  },
-                },
-            include: {
-              stock: true,
-            },
-            orderBy: {
-              quantity: "desc",
-            },
-          },
-        },
-        orderBy: {
-          name: "desc",
-        },
-      }),
-    ]);
-
-    const pagination = getPaginationData(startIndex, page, limit, total);
-
-    return NextResponse.json({
-      result,
-      pagination,
-    });
   } catch (error) {
     console.log(error);
     return getErrorResponse(t("serverError"), 500);

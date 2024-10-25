@@ -380,7 +380,6 @@
     "description": "Описание",
     "noData": "Нет информации",
     "noDescription": "Нет описания",
-    "update": "Изменить",
     "delete": "Удалить",
     "productDeleted": "Выбранные товары удалены",
     "productDeletedHint": "Выбранные товары успешно удалены",
@@ -388,7 +387,8 @@
     "productDeleteTitle": "Вы уверены, что хотите удалить выбранные товары ({productsLength})?",
     "productDeleteSubtitle": "После удаления восстановить товары будет уже невозможно.",
     "cancel": "Отмена",
-    "edit": "Изменить товар",
+    "edit": "Изменить",
+    "editProduct": "Изменить товар",
     "editPrices": "Изменить цены",
     "editStockLevels": "Изменить остатки на складах"
   },
