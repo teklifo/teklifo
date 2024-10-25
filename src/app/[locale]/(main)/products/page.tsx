@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Import, Package, Plus } from "lucide-react";
 import { Link } from "@/navigation";
+import queryString from "query-string";
+import ProductSearchInput from "./_components/product-search-input";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import ProductCard from "@/components/product/product-card";
 import PaginationBar from "@/components/ui/pagination-bar";
@@ -20,11 +22,14 @@ import getCurrentCompany, {
 import request from "@/lib/request";
 import { ProductWithPricesAndStocks, PaginationType } from "@/types";
 
+type SearchParams = {
+  query?: string;
+  page?: number;
+};
+
 type Props = {
   params: { locale: string };
-  searchParams: {
-    page?: number;
-  };
+  searchParams: SearchParams;
 };
 
 type PaginatedData = {
@@ -43,14 +48,29 @@ export const generateMetadata = async ({
   };
 };
 
-const getCompanyProducts = async (companyId: string, page: number) => {
+const getCompanyProducts = async (
+  companyId: string,
+  searchParams: SearchParams
+) => {
+  const queryParams = queryString.stringify(
+    {
+      ...searchParams,
+      limit: 10,
+      page: searchParams.page ?? 1,
+    },
+    {
+      skipNull: true,
+      skipEmptyString: true,
+    }
+  );
+
   try {
     const cookieStore = cookies();
     const headersList = headers();
     const cookie = headersList.get("cookie");
 
     return await request<PaginatedData>(
-      `/api/company/${companyId}/product?page=${page}&limit=10`,
+      `/api/company/${companyId}/product?${queryParams}`,
       {
         headers: {
           "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
@@ -64,13 +84,13 @@ const getCompanyProducts = async (companyId: string, page: number) => {
   }
 };
 
-const Products = async ({ searchParams: { page } }: Props) => {
+const Products = async ({ searchParams }: Props) => {
   const company = await getCurrentCompany();
   if (!company) return notFound();
 
   const isAdmin = await isCompanyAdmin(company.id);
 
-  const data = await getCompanyProducts(company.id, page ?? 1);
+  const data = await getCompanyProducts(company.id, searchParams);
   if (!data) return notFound();
 
   const { result, pagination } = data;
@@ -89,6 +109,7 @@ const Products = async ({ searchParams: { page } }: Props) => {
         {isAdmin && <ProductsUploadMenu />}
       </div>
       <div className="mt-4">
+        <ProductSearchInput defaultQuery={searchParams.query} />
         {result.length > 0 ? (
           <div className="flex flex-col space-y-3 pt-4">
             {result.map((product) => (

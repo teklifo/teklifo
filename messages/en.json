@@ -359,7 +359,9 @@
     "create": "Create product",
     "import": "Import from XLSX",
     "noProducts": "Your company does not yet have a product list",
-    "noProductsHint": "Try to import products now"
+    "noProductsHint": "Try to import products now",
+    "query": "Search",
+    "queryHint": "Type product name or number..."
   },
   "Product": {
     "name": "Name",
@@ -480,7 +482,7 @@
   "ProductSelect": {
     "title": "Product selection",
     "query": "Search",
-    "queryHint": "Please enter the product name or number...",
+    "queryHint": "Type product name or number...",
     "select": "Select"
   },
   "RFQ": {
