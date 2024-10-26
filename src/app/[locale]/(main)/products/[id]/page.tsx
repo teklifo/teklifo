@@ -120,6 +120,7 @@ const Product = async ({ params: { id } }: Props) => {
           <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
             {name}
           </h1>
+          <p className="text-sm text-muted-foreground">{`${t("id")}: ${id}`}</p>
         </div>
         {isAdmin && <ProductsUploadMenu productId={product.id} />}
       </div>
@@ -128,7 +129,8 @@ const Product = async ({ params: { id } }: Props) => {
           <p className="text-start font-semibold mb-2">{`${t("company")}:`}</p>
           <CompanyAvatar
             company={company}
-            className="flex flex-col justify-center"
+            className="flex flex-row justify-center items-center space-x-2"
+            titleClass="text-start"
           />
         </div>
         <div className="space-y-3">

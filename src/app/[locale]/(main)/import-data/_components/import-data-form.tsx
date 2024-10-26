@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
-import { Import, Loader, Upload } from "lucide-react";
+import { Download, Import, Loader, Upload } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -34,8 +34,10 @@ const ImportDataForm = () => {
   const t = useTranslations("ImportData");
 
   const router = useRouter();
+  const locale = useLocale();
 
   const { toast } = useToast();
+  const [templateFile, setTemplateFile] = useState("products-template");
   const [loading, setLoading] = useState(false);
 
   const st = useTranslations("Schemas.importDataSchema");
@@ -87,10 +89,17 @@ const ImportDataForm = () => {
     setLoading(false);
   };
 
+  function getTemplateTitle() {
+    if (templateFile === "prices-template") return t("pricesTemplate");
+    if (templateFile === "stock-levels-template")
+      return t("stockLevelsTemplate");
+    return t("productsTemplate");
+  }
+
   return (
     <div className="space-y-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="importType"
@@ -98,7 +107,14 @@ const ImportDataForm = () => {
               <FormItem>
                 <FormLabel>{t("importType")}</FormLabel>
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    if (value === "products")
+                      setTemplateFile("products-template");
+                    if (value === "prices") setTemplateFile("prices-template");
+                    if (value === "balance")
+                      setTemplateFile("stock-levels-template");
+                    field.onChange(value);
+                  }}
                   defaultValue={field.value}
                 >
                   <FormControl>
@@ -122,13 +138,26 @@ const ImportDataForm = () => {
               </FormItem>
             )}
           />
-          <p className="text-sm text-muted-foreground">{t("templateHint")}</p>
+          <div className="space-y-1">
+            <div className="flex flex-row space-x-2 items-center">
+              <Download className="h-4 w-4" />
+              <a
+                href={`/xlsx-templates/${locale}/${templateFile}.xlsx`}
+                download={templateFile}
+                className="underline"
+              >
+                {getTemplateTitle()}
+              </a>
+            </div>
+            <p className="text-muted-foreground">{t("templateHint")}</p>
+          </div>
           <Dropzone
             onDrop={(acceptedFiles: File[]) => {
               if (acceptedFiles.length > 0)
                 form.setValue("file", acceptedFiles[0]);
             }}
             multiple={false}
+            maxSize={10000}
             accept={{
               "application/vnd.ms-excel": [],
               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":

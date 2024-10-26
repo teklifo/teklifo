@@ -23,7 +23,7 @@ const ImportDataTable = ({ exchangeJobs }: ImportDataTableProps) => {
         <TableRow>
           <TableHead>{t("date")}</TableHead>
           <TableHead>{t("type")}</TableHead>
-          <TableHead>{t("name")}</TableHead>
+          <TableHead className="hidden md:block">{t("name")}</TableHead>
           <TableHead>{t("status")}</TableHead>
         </TableRow>
       </TableHeader>
@@ -37,7 +37,9 @@ const ImportDataTable = ({ exchangeJobs }: ImportDataTableProps) => {
               })}
             </TableCell>
             <TableCell>{exchangeJob.type}</TableCell>
-            <TableCell>{exchangeJob.name}</TableCell>
+            <TableCell className="hidden md:block">
+              {exchangeJob.name}
+            </TableCell>
             <TableCell>{exchangeJob.status}</TableCell>
           </TableRow>
         ))}
