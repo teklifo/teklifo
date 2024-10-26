@@ -23,7 +23,7 @@ const PaginationBar = ({
 
   return (
     <Pagination>
-      <PaginationContent className="w-full flex flex-row justify-center items-center py-10 space-x-2">
+      <PaginationContent className="relative w-full flex flex-row justify-center items-center py-10 space-x-2">
         {skipped > 0 && (
           // Prev button
           <PaginationItem>

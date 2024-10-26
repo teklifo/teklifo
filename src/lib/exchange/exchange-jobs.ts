@@ -11,7 +11,7 @@ import {
 import db from "@/lib/db";
 import { fileExists } from "@/lib/utils";
 import { readCMLImport, readCMLOffers } from "./exchange-cml";
-import { readXLSProducts } from "./exchange-xls";
+import { readXLSBalance, readXLSPrices, readXLSProducts } from "./exchange-xls";
 import { Log } from "@/types";
 
 const connection = new IORedis({ maxRetriesPerRequest: null });
@@ -169,6 +169,10 @@ const readExchangeFile = async (exchangeJob: ExchangeJob, logs: Log[]) => {
   if (exchangeJob.type === "CML_OFFERS") await readCMLOffers(exchangeJob, logs);
   if (exchangeJob.type === "XLSX_PRODUCTS")
     await readXLSProducts(exchangeJob, logs);
+  if (exchangeJob.type === "XLSX_PRICES")
+    await readXLSPrices(exchangeJob, logs);
+  if (exchangeJob.type === "XLSX_BALANCE")
+    await readXLSBalance(exchangeJob, logs);
 };
 
 const updateExchangeJobStatus = async (

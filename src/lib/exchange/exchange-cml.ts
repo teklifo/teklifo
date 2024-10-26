@@ -237,6 +237,11 @@ export const readCMLOffers = async (
           if (product) {
             await upsertCMLBalance(offer.Склад, stocks, product.id, logs);
             await upsertCMLPrices(offer.Цены, priceTypes, product.id, logs);
+          } else {
+            logs.push({
+              id: `Product not found - ID: ${productId}, number: ${number}`,
+              status: "error",
+            });
           }
         });
       });

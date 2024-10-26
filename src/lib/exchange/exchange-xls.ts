@@ -5,8 +5,9 @@ import { Prisma, ExchangeJob as ExchangeJobType } from "@prisma/client";
 import { upsertBalance, upsertPrices, upsertProduct } from "./bulk-import";
 import { getErrorMessage } from "../utils";
 import { Log } from "@/types";
+import db from "../db";
 
-type XLSXRowDataType = {
+type XLSXProductRowDataType = {
   1?: string;
   2?: string;
   3?: string;
@@ -16,6 +17,20 @@ type XLSXRowDataType = {
   7?: string;
   8?: string;
   9?: string;
+};
+
+type XLSXPriceRowDataType = {
+  1?: string;
+  2?: string;
+  3?: string;
+  4?: string;
+};
+
+type XLSXBalanceRowDataType = {
+  1?: string;
+  2?: string;
+  3?: string;
+  4?: string;
 };
 
 XLSX.set_fs(fs);
@@ -30,12 +45,12 @@ export const readXLSProducts = async (
   if (workbook.SheetNames.length === 0) return;
   const sheetName = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
-  const products = XLSX.utils.sheet_to_json<XLSXRowDataType>(sheet);
+  const products = XLSX.utils.sheet_to_json<XLSXProductRowDataType>(sheet);
 
   return await Promise.all(
     products.map(async (rowData, index) => {
-      const numberOfReservedRows = 2;
-      const rowNumber = index + numberOfReservedRows;
+      const startRowNumber = 2;
+      const rowNumber = index + startRowNumber;
 
       try {
         const productData = {
@@ -61,7 +76,7 @@ export const readXLSProducts = async (
   );
 };
 
-function convertRowToProductData(rowData: XLSXRowDataType) {
+function convertRowToProductData(rowData: XLSXProductRowDataType) {
   const name = cellValue(rowData["1"]);
   const number = cellValue(rowData["2"]);
   const unit = cellValue(rowData["3"]);
@@ -124,6 +139,211 @@ function checkProductData(
   }
 
   return checkResult;
+}
+
+export const readXLSPrices = async (
+  exchangeJob: ExchangeJobType,
+  logs: Log[]
+) => {
+  const { companyId, path: fullPath } = exchangeJob;
+
+  const workbook = XLSX.readFile(fullPath);
+  if (workbook.SheetNames.length === 0) return;
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+  const prices = XLSX.utils.sheet_to_json<XLSXPriceRowDataType>(sheet);
+
+  return await Promise.all(
+    prices.map(async (rowData, index) => {
+      const startRowNumber = 2;
+      const rowNumber = index + startRowNumber;
+
+      try {
+        const priceData = convertRowToPriceData(rowData);
+
+        const product = await db.product.findFirst({
+          where: {
+            AND: [
+              {
+                OR: [
+                  {
+                    id: priceData.productId,
+                  },
+                  {
+                    number: priceData.productNumber,
+                  },
+                ],
+              },
+              {
+                companyId,
+              },
+            ],
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (!product) {
+          logs.push({
+            id: `Product not found - ID: ${priceData.productId}, number: ${priceData.productNumber}`,
+            status: "error",
+          });
+          return;
+        }
+
+        const priceType = await db.priceType.findUnique({
+          where: {
+            id: priceData.priceTypeId,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (!priceType) {
+          logs.push({
+            id: `Price type not found: ${priceData.priceTypeId}`,
+            status: "error",
+          });
+          return;
+        }
+
+        await upsertPrices({
+          productId: product.id,
+          priceTypeId: priceType.id,
+          price: priceData.price,
+        });
+
+        logs.push({
+          id: `Row #${rowNumber}`,
+          status: "success",
+        });
+      } catch (error) {
+        logs.push({
+          id: `Row #${rowNumber}`,
+          status: "error",
+          message: getErrorMessage(error),
+        });
+      }
+    })
+  );
+};
+
+function convertRowToPriceData(rowData: XLSXPriceRowDataType) {
+  const productId = parseInt(cellValue(rowData["1"]));
+  const productNumber = cellValue(rowData["2"]);
+  const priceTypeId = cellValue(rowData["3"]);
+  const price = parseInt(cellValue(rowData["4"]));
+
+  return {
+    productId,
+    productNumber,
+    priceTypeId,
+    price,
+  };
+}
+
+export const readXLSBalance = async (
+  exchangeJob: ExchangeJobType,
+  logs: Log[]
+) => {
+  const { companyId, path: fullPath } = exchangeJob;
+
+  const workbook = XLSX.readFile(fullPath);
+  if (workbook.SheetNames.length === 0) return;
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+  const balance = XLSX.utils.sheet_to_json<XLSXBalanceRowDataType>(sheet);
+
+  return await Promise.all(
+    balance.map(async (rowData, index) => {
+      const startRowNumber = 2;
+      const rowNumber = index + startRowNumber;
+
+      try {
+        const balanceData = convertRowToBalanceData(rowData);
+        const product = await db.product.findFirst({
+          where: {
+            AND: [
+              {
+                OR: [
+                  {
+                    id: balanceData.productId,
+                  },
+                  {
+                    number: balanceData.productNumber,
+                  },
+                ],
+              },
+              {
+                companyId,
+              },
+            ],
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (!product) {
+          logs.push({
+            id: `Product not found - ID: ${balanceData.productId}, number: ${balanceData.productNumber}`,
+            status: "error",
+          });
+          return;
+        }
+
+        const stock = await db.stock.findUnique({
+          where: {
+            id: balanceData.stockId,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (!stock) {
+          logs.push({
+            id: `Stock not found: ${balanceData.stockId}`,
+            status: "error",
+          });
+          return;
+        }
+
+        await upsertBalance({
+          productId: product.id,
+          stockId: stock.id,
+          quantity: balanceData.quantity,
+        });
+
+        logs.push({
+          id: `Row #${rowNumber}`,
+          status: "success",
+        });
+      } catch (error) {
+        logs.push({
+          id: `Row #${rowNumber}`,
+          status: "error",
+          message: getErrorMessage(error),
+        });
+      }
+    })
+  );
+};
+
+function convertRowToBalanceData(rowData: XLSXBalanceRowDataType) {
+  const productId = parseInt(cellValue(rowData["1"]));
+  const productNumber = cellValue(rowData["2"]);
+  const stockId = cellValue(rowData["3"]);
+  const quantity = parseInt(cellValue(rowData["4"]));
+
+  return {
+    productId,
+    productNumber,
+    stockId,
+    quantity,
+  };
 }
 
 function cellValue(value?: string) {
