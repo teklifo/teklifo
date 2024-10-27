@@ -64,7 +64,9 @@
     "pricesTitle": "Цены | {productName}",
     "pricesDescription": "Обновите цены товара",
     "stockBalanceTitle": "Остатки на складах | {productName}",
-    "stockBalanceDescription": "Обновите остатки товара на складах"
+    "stockBalanceDescription": "Обновите остатки товара на складах",
+    "exchangeJobTitle": "задание обмена",
+    "exchangeJobDescription": "Логи задания обмена"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -102,7 +104,8 @@
     "invalidExchangeType": "Некорректный тип импорта данных",
     "idsAreRequired": "Не указаны идентификаторы",
     "productNotFound": "Товар {id} не найден",
-    "productsDeleted": "Товары удалены"
+    "productsDeleted": "Товары удалены",
+    "invalidExchangeJobId": "Задание обмена не найдено"
   },
   "Layout": {
     "login": "Войти",
@@ -744,7 +747,8 @@
     "type": "Тип импорта",
     "name": "Имя файла",
     "status": "Статус",
-    "fileSize": "Максимальный размер файла - 10MB"
+    "fileSize": "Максимальный размер файла - 10MB",
+    "logs": "Логи"
   },
   "ProductForm": {
     "newTitle": "Новый товар",
@@ -786,7 +790,7 @@
     "priceError": "Цена (ID товара: {productId}, ID вида цен: {priceTypeId}) - {error}"
   },
   "XLSXExchangeLogs": {
-    "product": "Строка #{rowNumber} - создан товар (ID: {id}, артикул: {number}, наименование: {name})",
+    "product": "Строка #{rowNumber} - Создан товар (ID: {id}, артикул: {number}, наименование: {name})",
     "productError": "Строка #{rowNumber} - {error}",
     "nameIsRequired": "Строка #{rowNumber} - Не указано наименование",
     "numberIsRequired": "Строка #{rowNumber} - Не указан артикул",
@@ -798,6 +802,15 @@
     "stockNotFound": "Строка #{rowNumber} - Склад не найден (ID: {id})",
     "balance": "Строка #{rowNumber} - Остатки на складах загружены",
     "balanceError": "Строка #{rowNumber} - {error}"
+  },
+  "ExchangeJob": {
+    "title": "Задание обмена",
+    "subtitle": "Логи задания обмена",
+    "noLogs": "Нет информации",
+    "noLogsHint": "По данному заданию обмена не обнаружено логов",
+    "date": "Дата",
+    "status": "Статус",
+    "message": "Сообщение"
   },
   "Schemas": {
     "companySchema": {

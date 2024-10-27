@@ -64,7 +64,9 @@
     "pricesTitle": "Prices | {productName}",
     "pricesDescription": "Update product prices",
     "stockBalanceTitle": "Stock levels | {productName}",
-    "stockBalanceDescription": "Update product levels"
+    "stockBalanceDescription": "Update product levels",
+    "exchangeJobTitle": "Exchange job",
+    "exchangeJobDescription": "Exchange job logs"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -102,7 +104,8 @@
     "invalidExchangeType": "Invalid exchange type",
     "idsAreRequired": "IDs are required",
     "productNotFound": "Product {id} not found",
-    "productsDeleted": "Products are deleted"
+    "productsDeleted": "Products are deleted",
+    "invalidExchangeJobId": "Invalid exchange job ID"
   },
   "Layout": {
     "login": "Log in",
@@ -744,7 +747,8 @@
     "type": "Import type",
     "name": "File name",
     "status": "Status",
-    "fileSize": "Maximum file size - 10MB"
+    "fileSize": "Maximum file size - 10MB",
+    "logs": "Logs"
   },
   "ProductForm": {
     "newTitle": "New product",
@@ -795,6 +799,15 @@
     "stockNotFound": "Row #{rowNumber} - Stock not found (ID: {id})",
     "balance": "Row #{rowNumber} - Stock levels downloaded",
     "balanceError": "Row #{rowNumber} - {error}"
+  },
+  "ExchangeJob": {
+    "title": "Exchange job",
+    "subtitle": "Exchange job logs",
+    "noLogs": "No logs",
+    "noLogsHint": "No logs were found for the given exchange job",
+    "date": "Date",
+    "status": "Status",
+    "message": "Message"
   },
   "Schemas": {
     "companySchema": {

@@ -1,4 +1,5 @@
 import { useTranslations, useFormatter } from "next-intl";
+import { Link } from "@/navigation";
 import type { ExchangeJob as ExchangeJobType } from "@prisma/client";
 import {
   Table,
@@ -8,6 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type ImportDataTableProps = {
   exchangeJobs: ExchangeJobType[];
@@ -24,7 +27,8 @@ const ImportDataTable = ({ exchangeJobs }: ImportDataTableProps) => {
           <TableHead>{t("date")}</TableHead>
           <TableHead>{t("type")}</TableHead>
           <TableHead className="hidden md:block">{t("name")}</TableHead>
-          <TableHead>{t("status")}</TableHead>
+          <TableHead className="hidden md:block">{t("status")}</TableHead>
+          <TableHead>{t("logs")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -40,7 +44,17 @@ const ImportDataTable = ({ exchangeJobs }: ImportDataTableProps) => {
             <TableCell className="hidden md:block">
               {exchangeJob.name}
             </TableCell>
-            <TableCell>{exchangeJob.status}</TableCell>
+            <TableCell className="hidden md:block">
+              {exchangeJob.status}
+            </TableCell>
+            <TableCell>
+              <Link
+                href={`/exchange-job/${exchangeJob.id}`}
+                className={cn(buttonVariants({ variant: "link" }))}
+              >
+                {t("logs")}
+              </Link>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
