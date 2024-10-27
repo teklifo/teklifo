@@ -123,7 +123,8 @@
     "lightTheme": "Light",
     "darkTheme": "Dark",
     "systemTheme": "System",
-    "rfqSearch": "RFQ search"
+    "rfqSearch": "RFQ search",
+    "importData": "Import data"
   },
   "Login": {
     "title": "Welcome aboard 👋",

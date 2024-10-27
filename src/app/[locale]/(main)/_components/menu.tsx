@@ -13,6 +13,7 @@ import {
   FileInput,
   BriefcaseBusiness,
   FileSearch,
+  Import,
 } from "lucide-react";
 import Nav from "./nav";
 import CompanySwitcher from "./company-switcher";
@@ -105,6 +106,12 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
             icon: Coins,
             href: `/price-types`,
           },
+          {
+            title: t("importData"),
+            label: "",
+            icon: Import,
+            href: `/import-data`,
+          },
         ]}
       />
       <Separator />
@@ -116,12 +123,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
             label: "",
             icon: Users,
             href: `/members`,
-          },
-          {
-            title: t("roles"),
-            label: "",
-            icon: UserCog,
-            href: `/roles`,
           },
         ]}
       />
