@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import queryString from "query-string";
-import { Loader } from "lucide-react";
+import { Loader, Package } from "lucide-react";
 import { Product as ProductType } from "@prisma/client";
 import ProductCard from "./product-card";
 import {
@@ -40,7 +40,6 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
     skipped: 0,
     total: 0,
   });
-  const [page, setPage] = useState(1);
 
   const debouncedValue = useDebounce(query);
 
@@ -132,24 +131,32 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
         </div>
       ) : (
         <div className="overflow-auto space-y-4">
-          {products.map((product) => (
-            <div key={product.id} className="h-auto">
-              <ProductCard product={product}>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    onSelect(product);
-                  }}
-                >
-                  {t("select")}
-                </Button>
-              </ProductCard>
+          {products.length > 0 ? (
+            products.map((product) => (
+              <div key={product.id} className="h-auto">
+                <ProductCard product={product}>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      onSelect(product);
+                    }}
+                  >
+                    {t("select")}
+                  </Button>
+                </ProductCard>
+              </div>
+            ))
+          ) : (
+            <div className="mt-16 flex flex-col justify-center items-center py-2 space-y-2">
+              <Package className="w-24 h-24 text-foreground" />
+              <p className="leading-7 tracking-tight max-w-sm text-muted-foreground">
+                {t("noResult")}
+              </p>
             </div>
-          ))}
+          )}
           <PaginationBarClient
             pagination={pagination}
             onPageClick={(newPage) => {
-              setPage(newPage);
               pushToNewPage(newPage);
             }}
           />

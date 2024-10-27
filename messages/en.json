@@ -488,7 +488,8 @@
     "title": "Product selection",
     "query": "Search",
     "queryHint": "Type product name or number...",
-    "select": "Select"
+    "select": "Select",
+    "noResult": "No results"
   },
   "RFQ": {
     "rfqNumber": "Number",
@@ -731,7 +732,7 @@
     "title": "Import data",
     "subtitle": "Import data from XLSX",
     "noExchangeJobs": "No import history",
-    "noExchangeJobsHint": "Your company hasn't imported any data recently",
+    "noExchangeJobsHint": "Your company hasn't imported any data from external resources yet",
     "uploadFile": "Upload file",
     "import": "Import",
     "importType": "Import type",
