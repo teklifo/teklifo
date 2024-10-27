@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
-import { Download, Import, Loader, Upload } from "lucide-react";
+import {
+  Download,
+  FileSpreadsheet,
+  Import,
+  Loader,
+  Upload,
+} from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -168,7 +174,8 @@ const ImportDataForm = () => {
             {(dropzone: DropzoneState) => (
               <div className="flex items-center flex-col gap-1.5">
                 {file ? (
-                  <div>
+                  <div className="flex flex-row justify-center items-center space-x-2">
+                    <FileSpreadsheet />
                     <span>{file.name}</span>
                   </div>
                 ) : (
