@@ -12,7 +12,6 @@ import db from "@/lib/db";
 import { fileExists } from "@/lib/utils";
 import { readCMLImport, readCMLOffers } from "./exchange-cml";
 import { readXLSBalance, readXLSPrices, readXLSProducts } from "./exchange-xls";
-import { Log } from "@/types";
 
 const connection = new IORedis({ maxRetriesPerRequest: null });
 
@@ -78,7 +77,6 @@ export const createExchangeJob = async (
       path: filePath,
       status: "INACTIVE",
       type,
-      logs: [],
     },
   });
 };
@@ -132,13 +130,14 @@ export const startExchangeJob = async (id: string) => {
       return;
     }
 
-    const logs: Log[] = [];
+    await readExchangeFile(exchangeJob);
 
-    await readExchangeFile(exchangeJob, logs);
+    const status = (await getExchangeJobStatusFromLogs(
+      exchangeJob.id
+    )) as ExchangeStatus;
 
     const data = {
-      status: getExchangeJobStatusFromLogs(logs),
-      logs,
+      status,
     };
     await updateExchangeJobStatus(exchangeJob.id, data);
 
@@ -164,15 +163,12 @@ const findExchangeJob = async (id: string) => {
   });
 };
 
-const readExchangeFile = async (exchangeJob: ExchangeJob, logs: Log[]) => {
-  if (exchangeJob.type === "CML_IMPORT") await readCMLImport(exchangeJob, logs);
-  if (exchangeJob.type === "CML_OFFERS") await readCMLOffers(exchangeJob, logs);
-  if (exchangeJob.type === "XLSX_PRODUCTS")
-    await readXLSProducts(exchangeJob, logs);
-  if (exchangeJob.type === "XLSX_PRICES")
-    await readXLSPrices(exchangeJob, logs);
-  if (exchangeJob.type === "XLSX_BALANCE")
-    await readXLSBalance(exchangeJob, logs);
+const readExchangeFile = async (exchangeJob: ExchangeJob) => {
+  if (exchangeJob.type === "CML_IMPORT") await readCMLImport(exchangeJob);
+  if (exchangeJob.type === "CML_OFFERS") await readCMLOffers(exchangeJob);
+  if (exchangeJob.type === "XLSX_PRODUCTS") await readXLSProducts(exchangeJob);
+  if (exchangeJob.type === "XLSX_PRICES") await readXLSPrices(exchangeJob);
+  if (exchangeJob.type === "XLSX_BALANCE") await readXLSBalance(exchangeJob);
 };
 
 const updateExchangeJobStatus = async (
@@ -187,9 +183,14 @@ const updateExchangeJobStatus = async (
   });
 };
 
-const getExchangeJobStatusFromLogs = (logs: Log[]): ExchangeStatus => {
-  const error = logs.find((log) => log.status === "error");
-  return error ? "ERROR" : "SUCCESS";
+const getExchangeJobStatusFromLogs = async (exchangeJobId: string) => {
+  const result = await db.exchangeLog.findFirst({
+    where: {
+      exchangeJobId,
+      status: "ERROR",
+    },
+  });
+  return result ? "ERROR" : "SUCCESS";
 };
 
 const deleteExchangeFile = async (filePath: string) => {

@@ -157,7 +157,7 @@ const ImportDataForm = () => {
                 form.setValue("file", acceptedFiles[0]);
             }}
             multiple={false}
-            maxSize={10000}
+            maxSize={1000000}
             accept={{
               "application/vnd.ms-excel": [],
               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
@@ -168,13 +168,18 @@ const ImportDataForm = () => {
             {(dropzone: DropzoneState) => (
               <div className="flex items-center flex-col gap-1.5">
                 {file ? (
-                  <div className="">
+                  <div>
                     <span>{file.name}</span>
                   </div>
                 ) : (
-                  <div className="flex items-center flex-row gap-0.5 text-sm font-medium">
-                    <Upload className="mr-2 h-4 w-4" />
-                    <span>{t("uploadFile")}</span>
+                  <div className="flex flex-col justify-center items-center space-y-2">
+                    <div className="flex items-center flex-row gap-0.5 text-sm font-medium">
+                      <Upload className="mr-2 h-4 w-4" />
+                      <span>{t("uploadFile")}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {t("fileSize")}
+                    </p>
                   </div>
                 )}
               </div>

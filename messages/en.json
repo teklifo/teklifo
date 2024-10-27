@@ -643,7 +643,7 @@
     "subtitle": "Streamline purchasing in your company",
     "getStarted": "Get started",
     "more": "More",
-    "howItWorks": "How does it work?",
+    "howItWorks": "How it works?",
     "stepLabel1": "1. Create a request for quotation",
     "stepText1": "Prepare RFQ in minutes by specifying all necessary details: item name, quantity, currency, expected prices, and delivery times",
     "stepLabel2": "2. Share your request with suppliers",
@@ -743,7 +743,8 @@
     "date": "Date",
     "type": "Import type",
     "name": "File name",
-    "status": "Status"
+    "status": "Status",
+    "fileSize": "Maximum file size - 10MB"
   },
   "ProductForm": {
     "newTitle": "New product",

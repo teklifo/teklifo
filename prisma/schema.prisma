@@ -32,6 +32,11 @@ enum ExchangeStatus {
   ERROR
 }
 
+enum ExchangeLogStatus {
+  SUCCESS
+  ERROR
+}
+
 enum VatRates {
   NOVAT
   VAT0
@@ -250,9 +255,18 @@ model ExchangeJob {
   path      String
   type      ExchangeType
   status    ExchangeStatus
-  logs      Json
+  logs      ExchangeLog[]
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+}
+
+model ExchangeLog {
+  id            String            @id @default(cuid())
+  exchangeJob   ExchangeJob       @relation(fields: [exchangeJobId], references: [id], onDelete: Cascade)
+  exchangeJobId String
+  status        ExchangeLogStatus
+  message       String
+  createdAt     DateTime          @default(now())
 }
 
 model RequestForQuotation {

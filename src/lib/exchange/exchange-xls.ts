@@ -1,10 +1,9 @@
 import fs from "fs";
-import path from "path";
 import * as XLSX from "xlsx";
 import { Prisma, ExchangeJob as ExchangeJobType } from "@prisma/client";
 import { upsertBalance, upsertPrices, upsertProduct } from "./bulk-import";
+import { exchangeLog } from "./exchangeLog";
 import { getErrorMessage } from "../utils";
-import { Log } from "@/types";
 import db from "../db";
 
 type XLSXProductRowDataType = {
@@ -35,11 +34,8 @@ type XLSXBalanceRowDataType = {
 
 XLSX.set_fs(fs);
 
-export const readXLSProducts = async (
-  exchangeJob: ExchangeJobType,
-  logs: Log[]
-) => {
-  const { companyId, path: fullPath } = exchangeJob;
+export const readXLSProducts = async (exchangeJob: ExchangeJobType) => {
+  const { companyId, path: fullPath, id: exchangeJobId } = exchangeJob;
 
   const workbook = XLSX.readFile(fullPath);
   if (workbook.SheetNames.length === 0) return;
@@ -57,19 +53,20 @@ export const readXLSProducts = async (
           ...convertRowToProductData(rowData),
           companyId,
         };
-        if (!checkProductData(productData, rowNumber, logs)) {
+        if (!checkProductData(productData, rowNumber, exchangeJobId)) {
           return;
         }
         await upsertProduct({ ...productData, companyId });
-        logs.push({
-          id: `Row #${rowNumber}`,
-          status: "success",
+        exchangeLog({
+          exchangeJobId,
+          status: "SUCCESS",
+          message: `Row #${rowNumber}`,
         });
       } catch (error) {
-        logs.push({
-          id: `Row #${rowNumber}`,
-          status: "error",
-          message: getErrorMessage(error),
+        exchangeLog({
+          exchangeJobId,
+          status: "ERROR",
+          message: `Row #${rowNumber} - ${getErrorMessage(error)}`,
         });
       }
     })
@@ -107,33 +104,33 @@ function convertRowToProductData(rowData: XLSXProductRowDataType) {
 function checkProductData(
   productData: Prisma.ProductUncheckedCreateInput,
   rowNumber: number,
-  logs: Log[]
+  exchangeJobId: string
 ) {
   let checkResult = true;
 
   if (!productData.name) {
-    logs.push({
-      id: `Row #${rowNumber}`,
-      status: "error",
-      message: "Name is required",
+    exchangeLog({
+      exchangeJobId,
+      status: "ERROR",
+      message: `Row #${rowNumber} - Name is required`,
     });
     checkResult = false;
   }
 
   if (!productData.number) {
-    logs.push({
-      id: `Row #${rowNumber}`,
-      status: "error",
-      message: "Number is required",
+    exchangeLog({
+      exchangeJobId,
+      status: "ERROR",
+      message: `Row #${rowNumber} - SKU is required`,
     });
     checkResult = false;
   }
 
   if (!productData.unit) {
-    logs.push({
-      id: `Row #${rowNumber}`,
-      status: "error",
-      message: "Unit is required",
+    exchangeLog({
+      exchangeJobId,
+      status: "ERROR",
+      message: `Row #${rowNumber} - Unit is required`,
     });
     checkResult = false;
   }
@@ -141,11 +138,8 @@ function checkProductData(
   return checkResult;
 }
 
-export const readXLSPrices = async (
-  exchangeJob: ExchangeJobType,
-  logs: Log[]
-) => {
-  const { companyId, path: fullPath } = exchangeJob;
+export const readXLSPrices = async (exchangeJob: ExchangeJobType) => {
+  const { companyId, path: fullPath, id: exchangeJobId } = exchangeJob;
 
   const workbook = XLSX.readFile(fullPath);
   if (workbook.SheetNames.length === 0) return;
@@ -185,9 +179,10 @@ export const readXLSPrices = async (
         });
 
         if (!product) {
-          logs.push({
-            id: `Product not found - ID: ${priceData.productId}, number: ${priceData.productNumber}`,
-            status: "error",
+          exchangeLog({
+            exchangeJobId,
+            status: "ERROR",
+            message: `Row #${rowNumber} - Product not found (ID: ${priceData.productId}, number: ${priceData.productNumber})`,
           });
           return;
         }
@@ -202,9 +197,10 @@ export const readXLSPrices = async (
         });
 
         if (!priceType) {
-          logs.push({
-            id: `Price type not found: ${priceData.priceTypeId}`,
-            status: "error",
+          exchangeLog({
+            exchangeJobId,
+            status: "ERROR",
+            message: `Row #${rowNumber} - Price type not found (${priceData.priceTypeId})`,
           });
           return;
         }
@@ -215,15 +211,16 @@ export const readXLSPrices = async (
           price: priceData.price,
         });
 
-        logs.push({
-          id: `Row #${rowNumber}`,
-          status: "success",
+        exchangeLog({
+          exchangeJobId,
+          status: "SUCCESS",
+          message: `Row #${rowNumber}`,
         });
       } catch (error) {
-        logs.push({
-          id: `Row #${rowNumber}`,
-          status: "error",
-          message: getErrorMessage(error),
+        exchangeLog({
+          exchangeJobId,
+          status: "ERROR",
+          message: `Row #${rowNumber} - ${getErrorMessage(error)}`,
         });
       }
     })
@@ -244,11 +241,8 @@ function convertRowToPriceData(rowData: XLSXPriceRowDataType) {
   };
 }
 
-export const readXLSBalance = async (
-  exchangeJob: ExchangeJobType,
-  logs: Log[]
-) => {
-  const { companyId, path: fullPath } = exchangeJob;
+export const readXLSBalance = async (exchangeJob: ExchangeJobType) => {
+  const { companyId, path: fullPath, id: exchangeJobId } = exchangeJob;
 
   const workbook = XLSX.readFile(fullPath);
   if (workbook.SheetNames.length === 0) return;
@@ -287,9 +281,10 @@ export const readXLSBalance = async (
         });
 
         if (!product) {
-          logs.push({
-            id: `Product not found - ID: ${balanceData.productId}, number: ${balanceData.productNumber}`,
-            status: "error",
+          exchangeLog({
+            exchangeJobId,
+            status: "ERROR",
+            message: `Row #${rowNumber} - Product not found (ID: ${balanceData.productId}, number: ${balanceData.productNumber})`,
           });
           return;
         }
@@ -304,9 +299,10 @@ export const readXLSBalance = async (
         });
 
         if (!stock) {
-          logs.push({
-            id: `Stock not found: ${balanceData.stockId}`,
-            status: "error",
+          exchangeLog({
+            exchangeJobId,
+            status: "ERROR",
+            message: `Row #${rowNumber} - Stock not found (${balanceData.stockId})`,
           });
           return;
         }
@@ -317,15 +313,16 @@ export const readXLSBalance = async (
           quantity: balanceData.quantity,
         });
 
-        logs.push({
-          id: `Row #${rowNumber}`,
-          status: "success",
+        exchangeLog({
+          exchangeJobId,
+          status: "SUCCESS",
+          message: `Row #${rowNumber}`,
         });
       } catch (error) {
-        logs.push({
-          id: `Row #${rowNumber}`,
-          status: "error",
-          message: getErrorMessage(error),
+        exchangeLog({
+          exchangeJobId,
+          status: "ERROR",
+          message: `Row #${rowNumber} - getErrorMessage(error)`,
         });
       }
     })

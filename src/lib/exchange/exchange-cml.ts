@@ -11,6 +11,7 @@ import {
 } from "@prisma/client";
 import db from "../db";
 import { upsertBalance, upsertPrices, upsertProduct } from "./bulk-import";
+import { exchangeLog } from "./exchangeLog";
 import { getErrorMessage } from "../utils";
 import {
   CML_Import,
@@ -19,18 +20,14 @@ import {
   CML_СвойстваОстатка,
   CML_Склад,
   CML_ТипЦены,
-  Log,
 } from "@/types";
 
 type ProductTypeWithImages = Prisma.ProductGetPayload<{
   include: { images: true };
 }>;
 
-export const readCMLImport = async (
-  exchangeJob: ExchangeJobType,
-  logs: Log[]
-) => {
-  const { companyId, path: fullPath } = exchangeJob;
+export const readCMLImport = async (exchangeJob: ExchangeJobType) => {
+  const { companyId, path: fullPath, id: exchangeJobId } = exchangeJob;
 
   // Retrieve data from plain xml
   const importXml = await fs.promises.readFile(fullPath, "utf8");
@@ -98,9 +95,10 @@ export const readCMLImport = async (
             };
 
             const product = await upsertProduct(data);
-            logs.push({
-              id: `${data.externalId} - ${data.number} - ${data.name}`,
-              status: "success",
+            exchangeLog({
+              exchangeJobId,
+              status: "SUCCESS",
+              message: `${data.externalId} - ${data.number} - ${data.name}`,
             });
 
             // Upsert product images
@@ -108,10 +106,12 @@ export const readCMLImport = async (
 
             await upsertCMLImages(product, images, folderPath, onlyChanges);
           } catch (error) {
-            logs.push({
-              id: `Product: ${getXmlValue(productData.Ид)}`,
-              status: "error",
-              message: getErrorMessage(error),
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: `Product: ${getXmlValue(
+                productData.Ид
+              )} - ${getErrorMessage(error)}`,
             });
           }
         })
@@ -186,11 +186,8 @@ const upsertCMLImages = async (
   }
 };
 
-export const readCMLOffers = async (
-  exchangeJob: ExchangeJobType,
-  logs: Log[]
-) => {
-  const { companyId, path: fullPath } = exchangeJob;
+export const readCMLOffers = async (exchangeJob: ExchangeJobType) => {
+  const { companyId, path: fullPath, id: exchangeJobId } = exchangeJob;
 
   // Retrieve data from plain xml
   const importXml = await fs.promises.readFile(fullPath, "utf8");
@@ -205,12 +202,12 @@ export const readCMLOffers = async (
       const stocks = await upsertCMLStocks(
         companyId,
         offerPackage.Склады,
-        logs
+        exchangeJobId
       );
       const priceTypes = await upsertCMLPriceTypes(
         companyId,
         offerPackage.ТипыЦен,
-        logs
+        exchangeJobId
       );
 
       // Read offers
@@ -235,12 +232,23 @@ export const readCMLOffers = async (
           });
 
           if (product) {
-            await upsertCMLBalance(offer.Склад, stocks, product.id, logs);
-            await upsertCMLPrices(offer.Цены, priceTypes, product.id, logs);
+            await upsertCMLBalance(
+              offer.Склад,
+              stocks,
+              product.id,
+              exchangeJobId
+            );
+            await upsertCMLPrices(
+              offer.Цены,
+              priceTypes,
+              product.id,
+              exchangeJobId
+            );
           } else {
-            logs.push({
-              id: `Product not found - ID: ${productId}, number: ${number}`,
-              status: "error",
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: `Product not found (ID: ${productId}, number: ${number})`,
             });
           }
         });
@@ -252,7 +260,7 @@ export const readCMLOffers = async (
 const upsertCMLStocks = async (
   companyId: string,
   stocksdata: { Склад: CML_Склад[] }[],
-  logs: Log[]
+  exchangeJobId: string
 ) => {
   const uploadedStocks: StockType[] = [];
 
@@ -293,15 +301,18 @@ const upsertCMLStocks = async (
 
             uploadedStocks.push(result);
 
-            logs.push({
-              id: `Stock: ${stockExternalId} - ${stockName}`,
-              status: "success",
+            exchangeLog({
+              exchangeJobId,
+              status: "SUCCESS",
+              message: `Stock: ${stockExternalId}, ${stockName}`,
             });
           } catch (error) {
-            logs.push({
-              id: `Stock: ${stockExternalId} - ${stockName}`,
-              status: "error",
-              message: getErrorMessage(error),
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: `Stock (${stockExternalId}, ${stockName}) - ${getErrorMessage(
+                error
+              )}`,
             });
           }
         })
@@ -315,7 +326,7 @@ const upsertCMLStocks = async (
 const upsertCMLPriceTypes = async (
   companyId: string,
   priceTypesData: { ТипЦены: CML_ТипЦены[] }[],
-  logs: Log[]
+  exchangeJobId: string
 ) => {
   const uploadedPriceTypes: PriceTypeType[] = [];
 
@@ -360,15 +371,18 @@ const upsertCMLPriceTypes = async (
 
             uploadedPriceTypes.push(result);
 
-            logs.push({
-              id: `Price type: ${priceTypeExternalId} - ${priceTypeName}`,
-              status: "success",
+            exchangeLog({
+              exchangeJobId,
+              status: "SUCCESS",
+              message: `Price type (${priceTypeExternalId}, ${priceTypeName})`,
             });
           } catch (error) {
-            logs.push({
-              id: `Price type: ${priceTypeExternalId} - ${priceTypeName}`,
-              status: "error",
-              message: getErrorMessage(error),
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: `Price type (${priceTypeExternalId}, ${priceTypeName}) - ${getErrorMessage(
+                error
+              )}`,
             });
           }
         })
@@ -383,7 +397,7 @@ const upsertCMLBalance = async (
   balance: CML_СвойстваОстатка[],
   stocks: StockType[],
   productId: number,
-  logs: Log[]
+  exchangeJobId: string
 ) => {
   return await Promise.all(
     balance.map(async (stockData) => {
@@ -403,16 +417,17 @@ const upsertCMLBalance = async (
         };
 
         const balance = await upsertBalance(data);
-        logs.push({
-          id: `Balance: ${data.stockId} - ${data.productId}`,
-          status: "success",
+        exchangeLog({
+          exchangeJobId,
+          status: "SUCCESS",
+          message: `Balance (${data.stockId}, ${data.productId})`,
         });
         return balance;
       } catch (error) {
-        logs.push({
-          id: `Balance: ${productId}`,
-          status: "error",
-          message: getErrorMessage(error),
+        exchangeLog({
+          exchangeJobId,
+          status: "ERROR",
+          message: `Balance (${productId}) - ${getErrorMessage(error)}`,
         });
       }
     })
@@ -423,7 +438,7 @@ const upsertCMLPrices = async (
   priceData: CML_ДанныеЦены[],
   priceTypes: PriceTypeType[],
   productId: number,
-  logs: Log[]
+  exchangeJobId: string
 ) => {
   const uploadedPrices: PriceType[] = [];
 
@@ -449,16 +464,19 @@ const upsertCMLPrices = async (
             };
 
             const result = await upsertPrices(data);
-            logs.push({
-              id: `Price: ${priceTypeExternalId} - ${productId}`,
-              status: "success",
+            exchangeLog({
+              exchangeJobId,
+              status: "SUCCESS",
+              message: `Price (${priceTypeExternalId}, ${productId})`,
             });
             uploadedPrices.push(result);
           } catch (error) {
-            logs.push({
-              id: `Price: ${priceTypeExternalId} - ${productId}`,
-              status: "error",
-              message: getErrorMessage(error),
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: `Price (${priceTypeExternalId}, ${productId}) - ${getErrorMessage(
+                error
+              )}`,
             });
           }
         })

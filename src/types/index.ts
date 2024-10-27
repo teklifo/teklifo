@@ -20,12 +20,6 @@ export type PaginationType = {
 
 export type FlattenAvailableDataType = { stockId: string; priceTypeId: string };
 
-export type Log = {
-  id: string;
-  status: "success" | "error";
-  message?: string;
-};
-
 export type ProductWithPricesAndStocks = Prisma.ProductGetPayload<{
   include: {
     company: {
