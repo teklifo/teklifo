@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
-import { Prisma } from "@prisma/client";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import { getProductsSchema } from "@/lib/schemas";
 import { upsertProduct } from "@/lib/exchange/bulk-import";
-import getPaginationData from "@/lib/pagination";
 import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 
 type UpsertResult = {

@@ -63,7 +63,7 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
         skip: startIndex,
         where: filters,
         orderBy: {
-          name: "desc",
+          name: "asc",
         },
       }),
     ]);

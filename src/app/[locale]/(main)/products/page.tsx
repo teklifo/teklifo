@@ -21,6 +21,7 @@ import getCurrentCompany, {
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { ProductWithPricesAndStocks, PaginationType } from "@/types";
+import ProductsTable from "./_components/products-table";
 
 type SearchParams = {
   query?: string;
@@ -111,11 +112,16 @@ const Products = async ({ searchParams }: Props) => {
       <div className="mt-4">
         <ProductSearchInput defaultQuery={searchParams.query} />
         {result.length > 0 ? (
-          <div className="flex flex-col space-y-3 pt-4">
-            {result.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <>
+            <div className="hidden pt-4 md:block">
+              <ProductsTable products={result} />
+            </div>
+            <div className="flex flex-col space-y-3 pt-4 md:hidden">
+              {result.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </>
         ) : (
           <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
             <Package className="w-48 h-48 text-foreground" />
