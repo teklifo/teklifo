@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { ZodIssue } from "zod";
 
 export type EmailType = "email-verification";
@@ -20,14 +20,14 @@ export type PaginationType = {
 
 export type FlattenAvailableDataType = { stockId: string; priceTypeId: string };
 
-export type Log = {
-  id: string;
-  status: "success" | "error";
-  message?: string;
-};
-
 export type ProductWithPricesAndStocks = Prisma.ProductGetPayload<{
   include: {
+    company: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
     prices: { include: { priceType: true } };
     stock: { include: { stock: true } };
   };
@@ -78,6 +78,28 @@ export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
     };
   };
 }>;
+
+export type ProductPriceType = Prisma.PriceTypeGetPayload<{
+  include: {
+    prices: true;
+  };
+}>;
+
+export type ProductAndPriceTypes = {
+  product: Product;
+  priceTypes: ProductPriceType[];
+};
+
+export type ProductStocks = Prisma.StockGetPayload<{
+  include: {
+    balance: true;
+  };
+}>;
+
+export type ProductAndStocks = {
+  product: Product;
+  stocks: ProductStocks[];
+};
 
 // CML TYPES
 

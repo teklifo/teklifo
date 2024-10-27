@@ -24,7 +24,7 @@
     "editRoleDescription": "Update company role",
     "newCompanyTitle": "New company",
     "newCompanyDescription": "Create a new company on Teklifo",
-    "updateCompanyTitle": "{companyName} | Company update",
+    "updateCompanyTitle": "Company update",
     "updateCompanyDescription": "Edit company details",
     "settingsTitle": "{username} | Settings",
     "settingsDescription": "Edit user settings",
@@ -54,7 +54,19 @@
     "quotationsCompareTitle": "Quotation analysis | {title}",
     "quotationsCompareDescription": "Comparison of quotations from suppliers",
     "RFQTitle": "RFQ search",
-    "RFQDescription": "Search for RFQ from buyers"
+    "RFQDescription": "Search for RFQ from buyers",
+    "importDataTitle": "Import data",
+    "importDataDescription": "Import data from XLSX",
+    "newProductTitle": "New product",
+    "newProductDescription": "Create a new product entry for your company",
+    "updateProductTitle": "Update product",
+    "updateProductDescription": "Update product information",
+    "pricesTitle": "Prices | {productName}",
+    "pricesDescription": "Update product prices",
+    "stockBalanceTitle": "Stock levels | {productName}",
+    "stockBalanceDescription": "Update product levels",
+    "exchangeJobTitle": "Exchange job",
+    "exchangeJobDescription": "Exchange job logs"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -87,7 +99,13 @@
     "nameIsNotUnique": "The name {name} is already assigned to another company",
     "tinIsNotUnique": "TIN {tin} is already assigned to another company",
     "rfqIsCompleted": "RFQ deadline has passed",
-    "requesterCantParticipate": "You cannot participate in your own RFQ"
+    "requesterCantParticipate": "You cannot participate in your own RFQ",
+    "invalidFileName": "Invalid file name",
+    "invalidExchangeType": "Invalid exchange type",
+    "idsAreRequired": "IDs are required",
+    "productNotFound": "Product {id} not found",
+    "productsDeleted": "Products are deleted",
+    "invalidExchangeJobId": "Invalid exchange job ID"
   },
   "Layout": {
     "login": "Log in",
@@ -108,7 +126,8 @@
     "lightTheme": "Light",
     "darkTheme": "Dark",
     "systemTheme": "System",
-    "rfqSearch": "RFQ search"
+    "rfqSearch": "RFQ search",
+    "importData": "Import data"
   },
   "Login": {
     "title": "Welcome aboard 👋",
@@ -249,7 +268,7 @@
     "noPriceTypesHint": "Create a new price type right now"
   },
   "Member": {
-    "title": "Participants",
+    "title": "Members",
     "subtitle": "List of company members",
     "invitationIsSent": "The invitation letter has been sent successfully",
     "invitationIsSentHint": "The user will become a member of the company as soon as the confirmation is complete",
@@ -259,7 +278,7 @@
     "add": "Invite",
     "send": "Send invitation",
     "newMemberTitle": "Invitation",
-    "newMemberSubtitle": "Enter the email address for sending the invitation letter, and specify the role you wish to assign to the new member",
+    "newMemberSubtitle": "Type the email address for sending the invitation letter, and specify the role you wish to assign to the new member",
     "openMenu": "Open menu",
     "edit": "Edit",
     "delete": "Remove from the company",
@@ -340,13 +359,18 @@
   "CompanyProducts": {
     "title": "Products",
     "subtitle": "List of company products",
-    "new": "Add product",
+    "add": "Add",
+    "create": "Create product",
+    "import": "Import from XLSX",
     "noProducts": "Your company does not yet have a product list",
-    "noProductsHint": "Try to upload products now"
+    "noProductsHint": "Try to import products now",
+    "query": "Search",
+    "queryHint": "Type product name or number..."
   },
   "Product": {
     "name": "Name",
-    "number": "Number",
+    "id": "ID",
+    "number": "SKU",
     "brand": "Manufacturer",
     "brandNumber": "Manufacturer number",
     "unit": "Unit",
@@ -356,16 +380,47 @@
     "stock": "Stock",
     "more": "More",
     "price": "Prices",
-    "balance": "Stock balance"
+    "balance": "Stock levels",
+    "externalId": "External ID",
+    "description": "Description",
+    "noData": "No data",
+    "noDescription": "No description",
+    "delete": "Delete",
+    "productDeleted": "Selected products are deleted",
+    "productDeletedHint": "Selected products successfully deleted",
+    "deleteError": "Failed to delete selected products",
+    "productDeleteTitle": "Are you sure you want to delete selected products ({productsLength})?",
+    "productDeleteSubtitle": "Once deleted, it cannot be restored.",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "editProduct": "Edit product",
+    "editPrices": "Edit prices",
+    "editStockLevels": "Edit stock levels"
   },
   "Prices": {
     "priceType": "Price type",
     "price": "Price",
-    "currency": "Currency"
+    "currency": "Currency",
+    "pricesTitle": "Prices - {productName}",
+    "pricesSubtitle": "Edit product prices",
+    "save": "Save",
+    "savePricesTitle": "Save product prices?",
+    "savePricesSubtitle": "All previous product prices will be removed",
+    "cancel": "Cancel",
+    "pricesSaved": "Prices saved",
+    "pricesSavedHint": "New prices have been successfully saved"
   },
   "StockBalance": {
     "stock": "Stock",
-    "balance": "Balance"
+    "quantity": "Quantity",
+    "stockBalanceTitle": "Stock levels - {productName}",
+    "stockBalanceSubtitle": "Edit product levels",
+    "save": "Save",
+    "saveStockBalanceTitle": "Save product levels?",
+    "saveStockBalanceSubtitle": "All previous product levels will be removed",
+    "cancel": "Cancel",
+    "stockBalanceSaved": "Stock levels saved",
+    "stockBalanceSavedHint": "New stock levels have been successfully saved"
   },
   "MyRFQ": {
     "title": "My RFQs",
@@ -423,7 +478,7 @@
     "phone": "Phone number",
     "contacts": "Contacts",
     "product": "Product",
-    "productInputHint": "Enter manually or select a product from the list",
+    "productInputHint": "Type manually or select a product from the list",
     "cancel": "Cancel",
     "rfqConfirmTitle": "Save RFQ?",
     "rfqConfirmSubtitle": "Once confirmed, you can share the request with suppliers",
@@ -432,8 +487,9 @@
   "ProductSelect": {
     "title": "Product selection",
     "query": "Search",
-    "queryHint": "Please enter the product name or number...",
-    "select": "Select"
+    "queryHint": "Type product name or number...",
+    "select": "Select",
+    "noResult": "No results"
   },
   "RFQ": {
     "rfqNumber": "Number",
@@ -449,7 +505,7 @@
     "main": "Main",
     "quotations": "Quots",
     "items": "Products",
-    "number": "Number",
+    "number": "SKU",
     "unit": "Unit",
     "brand": "Manufacturer",
     "quantity": "Quantity",
@@ -536,7 +592,7 @@
     "deliveryDate": "Delivery date",
     "pickDate": "Select date",
     "comment": "Comment",
-    "number": "Number",
+    "number": "SKU",
     "unit": "Unit",
     "brand": "Manufacturer",
     "rfqQuantity": "Requested quantity",
@@ -573,7 +629,7 @@
     "noDescription": "No description",
     "delete": "Delete",
     "quotationDeleteTitle": "Are you sure you want to delete the quotation?",
-    "quotationDeleteSubtitle": "It cannot be restored once deleted. The client who requested this quotation will also lose access to it",
+    "quotationDeleteSubtitle": "Once deleted, it cannot be restored. The client who requested this quotation will also lose access to it",
     "quotationDeleted": "Quotation has been deleted",
     "quotationDeletedHint": "If needed, you can create a new quotation to replace the deleted one",
     "deleteError": "Failed to delete the quotation",
@@ -587,11 +643,11 @@
     "totalVatIncluded": "VAT incl."
   },
   "Home": {
-    "title": "Create RFQs and select the best quotations",
+    "title": "Create RFQs and select best quotations",
     "subtitle": "Streamline purchasing in your company",
     "getStarted": "Get started",
     "more": "More",
-    "howItWorks": "How does it work?",
+    "howItWorks": "How it works?",
     "stepLabel1": "1. Create a request for quotation",
     "stepText1": "Prepare RFQ in minutes by specifying all necessary details: item name, quantity, currency, expected prices, and delivery times",
     "stepLabel2": "2. Share your request with suppliers",
@@ -665,12 +721,94 @@
   },
   "CompanyFilter": {
     "company": "Company",
-    "hint": "Select the companies you want to filter",
+    "hint": "Select companies you want to filter",
     "query": "Search",
-    "queryHint": "Enter the name or TIN of the company...",
+    "queryHint": "Type company name or TIN...",
     "save": "Save",
     "selectCompanyHint": "Select companies from the list",
     "noResults": "No results"
+  },
+  "ImportData": {
+    "title": "Import data",
+    "subtitle": "Import data from XLSX",
+    "noExchangeJobs": "No import history",
+    "noExchangeJobsHint": "Your company hasn't imported any data from external resources yet",
+    "uploadFile": "Upload file",
+    "import": "Import",
+    "importType": "Import type",
+    "productsImport": "Products",
+    "productPricesImport": "Prices",
+    "productBalanceImport": "Stock levels",
+    "productsTemplate": "Products template",
+    "pricesTemplate": "Prices template",
+    "stockLevelsTemplate": "Stock levels template",
+    "templateHint": "Download and fill out the XLSX template. Then upload the completed file back",
+    "error": "Failed to import the data",
+    "date": "Date",
+    "type": "Import type",
+    "name": "File name",
+    "status": "Status",
+    "fileSize": "Maximum file size - 10MB",
+    "logs": "Logs"
+  },
+  "ProductForm": {
+    "newTitle": "New product",
+    "newSubtitle": "Create a new product entry for your company",
+    "updateTitle": "Update product",
+    "updateSubtitle": "Update product information",
+    "productIsUpdated": "Product is updated",
+    "productIsUpdatedHint": "Product information is successfully updated",
+    "newProductIsCreated": "Product is created",
+    "newProductHint": "You can now specify product prices and stock levels",
+    "updateError": "Failed to update product",
+    "error": "Failed to create the product",
+    "update": "Save",
+    "create": "Create product",
+    "name": "Name",
+    "number": "SKU",
+    "unit": "Unit",
+    "brand": "Manufacturer",
+    "brandNumber": "Manufacturer number",
+    "externalId": "External ID",
+    "description": "Description",
+    "archive": "Archive",
+    "archiveHint": "Archive a product if it is no longer in use. Archived products will not appear in the company's product list"
+  },
+  "CMLExchangeLogs": {
+    "product": "Product created (ID: {id}, SKU: {number}, name: {name})",
+    "productError": "Product (ID: {id}) - {error}",
+    "productNotFound": "Product not found (ID: {id}, SKU: {number})",
+    "stock": "Stock (ID: {id}, name: {name})",
+    "stockError": "Stock (ID: {id}, name: {name}) - {error}",
+    "priceType": "Price type (ID: {id}, name: {name})",
+    "priceTypeError": "Price type (ID: {id}, name: {name}) - {error}",
+    "balance": "Balance (product ID: {productId}, stock ID: {stockId})",
+    "balanceError": "Balance (product ID: {productId}) - {error}",
+    "price": "Price (product ID: {productId}, price type ID: {priceTypeId})",
+    "priceError": "Price (product ID: {productId}, price type ID: {priceTypeId}) - {error}"
+  },
+  "XLSXExchangeLogs": {
+    "product": "Row #{rowNumber} - Product created (ID: {id}, SKU: {number}, name: {name})",
+    "productError": "Row #{rowNumber} - {error}",
+    "nameIsRequired": "Row #{rowNumber} - Name is required",
+    "numberIsRequired": "Row #{rowNumber} - SKU is required",
+    "unitIsRequired": "Row #{rowNumber} - Unit is required",
+    "productNotFound": "Row #{rowNumber} - Product not found (ID: {id}, SKU: {number})",
+    "priceTypeNotFound": "Row #{rowNumber} - Price type not found (ID: {id})",
+    "price": "Row #{rowNumber} - Price downloaded",
+    "priceError": "Row #{rowNumber} - {error}",
+    "stockNotFound": "Row #{rowNumber} - Stock not found (ID: {id})",
+    "balance": "Row #{rowNumber} - Stock levels downloaded",
+    "balanceError": "Row #{rowNumber} - {error}"
+  },
+  "ExchangeJob": {
+    "title": "Exchange job",
+    "subtitle": "Exchange job logs",
+    "noLogs": "No logs",
+    "noLogsHint": "No logs were found for the given exchange job",
+    "date": "Date",
+    "status": "Status",
+    "message": "Message"
   },
   "Schemas": {
     "companySchema": {
@@ -757,6 +895,20 @@
     },
     "rfqFiltersSchema": {
       "invalidDate": "Invalid RFQ deadline"
+    },
+    "importDataSchema": {
+      "invalidImportType": "Invalid import type",
+      "invalidFile": "Invalid file type"
+    },
+    "pricesSchema": {
+      "invalidProductId": "Invalid product ID",
+      "invalidPriceTypeId": "Price type is required",
+      "invalidPrice": "Price is required"
+    },
+    "stockBalanceSchema": {
+      "invalidProductId": "Invalid product ID",
+      "invalidStockId": "Stock is required",
+      "invalidQuantity": "Quantity is required"
     }
   },
   "Invitation": {

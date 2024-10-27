@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  seed     = "prisma/seed.ts"
+  provider        = "prisma-client-js"
+  seed            = "prisma/seed.ts"
   previewFeatures = ["typedSql"]
 }
 
@@ -28,6 +28,11 @@ enum ExchangeType {
 enum ExchangeStatus {
   INACTIVE
   PENDING
+  SUCCESS
+  ERROR
+}
+
+enum ExchangeLogStatus {
   SUCCESS
   ERROR
 }
@@ -181,7 +186,7 @@ model Stock {
   name         String
   company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId    String
-  products     StockBalance[]
+  balance      StockBalance[]
   companyRoles AvailableData[]
 }
 
@@ -246,12 +251,23 @@ model ExchangeJob {
   id        String         @id @default(cuid())
   company   Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId String
+  name      String
   path      String
   type      ExchangeType
   status    ExchangeStatus
-  logs      Json
+  logs      ExchangeLog[]
+  locale    String         @default("en")
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+}
+
+model ExchangeLog {
+  id            String            @id @default(cuid())
+  exchangeJob   ExchangeJob       @relation(fields: [exchangeJobId], references: [id], onDelete: Cascade)
+  exchangeJobId String
+  status        ExchangeLogStatus
+  message       String
+  createdAt     DateTime          @default(now())
 }
 
 model RequestForQuotation {

@@ -22,7 +22,7 @@ export const generateMetadata = async ({
     };
 
   return {
-    title: t("updateCompanyTitle", { companyName: company.name }),
+    title: t("updateCompanyTitle"),
     description: t("updateCompanyDescription"),
   };
 };

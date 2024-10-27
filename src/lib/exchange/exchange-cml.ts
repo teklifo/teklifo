@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import xml2js from "xml2js";
+import { getTranslations } from "next-intl/server";
 import cloudinary from "@/lib/cloudinary";
 import {
   Prisma,
@@ -11,6 +12,7 @@ import {
 } from "@prisma/client";
 import db from "../db";
 import { upsertBalance, upsertPrices, upsertProduct } from "./bulk-import";
+import { exchangeLog } from "./exchangeLog";
 import { getErrorMessage } from "../utils";
 import {
   CML_Import,
@@ -19,18 +21,16 @@ import {
   CML_СвойстваОстатка,
   CML_Склад,
   CML_ТипЦены,
-  Log,
 } from "@/types";
 
 type ProductTypeWithImages = Prisma.ProductGetPayload<{
   include: { images: true };
 }>;
 
-export const readCMLImport = async (
-  exchangeJob: ExchangeJobType,
-  logs: Log[]
-) => {
-  const { companyId, path: fullPath } = exchangeJob;
+export const readCMLImport = async (exchangeJob: ExchangeJobType) => {
+  const { id: exchangeJobId, companyId, path: fullPath, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "CMLExchangeLogs" });
 
   // Retrieve data from plain xml
   const importXml = await fs.promises.readFile(fullPath, "utf8");
@@ -98,9 +98,14 @@ export const readCMLImport = async (
             };
 
             const product = await upsertProduct(data);
-            logs.push({
-              id: `${data.externalId} - ${data.number} - ${data.name}`,
-              status: "success",
+            exchangeLog({
+              exchangeJobId,
+              status: "SUCCESS",
+              message: t("product", {
+                id: data.externalId,
+                number: data.number,
+                name: data.name,
+              }),
             });
 
             // Upsert product images
@@ -108,10 +113,13 @@ export const readCMLImport = async (
 
             await upsertCMLImages(product, images, folderPath, onlyChanges);
           } catch (error) {
-            logs.push({
-              id: `Product: ${getXmlValue(productData.Ид)}`,
-              status: "error",
-              message: getErrorMessage(error),
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: t("productError", {
+                id: getXmlValue(productData.Ид),
+                error: getErrorMessage(error),
+              }),
             });
           }
         })
@@ -186,11 +194,10 @@ const upsertCMLImages = async (
   }
 };
 
-export const readCMLOffers = async (
-  exchangeJob: ExchangeJobType,
-  logs: Log[]
-) => {
-  const { companyId, path: fullPath } = exchangeJob;
+export const readCMLOffers = async (exchangeJob: ExchangeJobType) => {
+  const { id: exchangeJobId, companyId, path: fullPath, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "CMLExchangeLogs" });
 
   // Retrieve data from plain xml
   const importXml = await fs.promises.readFile(fullPath, "utf8");
@@ -205,12 +212,12 @@ export const readCMLOffers = async (
       const stocks = await upsertCMLStocks(
         companyId,
         offerPackage.Склады,
-        logs
+        exchangeJob
       );
       const priceTypes = await upsertCMLPriceTypes(
         companyId,
         offerPackage.ТипыЦен,
-        logs
+        exchangeJob
       );
 
       // Read offers
@@ -235,8 +242,27 @@ export const readCMLOffers = async (
           });
 
           if (product) {
-            await upsertCMLBalance(offer.Склад, stocks, product.id, logs);
-            await upsertCMLPrices(offer.Цены, priceTypes, product.id, logs);
+            await upsertCMLBalance(
+              offer.Склад,
+              stocks,
+              product.id,
+              exchangeJob
+            );
+            await upsertCMLPrices(
+              offer.Цены,
+              priceTypes,
+              product.id,
+              exchangeJob
+            );
+          } else {
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: t("productNotFound", {
+                id: productId,
+                number,
+              }),
+            });
           }
         });
       });
@@ -247,8 +273,12 @@ export const readCMLOffers = async (
 const upsertCMLStocks = async (
   companyId: string,
   stocksdata: { Склад: CML_Склад[] }[],
-  logs: Log[]
+  exchangeJob: ExchangeJobType
 ) => {
+  const { id: exchangeJobId, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "CMLExchangeLogs" });
+
   const uploadedStocks: StockType[] = [];
 
   await Promise.all(
@@ -288,15 +318,23 @@ const upsertCMLStocks = async (
 
             uploadedStocks.push(result);
 
-            logs.push({
-              id: `Stock: ${stockExternalId} - ${stockName}`,
-              status: "success",
+            exchangeLog({
+              exchangeJobId,
+              status: "SUCCESS",
+              message: t("stock", {
+                id: stockExternalId,
+                name: stockName,
+              }),
             });
           } catch (error) {
-            logs.push({
-              id: `Stock: ${stockExternalId} - ${stockName}`,
-              status: "error",
-              message: getErrorMessage(error),
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: t("stockError", {
+                id: stockExternalId,
+                name: stockName,
+                error: getErrorMessage(error),
+              }),
             });
           }
         })
@@ -310,8 +348,12 @@ const upsertCMLStocks = async (
 const upsertCMLPriceTypes = async (
   companyId: string,
   priceTypesData: { ТипЦены: CML_ТипЦены[] }[],
-  logs: Log[]
+  exchangeJob: ExchangeJobType
 ) => {
+  const { id: exchangeJobId, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "CMLExchangeLogs" });
+
   const uploadedPriceTypes: PriceTypeType[] = [];
 
   await Promise.all(
@@ -355,15 +397,23 @@ const upsertCMLPriceTypes = async (
 
             uploadedPriceTypes.push(result);
 
-            logs.push({
-              id: `Price type: ${priceTypeExternalId} - ${priceTypeName}`,
-              status: "success",
+            exchangeLog({
+              exchangeJobId,
+              status: "SUCCESS",
+              message: t("priceType", {
+                id: priceTypeExternalId,
+                name: priceTypeName,
+              }),
             });
           } catch (error) {
-            logs.push({
-              id: `Price type: ${priceTypeExternalId} - ${priceTypeName}`,
-              status: "error",
-              message: getErrorMessage(error),
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: t("priceTypeError", {
+                id: priceTypeExternalId,
+                name: priceTypeName,
+                error: getErrorMessage(error),
+              }),
             });
           }
         })
@@ -378,8 +428,12 @@ const upsertCMLBalance = async (
   balance: CML_СвойстваОстатка[],
   stocks: StockType[],
   productId: number,
-  logs: Log[]
+  exchangeJob: ExchangeJobType
 ) => {
+  const { id: exchangeJobId, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "CMLExchangeLogs" });
+
   return await Promise.all(
     balance.map(async (stockData) => {
       try {
@@ -398,16 +452,23 @@ const upsertCMLBalance = async (
         };
 
         const balance = await upsertBalance(data);
-        logs.push({
-          id: `Balance: ${data.stockId} - ${data.productId}`,
-          status: "success",
+        exchangeLog({
+          exchangeJobId,
+          status: "SUCCESS",
+          message: t("balance", {
+            productId: data.productId,
+            stockId: data.stockId,
+          }),
         });
         return balance;
       } catch (error) {
-        logs.push({
-          id: `Balance: ${productId}`,
-          status: "error",
-          message: getErrorMessage(error),
+        exchangeLog({
+          exchangeJobId,
+          status: "ERROR",
+          message: t("balance", {
+            productId: productId,
+            error: getErrorMessage(error),
+          }),
         });
       }
     })
@@ -418,8 +479,12 @@ const upsertCMLPrices = async (
   priceData: CML_ДанныеЦены[],
   priceTypes: PriceTypeType[],
   productId: number,
-  logs: Log[]
+  exchangeJob: ExchangeJobType
 ) => {
+  const { id: exchangeJobId, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "CMLExchangeLogs" });
+
   const uploadedPrices: PriceType[] = [];
 
   await Promise.all(
@@ -444,16 +509,24 @@ const upsertCMLPrices = async (
             };
 
             const result = await upsertPrices(data);
-            logs.push({
-              id: `Price: ${priceTypeExternalId} - ${productId}`,
-              status: "success",
+            exchangeLog({
+              exchangeJobId,
+              status: "SUCCESS",
+              message: t("price", {
+                productId,
+                priceTypeId: priceTypeExternalId,
+              }),
             });
             uploadedPrices.push(result);
           } catch (error) {
-            logs.push({
-              id: `Price: ${priceTypeExternalId} - ${productId}`,
-              status: "error",
-              message: getErrorMessage(error),
+            exchangeLog({
+              exchangeJobId,
+              status: "ERROR",
+              message: t("price", {
+                productId,
+                priceTypeId: priceTypeExternalId,
+                error: getErrorMessage(error),
+              }),
             });
           }
         })

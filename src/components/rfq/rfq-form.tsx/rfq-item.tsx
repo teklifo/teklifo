@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Product as ProductType } from "@prisma/client";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations, useFormatter } from "next-intl";
 import {
   Control,
   ControllerRenderProps,
   useFormContext,
 } from "react-hook-form";
 import * as z from "zod";
-import { format } from "date-fns";
 import { MoreHorizontal, Trash, X, CalendarIcon } from "lucide-react";
 import ProductSelect from "@/components/product/product-select";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -33,7 +32,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getRFQSchema } from "@/lib/schemas";
-import { cn, dateFnsLocale } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 type RFQItemProps = {
   index: number;
@@ -102,8 +101,7 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
 
 const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
   const t = useTranslations("RFQForm");
-
-  const locale = useLocale();
+  const format = useFormatter();
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -219,8 +217,8 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
                       )}
                     >
                       {field.value ? (
-                        format(field.value, "PPP", {
-                          locale: dateFnsLocale(locale),
+                        format.dateTime(new Date(field.value), {
+                          dateStyle: "medium",
                         })
                       ) : (
                         <span>{t("pickDate")}</span>

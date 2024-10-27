@@ -5,7 +5,7 @@ type Props = {
   prices: PriceType[];
 };
 
-const PriceTable = ({ prices }: Props) => {
+const PriceView = ({ prices }: Props) => {
   return (
     <div className="mx-auto">
       <DataTable columns={columns} data={prices} />
@@ -13,4 +13,4 @@ const PriceTable = ({ prices }: Props) => {
   );
 };
 
-export default PriceTable;
+export default PriceView;

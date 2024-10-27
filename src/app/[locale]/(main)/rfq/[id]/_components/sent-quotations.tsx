@@ -1,13 +1,13 @@
 import { headers, cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
+import { BriefcaseBusiness } from "lucide-react";
 import type { Prisma } from "@prisma/client";
-import request from "@/lib/request";
-import { PaginationType } from "@/types";
 import QuotationModal from "@/components/quotation/quotation-modal";
 import QuotationCard from "@/components/quotation/quotation-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import getCurrentCompany from "@/app/actions/get-current-company";
-import ThemedImage from "@/components/themed-image";
-import { getTranslations } from "next-intl/server";
+import request from "@/lib/request";
+import { PaginationType } from "@/types";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -93,14 +93,8 @@ const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
       <PaginationBar href={`/rfq/${rfq.id}?page=`} pagination={pagination} />
     </>
   ) : (
-    <div className="flex flex-col justify-center items-center py-2 space-y-4">
-      <ThemedImage
-        src={`/illustrations/light/documents.svg`}
-        alt="No quotations"
-        priority
-        width={200}
-        height={200}
-      />
+    <div className="mt-10 flex flex-col justify-center items-center py-2 space-y-2">
+      <BriefcaseBusiness className="w-24 h-24 text-foreground" />
       <p className="leading-7 tracking-tight max-w-sm text-muted-foreground">
         {t("noQuotations")}
       </p>

@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "@/navigation";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultValues, useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
 import { DateRange } from "react-day-picker";
-import { format, formatISO } from "date-fns";
+import { formatISO } from "date-fns";
 import queryString from "query-string";
 import { Company as CompanyType } from "@prisma/client";
 import { CalendarIcon } from "lucide-react";
@@ -38,6 +38,7 @@ type RFQFiltersProps = {
 
 const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
   const t = useTranslations("RFQSearch");
+  const format = useFormatter();
 
   const router = useRouter();
 
@@ -118,11 +119,18 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
                         {field.value?.from ? (
                           field.value.to ? (
                             <>
-                              {format(field.value.from, "dd.MM.yyyy")} -{" "}
-                              {format(field.value.to, "dd.MM.yyyy")}
+                              {format.dateTime(new Date(field.value.from), {
+                                dateStyle: "medium",
+                              })}{" "}
+                              -{" "}
+                              {format.dateTime(new Date(field.value.to), {
+                                dateStyle: "medium",
+                              })}
                             </>
                           ) : (
-                            format(field.value.from, "dd.MM.yyyy")
+                            format.dateTime(new Date(field.value.from), {
+                              dateStyle: "medium",
+                            })
                           )
                         ) : (
                           <span>{t("pickDate")}</span>

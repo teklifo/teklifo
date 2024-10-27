@@ -5,7 +5,7 @@ import { cn, getAvatarFallback } from "@/lib/utils";
 import { ClassValue } from "clsx";
 
 type CompanyAvatarProps = {
-  company: CompanyType;
+  company: Pick<CompanyType, "id" | "name">;
   className?: ClassValue;
   titleClass?: ClassValue;
 };

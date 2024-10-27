@@ -1,5 +1,5 @@
-import { useLocale, useTranslations } from "next-intl";
-import type { Prisma, Company as CompanyType } from "@prisma/client";
+import { useFormatter, useTranslations } from "next-intl";
+import type { Prisma } from "@prisma/client";
 import { QuotationOutdated, QuotationTotal } from "./quotation-main-info";
 import {
   Card,
@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { cn, getAvatarFallback, localizedRelativeDate } from "@/lib/utils";
+import { cn, getAvatarFallback } from "@/lib/utils";
 
 type QuotationType = Prisma.QuotationGetPayload<{
   include: {
@@ -28,8 +28,7 @@ type QuotationCardProps = {
 
 const QuotationCard = ({ quotation }: QuotationCardProps) => {
   const t = useTranslations("Quotation");
-
-  const locale = useLocale();
+  const format = useFormatter();
 
   const { company, updatedAt } = quotation;
 
@@ -55,11 +54,7 @@ const QuotationCard = ({ quotation }: QuotationCardProps) => {
         <CardContent className="space-y-4 p-4 pt-0 md:p-6 md:pt-0">
           <QuotationTotal quotation={quotation} />
           <CardDescription>
-            {`${t("updatedAt")}: ${localizedRelativeDate(
-              new Date(updatedAt),
-              new Date(),
-              locale
-            )}`}
+            {`${t("updatedAt")}: ${format.relativeTime(new Date(updatedAt))}`}
           </CardDescription>
         </CardContent>
       </div>

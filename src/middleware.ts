@@ -19,6 +19,7 @@ const publicPages = [
   "/rfq",
   "/rfq/*",
   "/supplier-guide/*",
+  "/products/*",
 ];
 
 const intlMiddleware = createIntlMiddleware({

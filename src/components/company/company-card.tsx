@@ -46,7 +46,7 @@ const CompanyCard = ({
           className={cn("space-x-2", buttonVariants({ variant: "default" }))}
         >
           <span>{t("more")}</span>
-          <ArrowRight />
+          <ArrowRight className="h-4 w-4" />
         </Link>
       </CardFooter>
     </Card>

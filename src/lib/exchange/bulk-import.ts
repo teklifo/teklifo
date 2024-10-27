@@ -2,31 +2,42 @@ import { Prisma } from "@prisma/client";
 import db from "../db";
 
 export const upsertProduct = async (
-  productData: Prisma.ProductUncheckedCreateInput
+  productData: Prisma.ProductUncheckedCreateInput,
+  searchByAttributes: boolean = true
 ) => {
-  const existingProduct = await db.product.findFirst({
-    where: {
-      AND: [
-        {
-          OR: [
-            {
-              externalId: productData.externalId,
-            },
-            {
-              number: productData.number,
-            },
-          ],
-        },
-        {
-          companyId: productData.companyId,
-        },
-      ],
-    },
-  });
+  let id = productData.id;
+
+  if (!id && searchByAttributes) {
+    const existingProduct = await db.product.findFirst({
+      where: {
+        AND: [
+          {
+            OR: [
+              {
+                externalId: productData.externalId
+                  ? productData.externalId
+                  : null,
+              },
+              {
+                number: productData.number,
+              },
+            ],
+          },
+          {
+            companyId: productData.companyId,
+          },
+        ],
+      },
+    });
+
+    id = existingProduct?.id ?? 0;
+
+    console.log(existingProduct);
+  }
 
   return await db.product.upsert({
     where: {
-      id: existingProduct?.id ?? 0,
+      id,
     },
     create: productData,
     update: productData,
@@ -39,7 +50,7 @@ export const upsertProduct = async (
 export const upsertBalance = async (
   data: Prisma.StockBalanceUncheckedCreateInput
 ) => {
-  await db.stockBalance.upsert({
+  return await db.stockBalance.upsert({
     where: {
       stockId_productId: {
         stockId: data.stockId,

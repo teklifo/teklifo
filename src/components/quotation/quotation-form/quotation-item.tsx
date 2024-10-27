@@ -1,5 +1,5 @@
 import { memo, useEffect } from "react";
-import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import {
   Control,
   ControllerRenderProps,
@@ -7,7 +7,6 @@ import {
   useWatch,
 } from "react-hook-form";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
 import { RequestForQuotationItem, VatRates } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -38,7 +37,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { cn, dateFnsLocale } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   calculateAmountWithVat,
   calculateVatAmount,
@@ -126,8 +125,6 @@ const QuotationItem = ({
 }: QuotationItemProps) => {
   const t = useTranslations("Quotation");
   const intlFormat = useFormatter();
-
-  const locale = useLocale();
 
   const productName = useWatch({ name: `items.${index}.productName` });
   const quantity = useWatch({ name: `items.${index}.quantity` });
@@ -262,7 +259,9 @@ const QuotationItem = ({
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
-          {format(rfqItem.deliveryDate, "dd.MM.yyyy")}
+          {intlFormat.dateTime(new Date(rfqItem.deliveryDate), {
+            dateStyle: "medium",
+          })}
         </div>
       </Cell>
       <Cell>
@@ -285,8 +284,8 @@ const QuotationItem = ({
                         )}
                       >
                         {field.value ? (
-                          format(field.value, "PPP", {
-                            locale: dateFnsLocale(locale),
+                          intlFormat.dateTime(new Date(field.value), {
+                            dateStyle: "medium",
                           })
                         ) : (
                           <span>{t("pickDate")}</span>

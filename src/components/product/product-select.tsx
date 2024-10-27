@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import queryString from "query-string";
-import { Loader } from "lucide-react";
+import { Loader, Package } from "lucide-react";
 import { Product as ProductType } from "@prisma/client";
 import ProductCard from "./product-card";
 import {
@@ -40,7 +40,6 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
     skipped: 0,
     total: 0,
   });
-  const [page, setPage] = useState(1);
 
   const debouncedValue = useDebounce(query);
 
@@ -56,13 +55,14 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
 
       const companyId = getCookie("user-company") || "";
       const queryParams = queryString.stringify({
-        page,
         query: debouncedValue,
+        limit: 10,
+        page: 1,
       });
 
       try {
         const resonse = await request<PaginatedData>(
-          `/api/company/${companyId}/product?limit=10&${queryParams}`,
+          `/api/company/${companyId}/product?${queryParams}`,
           config
         );
         setProducts(resonse.result);
@@ -75,7 +75,37 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
     }
 
     getProducts();
-  }, [debouncedValue, page]);
+  }, [debouncedValue]);
+
+  async function pushToNewPage(pageNumber: number) {
+    setLoading(true);
+
+    const config = {
+      headers: {
+        "Accept-Language": getCookie("NEXT_LOCALE"),
+      },
+    };
+
+    const companyId = getCookie("user-company") || "";
+    const queryParams = queryString.stringify({
+      query: debouncedValue,
+      limit: 10,
+      page: pageNumber,
+    });
+
+    try {
+      const resonse = await request<PaginatedData>(
+        `/api/company/${companyId}/product?${queryParams}`,
+        config
+      );
+      setProducts(resonse.result);
+      setPagination(resonse.pagination);
+    } catch (error) {
+      throw error;
+    }
+
+    setLoading(false);
+  }
 
   return (
     <DialogContent className="h-full flex flex-col md:h-[80vh]">
@@ -101,24 +131,33 @@ const ProductSelect = ({ onSelect }: ProductSelectProps) => {
         </div>
       ) : (
         <div className="overflow-auto space-y-4">
-          {products.map((product) => (
-            <div key={product.id} className="h-auto">
-              <ProductCard product={product}>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    onSelect(product);
-                  }}
-                >
-                  {t("select")}
-                </Button>
-              </ProductCard>
+          {products.length > 0 ? (
+            products.map((product) => (
+              <div key={product.id} className="h-auto">
+                <ProductCard product={product}>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      onSelect(product);
+                    }}
+                  >
+                    {t("select")}
+                  </Button>
+                </ProductCard>
+              </div>
+            ))
+          ) : (
+            <div className="mt-16 flex flex-col justify-center items-center py-2 space-y-2">
+              <Package className="w-24 h-24 text-foreground" />
+              <p className="leading-7 tracking-tight max-w-sm text-muted-foreground">
+                {t("noResult")}
+              </p>
             </div>
-          ))}
+          )}
           <PaginationBarClient
             pagination={pagination}
             onPageClick={(newPage) => {
-              setPage(newPage);
+              pushToNewPage(newPage);
             }}
           />
         </div>

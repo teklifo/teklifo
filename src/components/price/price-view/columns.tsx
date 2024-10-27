@@ -41,6 +41,10 @@ export const columns: ColumnDef<PriceType>[] = [
     header: PriceTypeHeader,
   },
   {
+    accessorKey: "priceType.currency",
+    header: PriceCurrencyHeader,
+  },
+  {
     accessorKey: "price",
     header: PriceHeader,
     cell: ({ row }) => {
@@ -48,9 +52,5 @@ export const columns: ColumnDef<PriceType>[] = [
         <div className="text-left font-medium">{row.getValue("price")}</div>
       );
     },
-  },
-  {
-    accessorKey: "priceType.currency",
-    header: PriceCurrencyHeader,
   },
 ];

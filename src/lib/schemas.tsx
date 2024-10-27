@@ -511,3 +511,62 @@ export const getRFQFiltersSchema = (t: TranslateFunction) => {
       .optional(),
   });
 };
+
+export const getImportDataSchema = (t: TranslateFunction) => {
+  return z.object({
+    importType: z.enum(["products", "prices", "balance"], {
+      required_error: t("invalidImportType"),
+      invalid_type_error: t("invalidImportType"),
+    }),
+    file: z.instanceof(File, { message: t("invalidFile") }),
+  });
+};
+
+export const getPriceSchema = (t: TranslateFunction) => {
+  return z.object({
+    prices: z.array(
+      z.object({
+        productId: z.coerce.number({
+          required_error: t("invalidProductId"),
+          invalid_type_error: t("invalidProductId"),
+        }),
+        priceTypeId: z
+          .string({
+            required_error: t("invalidPriceTypeId"),
+            invalid_type_error: t("invalidPriceTypeId"),
+          })
+          .min(1, t("invalidPriceTypeId")),
+        priceTypeName: z.string().optional(),
+        priceTypeCurrency: z.string().optional(),
+        price: z.coerce.number({
+          required_error: t("invalidPrice"),
+          invalid_type_error: t("invalidPrice"),
+        }),
+      })
+    ),
+  });
+};
+
+export const getStockBalanceSchema = (t: TranslateFunction) => {
+  return z.object({
+    balance: z.array(
+      z.object({
+        productId: z.coerce.number({
+          required_error: t("invalidProductId"),
+          invalid_type_error: t("invalidProductId"),
+        }),
+        stockId: z
+          .string({
+            required_error: t("invalidStockId"),
+            invalid_type_error: t("invalidStockId"),
+          })
+          .min(1, t("invalidStockId")),
+        stockName: z.string().optional(),
+        quantity: z.coerce.number({
+          required_error: t("invalidQuantity"),
+          invalid_type_error: t("invalidQuantity"),
+        }),
+      })
+    ),
+  });
+};

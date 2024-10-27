@@ -1,6 +1,6 @@
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import type { Prisma } from "@prisma/client";
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays } from "date-fns";
 import { Calendar, Lock, Globe, HelpCircle, Banknote } from "lucide-react";
 import MainInfoItem from "@/components/main-info-item";
 import {
@@ -31,6 +31,7 @@ type RFQMainInfoProps = {
 
 export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
   const t = useTranslations("RFQ");
+  const format = useFormatter();
 
   const daysLeft = differenceInDays(endDate, new Date());
 
@@ -42,7 +43,11 @@ export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
           title={t("endDate")}
           content={
             <div className="flex flex-row space-x-2">
-              <span>{format(endDate, "dd.MM.yyyy")}</span>
+              <span>
+                {format.dateTime(new Date(endDate), {
+                  dateStyle: "long",
+                })}
+              </span>
               {daysLeft > 0 ? (
                 <Badge variant="outline">{t("daysLeft", { daysLeft })}</Badge>
               ) : (
