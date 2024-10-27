@@ -256,6 +256,7 @@ model ExchangeJob {
   type      ExchangeType
   status    ExchangeStatus
   logs      ExchangeLog[]
+  locale    String         @default("en")
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
 }

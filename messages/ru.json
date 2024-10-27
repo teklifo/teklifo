@@ -769,6 +769,36 @@
     "archive": "Архивировать",
     "archiveHint": "Архивируйте товар, если он больше не используется. Архивированный товар не будет отображаться в списе товаров организации"
   },
+  "ExchangeLogs": {
+    "product": "Товар"
+  },
+  "CMLExchangeLogs": {
+    "product": "Создан товар (ID: {id}, артикул: {number}, наименование: {name})",
+    "productError": "Товар (ID: {id}) - {error}",
+    "productNotFound": "Товар не найден (ID: {id}, артикул: {number})",
+    "stock": "Склад (ID: {id}, наименование: {name})",
+    "stockError": "Склад (ID: {id}, наименование: {name}) - {error}",
+    "priceType": "Вид цен (ID: {id}, наименование: {name})",
+    "priceTypeError": "Вид цен (ID: {id}, наименование: {name}) - {error}",
+    "balance": "Остатки на складах (ID товара: {productId}, ID склада: {stockId})",
+    "balanceError": "Остатки на складах (ID товара: {productId}) - {error}",
+    "price": "Цена (ID товара: {productId}, ID вида цен: {priceTypeId})",
+    "priceError": "Цена (ID товара: {productId}, ID вида цен: {priceTypeId}) - {error}"
+  },
+  "XLSXExchangeLogs": {
+    "product": "Строка #{rowNumber} - создан товар (ID: {id}, артикул: {number}, наименование: {name})",
+    "productError": "Строка #{rowNumber} - {error}",
+    "nameIsRequired": "Строка #{rowNumber} - Не указано наименование",
+    "numberIsRequired": "Строка #{rowNumber} - Не указан артикул",
+    "unitIsRequired": "Строка #{rowNumber} - Не указана единица измерения",
+    "productNotFound": "Строка #{rowNumber} - Товар не нейден (ID: {id}, артикул: {number})",
+    "priceTypeNotFound": "Строка #{rowNumber} - Вид цен не найден (ID: {id})",
+    "price": "Строка #{rowNumber} - Цена загружена",
+    "priceError": "Строка #{rowNumber} - {error}",
+    "stockNotFound": "Строка #{rowNumber} - Склад не найден (ID: {id})",
+    "balance": "Строка #{rowNumber} - Остатки на складах загружены",
+    "balanceError": "Строка #{rowNumber} - {error}"
+  },
   "Schemas": {
     "companySchema": {
       "invalidId": "Укажите идентификатор организации",

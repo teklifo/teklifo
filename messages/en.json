@@ -769,6 +769,33 @@
     "archive": "Archive",
     "archiveHint": "Archive a product if it is no longer in use. Archived products will not appear in the company's product list"
   },
+  "CMLExchangeLogs": {
+    "product": "Product created (ID: {id}, SKU: {number}, name: {name})",
+    "productError": "Product (ID: {id}) - {error}",
+    "productNotFound": "Product not found (ID: {id}, SKU: {number})",
+    "stock": "Stock (ID: {id}, name: {name})",
+    "stockError": "Stock (ID: {id}, name: {name}) - {error}",
+    "priceType": "Price type (ID: {id}, name: {name})",
+    "priceTypeError": "Price type (ID: {id}, name: {name}) - {error}",
+    "balance": "Balance (product ID: {productId}, stock ID: {stockId})",
+    "balanceError": "Balance (product ID: {productId}) - {error}",
+    "price": "Price (product ID: {productId}, price type ID: {priceTypeId})",
+    "priceError": "Price (product ID: {productId}, price type ID: {priceTypeId}) - {error}"
+  },
+  "XLSXExchangeLogs": {
+    "product": "Row #{rowNumber} - Product created (ID: {id}, SKU: {number}, name: {name})",
+    "productError": "Row #{rowNumber} - {error}",
+    "nameIsRequired": "Row #{rowNumber} - Name is required",
+    "numberIsRequired": "Row #{rowNumber} - SKU is required",
+    "unitIsRequired": "Row #{rowNumber} - Unit is required",
+    "productNotFound": "Row #{rowNumber} - Product not found (ID: {id}, SKU: {number})",
+    "priceTypeNotFound": "Row #{rowNumber} - Price type not found (ID: {id})",
+    "price": "Row #{rowNumber} - Price downloaded",
+    "priceError": "Row #{rowNumber} - {error}",
+    "stockNotFound": "Row #{rowNumber} - Stock not found (ID: {id})",
+    "balance": "Row #{rowNumber} - Stock levels downloaded",
+    "balanceError": "Row #{rowNumber} - {error}"
+  },
   "Schemas": {
     "companySchema": {
       "invalidId": "Company ID is required",

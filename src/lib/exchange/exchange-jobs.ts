@@ -68,7 +68,8 @@ export const createExchangeJob = async (
   companyId: string,
   filename: string,
   filePath: string,
-  type: ExchangeType
+  type: ExchangeType,
+  locale: string
 ) => {
   return await db.exchangeJob.create({
     data: {
@@ -77,6 +78,7 @@ export const createExchangeJob = async (
       path: filePath,
       status: "INACTIVE",
       type,
+      locale,
     },
   });
 };

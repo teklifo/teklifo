@@ -97,7 +97,13 @@ export async function POST(
       }
 
       if (filename.includes("xml")) {
-        await createExchangeJob(companyId, filename, filePath, exchangeType);
+        await createExchangeJob(
+          companyId,
+          filename,
+          filePath,
+          exchangeType,
+          "ru"
+        );
       }
       return new Response(getResponseMessage("SUCCESS"));
     } else {

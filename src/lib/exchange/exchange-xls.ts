@@ -1,5 +1,6 @@
 import fs from "fs";
 import * as XLSX from "xlsx";
+import { getTranslations } from "next-intl/server";
 import { Prisma, ExchangeJob as ExchangeJobType } from "@prisma/client";
 import { upsertBalance, upsertPrices, upsertProduct } from "./bulk-import";
 import { exchangeLog } from "./exchangeLog";
@@ -35,7 +36,9 @@ type XLSXBalanceRowDataType = {
 XLSX.set_fs(fs);
 
 export const readXLSProducts = async (exchangeJob: ExchangeJobType) => {
-  const { companyId, path: fullPath, id: exchangeJobId } = exchangeJob;
+  const { id: exchangeJobId, companyId, path: fullPath, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "XLSXExchangeLogs" });
 
   const workbook = XLSX.readFile(fullPath);
   if (workbook.SheetNames.length === 0) return;
@@ -53,20 +56,35 @@ export const readXLSProducts = async (exchangeJob: ExchangeJobType) => {
           ...convertRowToProductData(rowData),
           companyId,
         };
-        if (!checkProductData(productData, rowNumber, exchangeJobId)) {
+
+        const checkResult = await checkProductData(
+          productData,
+          rowNumber,
+          exchangeJob
+        );
+
+        if (!checkResult) {
           return;
         }
-        await upsertProduct({ ...productData, companyId });
+        const product = await upsertProduct({ ...productData, companyId });
         exchangeLog({
           exchangeJobId,
           status: "SUCCESS",
-          message: `Row #${rowNumber}`,
+          message: t("product", {
+            rowNumber,
+            id: product.id,
+            name: product.name,
+            number: product.number,
+          }),
         });
       } catch (error) {
         exchangeLog({
           exchangeJobId,
           status: "ERROR",
-          message: `Row #${rowNumber} - ${getErrorMessage(error)}`,
+          message: t("productError", {
+            rowNumber,
+            error: getErrorMessage(error),
+          }),
         });
       }
     })
@@ -101,18 +119,24 @@ function convertRowToProductData(rowData: XLSXProductRowDataType) {
   };
 }
 
-function checkProductData(
+async function checkProductData(
   productData: Prisma.ProductUncheckedCreateInput,
   rowNumber: number,
-  exchangeJobId: string
+  exchangeJob: ExchangeJobType
 ) {
+  const { id: exchangeJobId, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "XLSXExchangeLogs" });
+
   let checkResult = true;
 
   if (!productData.name) {
     exchangeLog({
       exchangeJobId,
       status: "ERROR",
-      message: `Row #${rowNumber} - Name is required`,
+      message: t("nameIsRequired", {
+        rowNumber,
+      }),
     });
     checkResult = false;
   }
@@ -121,7 +145,9 @@ function checkProductData(
     exchangeLog({
       exchangeJobId,
       status: "ERROR",
-      message: `Row #${rowNumber} - SKU is required`,
+      message: t("numberIsRequired", {
+        rowNumber,
+      }),
     });
     checkResult = false;
   }
@@ -130,7 +156,9 @@ function checkProductData(
     exchangeLog({
       exchangeJobId,
       status: "ERROR",
-      message: `Row #${rowNumber} - Unit is required`,
+      message: t("unitIsRequired", {
+        rowNumber,
+      }),
     });
     checkResult = false;
   }
@@ -139,7 +167,9 @@ function checkProductData(
 }
 
 export const readXLSPrices = async (exchangeJob: ExchangeJobType) => {
-  const { companyId, path: fullPath, id: exchangeJobId } = exchangeJob;
+  const { id: exchangeJobId, companyId, path: fullPath, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "XLSXExchangeLogs" });
 
   const workbook = XLSX.readFile(fullPath);
   if (workbook.SheetNames.length === 0) return;
@@ -182,7 +212,11 @@ export const readXLSPrices = async (exchangeJob: ExchangeJobType) => {
           exchangeLog({
             exchangeJobId,
             status: "ERROR",
-            message: `Row #${rowNumber} - Product not found (ID: ${priceData.productId}, number: ${priceData.productNumber})`,
+            message: t("productNotFound", {
+              rowNumber,
+              id: priceData.productId,
+              number: priceData.productNumber,
+            }),
           });
           return;
         }
@@ -200,7 +234,10 @@ export const readXLSPrices = async (exchangeJob: ExchangeJobType) => {
           exchangeLog({
             exchangeJobId,
             status: "ERROR",
-            message: `Row #${rowNumber} - Price type not found (${priceData.priceTypeId})`,
+            message: t("priceTypeNotFound", {
+              rowNumber,
+              id: priceData.priceTypeId,
+            }),
           });
           return;
         }
@@ -214,13 +251,18 @@ export const readXLSPrices = async (exchangeJob: ExchangeJobType) => {
         exchangeLog({
           exchangeJobId,
           status: "SUCCESS",
-          message: `Row #${rowNumber}`,
+          message: t("price", {
+            rowNumber,
+          }),
         });
       } catch (error) {
         exchangeLog({
           exchangeJobId,
           status: "ERROR",
-          message: `Row #${rowNumber} - ${getErrorMessage(error)}`,
+          message: t("priceError", {
+            rowNumber,
+            error: getErrorMessage(error),
+          }),
         });
       }
     })
@@ -228,10 +270,10 @@ export const readXLSPrices = async (exchangeJob: ExchangeJobType) => {
 };
 
 function convertRowToPriceData(rowData: XLSXPriceRowDataType) {
-  const productId = parseInt(cellValue(rowData["1"]));
+  const productId = parseInt(cellValue(rowData["1"])) || 0;
   const productNumber = cellValue(rowData["2"]);
   const priceTypeId = cellValue(rowData["3"]);
-  const price = parseInt(cellValue(rowData["4"]));
+  const price = parseInt(cellValue(rowData["4"])) || 0;
 
   return {
     productId,
@@ -242,7 +284,9 @@ function convertRowToPriceData(rowData: XLSXPriceRowDataType) {
 }
 
 export const readXLSBalance = async (exchangeJob: ExchangeJobType) => {
-  const { companyId, path: fullPath, id: exchangeJobId } = exchangeJob;
+  const { id: exchangeJobId, companyId, path: fullPath, locale } = exchangeJob;
+
+  const t = await getTranslations({ locale, namespace: "XLSXExchangeLogs" });
 
   const workbook = XLSX.readFile(fullPath);
   if (workbook.SheetNames.length === 0) return;
@@ -284,7 +328,11 @@ export const readXLSBalance = async (exchangeJob: ExchangeJobType) => {
           exchangeLog({
             exchangeJobId,
             status: "ERROR",
-            message: `Row #${rowNumber} - Product not found (ID: ${balanceData.productId}, number: ${balanceData.productNumber})`,
+            message: t("productNotFound", {
+              rowNumber,
+              id: balanceData.productId,
+              number: balanceData.productNumber,
+            }),
           });
           return;
         }
@@ -302,7 +350,10 @@ export const readXLSBalance = async (exchangeJob: ExchangeJobType) => {
           exchangeLog({
             exchangeJobId,
             status: "ERROR",
-            message: `Row #${rowNumber} - Stock not found (${balanceData.stockId})`,
+            message: t("stockNotFound", {
+              rowNumber,
+              id: balanceData.stockId,
+            }),
           });
           return;
         }
@@ -316,13 +367,18 @@ export const readXLSBalance = async (exchangeJob: ExchangeJobType) => {
         exchangeLog({
           exchangeJobId,
           status: "SUCCESS",
-          message: `Row #${rowNumber}`,
+          message: t("balance", {
+            rowNumber,
+          }),
         });
       } catch (error) {
         exchangeLog({
           exchangeJobId,
           status: "ERROR",
-          message: `Row #${rowNumber} - getErrorMessage(error)`,
+          message: t("balanceError", {
+            rowNumber,
+            error: getErrorMessage(error),
+          }),
         });
       }
     })
@@ -330,10 +386,10 @@ export const readXLSBalance = async (exchangeJob: ExchangeJobType) => {
 };
 
 function convertRowToBalanceData(rowData: XLSXBalanceRowDataType) {
-  const productId = parseInt(cellValue(rowData["1"]));
+  const productId = parseInt(cellValue(rowData["1"])) || 0;
   const productNumber = cellValue(rowData["2"]);
   const stockId = cellValue(rowData["3"]);
-  const quantity = parseInt(cellValue(rowData["4"]));
+  const quantity = parseInt(cellValue(rowData["4"])) || 0;
 
   return {
     productId,

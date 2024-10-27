@@ -61,7 +61,13 @@ export async function POST(request: NextRequest) {
         t("invalidRequest")
       );
     }
-    await createExchangeJob(company.id, filename, filePath, exchangeType);
+    await createExchangeJob(
+      company.id,
+      filename,
+      filePath,
+      exchangeType,
+      locale
+    );
 
     await addReadFileJobToQueue(company.id, filePath);
 
