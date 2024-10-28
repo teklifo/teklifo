@@ -105,7 +105,8 @@
     "idsAreRequired": "IDs are required",
     "productNotFound": "Product {id} not found",
     "productsDeleted": "Products are deleted",
-    "invalidExchangeJobId": "Invalid exchange job ID"
+    "invalidExchangeJobId": "Invalid exchange job ID",
+    "topQuotationsPromt": "Analyze and select best quotation"
   },
   "Layout": {
     "login": "Log in",

@@ -105,7 +105,8 @@
     "idsAreRequired": "Не указаны идентификаторы",
     "productNotFound": "Товар {id} не найден",
     "productsDeleted": "Товары удалены",
-    "invalidExchangeJobId": "Задание обмена не найдено"
+    "invalidExchangeJobId": "Задание обмена не найдено",
+    "topQuotationsPromt": "Проанализируй и выбери лучшее предложение"
   },
   "Layout": {
     "login": "Войти",
