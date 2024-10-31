@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { BarChart, Pencil } from "lucide-react";
+import { BarChart, Pencil, Sparkles } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
 import DeleteRFQ from "./delete-rfq";
@@ -61,16 +61,31 @@ const RFQActions = async ({ rfq }: RFQActions) => {
       {companyIsRequester && (
         <>
           {isAdmin && (
-            <Link
-              href={`/rfq/${rfq.id}/quotations-compare`}
-              className={cn(
-                buttonVariants({ variant: "default" }),
-                "text-center whitespace-normal h-auto space-x-2 lg:w-full"
-              )}
-            >
-              <BarChart className="h-4 w-4" />
-              <span>{t("compareQuotations")}</span>
-            </Link>
+            <>
+              <div className="relative inline-flex group">
+                <div className="absolute transitiona-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-md group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200"></div>
+                <Link
+                  href={`/rfq/${rfq.id}/ai-analysis`}
+                  className={cn(
+                    buttonVariants({ variant: "ghost" }),
+                    "relative text-center whitespace-normal h-auto space-x-2 lg:w-full bg-background hover:!bg-background"
+                  )}
+                >
+                  <Sparkles className="h-4 w-4" />
+                  <span>{t("aiAnalysis")}</span>
+                </Link>
+              </div>
+              <Link
+                href={`/rfq/${rfq.id}/quotations-compare`}
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "text-center whitespace-normal h-auto space-x-2 lg:w-full"
+                )}
+              >
+                <BarChart className="h-4 w-4" />
+                <span>{t("compareQuotations")}</span>
+              </Link>
+            </>
           )}
           {!completed && (
             <>

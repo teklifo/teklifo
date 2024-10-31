@@ -293,6 +293,7 @@ model RequestForQuotation {
   items           RequestForQuotationItem[]
   participants    Participants[]
   quotations      Quotation[]
+  aiAnalysis      AIQuotationsAnalysis[]
   createdAt       DateTime                  @default(now())
   latestVersion   Boolean                   @default(true)
   deleted         Boolean                   @default(false)
@@ -366,4 +367,13 @@ model QuotationItem {
   deliveryDate     DateTime
   comment          String
   skip             Boolean                 @default(false)
+}
+
+model AIQuotationsAnalysis {
+  id           String              @id @default(uuid())
+  rfq          RequestForQuotation @relation(fields: [rfqVersionId], references: [versionId], onDelete: Cascade)
+  rfqVersionId String
+  rfqId        String
+  message      String
+  createdAt    DateTime            @default(now())
 }

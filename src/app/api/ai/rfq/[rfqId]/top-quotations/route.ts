@@ -9,7 +9,7 @@ type Props = {
   params: { rfqId: string };
 };
 
-export async function GET(request: NextRequest, { params: { rfqId } }: Props) {
+export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   const MAX_ITEMS = 10;
@@ -26,6 +26,7 @@ export async function GET(request: NextRequest, { params: { rfqId } }: Props) {
       where: { id: rfqId, latestVersion: true },
       select: {
         versionId: true,
+        id: true,
         items: {
           take: MAX_ITEMS,
           orderBy: {
@@ -108,14 +109,58 @@ export async function GET(request: NextRequest, { params: { rfqId } }: Props) {
       },
     });
 
-    const result = await geminiModel.generateContent([
-      t("topQuotationsPromt"),
-      JSON.stringify(rfqAndTopQuotations),
-    ]);
+    // const result = await geminiModel.generateContent([
+    //   t("topQuotationsPromt"),
+    //   JSON.stringify(rfqAndTopQuotations),
+    // ]);
 
-    return NextResponse.json({
-      result: result.response.text(),
+    // const aiAnalysis = await db.aIQuotationsAnalysis.create({
+    //   data: {
+    //     message: result.response.text(),
+    //     rfqVersionId: rfq.versionId,
+    //     rfqId: rfq.id,
+    //   },
+    // });
+
+    const aiAnalysis = await db.aIQuotationsAnalysis.findFirst({});
+
+    return NextResponse.json(aiAnalysis);
+  } catch (error) {
+    console.log(error);
+    return getErrorResponse(t("serverError"), 500);
+  }
+}
+
+export async function GET(request: NextRequest, { params: { rfqId } }: Props) {
+  const { t } = await getTranslationsFromHeader(request.headers);
+
+  try {
+    // Check company
+    const company = await getCurrentCompany();
+    if (!company) {
+      return getErrorResponse(t("invalidCompanyId"), 404);
+    }
+
+    // Find RFQ
+    const rfq = await db.requestForQuotation.findFirst({
+      where: { id: rfqId, latestVersion: true },
+      select: {
+        id: true,
+      },
     });
+
+    // RFQ not found
+    if (!rfq) {
+      return getErrorResponse(t("invalidRFQId"), 404);
+    }
+
+    const aiAnalysis = await db.aIQuotationsAnalysis.findMany({
+      where: {
+        rfqId: rfq.id,
+      },
+    });
+
+    return NextResponse.json(aiAnalysis);
   } catch (error) {
     console.log(error);
     return getErrorResponse(t("serverError"), 500);

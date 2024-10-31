@@ -59,6 +59,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.53.0",
+    "react-markdown": "^8.0.6",
     "react-phone-number-input": "^3.4.3",
     "react-resizable-panels": "^2.0.9",
     "tailwind-merge": "^2.1.0",

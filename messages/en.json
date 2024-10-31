@@ -542,6 +542,7 @@
     "quotationTitle": "Quotation to the client",
     "quotationSubtitle": "Send a quotation to the client in response to the received RFQ",
     "compareQuotations": "Compare quotations",
+    "aiAnalysis": "Analyze with AI",
     "noQuotations": "There are no quotations for this request at the moment",
     "confirmParticipation": "Confirm participation",
     "participationTitle": "Do you want to confirm your participation in the RFQ?",
