@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
-import ReactMarkdown from "react-markdown";
 import { Sparkles } from "lucide-react";
 import { AIQuotationsAnalysis as AIQuotationsAnalysisType } from "@prisma/client";
+import AIAnalysisMessage from "./ai-analysis-message";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import request from "@/lib/request";
@@ -16,28 +16,12 @@ type AIAnalysisProps = {
 
 const AIAnalysis = ({ rfqId }: AIAnalysisProps) => {
   const t = useTranslations("QuotationsAIAnalysis");
-  const format = useFormatter();
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [aiAnalysis, setAiAnalysis] = useState<AIQuotationsAnalysisType>();
+  const [aiAnalysisList, setAiAnalysisList] =
+    useState<AIQuotationsAnalysisType[]>();
 
-  const [currentText, setCurrentText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    if (aiAnalysis && currentIndex < aiAnalysis.message.length) {
-      const timeout = setTimeout(() => {
-        setCurrentText(
-          (prevText) => prevText + aiAnalysis.message[currentIndex]
-        );
-        setCurrentIndex((prevIndex) => prevIndex + 1);
-      }, 1);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [aiAnalysis, currentIndex]);
-
-  async function analyzeQuotationsWithAI() {
+  async function analyzeQuotationsUsingAI() {
     setLoading(true);
 
     const config = {
@@ -54,7 +38,14 @@ const AIAnalysis = ({ rfqId }: AIAnalysisProps) => {
         config
       );
 
-      setAiAnalysis(result);
+      const resultSorted = { ...result, id: new Date().toString() };
+
+      setAiAnalysisList((prevState) => {
+        if (!prevState) return [resultSorted];
+        const list = [...prevState];
+        list.unshift(resultSorted);
+        return list;
+      });
 
       toast({
         title: t("analysisCompleted"),
@@ -75,32 +66,29 @@ const AIAnalysis = ({ rfqId }: AIAnalysisProps) => {
   }
 
   return (
-    <>
+    <div className="space-y-8">
       <div className="flex p-10 space-y-4 bg-muted rounded-xl flex-col justify-center items-center">
         <Sparkles className="h-24 w-24" />
         <Button
-          onClick={analyzeQuotationsWithAI}
+          onClick={analyzeQuotationsUsingAI}
           disabled={loading}
           className="space-x-2"
         >
           <Sparkles />
           <span>{t("startAnalysis")}</span>
         </Button>
+        <p className="text-sm text-muted-foreground">{t("disclaimer")}</p>
       </div>
-      <div className="mb-8">
-        {aiAnalysis && (
-          <div className="space-y-4">
-            <h4 className="text-xl text-muted-foreground">
-              {format.dateTime(new Date(aiAnalysis.createdAt), {
-                dateStyle: "long",
-                timeStyle: "medium",
-              })}
-            </h4>
-            <ReactMarkdown>{currentText}</ReactMarkdown>
+      <div>
+        {
+          <div className="space-y-10">
+            {aiAnalysisList?.map((aiAnalysis) => (
+              <AIAnalysisMessage key={aiAnalysis.id} aiAnalysis={aiAnalysis} />
+            ))}
           </div>
-        )}
+        }
       </div>
-    </>
+    </div>
   );
 };
 

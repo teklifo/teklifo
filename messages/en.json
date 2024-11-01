@@ -66,7 +66,9 @@
     "stockBalanceTitle": "Stock levels | {productName}",
     "stockBalanceDescription": "Update product levels",
     "exchangeJobTitle": "Exchange job",
-    "exchangeJobDescription": "Exchange job logs"
+    "exchangeJobDescription": "Exchange job logs",
+    "quotationsAIAnalysisTitle": "AI quotations analysis | {title}",
+    "quotationsAIAnalysisDescription": "Use AI to analyze and compare quotations"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -811,6 +813,16 @@
     "date": "Date",
     "status": "Status",
     "message": "Message"
+  },
+  "QuotationsAIAnalysis": {
+    "title": "AI quotations analysis",
+    "subtitle": "Use AI to analyze and compare quotations",
+    "disclaimer": "Keep in mind that AI can make mistakes and may not have the full context",
+    "noQuotations": "There are no quotations available for AI analysis",
+    "startAnalysis": "Analyze quotations",
+    "analysisCompleted": "Analysis is complete",
+    "analysisCompletedHint": "Check AI analysis result",
+    "analysisError": "Failed to analyze quotations"
   },
   "Schemas": {
     "companySchema": {

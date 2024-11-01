@@ -63,7 +63,7 @@ const RFQActions = async ({ rfq }: RFQActions) => {
           {isAdmin && (
             <>
               <div className="relative inline-flex group">
-                <div className="absolute transitiona-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-md group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200"></div>
+                <div className="absolute transitiona-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] to-[#FF44EC] rounded-xl blur-md group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200"></div>
                 <Link
                   href={`/rfq/${rfq.id}/ai-analysis`}
                   className={cn(

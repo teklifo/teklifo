@@ -4,7 +4,7 @@ import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ArrowRightCircle } from "lucide-react";
 import { AIQuotationsAnalysis as AIQuotationsAnalysisType } from "@prisma/client";
-import AIAnalysis from "./_components/ai-analysys";
+import AIAnalysis from "./_components/ai-analysis";
 import AIAnalysisHistory from "./_components/ai-analysis-history";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import getCurrentCompany from "@/app/actions/get-current-company";
@@ -41,8 +41,8 @@ export const generateMetadata = async ({
     };
 
   return {
-    title: t("quotationsCompareTitle", { title: rfq.title }),
-    description: t("quotationsCompareDescription"),
+    title: t("quotationsAIAnalysisTitle", { title: rfq.title }),
+    description: t("quotationsAIAnalysisDescription"),
   };
 };
 
@@ -113,10 +113,9 @@ const QuotationsAIAnalysis = async ({
 
   const data = await getRFQQuotations(id, searchParams);
   if (!data) return notFound();
+  const { result, pagination } = data;
 
   const analysisHistory = await getAnalysisHistory(id);
-
-  const { result, pagination } = data;
 
   const t = await getTranslations("QuotationsAIAnalysis");
 
@@ -129,7 +128,7 @@ const QuotationsAIAnalysis = async ({
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
       {result.length > 0 ? (
-        <div className="mt-4 space-y-8">
+        <div className="mt-4 space-y-10">
           <AIAnalysis rfqId={id} />
           <AIAnalysisHistory analysisHistory={analysisHistory} />
         </div>
@@ -137,7 +136,7 @@ const QuotationsAIAnalysis = async ({
         <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
           <ArrowRightCircle className="w-48 h-48" />
           <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {t("noIncomingQuotation")}
+            {t("noQuotations")}
           </h2>
         </div>
       )}

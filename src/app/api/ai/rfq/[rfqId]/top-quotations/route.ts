@@ -45,7 +45,9 @@ export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
       getTopQuotationItemsPerRFQ(rfqId)
     );
 
-    const topThreeQuotations = topQuotations.slice(0, 4);
+    const topThreeQuotations = topQuotations
+      .slice(0, 4)
+      .filter((quotation) => quotation.quotationid);
     const topThreeQuotationsId = topThreeQuotations.map(
       (quotation) => quotation.quotationid
     );
@@ -109,20 +111,18 @@ export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
       },
     });
 
-    // const result = await geminiModel.generateContent([
-    //   t("topQuotationsPromt"),
-    //   JSON.stringify(rfqAndTopQuotations),
-    // ]);
+    const result = await geminiModel.generateContent([
+      t("topQuotationsPromt"),
+      JSON.stringify(rfqAndTopQuotations),
+    ]);
 
-    // const aiAnalysis = await db.aIQuotationsAnalysis.create({
-    //   data: {
-    //     message: result.response.text(),
-    //     rfqVersionId: rfq.versionId,
-    //     rfqId: rfq.id,
-    //   },
-    // });
-
-    const aiAnalysis = await db.aIQuotationsAnalysis.findFirst({});
+    const aiAnalysis = await db.aIQuotationsAnalysis.create({
+      data: {
+        message: result.response.text(),
+        rfqVersionId: rfq.versionId,
+        rfqId: rfq.id,
+      },
+    });
 
     return NextResponse.json(aiAnalysis);
   } catch (error) {
