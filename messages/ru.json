@@ -66,7 +66,9 @@
     "stockBalanceTitle": "Остатки на складах | {productName}",
     "stockBalanceDescription": "Обновите остатки товара на складах",
     "exchangeJobTitle": "задание обмена",
-    "exchangeJobDescription": "Логи задания обмена"
+    "exchangeJobDescription": "Логи задания обмена",
+    "quotationsAIAnalysisTitle": "Анализ коммерческих предложений с помощью ИИ | {title}",
+    "quotationsAIAnalysisDescription": "Используйте ИИ для анализа и сравнения коммерческих предложений"
   },
   "API": {
     "notAuthorized": "Необходимо авторизоваться",
@@ -105,7 +107,8 @@
     "idsAreRequired": "Не указаны идентификаторы",
     "productNotFound": "Товар {id} не найден",
     "productsDeleted": "Товары удалены",
-    "invalidExchangeJobId": "Задание обмена не найдено"
+    "invalidExchangeJobId": "Задание обмена не найдено",
+    "topQuotationsPromt": "Проанализируй и выбери лучшее предложение"
   },
   "Layout": {
     "login": "Войти",
@@ -541,6 +544,7 @@
     "quotationTitle": "Коммерческое предложение клиенту",
     "quotationSubtitle": "Отправьте коммерческое предложение клиенту в ответ на полученный запрос цен",
     "compareQuotations": "Сравнить предложения",
+    "aiAnalysis": "Анализировать с помощью ИИ",
     "noQuotations": "По этому запросу пока нет предложений",
     "confirmParticipation": "Подтвердить участие",
     "participationTitle": "Подтвердить участие в запросе цен?",
@@ -812,6 +816,16 @@
     "date": "Дата",
     "status": "Статус",
     "message": "Сообщение"
+  },
+  "QuotationsAIAnalysis": {
+    "title": "Анализ коммерческих предложений с помощью ИИ",
+    "subtitle": "Используйте искусственный интеллект для анализа и сравнения коммерческих предложений",
+    "disclaimer": "Помните, что искусственный интеллект может допускать ошибки и не иметь полной информации",
+    "noQuotations": "Нет коммерческих предложений для анализа",
+    "startAnalysis": "Анализировать коммерческие предложения",
+    "analysisCompleted": "Анализ завершен",
+    "analysisCompletedHint": "Просмотрите результаты анализа коммерческих предложений от ИИ",
+    "analysisError": "Не удалось проанализировать коммерческие предложения"
   },
   "Schemas": {
     "companySchema": {

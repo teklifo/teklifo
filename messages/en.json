@@ -66,7 +66,9 @@
     "stockBalanceTitle": "Stock levels | {productName}",
     "stockBalanceDescription": "Update product levels",
     "exchangeJobTitle": "Exchange job",
-    "exchangeJobDescription": "Exchange job logs"
+    "exchangeJobDescription": "Exchange job logs",
+    "quotationsAIAnalysisTitle": "AI quotations analysis | {title}",
+    "quotationsAIAnalysisDescription": "Use AI to analyze and compare quotations"
   },
   "API": {
     "notAuthorized": "Not authorized",
@@ -105,7 +107,8 @@
     "idsAreRequired": "IDs are required",
     "productNotFound": "Product {id} not found",
     "productsDeleted": "Products are deleted",
-    "invalidExchangeJobId": "Invalid exchange job ID"
+    "invalidExchangeJobId": "Invalid exchange job ID",
+    "topQuotationsPromt": "Analyze and select best quotation"
   },
   "Layout": {
     "login": "Log in",
@@ -541,6 +544,7 @@
     "quotationTitle": "Quotation to the client",
     "quotationSubtitle": "Send a quotation to the client in response to the received RFQ",
     "compareQuotations": "Compare quotations",
+    "aiAnalysis": "Analyze with AI",
     "noQuotations": "There are no quotations for this request at the moment",
     "confirmParticipation": "Confirm participation",
     "participationTitle": "Do you want to confirm your participation in the RFQ?",
@@ -809,6 +813,16 @@
     "date": "Date",
     "status": "Status",
     "message": "Message"
+  },
+  "QuotationsAIAnalysis": {
+    "title": "AI quotations analysis",
+    "subtitle": "Use AI to analyze and compare quotations",
+    "disclaimer": "Keep in mind that AI can make mistakes and may not have the full context",
+    "noQuotations": "There are no quotations available for AI analysis",
+    "startAnalysis": "Analyze quotations",
+    "analysisCompleted": "Analysis is complete",
+    "analysisCompletedHint": "Check AI analysis result",
+    "analysisError": "Failed to analyze quotations"
   },
   "Schemas": {
     "companySchema": {
