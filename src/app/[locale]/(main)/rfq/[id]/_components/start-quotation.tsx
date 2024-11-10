@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Prisma, Company as CompanyType } from "@prisma/client";
+import { useTranslations } from "next-intl";
 import { BriefcaseBusiness } from "lucide-react";
+import { Company as CompanyType } from "@prisma/client";
 import QuotationForm from "@/components/quotation/quotation-form";
 import {
   Dialog,
@@ -13,24 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-    items: {
-      include: {
-        product: true;
-      };
-    };
-    _count: {
-      select: {
-        quotations: true;
-      };
-    };
-    participants: true;
-  };
-}>;
+import { RequestForQuotationType } from "@/types";
 
 type StartQuotationProps = {
   rfq: RequestForQuotationType;

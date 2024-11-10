@@ -6,17 +6,19 @@ import { getCookie } from "cookies-next";
 import { Sparkles } from "lucide-react";
 import { AIQuotationsAnalysis as AIQuotationsAnalysisType } from "@prisma/client";
 import AIAnalysisMessage from "./ai-analysis-message";
+import QuotationSelect from "./quotation-select";
+import RFQItemsSelect from "./rfq-items-select";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import request from "@/lib/request";
-import QuotationSelect from "./quotation-select";
 import { useQuotationsAIAnalysisStore } from "../_store";
+import request from "@/lib/request";
+import { RequestForQuotationType } from "@/types";
 
 type AIAnalysisSettingsProps = {
-  rfqId: string;
+  rfq: RequestForQuotationType;
 };
 
-const AIAnalysisSettings = ({ rfqId }: AIAnalysisSettingsProps) => {
+const AIAnalysisSettings = ({ rfq }: AIAnalysisSettingsProps) => {
   const t = useTranslations("QuotationsAIAnalysis");
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,7 +46,7 @@ const AIAnalysisSettings = ({ rfqId }: AIAnalysisSettingsProps) => {
 
     try {
       const result = await request<AIQuotationsAnalysisType>(
-        `/api/ai/rfq/${rfqId}/top-quotations`,
+        `/api/ai/rfq/${rfq.id}/top-quotations`,
         config
       );
 
@@ -77,9 +79,9 @@ const AIAnalysisSettings = ({ rfqId }: AIAnalysisSettingsProps) => {
 
   return (
     <div className="space-y-8">
-      <div className="flex p-10 space-y-4 bg-muted rounded-xl flex-col justify-center items-center">
-        <Sparkles className="h-24 w-24" />
-        <QuotationSelect rfqId={rfqId} />
+      <div className="flex p-10 space-y-4 border rounded-xl flex-col justify-start items-start">
+        <QuotationSelect rfqId={rfq.id} />
+        <RFQItemsSelect rfq={rfq} />
         <Button
           onClick={analyzeQuotationsUsingAI}
           disabled={

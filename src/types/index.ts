@@ -100,6 +100,28 @@ export type QuotationWithCompanyType = Prisma.QuotationGetPayload<{
   };
 }>;
 
+export type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
+  include: {
+    company: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
+    items: {
+      include: {
+        product: true;
+      };
+    };
+    _count: {
+      select: {
+        quotations: true;
+      };
+    };
+    participants: true;
+  };
+}>;
+
 export type ProductPriceType = Prisma.PriceTypeGetPayload<{
   include: {
     prices: true;

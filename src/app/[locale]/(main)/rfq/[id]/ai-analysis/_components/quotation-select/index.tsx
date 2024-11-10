@@ -119,7 +119,7 @@ const QuotationSelect = ({ rfqId }: QuotationSelectProps) => {
       <DialogContent className="h-full md:h-auto overflow-auto max-w-7xl">
         <DialogHeader>
           <DialogTitle>{t("quotations")}</DialogTitle>
-          <DialogDescription>{t("hint")}</DialogDescription>
+          <DialogDescription>{t("quotationsHint")}</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-1 gap-0 md:grid-cols-12 md:gap-6">
           <div className="flex flex-col col-span-7">

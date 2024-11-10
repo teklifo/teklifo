@@ -86,7 +86,7 @@ const QuotationsAIAnalysis = async ({ params: { id } }: Props) => {
       </div>
       {
         <div className="mt-4 space-y-10">
-          <AIAnalysisSettings rfqId={id} />
+          <AIAnalysisSettings rfq={rfq} />
           <AIAnalysisHistory analysisHistory={analysisHistory} />
         </div>
       }

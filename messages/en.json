@@ -825,13 +825,17 @@
     "analysisError": "Failed to analyze quotations",
     "selectQuotations": "Select quotations",
     "quotations": "Quotations",
-    "hint": "Select up to three quotations for AI analysis",
+    "quotationsHint": "Select up to three quotations for AI analysis",
     "query": "Search",
     "queryHint": "Type company name...",
     "noResults": "No results",
     "selectQuotationHint": "Select quotations from the list",
     "select": "Select",
-    "selectedQuotations": "{number} quots selected"
+    "selectedQuotations": "{number} quots selected",
+    "selectRfqItems": "Select RFQ items",
+    "selectedRfqItems": "{number} RFQ items selected",
+    "rfqItems": "RFQ items",
+    "rfqItemsHint": "Select up to ten RFQ items for AI analysis"
   },
   "Schemas": {
     "companySchema": {

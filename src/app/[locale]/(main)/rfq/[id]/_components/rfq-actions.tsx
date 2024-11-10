@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
 import { BarChart, Pencil, Sparkles } from "lucide-react";
-import type { Prisma } from "@prisma/client";
 import { Link } from "@/navigation";
 import DeleteRFQ from "./delete-rfq";
 import ShareRFQ from "./share-rfq";
@@ -9,29 +8,13 @@ import getCurrentCompany from "@/app/actions/get-current-company";
 import { cn } from "@/lib/utils";
 import StartQuotation from "./start-quotation";
 import ConfirmParticipation from "./confirm-participation";
+import { RequestForQuotationType } from "@/types";
 
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-    items: {
-      include: {
-        product: true;
-      };
-    };
-    _count: {
-      select: {
-        quotations: true;
-      };
-    };
-    participants: true;
-  };
-}>;
-
-type RFQActions = {
+type RFQActionsProps = {
   rfq: RequestForQuotationType;
 };
 
-const RFQActions = async ({ rfq }: RFQActions) => {
+const RFQActions = async ({ rfq }: RFQActionsProps) => {
   const t = await getTranslations("RFQ");
 
   const company = await getCurrentCompany();

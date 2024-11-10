@@ -11,7 +11,12 @@ import { PaginationType, QuotationWithCompanyType } from "@/types";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
-    company: true;
+    company: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
     items: {
       include: {
         product: true;

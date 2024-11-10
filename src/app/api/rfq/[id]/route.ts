@@ -266,7 +266,12 @@ export async function DELETE(request: NextRequest, { params: { id } }: Props) {
     const rfq = await db.requestForQuotation.findFirst({
       where: { id, latestVersion: true },
       include: {
-        company: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         items: {
           include: {
             product: true,
