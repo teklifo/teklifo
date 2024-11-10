@@ -46,29 +46,6 @@ export const generateMetadata = async ({
   };
 };
 
-const getRFQQuotations = async (rfqId: string, searchParams: SearchParams) => {
-  try {
-    const cookieStore = cookies();
-    const headersList = headers();
-    const cookie = headersList.get("cookie");
-
-    const { page } = searchParams;
-
-    return await request<PaginatedData>(
-      `/api/rfq/${rfqId}/quotations?order=amountAsc&page=${page ?? 1}&limit=10`,
-      {
-        headers: {
-          "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
-          Cookie: cookie,
-        },
-        next: { revalidate: 0 },
-      }
-    );
-  } catch (error) {
-    return undefined;
-  }
-};
-
 const getAnalysisHistory = async (rfqId: string) => {
   try {
     const cookieStore = cookies();
@@ -111,10 +88,6 @@ const QuotationsAIAnalysis = async ({
     return notFound();
   }
 
-  const data = await getRFQQuotations(id, searchParams);
-  if (!data) return notFound();
-  const { result, pagination } = data;
-
   const analysisHistory = await getAnalysisHistory(id);
 
   const t = await getTranslations("QuotationsAIAnalysis");
@@ -127,19 +100,12 @@ const QuotationsAIAnalysis = async ({
         </h1>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
-      {result.length > 0 ? (
+      {
         <div className="mt-4 space-y-10">
           <AIAnalysis rfqId={id} />
           <AIAnalysisHistory analysisHistory={analysisHistory} />
         </div>
-      ) : (
-        <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-          <ArrowRightCircle className="w-48 h-48" />
-          <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {t("noQuotations")}
-          </h2>
-        </div>
-      )}
+      }
       <div />
     </MaxWidthWrapper>
   );

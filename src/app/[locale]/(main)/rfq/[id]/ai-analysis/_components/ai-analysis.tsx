@@ -9,6 +9,7 @@ import AIAnalysisMessage from "./ai-analysis-message";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import request from "@/lib/request";
+import QuotationSelect from "./quotation-select";
 
 type AIAnalysisProps = {
   rfqId: string;
@@ -69,6 +70,7 @@ const AIAnalysis = ({ rfqId }: AIAnalysisProps) => {
     <div className="space-y-8">
       <div className="flex p-10 space-y-4 bg-muted rounded-xl flex-col justify-center items-center">
         <Sparkles className="h-24 w-24" />
+        <QuotationSelect rfqId={rfqId} />
         <Button
           onClick={analyzeQuotationsUsingAI}
           disabled={loading}
