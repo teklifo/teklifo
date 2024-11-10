@@ -1,5 +1,6 @@
 import { useFormatter, useTranslations } from "next-intl";
-import type { Prisma } from "@prisma/client";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { QuotationOutdated, QuotationTotal } from "./quotation-main-info";
 import {
   Card,
@@ -12,11 +13,30 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn, getAvatarFallback } from "@/lib/utils";
 import { QuotationWithCompanyType } from "@/types";
 
-type QuotationCardProps = {
-  quotation: QuotationWithCompanyType;
-};
+const cardVariants = cva("", {
+  variants: {
+    variant: {
+      default: "",
+      primary: "bg-secondary",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
-const QuotationCard = ({ quotation }: QuotationCardProps) => {
+interface QuotationCardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
+  quotation: QuotationWithCompanyType;
+}
+
+const QuotationCard = ({
+  quotation,
+  className,
+  variant,
+  ...props
+}: QuotationCardProps) => {
   const t = useTranslations("Quotation");
   const format = useFormatter();
 
@@ -26,8 +46,10 @@ const QuotationCard = ({ quotation }: QuotationCardProps) => {
     <Card
       className={cn(
         "text-start cursor-pointer md:transition-shadow md:hover:shadow-lg md:hover:dark:bg-muted",
+        cardVariants({ variant, className }),
         !quotation.rfq.latestVersion && "text-muted-foreground"
       )}
+      {...props}
     >
       <div className="px-2">
         <CardHeader>

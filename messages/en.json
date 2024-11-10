@@ -827,10 +827,11 @@
     "quotations": "Quotations",
     "hint": "Select up to three quotations for AI analysis",
     "query": "Search",
-    "queryHint": "Type company name or total quote amount...",
+    "queryHint": "Type company name...",
     "noResults": "No results",
     "selectQuotationHint": "Select quotations from the list",
-    "select": "Select"
+    "select": "Select",
+    "selectedQuotations": "{number} quots selected"
   },
   "Schemas": {
     "companySchema": {

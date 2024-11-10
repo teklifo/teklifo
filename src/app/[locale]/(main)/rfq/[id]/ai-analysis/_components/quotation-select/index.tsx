@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import queryString from "query-string";
 import { BriefcaseBusiness, Loader, X } from "lucide-react";
-import QuotationRow from "./quotation-row";
+import QuotationCard from "@/components/quotation/quotation-card";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQuotationsAIAnalysisStore } from "../../_store";
 import useDebounce from "@/hooks/useDebounce";
+import { cn } from "@/lib/utils";
 import request from "@/lib/request";
 import { PaginationType, QuotationWithCompanyType } from "@/types";
 
@@ -38,6 +39,7 @@ type QuotationSelectProps = {
 const QuotationSelect = ({ rfqId }: QuotationSelectProps) => {
   const t = useTranslations("QuotationsAIAnalysis");
 
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [quotations, setQuotations] = useState<QuotationWithCompanyType[]>([]);
@@ -50,6 +52,10 @@ const QuotationSelect = ({ rfqId }: QuotationSelectProps) => {
 
   const selectedQuotations = useQuotationsAIAnalysisStore(
     (state) => state.quotations
+  );
+
+  const addQuotation = useQuotationsAIAnalysisStore(
+    (state) => state.addQuotation
   );
 
   const removeQuotation = useQuotationsAIAnalysisStore(
@@ -94,14 +100,20 @@ const QuotationSelect = ({ rfqId }: QuotationSelectProps) => {
   }, [debouncedValue, page, rfqId]);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
           className="flex flex-row justify-center items-center space-x-2"
         >
           <BriefcaseBusiness className="h-4 w-4 text-muted-foreground" />
-          <span>{t("selectQuotations")}</span>
+          {selectedQuotations.length > 0 ? (
+            <span>
+              {t("selectedQuotations", { number: selectedQuotations.length })}
+            </span>
+          ) : (
+            <span>{t("selectQuotations")}</span>
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent className="h-full md:h-auto overflow-auto max-w-7xl">
@@ -134,12 +146,23 @@ const QuotationSelect = ({ rfqId }: QuotationSelectProps) => {
                   <ScrollArea>
                     <div className="space-y-4">
                       {quotations.length > 0 ? (
-                        quotations.map((quotation) => (
-                          <QuotationRow
-                            key={quotation.id}
-                            quotation={quotation}
-                          />
-                        ))
+                        quotations.map((quotation) => {
+                          const selected = selectedQuotations.find(
+                            (selectedQuot) => selectedQuot.id === quotation.id
+                          );
+                          return (
+                            <QuotationCard
+                              key={quotation.id}
+                              quotation={quotation}
+                              onClick={() =>
+                                selected
+                                  ? removeQuotation(quotation)
+                                  : addQuotation(quotation)
+                              }
+                              variant={selected ? "primary" : "default"}
+                            />
+                          );
+                        })
                       ) : (
                         <div className="h-full w-full flex justify-center items-center">
                           <p className="text-sm text-muted-foreground">
@@ -159,37 +182,44 @@ const QuotationSelect = ({ rfqId }: QuotationSelectProps) => {
               )}
             </div>
           </div>
-          <div className="flex flex-col col-span-5 md:flex-row">
-            <Separator className="w-full h-[0.5px] md:h-full md:w-[0.5px]" />
-            {selectedQuotations.length > 0 ? (
-              <div className="h-fit p-2 flex flex-wrap overflow-auto">
-                {selectedQuotations.map((quotation) => {
-                  return (
-                    <Button
-                      key={quotation.id}
-                      variant="secondary"
-                      className="m-2"
-                      onClick={() => removeQuotation(quotation)}
-                    >
-                      <span className="max-w-[200px] truncate">
-                        {quotation.company.name}
-                      </span>
-                      <X className="ml-2 w-4 h-4 text-muted-foreground" />
-                    </Button>
-                  );
-                })}
+          <div className="flex flex-col col-span-5">
+            <div className="h-full md:h-[60vh]">
+              <div className="h-full flex flex-col space-y-6 space-x-0 md:flex-row md:space-y-0 md:space-x-6">
+                <Separator className="w-full h-[0.5px] md:h-full md:w-[0.5px]" />
+                <div className="h-full w-full">
+                  {selectedQuotations.length > 0 ? (
+                    <div className="h-full flex flex-col justify-between">
+                      <ScrollArea>
+                        <div className="space-y-4">
+                          {selectedQuotations.map((quotation) => {
+                            return (
+                              <div
+                                key={quotation.id}
+                                className="relative"
+                                onClick={() => removeQuotation(quotation)}
+                              >
+                                <QuotationCard quotation={quotation} />
+                                <X className="absolute top-0 right-0 m-4 w-4 h-4 text-muted-foreground cursor-pointer" />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </ScrollArea>
+                    </div>
+                  ) : (
+                    <div className="h-full w-full flex justify-center items-center">
+                      <p className="text-sm text-muted-foreground">
+                        {t("selectQuotationHint")}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-            ) : (
-              <div className="h-full w-full flex justify-center items-center">
-                <p className="text-sm text-muted-foreground">
-                  {t("selectQuotationHint")}
-                </p>
-              </div>
-            )}
+            </div>
           </div>
         </div>
         <DialogFooter>
-          <Button>{t("select")}</Button>
+          <Button onClick={() => [setOpen(false)]}>{t("select")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
