@@ -7,7 +7,7 @@ import QuotationCard from "@/components/quotation/quotation-card";
 import PaginationBar from "@/components/ui/pagination-bar";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import request from "@/lib/request";
-import { PaginationType } from "@/types";
+import { PaginationType, QuotationWithCompanyType } from "@/types";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -21,19 +21,8 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   };
 }>;
 
-type QuotationType = Prisma.QuotationGetPayload<{
-  include: {
-    company: true;
-    rfq: {
-      include: {
-        company: true;
-      };
-    };
-  };
-}>;
-
 type PaginatedData = {
-  result: QuotationType[];
+  result: QuotationWithCompanyType[];
   pagination: PaginationType;
 };
 

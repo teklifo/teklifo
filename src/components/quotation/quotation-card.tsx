@@ -10,20 +10,10 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn, getAvatarFallback } from "@/lib/utils";
-
-type QuotationType = Prisma.QuotationGetPayload<{
-  include: {
-    company: true;
-    rfq: {
-      include: {
-        company: true;
-      };
-    };
-  };
-}>;
+import { QuotationWithCompanyType } from "@/types";
 
 type QuotationCardProps = {
-  quotation: QuotationType;
+  quotation: QuotationWithCompanyType;
 };
 
 const QuotationCard = ({ quotation }: QuotationCardProps) => {

@@ -51,6 +51,7 @@ const QuotationSelect = ({ rfqId }: QuotationSelectProps) => {
   const selectedQuotations = useQuotationsAIAnalysisStore(
     (state) => state.quotations
   );
+
   const removeQuotation = useQuotationsAIAnalysisStore(
     (state) => state.removeQuotation
   );
@@ -188,7 +189,7 @@ const QuotationSelect = ({ rfqId }: QuotationSelectProps) => {
           </div>
         </div>
         <DialogFooter>
-          <Button>{t("save")}</Button>
+          <Button>{t("select")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

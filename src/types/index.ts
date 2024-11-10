@@ -79,6 +79,27 @@ export type QuotationsByRFQItemType = Prisma.RequestForQuotationItemGetPayload<{
   };
 }>;
 
+export type QuotationWithCompanyType = Prisma.QuotationGetPayload<{
+  include: {
+    company: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
+    rfq: {
+      include: {
+        company: {
+          select: {
+            id: true;
+            name: true;
+          };
+        };
+      };
+    };
+  };
+}>;
+
 export type ProductPriceType = Prisma.PriceTypeGetPayload<{
   include: {
     prices: true;

@@ -10,17 +10,26 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import request from "@/lib/request";
 import QuotationSelect from "./quotation-select";
+import { useQuotationsAIAnalysisStore } from "../_store";
 
-type AIAnalysisProps = {
+type AIAnalysisSettingsProps = {
   rfqId: string;
 };
 
-const AIAnalysis = ({ rfqId }: AIAnalysisProps) => {
+const AIAnalysisSettings = ({ rfqId }: AIAnalysisSettingsProps) => {
   const t = useTranslations("QuotationsAIAnalysis");
 
   const [loading, setLoading] = useState<boolean>(false);
   const [aiAnalysisList, setAiAnalysisList] =
     useState<AIQuotationsAnalysisType[]>();
+
+  const selectedQuotations = useQuotationsAIAnalysisStore(
+    (state) => state.quotations
+  );
+
+  const selectedRfqItems = useQuotationsAIAnalysisStore(
+    (state) => state.rfqItems
+  );
 
   async function analyzeQuotationsUsingAI() {
     setLoading(true);
@@ -73,10 +82,14 @@ const AIAnalysis = ({ rfqId }: AIAnalysisProps) => {
         <QuotationSelect rfqId={rfqId} />
         <Button
           onClick={analyzeQuotationsUsingAI}
-          disabled={loading}
+          disabled={
+            loading ||
+            selectedQuotations.length === 0 ||
+            selectedRfqItems.length === 0
+          }
           className="space-x-2"
         >
-          <Sparkles />
+          <Sparkles className="w-4 h-4" />
           <span>{t("startAnalysis")}</span>
         </Button>
         <p className="text-sm text-muted-foreground">{t("disclaimer")}</p>
@@ -94,4 +107,4 @@ const AIAnalysis = ({ rfqId }: AIAnalysisProps) => {
   );
 };
 
-export default AIAnalysis;
+export default AIAnalysisSettings;

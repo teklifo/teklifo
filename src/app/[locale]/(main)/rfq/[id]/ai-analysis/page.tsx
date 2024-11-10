@@ -2,30 +2,17 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ArrowRightCircle } from "lucide-react";
 import { AIQuotationsAnalysis as AIQuotationsAnalysisType } from "@prisma/client";
-import AIAnalysis from "./_components/ai-analysis";
+import AIAnalysisSettings from "./_components/ai-analysis-settings";
 import AIAnalysisHistory from "./_components/ai-analysis-history";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
 import request from "@/lib/request";
-import { QuotationsByRFQItemType, PaginationType } from "@/types";
-
-type SearchParams = {
-  order?: string;
-  page?: number;
-};
 
 type Props = {
   params: { locale: string; id: string };
-  searchParams: SearchParams;
-};
-
-type PaginatedData = {
-  result: QuotationsByRFQItemType[];
-  pagination: PaginationType;
 };
 
 export const generateMetadata = async ({
@@ -67,10 +54,7 @@ const getAnalysisHistory = async (rfqId: string) => {
   }
 };
 
-const QuotationsAIAnalysis = async ({
-  params: { id },
-  searchParams,
-}: Props) => {
+const QuotationsAIAnalysis = async ({ params: { id } }: Props) => {
   const rfq = await getRFQ(id);
 
   if (!rfq) {
@@ -102,7 +86,7 @@ const QuotationsAIAnalysis = async ({
       </div>
       {
         <div className="mt-4 space-y-10">
-          <AIAnalysis rfqId={id} />
+          <AIAnalysisSettings rfqId={id} />
           <AIAnalysisHistory analysisHistory={analysisHistory} />
         </div>
       }
