@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
+import RFQItemsTable from "@/components/rfq/rfq-view/rfq-view-items-table";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -67,7 +68,7 @@ const RFQItemsSelect = ({ rfq }: RFQItemsSelectProps) => {
           <DialogTitle>{t("rfqItems")}</DialogTitle>
           <DialogDescription>{t("rfqItemsHint")}</DialogDescription>
         </DialogHeader>
-
+        <RFQItemsTable items={rfq.items} />
         <DialogFooter>
           <Button onClick={() => [setOpen(false)]}>{t("select")}</Button>
         </DialogFooter>

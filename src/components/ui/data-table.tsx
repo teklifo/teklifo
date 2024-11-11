@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "./button";
 
 interface DatatableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,6 +48,7 @@ export function DataTable<TData, TValue>({
     columnResizeMode,
     columnResizeDirection,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     state: {
@@ -55,94 +57,117 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div style={{ direction: table.options.columnResizeDirection }}>
-      <Table
-        className="min-w-full"
-        {...{
-          style: {
-            width: table.getCenterTotalSize(),
-          },
-        }}
-      >
-        <TableHeader className="sticky top-[-1px] bg-background">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  className="border h-15"
-                  {...{
-                    colSpan: header.colSpan,
-                    style: {
-                      width: header.getSize(),
-                    },
-                  }}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                  <div
+    <div>
+      <div style={{ direction: table.options.columnResizeDirection }}>
+        <Table
+          className="min-w-full"
+          {...{
+            style: {
+              width: table.getCenterTotalSize(),
+            },
+          }}
+        >
+          <TableHeader className="sticky top-[-1px] bg-background">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="border h-15"
                     {...{
-                      onDoubleClick: () => header.column.resetSize(),
-                      onMouseDown: header.getResizeHandler(),
-                      onTouchStart: header.getResizeHandler(),
-                      className: `resizer ${
-                        table.options.columnResizeDirection
-                      } ${header.column.getIsResizing() ? "isResizing" : ""}`,
+                      colSpan: header.colSpan,
                       style: {
-                        transform:
-                          columnResizeMode === "onEnd" &&
-                          header.column.getIsResizing()
-                            ? `translateX(${
-                                (table.options.columnResizeDirection === "rtl"
-                                  ? -1
-                                  : 1) *
-                                (table.getState().columnSizingInfo
-                                  .deltaOffset ?? 0)
-                              }px)`
-                            : "",
-                      },
-                    }}
-                  />
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className="px-3 py-2 text-sm border"
-                    {...{
-                      style: {
-                        width: cell.column.getSize(),
+                        width: header.getSize(),
                       },
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                    <div
+                      {...{
+                        onDoubleClick: () => header.column.resetSize(),
+                        onMouseDown: header.getResizeHandler(),
+                        onTouchStart: header.getResizeHandler(),
+                        className: `resizer ${
+                          table.options.columnResizeDirection
+                        } ${header.column.getIsResizing() ? "isResizing" : ""}`,
+                        style: {
+                          transform:
+                            columnResizeMode === "onEnd" &&
+                            header.column.getIsResizing()
+                              ? `translateX(${
+                                  (table.options.columnResizeDirection === "rtl"
+                                    ? -1
+                                    : 1) *
+                                  (table.getState().columnSizingInfo
+                                    .deltaOffset ?? 0)
+                                }px)`
+                              : "",
+                        },
+                      }}
+                    />
+                  </TableHead>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="h-24 text-center border"
-              >
-                {t("noData")}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className="px-3 py-2 text-sm border"
+                      {...{
+                        style: {
+                          width: cell.column.getSize(),
+                        },
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center border"
+                >
+                  {t("noData")}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-start space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {t("prevPage")}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {t("nextPage")}
+        </Button>
+      </div>
     </div>
   );
 }

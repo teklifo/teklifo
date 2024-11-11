@@ -130,7 +130,9 @@
     "darkTheme": "Dark",
     "systemTheme": "System",
     "rfqSearch": "RFQ search",
-    "importData": "Import data"
+    "importData": "Import data",
+    "prevPage": "Previous",
+    "nextPage": "Next"
   },
   "Login": {
     "title": "Welcome aboard 👋",
@@ -552,7 +554,9 @@
     "participationConfirmed": "Participation confirmed",
     "participationConfirmedHint": "Now you can prepare and send a quotation",
     "confirm": "Confirm",
-    "participationError": "Unable to confirm participation in the RFQ"
+    "participationError": "Unable to confirm participation in the RFQ",
+    "lineNumber": "#",
+    "product": "Product"
   },
   "SupplierGuide": {
     "title": "Congratulations! You've accessed the private RFQ via the link",
@@ -825,7 +829,7 @@
     "analysisError": "Failed to analyze quotations",
     "selectQuotations": "Select quotations",
     "quotations": "Quotations",
-    "quotationsHint": "Select up to three quotations for AI analysis",
+    "quotationsHint": "Select up to 3 quotations for AI analysis",
     "query": "Search",
     "queryHint": "Type company name...",
     "noResults": "No results",
@@ -835,7 +839,7 @@
     "selectRfqItems": "Select RFQ items",
     "selectedRfqItems": "{number} RFQ items selected",
     "rfqItems": "RFQ items",
-    "rfqItemsHint": "Select up to ten RFQ items for AI analysis"
+    "rfqItemsHint": "Select up to 10 RFQ items for AI analysis"
   },
   "Schemas": {
     "companySchema": {

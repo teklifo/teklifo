@@ -51,7 +51,7 @@ const RFQActions = async ({ rfq }: RFQActionsProps) => {
                   href={`/rfq/${rfq.id}/ai-analysis`}
                   className={cn(
                     buttonVariants({ variant: "ghost" }),
-                    "relative text-center whitespace-normal h-auto space-x-2 lg:w-full bg-background hover:!bg-background"
+                    "relative w-full text-center whitespace-normal h-auto space-x-2 lg:w-full bg-background hover:!bg-background"
                   )}
                 >
                   <Sparkles className="h-4 w-4" />

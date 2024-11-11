@@ -101,7 +101,11 @@ export const columns: ColumnDef<QuotationItemType>[] = [
       const rfqItem = info.getValue() as any;
 
       return rfqItem.productId ? (
-        <Link href={`/product/${rfqItem.productId}`} className="block w-full">
+        <Link
+          href={`/products/${rfqItem.productId}`}
+          className="block w-full"
+          target="_blank"
+        >
           <span className="underline underline-offset-4">
             {rfqItem.productName}
           </span>
@@ -110,7 +114,7 @@ export const columns: ColumnDef<QuotationItemType>[] = [
         <>{rfqItem.productName}</>
       );
     },
-    size: 500,
+    size: 350,
   },
   {
     accessorKey: "rfqItem.quantity",
@@ -120,7 +124,7 @@ export const columns: ColumnDef<QuotationItemType>[] = [
       return <Cell />;
     },
     meta: {
-      getCellContext: (context: any) => {
+      getCellContext: (_context: any) => {
         return {
           style: {
             fontWeight: "bold",
