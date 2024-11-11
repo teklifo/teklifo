@@ -63,12 +63,17 @@ const RFQItemsSelect = ({ rfq }: RFQItemsSelectProps) => {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-full md:h-auto overflow-auto max-w-7xl">
+      <DialogContent className="mt-0 px-0 flex flex-col max-w-[100vw] h-[100vh] md:max-w-[90vw] md:h-[95vh] sm:p-6">
         <DialogHeader>
           <DialogTitle>{t("rfqItems")}</DialogTitle>
           <DialogDescription>{t("rfqItemsHint")}</DialogDescription>
         </DialogHeader>
-        <RFQItemsTable items={rfq.items} />
+        <div className="h-full md:h-auto">
+          <RFQItemsTable
+            items={rfq.items}
+            scrollClass="h-[calc(100vh-15rem)] md:h-[calc(100vh-17rem)]"
+          />
+        </div>
         <DialogFooter>
           <Button onClick={() => [setOpen(false)]}>{t("select")}</Button>
         </DialogFooter>

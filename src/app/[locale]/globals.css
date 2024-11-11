@@ -91,6 +91,7 @@ th,
   cursor: col-resize;
   user-select: none;
   touch-action: none;
+  opacity: 0;
 }
 
 .resizer.ltr {

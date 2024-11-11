@@ -132,7 +132,12 @@
     "rfqSearch": "RFQ search",
     "importData": "Import data",
     "prevPage": "Previous",
-    "nextPage": "Next"
+    "nextPage": "Next",
+    "pageOf": "Page {current} of {total}",
+    "goToFirstPage": "Go to first page",
+    "goToPrevPage": "Go to previous page",
+    "goToNextPage": "Go to next page",
+    "goToLastPage": "Go to first page"
   },
   "Login": {
     "title": "Welcome aboard 👋",

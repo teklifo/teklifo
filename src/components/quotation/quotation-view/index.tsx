@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Contact, Info, Loader, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
@@ -10,7 +10,6 @@ import QuotationViewAdditional from "./quotation-view-additional";
 import QuotationViewItemsTable from "../quotation-view/quotation-view-items-table";
 import QuotationViewFooter from "./quotation-view-footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogFooter } from "@/components/ui/dialog";
 import request from "@/lib/request";
 
@@ -43,17 +42,8 @@ async function getQuotation(quotationId: number) {
 const QuotationView = ({ quotationId }: QuotationViewProps) => {
   const t = useTranslations("Quotation");
 
-  const ref = useRef<HTMLDivElement>(null);
-
   const [loading, setLoading] = useState<boolean>(true);
   const [quotation, setQuotation] = useState<QuotationType>();
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    if (!loading) {
-      setHeight((ref.current?.clientHeight ?? 0) - 150);
-    }
-  }, [loading]);
 
   useEffect(() => {
     const fetchQuotation = async () => {
@@ -79,7 +69,7 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
 
   return (
     <>
-      <div className="flex-auto space-y-6" ref={ref}>
+      <div className="flex-auto space-y-6">
         <CompanyAvatar
           company={quotation.company}
           className="flex flex-row justify-center items-center space-x-4 md:justify-start"
@@ -101,13 +91,12 @@ const QuotationView = ({ quotationId }: QuotationViewProps) => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="items">
-            {height > 0 && (
-              <ScrollArea className="w-full" style={{ height }}>
-                <QuotationViewItemsTable items={quotation.items} />
-                <ScrollBar orientation="horizontal" className="h-4" />
-                <ScrollBar orientation="vertical" className="w-4" />
-              </ScrollArea>
-            )}
+            <div className="h-full md:h-auto">
+              <QuotationViewItemsTable
+                items={quotation.items}
+                scrollClass="h-[calc(100vh-24rem)] md:h-[calc(100vh-28rem)]"
+              />
+            </div>
           </TabsContent>
           <TabsContent value="contacts">
             <QuotationViewContatcs quotation={quotation} />
