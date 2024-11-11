@@ -14,6 +14,26 @@ import { useQuotationsAIAnalysisStore } from "../_store";
 import request from "@/lib/request";
 import { RequestForQuotationType } from "@/types";
 
+type StepProps = {
+  stepNumber: string;
+  label: string;
+  children: React.ReactNode;
+};
+
+const Step = ({ stepNumber, label, children }: StepProps) => {
+  return (
+    <div className="space-y-1">
+      <div className="flex flex-row items-center space-x-2">
+        <div className="flex justify-center items-center w-8 h-8 text-lg font-semibold rounded-full border text-foreground">
+          {stepNumber}
+        </div>
+        {children}
+      </div>
+      <p className="text-sm text-muted-foreground">{label}</p>
+    </div>
+  );
+};
+
 type AIAnalysisSettingsProps = {
   rfq: RequestForQuotationType;
 };
@@ -79,22 +99,27 @@ const AIAnalysisSettings = ({ rfq }: AIAnalysisSettingsProps) => {
 
   return (
     <div className="space-y-8">
-      <div className="flex p-10 space-y-4 border rounded-xl flex-col justify-start items-start">
-        <QuotationSelect rfqId={rfq.id} />
-        <RFQItemsSelect rfq={rfq} />
-        <Button
-          onClick={analyzeQuotationsUsingAI}
-          disabled={
-            loading ||
-            selectedQuotations.length === 0 ||
-            selectedRfqItems.length === 0
-          }
-          className="space-x-2"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>{t("startAnalysis")}</span>
-        </Button>
-        <p className="text-sm text-muted-foreground">{t("disclaimer")}</p>
+      <div className="flex p-6 space-y-8 border rounded-xl flex-col justify-start items-start md:p-10">
+        <Step stepNumber="1" label={t("quotationsHint")}>
+          <QuotationSelect rfqId={rfq.id} />
+        </Step>
+        <Step stepNumber="2" label={t("rfqItemsHint")}>
+          <RFQItemsSelect rfq={rfq} />
+        </Step>
+        <Step stepNumber="3" label={t("disclaimer")}>
+          <Button
+            onClick={analyzeQuotationsUsingAI}
+            disabled={
+              loading ||
+              selectedQuotations.length === 0 ||
+              selectedRfqItems.length === 0
+            }
+            className="space-x-2"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>{t("startAnalysis")}</span>
+          </Button>
+        </Step>
       </div>
       <div>
         {

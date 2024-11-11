@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { AIQuotationsAnalysis as AIQuotationsAnalysisType } from "@prisma/client";
 import AIAnalysisSettings from "./_components/ai-analysis-settings";
 import AIAnalysisHistory from "./_components/ai-analysis-history";
+import BackButton from "@/components/back-button";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
@@ -79,9 +80,12 @@ const QuotationsAIAnalysis = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {`${t("title")}: ${rfq.title}`}
-        </h1>
+        <div className="flex justify-start items-center space-x-4">
+          <BackButton href={`/rfq/${rfq.id}`} />
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {`${t("title")}: ${rfq.title}`}
+          </h1>
+        </div>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
       {

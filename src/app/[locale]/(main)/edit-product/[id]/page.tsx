@@ -3,6 +3,7 @@ import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Product as ProductType } from "@prisma/client";
+import BackButton from "@/components/back-button";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import ProductForm from "@/components/product/product-form";
 import getCurrentCompany, {
@@ -58,9 +59,12 @@ const NewProduct = async ({ params: { id } }: Props) => {
   return (
     <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {t("updateTitle")}
-        </h1>
+        <div className="flex justify-start items-center space-x-4">
+          <BackButton href={`/products/${id}`} />
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {t("updateTitle")}
+          </h1>
+        </div>
         <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>
       </div>
       <div className="mt-4">
