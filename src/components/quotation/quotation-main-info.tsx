@@ -5,23 +5,13 @@ import type {
 } from "@prisma/client";
 import { CircleDollarSign, AlertCircle } from "lucide-react";
 import MainInfoItem from "@/components/main-info-item";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-type QuotationType = Prisma.QuotationGetPayload<{
-  include: {
-    company: true;
-    rfq: {
-      include: {
-        company: true;
-      };
-    };
-  };
-}>;
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { QuotationWithCompanyType } from "@/types";
 
 export const QuotationTotal = ({
   quotation: { totalAmount, currency },
 }: {
-  quotation: QuotationType;
+  quotation: QuotationWithCompanyType;
 }) => {
   const t = useTranslations("Quotation");
   const format = useFormatter();

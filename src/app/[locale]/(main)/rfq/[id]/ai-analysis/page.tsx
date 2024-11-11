@@ -2,30 +2,18 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ArrowRightCircle } from "lucide-react";
 import { AIQuotationsAnalysis as AIQuotationsAnalysisType } from "@prisma/client";
-import AIAnalysis from "./_components/ai-analysis";
+import AIAnalysisSettings from "./_components/ai-analysis-settings";
 import AIAnalysisHistory from "./_components/ai-analysis-history";
+import BackButton from "@/components/back-button";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
 import request from "@/lib/request";
-import { QuotationsByRFQItemType, PaginationType } from "@/types";
-
-type SearchParams = {
-  order?: string;
-  page?: number;
-};
 
 type Props = {
   params: { locale: string; id: string };
-  searchParams: SearchParams;
-};
-
-type PaginatedData = {
-  result: QuotationsByRFQItemType[];
-  pagination: PaginationType;
 };
 
 export const generateMetadata = async ({
@@ -44,29 +32,6 @@ export const generateMetadata = async ({
     title: t("quotationsAIAnalysisTitle", { title: rfq.title }),
     description: t("quotationsAIAnalysisDescription"),
   };
-};
-
-const getRFQQuotations = async (rfqId: string, searchParams: SearchParams) => {
-  try {
-    const cookieStore = cookies();
-    const headersList = headers();
-    const cookie = headersList.get("cookie");
-
-    const { page } = searchParams;
-
-    return await request<PaginatedData>(
-      `/api/rfq/${rfqId}/quotations?order=amountAsc&page=${page ?? 1}&limit=10`,
-      {
-        headers: {
-          "Accept-Language": cookieStore.get("NEXT_LOCALE")?.value,
-          Cookie: cookie,
-        },
-        next: { revalidate: 0 },
-      }
-    );
-  } catch (error) {
-    return undefined;
-  }
 };
 
 const getAnalysisHistory = async (rfqId: string) => {
@@ -90,10 +55,7 @@ const getAnalysisHistory = async (rfqId: string) => {
   }
 };
 
-const QuotationsAIAnalysis = async ({
-  params: { id },
-  searchParams,
-}: Props) => {
+const QuotationsAIAnalysis = async ({ params: { id } }: Props) => {
   const rfq = await getRFQ(id);
 
   if (!rfq) {
@@ -111,10 +73,6 @@ const QuotationsAIAnalysis = async ({
     return notFound();
   }
 
-  const data = await getRFQQuotations(id, searchParams);
-  if (!data) return notFound();
-  const { result, pagination } = data;
-
   const analysisHistory = await getAnalysisHistory(id);
 
   const t = await getTranslations("QuotationsAIAnalysis");
@@ -122,24 +80,20 @@ const QuotationsAIAnalysis = async ({
   return (
     <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {`${t("title")}: ${rfq.title}`}
-        </h1>
+        <div className="flex justify-start items-center space-x-4">
+          <BackButton href={`/rfq/${rfq.id}`} />
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {`${t("title")}: ${rfq.title}`}
+          </h1>
+        </div>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
-      {result.length > 0 ? (
+      {
         <div className="mt-4 space-y-10">
-          <AIAnalysis rfqId={id} />
+          <AIAnalysisSettings rfq={rfq} />
           <AIAnalysisHistory analysisHistory={analysisHistory} />
         </div>
-      ) : (
-        <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
-          <ArrowRightCircle className="w-48 h-48" />
-          <h2 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {t("noQuotations")}
-          </h2>
-        </div>
-      )}
+      }
       <div />
     </MaxWidthWrapper>
   );

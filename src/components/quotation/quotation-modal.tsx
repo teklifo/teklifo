@@ -16,7 +16,12 @@ import {
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
   include: {
-    company: true;
+    company: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
     items: {
       include: {
         product: true;
@@ -42,19 +47,19 @@ type QuotationType = Prisma.QuotationGetPayload<{
   };
 }>;
 
-type QuotationCardProps = {
+type QuotationModalProps = {
   rfq?: RequestForQuotationType;
   quotation: QuotationType;
   currentCompany?: CompanyType;
   children: React.ReactNode;
 };
 
-const QuotationCard = ({
+const QuotationModal = ({
   rfq,
   quotation,
   currentCompany,
   children,
-}: QuotationCardProps) => {
+}: QuotationModalProps) => {
   const t = useTranslations("Quotation");
 
   const [open, setOpen] = useState(false);
@@ -98,4 +103,4 @@ const QuotationCard = ({
   );
 };
 
-export default QuotationCard;
+export default QuotationModal;

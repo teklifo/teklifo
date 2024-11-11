@@ -2,15 +2,12 @@ import { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Link } from "@/navigation";
-import { ChevronLeft } from "lucide-react";
+import BackButton from "@/components/back-button";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import StockBalanceForm from "@/components/stock-balance/stock-balance-form";
-import { buttonVariants } from "@/components/ui/button";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
-import { cn } from "@/lib/utils";
 import request from "@/lib/request";
 import { ProductAndStocks } from "@/types";
 
@@ -79,16 +76,8 @@ const StockBalance = async ({ params: { id: productId } }: Props) => {
     <MaxWidthWrapper className="mt-8 mb-20">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <div className="flex justify-center items-center space-x-4">
-            <Link
-              href={`/products/${productId}`}
-              className={cn(
-                buttonVariants({ variant: "outline", size: "sm" }),
-                "space-x-2"
-              )}
-            >
-              <ChevronLeft className="w-4 -h-4" />
-            </Link>
+          <div className="flex justify-start items-center space-x-4">
+            <BackButton href={`/products/${productId}`} />
             <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
               {t("stockBalanceTitle", {
                 productName: product.name,

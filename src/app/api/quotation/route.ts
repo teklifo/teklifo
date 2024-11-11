@@ -218,6 +218,26 @@ export async function GET(request: NextRequest) {
       };
     }
 
+    const query = request.nextUrl.searchParams.get("query");
+    if (query) {
+      filters.company = {
+        OR: [
+          {
+            name: {
+              contains: query,
+              mode: "insensitive",
+            },
+          },
+          {
+            tin: {
+              contains: query,
+              mode: "insensitive",
+            },
+          },
+        ],
+      };
+    }
+
     const [total, result] = await db.$transaction([
       db.quotation.count({
         where: filters,

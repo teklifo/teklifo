@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import { Coins, Pencil, Warehouse } from "lucide-react";
+import BackButton from "@/components/back-button";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import CompanyAvatar from "@/components/company/company-avatar";
 import PriceView from "@/components/price/price-view";
@@ -117,9 +118,12 @@ const Product = async ({ params: { id } }: Props) => {
     <MaxWidthWrapper className="mt-8 mb-20">
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-            {name}
-          </h1>
+          <div className="flex justify-center items-center space-x-4">
+            <BackButton href="/products" />
+            <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+              {name}
+            </h1>
+          </div>
           <p className="text-sm text-muted-foreground">{`${t("id")}: ${id}`}</p>
         </div>
         {isAdmin && <ProductsUploadMenu productId={product.id} />}

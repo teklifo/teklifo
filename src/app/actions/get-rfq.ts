@@ -1,23 +1,6 @@
 import { headers, cookies } from "next/headers";
-import type { Prisma } from "@prisma/client";
 import request from "@/lib/request";
-
-type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
-  include: {
-    company: true;
-    items: {
-      include: {
-        product: true;
-      };
-    };
-    _count: {
-      select: {
-        quotations: true;
-      };
-    };
-    participants: true;
-  };
-}>;
+import { RequestForQuotationType } from "@/types";
 
 export default async function getRFQ(id: string) {
   try {

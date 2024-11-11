@@ -130,7 +130,14 @@
     "darkTheme": "Dark",
     "systemTheme": "System",
     "rfqSearch": "RFQ search",
-    "importData": "Import data"
+    "importData": "Import data",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "pageOf": "Page {current} of {total}",
+    "goToFirstPage": "Go to first page",
+    "goToPrevPage": "Go to previous page",
+    "goToNextPage": "Go to next page",
+    "goToLastPage": "Go to first page"
   },
   "Login": {
     "title": "Welcome aboard 👋",
@@ -552,7 +559,9 @@
     "participationConfirmed": "Participation confirmed",
     "participationConfirmedHint": "Now you can prepare and send a quotation",
     "confirm": "Confirm",
-    "participationError": "Unable to confirm participation in the RFQ"
+    "participationError": "Unable to confirm participation in the RFQ",
+    "lineNumber": "#",
+    "product": "Product"
   },
   "SupplierGuide": {
     "title": "Congratulations! You've accessed the private RFQ via the link",
@@ -815,14 +824,27 @@
     "message": "Message"
   },
   "QuotationsAIAnalysis": {
-    "title": "AI quotations analysis",
+    "title": "AI analysis",
     "subtitle": "Use AI to analyze and compare quotations",
     "disclaimer": "Keep in mind that AI can make mistakes and may not have the full context",
     "noQuotations": "There are no quotations available for AI analysis",
     "startAnalysis": "Analyze quotations",
     "analysisCompleted": "Analysis is complete",
     "analysisCompletedHint": "Check AI analysis result",
-    "analysisError": "Failed to analyze quotations"
+    "analysisError": "Failed to analyze quotations",
+    "selectQuotations": "Select quotations",
+    "quotations": "Quotations",
+    "quotationsHint": "Select up to 3 quotations for AI analysis",
+    "query": "Search",
+    "queryHint": "Type company name...",
+    "noResults": "No results",
+    "selectQuotationHint": "Select quotations from the list",
+    "select": "Select",
+    "selectedQuotations": "{number} quots selected",
+    "selectRfqItems": "Select RFQ items",
+    "selectedRfqItems": "{number} RFQ items selected",
+    "rfqItems": "RFQ items",
+    "rfqItemsHint": "Select up to 10 RFQ items for AI analysis"
   },
   "Schemas": {
     "companySchema": {

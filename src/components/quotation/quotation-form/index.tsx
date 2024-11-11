@@ -1,7 +1,7 @@
 "use client";
 import "react-phone-number-input/style.css";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -57,13 +57,6 @@ const QuotationForm = ({
   quotation,
 }: QuotationFormProps) => {
   const t = useTranslations("Quotation");
-
-  const [height, setHeight] = useState(0);
-  const ref = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    setHeight((ref.current?.clientHeight ?? 0) - 90);
-  }, []);
 
   const st = useTranslations("Schemas.quotationSchema");
   const formSchema = getQuotationSchema(st);
@@ -121,7 +114,7 @@ const QuotationForm = ({
 
   return (
     <Form {...form}>
-      <form className="flex-auto space-y-10" ref={ref}>
+      <form className="flex-auto space-y-10">
         <Tabs defaultValue="items">
           <TabsList className="grid w-full grid-cols-3 md:max-w-max">
             <TabsTrigger value="items" className="space-x-2">
@@ -139,13 +132,11 @@ const QuotationForm = ({
           </TabsList>
           <TabsContent value="items">
             <QuotationFormInputs />
-            {height > 0 && (
-              <ScrollArea className="w-full" style={{ height }}>
-                <QuotationFormItemsTable rfq={rfq} />
-                <ScrollBar orientation="horizontal" className="h-4 z-20" />
-                <ScrollBar orientation="vertical" className="w-4 z-20" />
-              </ScrollArea>
-            )}
+            <ScrollArea className="w-full pr-5 pb-5 h-[calc(100vh-24rem)] md:h-[calc(100vh-22rem)]">
+              <QuotationFormItemsTable rfq={rfq} />
+              <ScrollBar orientation="horizontal" className="h-4 z-20" />
+              <ScrollBar orientation="vertical" className="w-4 z-20" />
+            </ScrollArea>
           </TabsContent>
           <TabsContent value="contacts">
             <QuotationFormContatcs />
