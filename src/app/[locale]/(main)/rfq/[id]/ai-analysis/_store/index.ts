@@ -4,11 +4,10 @@ import { QuotationWithCompanyType } from "@/types";
 
 interface QuotationsAIAnalysisState {
   quotations: QuotationWithCompanyType[];
-  rfqItems: RequestForQuotationItemType[];
+  rfqItems: string[];
   addQuotation: (quotation: QuotationWithCompanyType) => void;
   removeQuotation: (quotation: QuotationWithCompanyType) => void;
-  addRfqItem: (rfqItem: RequestForQuotationItemType) => void;
-  removeRfqItem: (rfqItem: RequestForQuotationItemType) => void;
+  setRfqItems: (rfqItem: string[]) => void;
 }
 
 const MAX_QUOTS = 3;
@@ -32,17 +31,10 @@ export const useQuotationsAIAnalysisStore = create<QuotationsAIAnalysisState>(
           (element) => element.id !== quotation.id
         ),
       })),
-    addRfqItem: (rfqItem: RequestForQuotationItemType) =>
+
+    setRfqItems: (rfqItems: string[]) =>
       set((state) => ({
-        rfqItems:
-          state.rfqItems.length < MAX_ITEMS &&
-          !state.rfqItems.find((item) => item.id === rfqItem.id)
-            ? [...state.rfqItems, rfqItem]
-            : state.rfqItems,
-      })),
-    removeRfqItem: (rfqItem: RequestForQuotationItemType) =>
-      set((state) => ({
-        rfqItems: state.rfqItems.filter((element) => element.id !== rfqItem.id),
+        rfqItems: rfqItems.length <= MAX_ITEMS ? rfqItems : state.rfqItems,
       })),
   })
 );

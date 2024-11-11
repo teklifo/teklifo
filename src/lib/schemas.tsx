@@ -570,3 +570,10 @@ export const getStockBalanceSchema = (t: TranslateFunction) => {
     ),
   });
 };
+
+export const getQuotsAIAnalysisSchema = (t: TranslateFunction) => {
+  return z.object({
+    quotations: z.array(z.number()),
+    rfqItems: z.array(z.string()),
+  });
+};

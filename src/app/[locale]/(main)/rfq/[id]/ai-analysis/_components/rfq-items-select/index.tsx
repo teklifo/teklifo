@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import RFQItemsTable from "@/components/rfq/rfq-view/rfq-view-items-table";
+import { RFQItemType } from "@/components/rfq/rfq-view/rfq-view-items-table/columns";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -40,10 +41,15 @@ const RFQItemsSelect = ({ rfq }: RFQItemsSelectProps) => {
     (state) => state.rfqItems
   );
 
-  const addRfqItem = useQuotationsAIAnalysisStore((state) => state.addRfqItem);
+  const setRfqItems = useQuotationsAIAnalysisStore(
+    (state) => state.setRfqItems
+  );
 
-  const removeRfqItem = useQuotationsAIAnalysisStore(
-    (state) => state.removeRfqItem
+  const onSelectedRowsChange = useCallback(
+    (data: RFQItemType[]) => {
+      setRfqItems(data.map((row) => row.versionId));
+    },
+    [setRfqItems]
   );
 
   return (
@@ -72,10 +78,11 @@ const RFQItemsSelect = ({ rfq }: RFQItemsSelectProps) => {
           <RFQItemsTable
             items={rfq.items}
             scrollClass="h-[calc(100vh-15rem)] md:h-[calc(100vh-17rem)]"
+            onSelectedRowsChange={onSelectedRowsChange}
           />
         </div>
         <DialogFooter>
-          <Button onClick={() => [setOpen(false)]}>{t("select")}</Button>
+          <Button onClick={() => setOpen(false)}>{t("select")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

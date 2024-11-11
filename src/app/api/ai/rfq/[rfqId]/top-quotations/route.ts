@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getTopQuotationItemsPerRFQ } from "@prisma/client/sql";
+import { getTranslations } from "next-intl/server";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import db from "@/lib/db";
 import geminiModel from "@/lib/gemini";
 import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
+import { getQuotsAIAnalysisSchema } from "@/lib/schemas";
 
 type Props = {
   params: { rfqId: string };
 };
 
 export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
-  const { t } = await getTranslationsFromHeader(request.headers);
-
-  const MAX_ITEMS = 10;
+  const { t, locale } = await getTranslationsFromHeader(request.headers);
 
   try {
     // Check company
@@ -27,12 +26,6 @@ export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
       select: {
         versionId: true,
         id: true,
-        items: {
-          take: MAX_ITEMS,
-          orderBy: {
-            price: "desc",
-          },
-        },
       },
     });
 
@@ -41,18 +34,24 @@ export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
       return getErrorResponse(t("invalidRFQId"), 404);
     }
 
-    const topQuotations = await db.$queryRawTyped(
-      getTopQuotationItemsPerRFQ(rfqId)
-    );
+    const body = await request.json();
 
-    const topThreeQuotations = topQuotations
-      .slice(0, 4)
-      .filter((quotation) => quotation.quotationid);
-    const topThreeQuotationsId = topThreeQuotations.map(
-      (quotation) => quotation.quotationid
-    );
+    const st = await getTranslations({
+      locale,
+      namespace: "Schemas.productSchema",
+    });
+    const test = getQuotsAIAnalysisSchema(st).safeParse(body);
+    if (!test.success) {
+      return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
+    }
 
-    const itemsForAnalysis = rfq.items.map((item) => item.versionId);
+    const { quotations, rfqItems } = test.data;
+
+    const MAX_QUOTS = 3;
+    const MAX_ITEMS = 10;
+
+    const quotationsForAnalysis = quotations.slice(0, MAX_QUOTS);
+    const rfqItemsForAnalysis = rfqItems.slice(0, MAX_ITEMS);
 
     const rfqAndTopQuotations = await db.requestForQuotation.findUnique({
       where: {
@@ -63,7 +62,7 @@ export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
         items: {
           where: {
             versionId: {
-              in: itemsForAnalysis,
+              in: rfqItemsForAnalysis,
             },
           },
           select: {
@@ -77,7 +76,7 @@ export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
         quotations: {
           where: {
             id: {
-              in: topThreeQuotationsId,
+              in: quotationsForAnalysis,
             },
           },
           select: {
@@ -91,7 +90,7 @@ export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
             items: {
               where: {
                 rfqItemVersionId: {
-                  in: itemsForAnalysis,
+                  in: rfqItemsForAnalysis,
                 },
               },
               select: {

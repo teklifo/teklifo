@@ -62,6 +62,10 @@ const AIAnalysisSettings = ({ rfq }: AIAnalysisSettingsProps) => {
         "Content-Type": "application/json",
         "Accept-Language": getCookie("NEXT_LOCALE"),
       },
+      body: JSON.stringify({
+        quotations: selectedQuotations.map((quot) => quot.id),
+        rfqItems: selectedRfqItems,
+      }),
     };
 
     try {

@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { ColumnDef, HeaderContext } from "@tanstack/react-table";
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "@/navigation";
 import { cn } from "@/lib/utils";
 
@@ -69,6 +70,30 @@ function getQuantityCell(number: number) {
   return QuantityCell;
 }
 export const columns: ColumnDef<RFQItemType>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableResizing: false,
+    enableSorting: false,
+    enableHiding: false,
+    size: 10,
+  },
   {
     accessorKey: "lineNumber",
     header: getTableHeader("lineNumber"),

@@ -30,12 +30,14 @@ interface DatatableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   scrollClass?: ClassValue;
+  onSelectedRowsChange?: (value: TData[]) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   scrollClass,
+  onSelectedRowsChange,
 }: DatatableProps<TData, TValue>) {
   const t = useTranslations("Layout");
 
@@ -47,6 +49,8 @@ export function DataTable<TData, TValue>({
   const [columnResizeDirection, setColumnResizeDirection] =
     React.useState<ColumnResizeDirection>("ltr");
 
+  const [rowSelection, setRowSelection] = React.useState({});
+
   const table = useReactTable({
     data,
     columns,
@@ -56,10 +60,19 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
+      rowSelection,
     },
   });
+
+  React.useEffect(() => {
+    if (onSelectedRowsChange)
+      onSelectedRowsChange(
+        table.getSelectedRowModel().flatRows.map((row) => row.original)
+      );
+  }, [rowSelection, onSelectedRowsChange, table]);
 
   return (
     <div className="space-y-4">
