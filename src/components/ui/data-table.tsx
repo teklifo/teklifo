@@ -31,6 +31,7 @@ interface DatatableProps<TData, TValue> {
   data: TData[];
   scrollClass?: ClassValue;
   onSelectedRowsChange?: (value: TData[]) => void;
+  initialSelectState?: Record<string, boolean>;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +39,7 @@ export function DataTable<TData, TValue>({
   data,
   scrollClass,
   onSelectedRowsChange,
+  initialSelectState = {},
 }: DatatableProps<TData, TValue>) {
   const t = useTranslations("Layout");
 
@@ -49,7 +51,8 @@ export function DataTable<TData, TValue>({
   const [columnResizeDirection, setColumnResizeDirection] =
     React.useState<ColumnResizeDirection>("ltr");
 
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [rowSelection, setRowSelection] =
+    React.useState<Record<string, boolean>>(initialSelectState);
 
   const table = useReactTable({
     data,
@@ -144,7 +147,7 @@ export function DataTable<TData, TValue>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="px-3 py-2 text-sm border"
+                        className="py-2 text-sm border"
                         {...{
                           style: {
                             width: cell.column.getSize(),

@@ -846,7 +846,7 @@
     "selectedQuotations": "Предложений выбрано: {number} шт.",
     "selectRfqItems": "Выбрать позиции запроса",
     "selectedRfqItems": "Выбрано позиций: {number} шт.",
-    "rfqItems": "Позиции запроса",
+    "rfqItems": "Позиции запроса цен",
     "rfqItemsHint": "Выберите до 10 позиций запроса для анализа ИИ"
   },
   "Schemas": {

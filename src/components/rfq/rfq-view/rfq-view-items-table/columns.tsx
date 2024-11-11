@@ -92,7 +92,7 @@ export const columns: ColumnDef<RFQItemType>[] = [
     enableResizing: false,
     enableSorting: false,
     enableHiding: false,
-    size: 10,
+    size: 20,
   },
   {
     accessorKey: "lineNumber",
@@ -100,7 +100,7 @@ export const columns: ColumnDef<RFQItemType>[] = [
     cell: (info) => {
       return <>{(info.getValue() as number) + 1}</>;
     },
-    size: 0,
+    size: 20,
   },
   {
     accessorKey: "product",

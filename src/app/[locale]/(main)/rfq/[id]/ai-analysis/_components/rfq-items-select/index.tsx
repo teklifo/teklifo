@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
@@ -41,6 +41,20 @@ const RFQItemsSelect = ({ rfq }: RFQItemsSelectProps) => {
     (state) => state.rfqItems
   );
 
+  const initialSelectedItems = useMemo(() => {
+    const initialState: Record<string, boolean> = {};
+
+    if (open) {
+      rfq.items.forEach((item, index) => {
+        initialState[index] =
+          selectedRfqItems.find((versionId) => versionId === item.versionId) !==
+          undefined;
+      });
+    }
+
+    return initialState;
+  }, [open, rfq.items]);
+
   const setRfqItems = useQuotationsAIAnalysisStore(
     (state) => state.setRfqItems
   );
@@ -79,6 +93,7 @@ const RFQItemsSelect = ({ rfq }: RFQItemsSelectProps) => {
             items={rfq.items}
             scrollClass="h-[calc(100vh-15rem)] md:h-[calc(100vh-17rem)]"
             onSelectedRowsChange={onSelectedRowsChange}
+            initialSelectState={initialSelectedItems}
           />
         </div>
         <DialogFooter>
