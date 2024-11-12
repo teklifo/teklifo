@@ -137,7 +137,10 @@
     "goToFirstPage": "Go to first page",
     "goToPrevPage": "Go to previous page",
     "goToNextPage": "Go to next page",
-    "goToLastPage": "Go to first page"
+    "goToLastPage": "Go to first page",
+    "join": "Join now",
+    "joinHint": "Login to create RFQs and send quotations",
+    "contact": "Contact"
   },
   "Login": {
     "title": "Welcome aboard 👋",
