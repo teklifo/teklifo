@@ -16,46 +16,81 @@
       style="
         max-width: 600px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 0;
         background-color: #ffffff;
         border-radius: 5px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       "
     >
-      <h2>Добро пожаловать на Teklifo!</h2>
-      <p>
-        Чтобы начать работу подтвердите, пожалуйста, свой Email, нажав на кнопку
-        ниже
-      </p>
-      <p>
-        <a
-          href="{{url}}"
-          style="
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            text-align: center;
-            text-decoration: none;
-            color: #ffffff;
-            background-color: #0ea5e9;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-          "
-        >
-          Войти
-        </a>
-      </p>
-      <p>Если кнопка не работает, то перейдите по этой ссылке</p>
-      <a href="{{url}}">{{url}}</a>
-      <p>
-        Если вы не проходили авторизацию на Teklifo, то проигнорируйте это
-        письмо
-      </p>
-      <p>
-        С наилучшими пожеланиями,<br />
-        Teklifo
-      </p>
+      <!-- Header with Logo -->
+      <div
+        style="
+          background-color: #18181b;
+          padding: 20px;
+          text-align: center;
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px;
+        "
+      >
+        <img
+          src="https://i.ibb.co/R6Q4h2F/logo.png"
+          alt="Teklifo Logo"
+          style="max-width: 150px"
+        />
+      </div>
+
+      <!-- Email Body -->
+      <div style="padding: 20px; text-align: center">
+        <h2>Добро пожаловать на Teklifo!</h2>
+        <p>
+          Чтобы начать работу, подтвердите свой адрес электронной почты, нажав
+          на кнопку ниже:
+        </p>
+        <p>
+          <a
+            href="{{url}}"
+            style="
+              display: inline-block;
+              padding: 10px 20px;
+              font-size: 16px;
+              text-align: center;
+              text-decoration: none;
+              color: #ffffff;
+              background-color: #18181b;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            "
+          >
+            Войти
+          </a>
+        </p>
+        <p>Если кнопка не работает, то перейдите по следующей ссылке:</p>
+        <a href="{{url}}">{{url}}</a>
+        <p>
+          Если вы не проходили авторизацию на Teklifo, то проигнорируйте это
+          письмо.
+        </p>
+        <p>
+          С наилучшими пожеланиями,<br />
+          Teklifo
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div
+        style="
+          background-color: #f2f2f2;
+          padding: 10px;
+          text-align: center;
+          font-size: 12px;
+          color: #666666;
+          border-bottom-left-radius: 5px;
+          border-bottom-right-radius: 5px;
+        "
+      >
+        <a href="https://teklifo.com">2024 Teklifo</a>
+      </div>
     </div>
   </body>
 </html>

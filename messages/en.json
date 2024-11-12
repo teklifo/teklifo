@@ -726,7 +726,7 @@
   },
   "RFQSearch": {
     "title": "RFQ search",
-    "subtitle": "Find potential buyers",
+    "subtitle": "Search RFQs using specific filters",
     "noRFQ": "No RFQs",
     "noRFQHint": "Adjust your search filters",
     "endDate": "RFQ deadline",

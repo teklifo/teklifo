@@ -79,7 +79,7 @@ const Footer = ({ isCollapsed }: FooterProps) => {
 
       <Separator className="w-full" />
       <div className="p-3 flex justify-between items-center">
-        <p className="text-sm text-muted-foreground">Teklifo 2024</p>
+        <p className="text-sm text-muted-foreground">2024 Teklifo</p>
         <FooterMenu />
       </div>
     </div>
