@@ -588,8 +588,8 @@
     "subtitle": "List of all Teklifo companies"
   },
   "WelcomeScreen": {
-    "title": "Hello!",
-    "hintText": "We noticed that you are not currently a member of any company. All major activities on Teklifo are conducted through companies. Please reach out to an existing company to request membership or create your own!",
+    "title": "Hi there! 👋",
+    "hintText": "We noticed that you are not currently a member of any company. All key activities on Teklifo are carried out through companies. Please contact an existing company to request membership or create your own!",
     "createCompany": "Register a new company"
   },
   "Quotation": {

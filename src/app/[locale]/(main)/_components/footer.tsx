@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { Link } from "@/navigation";
 import { LogIn } from "lucide-react";
 import FooterMenu from "./footer-menu";
+import { Separator } from "@/components/ui/separator";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -17,7 +18,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
 
 type FooterProps = {
   isCollapsed: boolean;

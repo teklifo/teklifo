@@ -33,7 +33,13 @@ const Dashboard = async () => {
     include: {
       _count: {
         select: {
-          companies: true,
+          companies: {
+            where: {
+              company: {
+                deleted: false,
+              },
+            },
+          },
         },
       },
     },

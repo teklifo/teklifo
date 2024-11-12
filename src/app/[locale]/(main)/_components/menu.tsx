@@ -1,11 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { useSession } from "next-auth/react";
 import { Company as CompanyType } from "@prisma/client";
 import {
   LayoutGrid,
-  UserCog,
   Users,
   Package,
   Warehouse,
@@ -28,6 +27,9 @@ type MenuProps = {
 const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
   const t = useTranslations("Layout");
 
+  const { status } = useSession();
+  const authenticated = status === "authenticated";
+
   return defaultCompany ? (
     <div className="mt-2">
       <div
@@ -42,7 +44,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           userCompanies={userCompanies}
         />
       </div>
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -54,7 +55,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -66,7 +66,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -84,7 +83,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -114,7 +112,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -129,6 +126,19 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
     </div>
   ) : (
     <div className="mt-8">
+      {authenticated && (
+        <Nav
+          isCollapsed={isCollapsed}
+          links={[
+            {
+              title: t("dashboard"),
+              label: "",
+              icon: LayoutGrid,
+              href: `/dashboard`,
+            },
+          ]}
+        />
+      )}
       <Nav
         isCollapsed={isCollapsed}
         links={[
