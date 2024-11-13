@@ -965,5 +965,9 @@
     "welcome": "Hi there! 👋",
     "betaDisclaimer": "Teklifo is currently in beta! If you have any suggestions or come across any bugs, please reach out to us. Your feedback is invaluable — thank you! 💓",
     "contact": "Contact"
+  },
+  "Emails": {
+    "authEmailTitle": "🚀 Authorization",
+    "invitationEmailTitle": "👔 Invitation to join {companyName} company"
   }
 }

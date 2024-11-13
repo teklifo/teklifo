@@ -53,6 +53,7 @@ const DeleteMember = ({ companyId, memberId }: Props) => {
 
       setOpen(false);
 
+      router.push("/dashboard");
       router.refresh();
     } catch (error) {
       let message = "";
