@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import db from "@/lib/db";
 import getCurrentUser from "@/app/actions/get-current-user";
 import WelcomeScreen from "./_components/welcome-screen";
+import BetaDisclaimer from "./_components/beta-disclaimer";
 
 type Props = {
   params: { locale: string };
@@ -50,7 +51,7 @@ const Dashboard = async () => {
       {(userCompanies?._count.companies ?? 0) === 0 ? (
         <WelcomeScreen />
       ) : (
-        <span>{t("dashboard")}</span>
+        <BetaDisclaimer />
       )}
     </div>
   );
