@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "@/navigation";
 import { getCookie } from "cookies-next";
 import * as z from "zod";
 import type { Prisma } from "@prisma/client";
@@ -39,6 +40,7 @@ type ConfirmRFQProps = {
 
 const ConfirmRFQ = ({ rfq }: ConfirmRFQProps) => {
   const t = useTranslations("RFQForm");
+  const router = useRouter();
 
   const update = rfq !== undefined;
   const { toast } = useToast();
@@ -88,7 +90,8 @@ const ConfirmRFQ = ({ rfq }: ConfirmRFQProps) => {
           description: t("newRFQHint"),
         });
 
-        window.location.href = `/rfq/${newRfq.id}`;
+        router.push(`/rfq/${newRfq.id}`);
+        router.refresh();
       }
     } catch (error) {
       let message = "";

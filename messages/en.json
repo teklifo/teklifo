@@ -493,7 +493,7 @@
     "product": "Product",
     "productInputHint": "Type manually or select a product from the list",
     "cancel": "Cancel",
-    "rfqConfirmTitle": "Save RFQ?",
+    "rfqConfirmTitle": "Create RFQ?",
     "rfqConfirmSubtitle": "Once confirmed, you can share the request with suppliers",
     "invalidForm": "Ensure that all form fields are filled out correctly"
   },

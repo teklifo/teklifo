@@ -79,7 +79,7 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
   return (
     <Form {...form}>
       <form className="space-y-10">
-        <Tabs defaultValue="main" className="h-full">
+        <Tabs defaultValue="main" className="relative h-full">
           <TabsList className="grid w-full grid-cols-4 md:max-w-max">
             <TabsTrigger value="main" className="space-x-2">
               <FileText className="w-4 h-4" />
