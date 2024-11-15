@@ -26,7 +26,7 @@ const WelcomeScreen = async () => {
                   "space-x-2"
                 )}
               >
-                <Plus className="text-muted-foreground" />
+                <Plus className="text-muted-foreground h-4 w-4" />
                 <span>{t("createCompany")}</span>
               </Link>
             </div>

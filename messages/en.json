@@ -138,7 +138,7 @@
     "goToPrevPage": "Go to previous page",
     "goToNextPage": "Go to next page",
     "goToLastPage": "Go to first page",
-    "join": "Join now",
+    "join": "🚀 Join now",
     "joinHint": "Login to create RFQs and send quotations",
     "contact": "Contact"
   },
@@ -174,7 +174,7 @@
   "CompanyForm": {
     "title": "New company",
     "name": "Company name",
-    "id": "Company ID",
+    "id": "Slug",
     "idDescription": "This is a unique identifier for your company in Teklifo. It may only contain lowercase Latin letters and the '-' symbol",
     "tin": "TIN",
     "email": "Email",
@@ -516,7 +516,8 @@
     "endDate": "Deadline",
     "currency": "Currency",
     "main": "Main",
-    "quotations": "Quots",
+    "quotationsReceived": "Received quots",
+    "quotationsSent": "My quots",
     "items": "Products",
     "number": "SKU",
     "unit": "Unit",
@@ -555,8 +556,9 @@
     "quotationSubtitle": "Send a quotation to the client in response to the received RFQ",
     "compareQuotations": "Compare quotations",
     "aiAnalysis": "Analyze with AI",
-    "noQuotations": "There are no quotations for this request at the moment",
-    "confirmParticipation": "Confirm participation",
+    "noQuotationsReceived": "There are no quotations received for this request at the moment",
+    "noQuotationsSent": "You haven't submitted any quotations for this request yet",
+    "confirmParticipation": "Participate in the request",
     "participationTitle": "Do you want to confirm your participation in the RFQ?",
     "participationSubtitle": "Once participation is confirmed, you'll be able to prepare and submit your quotation",
     "participationConfirmed": "Participation confirmed",
@@ -968,6 +970,16 @@
   },
   "Emails": {
     "authEmailTitle": "🚀 Authorization",
-    "invitationEmailTitle": "👔 Invitation to join {companyName} company"
+    "invitationEmailTitle": "💼 Invitation to join {companyName} company"
+  },
+  "CompanyRequired": {
+    "companyRequiredTitle": "💼 Not a member any company yet?",
+    "companyRequiredHint": "Create a new company to conduct your business activities, or reach out to an existing company to request membership",
+    "createCompany": "Register a new company"
+  },
+  "AuthRequired": {
+    "authRequiredTitle": "🚀 Join us now!",
+    "authRequiredHint": "Log in to unlock more features: create a company profile, post RFQs, send quotations, and much more",
+    "login": "Login"
   }
 }

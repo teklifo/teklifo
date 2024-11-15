@@ -12,6 +12,7 @@ import CompanyAvatar from "@/components/company/company-avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
+import getCurrentCompany from "@/app/actions/get-current-company";
 
 type Props = {
   params: { locale: string; id: string };
@@ -55,7 +56,10 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
     return notFound();
   }
 
-  const { title, number, currency, items } = rfq;
+  const { title, number, currency, items, companyId } = rfq;
+
+  const currentCompany = await getCurrentCompany();
+  const companyIsRequester = companyId === currentCompany?.id;
 
   return (
     <MaxWidthWrapper className="mt-8 mb-20">
@@ -87,7 +91,11 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
               </TabsTrigger>
               <TabsTrigger value="quotations" className="space-x-2">
                 <Briefcase className="w-4 h-4" />
-                <span className="hidden md:block">{t("quotations")}</span>
+                <span className="hidden md:block">
+                  {companyIsRequester
+                    ? t("quotationsReceived")
+                    : t("quotationsSent")}
+                </span>
               </TabsTrigger>
             </TabsList>
             <TabsContent value="main">
