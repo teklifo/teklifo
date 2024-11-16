@@ -13,6 +13,7 @@ import {
   BriefcaseBusiness,
   FileSearch,
   Import,
+  Building2,
 } from "lucide-react";
 import Nav from "./nav";
 import CompanySwitcher from "./company-switcher";
@@ -115,6 +116,12 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
       <Nav
         isCollapsed={isCollapsed}
         links={[
+          {
+            title: t("myCompany"),
+            label: "",
+            icon: Building2,
+            href: `/company/${defaultCompany.id}`,
+          },
           {
             title: t("members"),
             label: "",

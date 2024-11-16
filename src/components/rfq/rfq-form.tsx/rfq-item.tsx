@@ -84,7 +84,7 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
             onFocus={(e) => e.target.select()}
             onWheel={(e) => e.currentTarget.blur()}
             className={cn(
-              "border-none rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0",
+              "cursor-pointer border-none rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-green-50 hover:dark:bg-green-900",
               error && "bg-red-300"
             )}
           />
@@ -212,7 +212,7 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "border-none w-full pl-3 text-left font-normal",
+                        "border-none w-full pl-3 text-left font-normal hover:bg-green-50 hover:dark:bg-green-900",
                         !field.value && "text-muted-foreground"
                       )}
                     >

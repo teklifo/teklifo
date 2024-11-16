@@ -80,16 +80,19 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <ScrollArea className={cn("w-full", scrollClass)}>
-        <div style={{ direction: table.options.columnResizeDirection }}>
+        <div
+          className="mb-4 mr-4"
+          style={{ direction: table.options.columnResizeDirection }}
+        >
           <Table
-            className="min-w-full"
+            className="min-w-full border-none border-separate border-spacing-0"
             {...{
               style: {
                 width: table.getCenterTotalSize(),
               },
             }}
           >
-            <TableHeader className="sticky top-[-1px] bg-background">
+            <TableHeader className="sticky top-0 bg-background shadow-md z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
@@ -147,7 +150,7 @@ export function DataTable<TData, TValue>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="py-2 text-sm border"
+                        className="py-2 text-sm border border-input"
                         {...{
                           style: {
                             width: cell.column.getSize(),
@@ -166,7 +169,7 @@ export function DataTable<TData, TValue>({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center border"
+                    className="h-24 text-center border border-input"
                   >
                     {t("noData")}
                   </TableCell>
@@ -175,8 +178,8 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <ScrollBar orientation="horizontal" className="h-4" />
-        <ScrollBar orientation="vertical" className="w-4" />
+        <ScrollBar orientation="horizontal" className="h-4 z-20" />
+        <ScrollBar orientation="vertical" className="w-4 z-20" />
       </ScrollArea>
       <DataTablePagination table={table} />
     </div>

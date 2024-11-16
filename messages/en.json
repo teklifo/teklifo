@@ -140,7 +140,9 @@
     "goToLastPage": "Go to first page",
     "join": "🚀 Join now",
     "joinHint": "Login to create RFQs and send quotations",
-    "contact": "Contact"
+    "contact": "Contact",
+    "createCompany": "Create company",
+    "myCompany": "My company"
   },
   "Login": {
     "title": "Welcome aboard 👋",
@@ -633,7 +635,7 @@
     "send": "Send",
     "cancel": "Cancel",
     "quotationConfirmTitle": "Send a quotation to the client?",
-    "quotationConfirmSubtitle": "After confirmation, the client will receive a notification about your quotation",
+    "quotationConfirmSubtitle": "Once approved, the client will be able to view your quotation",
     "skip": "Skip item",
     "skipHint": "Skip this item if you don't want to submit a quotation for it",
     "contactPerson": "Contact person",

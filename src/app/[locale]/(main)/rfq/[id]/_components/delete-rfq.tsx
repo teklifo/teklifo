@@ -92,7 +92,7 @@ const DeleteRFQ = ({ rfq }: Props) => {
           variant="outline"
           className="text-center whitespace-normal h-auto space-x-2 lg:w-full"
         >
-          <Trash className="mr-2 h-4 w-4" />
+          <Trash className="h-4 w-4" />
           <span>{t("delete")}</span>
         </Button>
       </AlertDialogTrigger>

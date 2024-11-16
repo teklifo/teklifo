@@ -1,7 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { setCookie } from "cookies-next";
+import { Link } from "@/navigation";
+import { Plus } from "lucide-react";
 import { Company as CompanyType } from "@prisma/client";
 import {
   Select,
@@ -11,6 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { buttonVariants } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { cn, getAvatarFallback } from "@/lib/utils";
 
 type CompanySwitcherProps = {
@@ -24,7 +28,7 @@ const CompanySwitcher = ({
   defaultCompany,
   userCompanies,
 }: CompanySwitcherProps) => {
-  const router = useRouter();
+  const t = useTranslations("Layout");
 
   const switchToACompany = (value: string) => {
     const company = userCompanies.find((company) => company.id === value);
@@ -69,6 +73,17 @@ const CompanySwitcher = ({
             {company.name}
           </SelectItem>
         ))}
+        <Separator className="my-1" />
+        <Link
+          href="/login"
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "sm" }),
+            "w-full space-x-2 font-normal flex justify-start items-center"
+          )}
+        >
+          <Plus className="w-4 h-4" />
+          <span>{t("createCompany")}</span>
+        </Link>
       </SelectContent>
     </Select>
   );
