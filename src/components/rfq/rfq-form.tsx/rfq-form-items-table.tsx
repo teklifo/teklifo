@@ -26,7 +26,7 @@ const RFQFormItemsTable = () => {
   });
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="mt-4 space-y-4 py-6">
       <Button
         type="button"
         variant="outline"
@@ -48,20 +48,20 @@ const RFQFormItemsTable = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="border min-w-[400px]">
+            <TableHead className="border min-w-[25rem]">
               {t("product")}
             </TableHead>
-            <TableHead className="border min-w-[100px]">
+            <TableHead className="border min-w-[10rem]">
               {t("quantity")}
             </TableHead>
-            <TableHead className="border min-w-[100px]">{t("price")}</TableHead>
-            <TableHead className="border min-w-[100px]">
+            <TableHead className="border min-w-[10rem]">{t("price")}</TableHead>
+            <TableHead className="border min-w-[10rem]">
               {t("deliveryDate")}
             </TableHead>
-            <TableHead className="border min-w-[100px]">
+            <TableHead className="border min-w-[15rem]">
               {t("comment")}
             </TableHead>
-            <TableHead className="border min-w-[100px]" />
+            <TableHead className="border min-w-[5rem]" />
           </TableRow>
         </TableHeader>
         <TableBody>

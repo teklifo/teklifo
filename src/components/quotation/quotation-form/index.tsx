@@ -132,7 +132,7 @@ const QuotationForm = ({
           </TabsList>
           <TabsContent value="items">
             <QuotationFormInputs />
-            <ScrollArea className="w-full pr-5 pb-5 h-[calc(100vh-24rem)] md:h-[calc(100vh-22rem)]">
+            <ScrollArea className="w-full pr-5 pb-5 h-[calc(100vh-24rem)]">
               <QuotationFormItemsTable rfq={rfq} />
               <ScrollBar orientation="horizontal" className="h-4 z-20" />
               <ScrollBar orientation="vertical" className="w-4 z-20" />
