@@ -142,7 +142,9 @@
     "joinHint": "Login to create RFQs and send quotations",
     "contact": "Contact",
     "createCompany": "Create company",
-    "myCompany": "My company"
+    "myCompany": "My company",
+    "previous": "Previous",
+    "next": "Next"
   },
   "Login": {
     "title": "Welcome aboard 👋",
