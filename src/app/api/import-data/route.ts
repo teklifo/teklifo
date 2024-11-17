@@ -1,12 +1,12 @@
 import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
+import { addDataImportJob } from "@/workers/data-import.worker";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import { getImportDataSchema } from "@/lib/schemas";
 import {
-  addReadFileJobToQueue,
   createExchangeJob,
   getExchangeFilePath,
   getExchangeFileType,
@@ -61,7 +61,8 @@ export async function POST(request: NextRequest) {
         t("invalidRequest")
       );
     }
-    await createExchangeJob(
+
+    const exchangeJob = await createExchangeJob(
       company.id,
       filename,
       filePath,
@@ -69,7 +70,7 @@ export async function POST(request: NextRequest) {
       locale
     );
 
-    await addReadFileJobToQueue(company.id, filePath);
+    await addDataImportJob({ id: exchangeJob.id });
 
     return NextResponse.json(200);
   } catch (error) {

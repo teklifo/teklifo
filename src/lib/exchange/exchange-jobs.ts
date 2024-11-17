@@ -1,7 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { Queue, Worker, Job } from "bullmq";
-import IORedis from "ioredis";
 import {
   ExchangeJob,
   ExchangeStatus,
@@ -13,9 +11,7 @@ import { fileExists } from "@/lib/utils";
 import { readCMLImport, readCMLOffers } from "./exchange-cml";
 import { readXLSBalance, readXLSPrices, readXLSProducts } from "./exchange-xls";
 
-const connection = new IORedis({ maxRetriesPerRequest: null });
-
-export const getExcangeJobStatus = async (
+export const getExcangeJobByFileName = async (
   companyId: string,
   filename: string
 ) => {
@@ -28,13 +24,10 @@ export const getExchangeFilePath = (filename: string, companyId: string) => {
   return `${process.cwd()}/exchange-files/${companyId}/${baseId}/${filename}`;
 };
 
-const getBaseId = (filename: string) => {
-  const regex = /\${(.*?)}/;
-  const match = filename.match(regex);
-  return match ? match[1] : "baseId";
-};
-
-const getExchangeJobByPath = async (companyId: string, filePath: string) => {
+export const getExchangeJobByPath = async (
+  companyId: string,
+  filePath: string
+) => {
   const exchangeJob = await db.exchangeJob.findFirst({
     where: {
       path: filePath,
@@ -46,22 +39,6 @@ const getExchangeJobByPath = async (companyId: string, filePath: string) => {
   });
 
   return exchangeJob;
-};
-
-export const addReadFileJobToQueue = async (
-  companyId: string,
-  filePath: string
-) => {
-  const exchangeJob = await getExchangeJobByPath(companyId, filePath);
-  if (!exchangeJob) return;
-
-  const data = { status: ExchangeStatus.PENDING };
-  await updateExchangeJobStatus(exchangeJob.id, data);
-
-  const queueName = `${companyId}-exchange`;
-  await upsertReadExchangeQueue(queueName, exchangeJob.id);
-
-  createJobWorker(queueName);
 };
 
 export const createExchangeJob = async (
@@ -83,18 +60,6 @@ export const createExchangeJob = async (
   });
 };
 
-const upsertReadExchangeQueue = async (
-  queueName: string,
-  exchangeJobId: string
-) => {
-  const queue = new Queue(queueName);
-  await queue.add(
-    "read-echange-file",
-    { id: exchangeJobId },
-    { removeOnComplete: true, removeOnFail: true }
-  );
-};
-
 export async function makeDirectoryFromFullPath(fullPath: string) {
   const folderPath = path.dirname(fullPath);
   if (!(await fileExists(folderPath))) {
@@ -111,21 +76,14 @@ export const getExchangeFileType = (filePath: string) => {
   return null;
 };
 
-const createJobWorker = (queueName: string) => {
-  new Worker(
-    queueName,
-    async (job: Job) => {
-      const { id } = job.data;
-      await startExchangeJob(id);
-    },
-    { connection }
-  );
-};
-
 export const startExchangeJob = async (id: string) => {
   try {
     const exchangeJob = await findExchangeJob(id);
     if (!exchangeJob) return;
+
+    await updateExchangeJobStatus(exchangeJob.id, {
+      status: ExchangeStatus.PENDING,
+    });
 
     const file = await fileExists(exchangeJob.path);
     if (!file) {
@@ -138,10 +96,7 @@ export const startExchangeJob = async (id: string) => {
       exchangeJob.id
     )) as ExchangeStatus;
 
-    const data = {
-      status,
-    };
-    await updateExchangeJobStatus(exchangeJob.id, data);
+    await updateExchangeJobStatus(exchangeJob.id, { status });
 
     await deleteExchangeFile(exchangeJob.path);
 
@@ -155,6 +110,12 @@ export const startExchangeJob = async (id: string) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const getBaseId = (filename: string) => {
+  const regex = /\${(.*?)}/;
+  const match = filename.match(regex);
+  return match ? match[1] : "baseId";
 };
 
 const findExchangeJob = async (id: string) => {
