@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { AIQuotationsAnalysis as AIQuotationsAnalysisType } from "@prisma/client";
 import AIAnalysisSettings from "./_components/ai-analysis-settings";
@@ -9,7 +9,6 @@ import BackButton from "@/components/back-button";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
-import getRFQPreview from "@/app/actions/get-rfq-preview";
 import request from "@/lib/request";
 
 type Props = {
@@ -59,10 +58,6 @@ const QuotationsAIAnalysis = async ({ params: { id } }: Props) => {
   const rfq = await getRFQ(id);
 
   if (!rfq) {
-    const rfqPreview = await getRFQPreview(id);
-    if (rfqPreview) {
-      redirect(`/supplier-guide/${rfqPreview.id}`);
-    }
     return notFound();
   }
 

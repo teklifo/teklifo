@@ -18,7 +18,6 @@ const publicPages = [
   "/company/*",
   "/rfq",
   "/rfq/*",
-  "/supplier-guide/*",
   "/products/*",
 ];
 

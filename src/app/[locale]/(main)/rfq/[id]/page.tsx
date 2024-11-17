@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Briefcase, FileText, Package } from "lucide-react";
 import RFQActions from "./_components/rfq-actions";
@@ -11,7 +11,6 @@ import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import CompanyAvatar from "@/components/company/company-avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
-import getRFQPreview from "@/app/actions/get-rfq-preview";
 import getCurrentCompany from "@/app/actions/get-current-company";
 
 type Props = {
@@ -48,11 +47,6 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
   const rfq = await getRFQ(id);
 
   if (!rfq) {
-    const rfqPreview = await getRFQPreview(id);
-    if (rfqPreview) {
-      redirect(`/supplier-guide/${rfqPreview.id}`);
-    }
-
     return notFound();
   }
 

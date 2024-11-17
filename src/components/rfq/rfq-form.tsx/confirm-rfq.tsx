@@ -117,7 +117,9 @@ const ConfirmRFQ = ({ rfq }: ConfirmRFQProps) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("rfqConfirmTitle")}</AlertDialogTitle>
+          <AlertDialogTitle>
+            {rfq ? t("rfqConfirmTitleUpdate") : t("rfqConfirmTitleCreate")}
+          </AlertDialogTitle>
           <AlertDialogDescription>
             {t("rfqConfirmSubtitle")}
           </AlertDialogDescription>

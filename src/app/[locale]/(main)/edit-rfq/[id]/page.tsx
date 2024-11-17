@@ -9,6 +9,7 @@ import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
+import { TriangleAlert } from "lucide-react";
 
 type RFQType = Prisma.RequestForQuotationGetPayload<{
   include: {
@@ -89,6 +90,10 @@ const EditRFQ = async ({ params: { id } }: Props) => {
           {t("updateTitle", { number: rfq.number })}
         </h1>
         <p className="text-lg text-muted-foreground">{t("updateSubtitle")}</p>
+      </div>
+      <div className="my-4 p-4 w-full border rounded-md text-sm font-semibold space-x-4 flex justify-start items-start bg-destructive text-destructive-foreground">
+        <TriangleAlert className="w-10 h-10" />
+        <p>{t("rfqUpdateWarrning")}</p>
       </div>
       <div className="mt-4">
         <RFQForm rfq={rfq} currentCompany={company} />

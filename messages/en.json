@@ -495,9 +495,11 @@
     "product": "Product",
     "productInputHint": "Type manually or select a product from the list",
     "cancel": "Cancel",
-    "rfqConfirmTitle": "Create RFQ?",
+    "rfqConfirmTitleCreate": "Create RFQ?",
+    "rfqConfirmTitleUpdate": "Update RFQ?",
     "rfqConfirmSubtitle": "Once confirmed, you can share the request with suppliers",
-    "invalidForm": "Ensure that all form fields are filled out correctly"
+    "invalidForm": "Ensure that all form fields are filled out correctly",
+    "rfqUpdateWarrning": "Attention! If values in the columns 'Product,' 'Quantity,' 'Maximum price,' or 'Delivery date' are changed, if the request currency is modified, or if rows are added or removed in the product table, all previously received quotations for this request will be archived."
   },
   "ProductSelect": {
     "title": "Product selection",

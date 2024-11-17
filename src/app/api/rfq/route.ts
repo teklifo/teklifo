@@ -69,15 +69,15 @@ export async function POST(request: NextRequest) {
         deliveryTerms,
         paymentTerms,
         items: {
-          create: items.map((product, index) => ({
+          create: items.map((item, index) => ({
             lineNumber: index++,
-            externalId: product.externalId,
-            productName: product.productName,
-            productId: product.productId,
-            quantity: product.quantity,
-            price: product.price,
-            deliveryDate: product.deliveryDate,
-            comment: product.comment,
+            externalId: item.externalId,
+            productName: item.productName,
+            productId: item.productId,
+            quantity: item.quantity,
+            price: item.price,
+            deliveryDate: item.deliveryDate,
+            comment: item.comment,
           })),
         },
       },
@@ -115,9 +115,16 @@ export async function GET(request: NextRequest) {
       return getErrorResponse(t("pageAndlimitAreRequired"), 400);
 
     // Filters
-    const filters: Prisma.RequestForQuotationWhereInput = {
-      latestVersion: true,
-    };
+    const filters: Prisma.RequestForQuotationWhereInput = {};
+
+    if (searchParams.get("latestVersion")) {
+      if (searchParams.get("latestVersion") !== "any")
+        filters.latestVersion =
+          searchParams.get("latestVersion")?.toLowerCase() === "true";
+    } else {
+      filters.latestVersion = true;
+    }
+
     filters.OR = [
       {
         privateRequest: false,
