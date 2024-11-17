@@ -111,12 +111,14 @@ const SettingsForm = ({ user }: SettingsFormProps) => {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isLoading}>
-            {t("update")}
-          </Button>
+          <div className="flex justify-between items-center">
+            <Button type="submit" disabled={isLoading}>
+              {t("update")}
+            </Button>
+            <DeleteUser userId={user.id} />
+          </div>
         </form>
       </Form>
-      <DeleteUser userId={user.id} />
     </div>
   );
 };
