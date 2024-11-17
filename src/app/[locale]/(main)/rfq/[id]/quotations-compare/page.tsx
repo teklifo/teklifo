@@ -8,7 +8,6 @@ import RFQQuotationOrder from "./_components/rfq-quotations-order";
 import RFQQuotationsTable from "./_components/rfq-quotations-table";
 import BackButton from "@/components/back-button";
 import PaginationBar from "@/components/ui/pagination-bar";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import getRFQ from "@/app/actions/get-rfq";
 import getRFQPreview from "@/app/actions/get-rfq-preview";
@@ -134,15 +133,10 @@ const QuotationsCompare = async ({ params: { id }, searchParams }: Props) => {
       </div>
       <RFQQuotationOrder id={id} defaultValue={searchParams.order} />
       {result.length > 0 ? (
-        <div className="flex flex-col space-y-3">
-          <ScrollArea className="w-full min-h-full">
-            <RFQQuotationsTable
-              rfqQuotations={result}
-              topQuotations={topQuotations}
-            />
-            <ScrollBar orientation="horizontal" className="h-4" />
-          </ScrollArea>
-        </div>
+        <RFQQuotationsTable
+          rfqQuotations={result}
+          topQuotations={topQuotations}
+        />
       ) : (
         <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">
           <ArrowRightCircle className="w-48 h-48" />

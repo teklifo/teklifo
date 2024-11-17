@@ -48,7 +48,7 @@ const DeleteRFQ = ({ rfq }: Props) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { id, number } = rfq;
+  const { id } = rfq;
 
   const deleteRFQ = async () => {
     setLoading(true);
@@ -64,7 +64,7 @@ const DeleteRFQ = ({ rfq }: Props) => {
       await request(`/api/rfq/${id}`, config);
 
       toast({
-        title: t("rfqDeleted", { number }),
+        title: t("rfqDeleted"),
         description: t("rfqDeletedHint"),
       });
 
@@ -76,7 +76,7 @@ const DeleteRFQ = ({ rfq }: Props) => {
       if (error instanceof Error) message = error.message;
       else message = String(error);
       toast({
-        title: t("deleteError", { number }),
+        title: t("deleteError"),
         description: message,
         variant: "destructive",
       });
@@ -98,7 +98,7 @@ const DeleteRFQ = ({ rfq }: Props) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("rfqDeleteTitle", { number })}</AlertDialogTitle>
+          <AlertDialogTitle>{t("rfqDeleteTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("rfqDeleteSubtitle")}
           </AlertDialogDescription>

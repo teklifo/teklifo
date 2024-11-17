@@ -15,7 +15,15 @@ const RFQQuotationsTable = ({ rfqQuotations, topQuotations }: Props) => {
     rfqQuotations.length > 0 ? rfqQuotations[0].quotationItems : [];
   const columns = createColumns(quotationItems, topQuotations);
 
-  return <DataTable columns={columns} data={rfqQuotations} />;
+  return (
+    <div className="relative">
+      <DataTable
+        columns={columns}
+        data={rfqQuotations}
+        scrollClass="h-[70vh]"
+      />
+    </div>
+  );
 };
 
 export default RFQQuotationsTable;

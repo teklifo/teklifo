@@ -14,14 +14,12 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
   const { t } = await getTranslationsFromHeader(request.headers);
 
   try {
-    let isAdmin = false;
     let allowedPriceTypes: string[] = [];
     let allowedStocks: string[] = [];
 
-    const company = await getCurrentCompany();
-    if (company) {
-      const role = company.users[0].companyRole;
-      isAdmin = await isCompanyAdmin(company.id);
+    const currentCompany = await getCurrentCompany();
+    if (currentCompany) {
+      const role = currentCompany.users[0].companyRole;
       allowedPriceTypes = role.availableData.map((e) => e.priceTypeId);
       allowedStocks = role.availableData.map((e) => e.stockId);
     }
@@ -58,13 +56,18 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
           },
         },
         prices: {
-          where: isAdmin
-            ? undefined
-            : {
+          where: {
+            OR: [
+              {
+                product: { companyId: currentCompany?.id },
+              },
+              {
                 priceTypeId: {
                   in: allowedPriceTypes,
                 },
               },
+            ],
+          },
           include: {
             priceType: true,
           },
@@ -75,13 +78,18 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
           },
         },
         stock: {
-          where: isAdmin
-            ? undefined
-            : {
+          where: {
+            OR: [
+              {
+                product: { companyId: currentCompany?.id },
+              },
+              {
                 stockId: {
                   in: allowedStocks,
                 },
               },
+            ],
+          },
           include: {
             stock: true,
           },
