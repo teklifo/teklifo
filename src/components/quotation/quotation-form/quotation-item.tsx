@@ -61,7 +61,7 @@ interface TableInputProps extends React.ComponentPropsWithoutRef<"input"> {
 }
 
 const Cell = ({ children }: { children: React.ReactNode }) => {
-  return <TableCell className="p-0 border-none">{children}</TableCell>;
+  return <TableCell className="p-0 border-input border">{children}</TableCell>;
 };
 
 const CellField = ({ control, name, ...props }: CellFieldProps) => {
@@ -96,7 +96,7 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
             onFocus={(e) => e.target.select()}
             onWheel={(e) => e.currentTarget.blur()}
             className={cn(
-              "border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0",
+              "cursor-pointer border-none rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-green-50 hover:dark:bg-green-900",
               error && "bg-red-300"
             )}
           />
@@ -112,9 +112,7 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
 };
 
 const EmptyCell = () => {
-  return (
-    <p className="h-10 w-full px-3 py-2 text-center border-input border">-</p>
-  );
+  return <p className="h-10 w-full px-3 py-2 text-center ">-</p>;
 };
 
 const QuotationItem = ({
@@ -146,14 +144,12 @@ const QuotationItem = ({
   }, [index, setValue, price, quantity]);
 
   return (
-    <TableRow className="border-none">
+    <TableRow>
       <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
-          {productName}
-        </div>
+        <div className="h-10 w-full px-3 py-2 text-sm ">{productName}</div>
       </Cell>
       <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
+        <div className="h-10 w-full px-3 py-2 text-sm bg-muted">
           {intlFormat.number(Number(rfqItem.quantity), {
             style: "decimal",
             minimumFractionDigits: 3,
@@ -172,7 +168,7 @@ const QuotationItem = ({
         )}
       </Cell>
       <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
+        <div className="h-10 w-full px-3 py-2 text-sm bg-muted">
           {intlFormat.number(Number(rfqItem.price), {
             style: "decimal",
             minimumFractionDigits: 2,
@@ -194,7 +190,7 @@ const QuotationItem = ({
         {skip ? (
           <EmptyCell />
         ) : (
-          <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+          <div className="h-10 w-full px-3 py-2 text-sm ">
             {intlFormat.number(Number(amount), {
               style: "decimal",
               minimumFractionDigits: 2,
@@ -216,7 +212,7 @@ const QuotationItem = ({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                    <SelectTrigger className="border-none rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-green-50 hover:dark:bg-green-900">
                       <SelectValue placeholder={t("selectVatRate")} />
                     </SelectTrigger>
                   </FormControl>
@@ -237,7 +233,7 @@ const QuotationItem = ({
         {skip ? (
           <EmptyCell />
         ) : (
-          <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+          <div className="h-10 w-full px-3 py-2 text-sm ">
             {intlFormat.number(Number(vatAmount), {
               style: "decimal",
               minimumFractionDigits: 2,
@@ -249,7 +245,7 @@ const QuotationItem = ({
         {skip ? (
           <EmptyCell />
         ) : (
-          <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+          <div className="h-10 w-full px-3 py-2 text-sm ">
             {intlFormat.number(Number(amountWithVat), {
               style: "decimal",
               minimumFractionDigits: 2,
@@ -258,7 +254,7 @@ const QuotationItem = ({
         )}
       </Cell>
       <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border bg-muted">
+        <div className="h-10 w-full px-3 py-2 text-sm bg-muted">
           {intlFormat.dateTime(new Date(rfqItem.deliveryDate), {
             dateStyle: "medium",
           })}
@@ -279,7 +275,7 @@ const QuotationItem = ({
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full pl-3 text-left font-normal",
+                          "border-none w-full pl-3 text-left font-normal hover:bg-green-50 hover:dark:bg-green-900",
                           !field.value && "text-muted-foreground"
                         )}
                       >
@@ -310,7 +306,7 @@ const QuotationItem = ({
         )}
       </Cell>
       <Cell>
-        <div className="h-10 max-w-xs px-3 py-2 text-sm border-input border bg-muted truncate overflow-hidden">
+        <div className="h-10 max-w-xs px-3 py-2 text-sm bg-muted truncate overflow-hidden">
           {rfqItem.comment}
         </div>
       </Cell>
@@ -318,7 +314,7 @@ const QuotationItem = ({
         <CellField control={control} name={`items.${index}.comment`} />
       </Cell>
       <Cell>
-        <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+        <div className="h-10 w-full px-3 py-2 text-sm ">
           <FormField
             control={control}
             name={`items.${index}.skip`}

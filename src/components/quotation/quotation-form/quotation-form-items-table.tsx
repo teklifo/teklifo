@@ -65,42 +65,42 @@ const QuotationFormItemsTable = ({ rfq }: QuotationFormItemsTableProps) => {
   );
 
   return (
-    <Table className="mb-4">
-      <TableHeader className="sticky top-[-1px] bg-background z-10">
+    <Table className="mb-4 mr-4 border-separate border-spacing-0">
+      <TableHeader className="sticky top-0 bg-background shadow-md z-10">
         <TableRow>
-          <TableHead className="border min-w-[400px]">{t("product")}</TableHead>
-          <TableHead className="border min-w-[100px] bg-muted">
+          <TableHead className="border min-w-[25rem]">{t("product")}</TableHead>
+          <TableHead className="border min-w-[10rem] bg-muted">
             {t("rfqQuantity")}
           </TableHead>
-          <TableHead className="border min-w-[100px]">
+          <TableHead className="border min-w-[10rem]">
             {t("quantity")}
           </TableHead>
-          <TableHead className="border min-w-[100px] bg-muted">
+          <TableHead className="border min-w-[10rem] bg-muted">
             {t("rfqPrice")}
           </TableHead>
-          <TableHead className="border min-w-[100px]">{t("price")}</TableHead>
-          <TableHead className="border min-w-[100px]">{t("amount")}</TableHead>
-          <TableHead className="border min-w-[100px]">{t("vatRate")}</TableHead>
-          <TableHead className="border min-w-[100px]">
+          <TableHead className="border min-w-[10rem]">{t("price")}</TableHead>
+          <TableHead className="border min-w-[10rem]">{t("amount")}</TableHead>
+          <TableHead className="border min-w-[10rem]">{t("vatRate")}</TableHead>
+          <TableHead className="border min-w-[10rem]">
             {t("vatAmount")}
           </TableHead>
-          <TableHead className="border min-w-[100px]">
+          <TableHead className="border min-w-[10rem]">
             {t("amountWithVat")}
           </TableHead>
-          <TableHead className="border min-w-[100px] bg-muted">
+          <TableHead className="border min-w-[15rem] bg-muted">
             {t("rfqDeliveryDate")}
           </TableHead>
-          <TableHead className="border min-w-[100px]">
+          <TableHead className="border min-w-[15rem]">
             {t("deliveryDate")}
           </TableHead>
-          <TableHead className="border min-w-[100px] bg-muted">
+          <TableHead className="border min-w-[15rem] bg-muted">
             {t("rfqComment")}
           </TableHead>
-          <TableHead className="border min-w-[100px]">{t("comment")}</TableHead>
+          <TableHead className="border min-w-[15rem]">{t("comment")}</TableHead>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <TableHead className="border min-w-[100px]">
+                <TableHead className="border min-w-[10rem]">
                   {t("skip")}
                 </TableHead>
               </TooltipTrigger>

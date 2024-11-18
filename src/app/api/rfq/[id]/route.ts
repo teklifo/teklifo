@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
-import { Prisma } from "@prisma/client";
+import {
+  checkRfqItemsChanged,
+  createNewRfqVersion,
+  updateCurrentRfqVersion,
+} from "./_utils/rfq-update";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
@@ -22,21 +26,6 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
       where: {
         id,
         latestVersion: true,
-        OR: [
-          {
-            companyId: company?.id ?? "",
-          },
-          {
-            participants: {
-              some: {
-                companyId: company?.id ?? "",
-              },
-            },
-          },
-          {
-            privateRequest: false,
-          },
-        ],
       },
       include: {
         company: true,
@@ -113,24 +102,8 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       return getErrorResponse(test.error.issues, 400, t("invalidRequest"));
     }
 
-    const {
-      externalId,
-      title,
-      privateRequest,
-      currency,
-      endDate,
-      contactPerson,
-      email,
-      phone,
-      description,
-      deliveryAddress,
-      deliveryTerms,
-      paymentTerms,
-      items,
-    } = test.data;
-
     // Find and check RFQ
-    const previousRfqVersion = await db.requestForQuotation.findFirst({
+    const currentRfqVersion = await db.requestForQuotation.findFirst({
       where: {
         id: id ?? "",
         latestVersion: true,
@@ -141,94 +114,34 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
       },
     });
 
-    if (!previousRfqVersion) {
+    if (!currentRfqVersion) {
       return getErrorResponse(t("invalidRFQId"), 404);
     }
 
-    if (previousRfqVersion.companyId !== company.id) {
+    if (currentRfqVersion.companyId !== company.id) {
       return getErrorResponse(t("notAllowed"), 401);
     }
 
-    if (previousRfqVersion.endDate < new Date()) {
+    if (currentRfqVersion.endDate < new Date()) {
       return getErrorResponse(t("rfqIsCompleted"), 400);
     }
 
-    // Prev version is not latest anymore
-    await db.requestForQuotation.update({
-      where: {
-        versionId: previousRfqVersion.versionId,
-      },
-      data: {
-        latestVersion: false,
-      },
-    });
+    let rfqItemsChanged = checkRfqItemsChanged(currentRfqVersion, test.data);
 
-    // Create new version of RFQ
-    const newRfqVersion = await db.requestForQuotation.create({
-      data: {
-        id: previousRfqVersion.id,
-        number: previousRfqVersion.number,
-        externalId,
-        companyId: company.id,
-        userId: company.users[0].userId,
-        title,
-        privateRequest,
-        currency,
-        endDate: endDate,
-        contactPerson,
-        email,
-        phone,
-        description,
-        deliveryAddress,
-        deliveryTerms,
-        paymentTerms,
-        participants: {
-          createMany: {
-            data: previousRfqVersion.participants.map((e) => ({
-              companyId: e.companyId,
-            })),
-          },
-        },
-      },
-    });
-
-    const itemsDataUnfiltered = items.map((item, index) => {
-      const existingRfqItem = previousRfqVersion.items.find(
-        (existingProduct) => existingProduct.id === item.id
+    let rfq = null;
+    if (rfqItemsChanged) {
+      rfq = await createNewRfqVersion(currentRfqVersion, test.data, company);
+    } else {
+      rfq = await updateCurrentRfqVersion(
+        currentRfqVersion,
+        test.data,
+        company
       );
-      if (item.id && !existingRfqItem) return null;
-
-      const productData: Prisma.RequestForQuotationItemCreateManyInput = {
-        id: existingRfqItem ? existingRfqItem.id : undefined,
-        requestForQuotationId: newRfqVersion.versionId,
-        productName: item.productName,
-        productId: item.productId,
-        lineNumber: index++,
-        externalId: item.externalId,
-        price: item.price,
-        quantity: item.quantity,
-        deliveryDate: item.deliveryDate,
-        comment: item.comment,
-      };
-
-      return productData;
-    });
-
-    const itemsData: Prisma.RequestForQuotationItemCreateManyInput[] =
-      itemsDataUnfiltered.filter(
-        (
-          productData
-        ): productData is Prisma.RequestForQuotationItemCreateManyInput =>
-          productData !== null
-      );
-
-    await db.requestForQuotationItem.createMany({
-      data: itemsData,
-    });
+    }
 
     const newRfqVersionWithProducts = await db.requestForQuotation.findUnique({
       where: {
-        versionId: newRfqVersion.versionId,
+        versionId: rfq.versionId,
       },
       include: {
         items: true,

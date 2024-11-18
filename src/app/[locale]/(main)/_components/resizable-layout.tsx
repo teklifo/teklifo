@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { deleteCookie, setCookie } from "cookies-next";
 import { Company as CompanyType } from "@prisma/client";
 import Menu from "./menu";
+import Footer from "./footer";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -23,7 +24,7 @@ type ResizableLayoutProps = {
 
 const ResizableLayout = ({
   defaultCollapsed,
-  defaultLayout = [265, 440, 655],
+  defaultLayout = [15, 85],
   defaultCompany,
   userCompanies,
   children,
@@ -75,13 +76,16 @@ const ResizableLayout = ({
               "min-w-[50px] transition-all duration-300 ease-in-out"
           )}
         >
-          <ScrollArea className="h-full">
-            <Menu
-              isCollapsed={isCollapsed}
-              defaultCompany={defaultCompany}
-              userCompanies={userCompanies}
-            />
-          </ScrollArea>
+          <div className="h-full flex flex-col justify-between">
+            <ScrollArea>
+              <Menu
+                isCollapsed={isCollapsed}
+                defaultCompany={defaultCompany}
+                userCompanies={userCompanies}
+              />
+            </ScrollArea>
+            <Footer isCollapsed={isCollapsed} />
+          </div>
         </ResizablePanel>
         <ResizableHandle withHandle className="hidden xl:flex" />
         <ResizablePanel

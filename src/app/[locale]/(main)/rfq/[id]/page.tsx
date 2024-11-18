@@ -1,9 +1,10 @@
 import { Metadata } from "next";
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { Briefcase, FileText, Package } from "lucide-react";
+import { Briefcase, Ellipsis, FileText, Package } from "lucide-react";
 import RFQActions from "./_components/rfq-actions";
 import RFQData from "./_components/rfq-data";
+import RFQItemsView from "./_components/rfq-items-view";
 import RFQItemCard from "./_components/rfq-item-card";
 import SentQuotations from "./_components/sent-quotations";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -11,7 +12,10 @@ import RFQMainInfo from "@/components/rfq/rfq-main-info";
 import CompanyAvatar from "@/components/company/company-avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
-import getRFQPreview from "@/app/actions/get-rfq-preview";
+import getCurrentCompany from "@/app/actions/get-current-company";
+import BackButton from "@/components/back-button";
+
+const MAX_ITEM_CARDS = 5;
 
 type Props = {
   params: { locale: string; id: string };
@@ -47,22 +51,23 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
   const rfq = await getRFQ(id);
 
   if (!rfq) {
-    const rfqPreview = await getRFQPreview(id);
-    if (rfqPreview) {
-      redirect(`/supplier-guide/${rfqPreview.id}`);
-    }
-
     return notFound();
   }
 
-  const { title, number, currency, items } = rfq;
+  const { title, number, currency, items, companyId } = rfq;
+
+  const currentCompany = await getCurrentCompany();
+  const companyIsRequester = companyId === currentCompany?.id;
 
   return (
     <MaxWidthWrapper className="mt-8 mb-20">
       <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {title}
-        </h1>
+        <div className="flex justify-start items-center space-x-4">
+          <BackButton defaultHref="/rfq" />
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {title}
+          </h1>
+        </div>
         <p className="text-sm text-muted-foreground">
           {`${t("rfqNumber")}: ${number}`}
         </p>
@@ -87,7 +92,11 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
               </TabsTrigger>
               <TabsTrigger value="quotations" className="space-x-2">
                 <Briefcase className="w-4 h-4" />
-                <span className="hidden md:block">{t("quotations")}</span>
+                <span className="hidden md:block">
+                  {companyIsRequester
+                    ? t("quotationsReceived")
+                    : t("quotationsSent")}
+                </span>
               </TabsTrigger>
             </TabsList>
             <TabsContent value="main">
@@ -95,7 +104,7 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
             </TabsContent>
             <TabsContent value="items">
               <div className="space-y-4 mt-4">
-                {items.map((item, index) => (
+                {items.slice(0, MAX_ITEM_CARDS).map((item, index) => (
                   <RFQItemCard
                     key={index}
                     number={index + 1}
@@ -103,6 +112,12 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
                     item={item}
                   />
                 ))}
+                {rfq.items.length > MAX_ITEM_CARDS && (
+                  <div className="w-full flex justify-center">
+                    <Ellipsis />
+                  </div>
+                )}
+                <RFQItemsView rfqItems={items} />
               </div>
             </TabsContent>
             <TabsContent value="quotations">

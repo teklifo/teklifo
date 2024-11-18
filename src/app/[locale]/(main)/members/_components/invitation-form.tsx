@@ -202,7 +202,7 @@ const InvitationForm = ({ companyId }: InvitationFormProps) => {
               disabled={loading}
             >
               <span>{t("send")}</span>
-              <Send />
+              <Send className="h-4 w-4" />
             </Button>
           </form>
         </Form>

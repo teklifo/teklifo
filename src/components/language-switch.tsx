@@ -29,7 +29,7 @@ function LanguageSwitch() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" className="capitalize">
           {locale}
         </Button>
       </DropdownMenuTrigger>
@@ -40,7 +40,7 @@ function LanguageSwitch() {
             onClick={() => onSelectChange(loc)}
             disabled={isPending}
           >
-            {loc}
+            <span className="capitalize">{loc}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

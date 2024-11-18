@@ -16,7 +16,6 @@ import RFQFormItemsTable from "./rfq-form-items-table";
 import RFQFormInvalidMessage from "./rfq-form-invalid-message";
 import ConfirmRFQ from "./confirm-rfq";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Form } from "@/components/ui/form";
 import { getRFQSchema } from "@/lib/schemas";
 
@@ -79,7 +78,7 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
   return (
     <Form {...form}>
       <form className="space-y-10">
-        <Tabs defaultValue="main" className="h-full">
+        <Tabs defaultValue="main" className="relative h-full">
           <TabsList className="grid w-full grid-cols-4 md:max-w-max">
             <TabsTrigger value="main" className="space-x-2">
               <FileText className="w-4 h-4" />
@@ -102,10 +101,7 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
             <RFQFormMain />
           </TabsContent>
           <TabsContent value="items" className="h-full">
-            <ScrollArea className="w-full min-h-full">
-              <RFQFormItemsTable />
-              <ScrollBar orientation="horizontal" className="h-4" />
-            </ScrollArea>
+            <RFQFormItemsTable />
           </TabsContent>
           <TabsContent value="contacts">
             <RFQFormContatcs />

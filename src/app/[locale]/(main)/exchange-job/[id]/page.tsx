@@ -11,6 +11,7 @@ import getCurrentCompany, {
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
 import { PaginationType } from "@/types";
+import BackButton from "@/components/back-button";
 
 type Props = {
   params: { locale: string; id: string };
@@ -80,9 +81,12 @@ const ImportData = async ({
   return (
     <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2 mb-4">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {t("title")}
-        </h1>
+        <div className="flex justify-start items-center space-x-4">
+          <BackButton defaultHref="/import-data" />
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {t("title")}
+          </h1>
+        </div>
         <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
       </div>
       {result.length > 0 ? (

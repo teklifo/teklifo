@@ -1,13 +1,12 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { Plus } from "lucide-react";
+import { Mail } from "lucide-react";
 import ThemedImage from "@/components/themed-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const WelcomeScreen = async () => {
-  const t = await getTranslations("WelcomeScreen");
+const BetaDisclaimer = async () => {
+  const t = await getTranslations("Dashboard");
 
   return (
     <MaxWidthWrapper className="mt-8 mb-16">
@@ -15,27 +14,27 @@ const WelcomeScreen = async () => {
         <div className="w-full flex justify-center items-center text-center">
           <div className="max-w-lg space-y-8">
             <h1 className="scroll-m-20 text-4xl font-bold tracking-tight text-foreground">
-              {t("title")}
+              {t("welcome")}
             </h1>
-            <p className="text-lg">{t("hintText")}</p>
+            <p className="text-lg">{t("betaDisclaimer")}</p>
             <div className="flex flex-col space-y-2">
-              <Link
-                href={`/new-company`}
+              <a
+                href={`mailto: ${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`}
                 className={cn(
                   buttonVariants({ variant: "outline" }),
-                  "space-x-2"
+                  "flex items-center w-full space-x-2"
                 )}
               >
-                <Plus className="text-muted-foreground h-4 w-4" />
-                <span>{t("createCompany")}</span>
-              </Link>
+                <Mail className="w-4 -h-4" />
+                <span>{t("contact")}</span>
+              </a>
             </div>
           </div>
         </div>
         <div className="w-full flex items-center justify-center lg:flex-col lg:space-y-12">
           <ThemedImage
-            src="/illustrations/light/invitation.svg"
-            alt="Company suggestion"
+            src="/illustrations/light/contact.svg"
+            alt="Contact"
             priority
             width={200}
             height={200}
@@ -46,4 +45,4 @@ const WelcomeScreen = async () => {
   );
 };
 
-export default WelcomeScreen;
+export default BetaDisclaimer;

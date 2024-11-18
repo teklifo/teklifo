@@ -137,7 +137,14 @@
     "goToFirstPage": "Go to first page",
     "goToPrevPage": "Go to previous page",
     "goToNextPage": "Go to next page",
-    "goToLastPage": "Go to first page"
+    "goToLastPage": "Go to first page",
+    "join": "🚀 Join now",
+    "joinHint": "Login to create RFQs and send quotations",
+    "contact": "Contact",
+    "createCompany": "Create company",
+    "myCompany": "My company",
+    "previous": "Previous",
+    "next": "Next"
   },
   "Login": {
     "title": "Welcome aboard 👋",
@@ -171,7 +178,7 @@
   "CompanyForm": {
     "title": "New company",
     "name": "Company name",
-    "id": "Company ID",
+    "id": "Slug",
     "idDescription": "This is a unique identifier for your company in Teklifo. It may only contain lowercase Latin letters and the '-' symbol",
     "tin": "TIN",
     "email": "Email",
@@ -372,7 +379,7 @@
     "add": "Add",
     "create": "Create product",
     "import": "Import from XLSX",
-    "noProducts": "Your company does not yet have a product list",
+    "noProducts": "Products not found",
     "noProductsHint": "Try to import products now",
     "query": "Search",
     "queryHint": "Type product name or number..."
@@ -490,9 +497,11 @@
     "product": "Product",
     "productInputHint": "Type manually or select a product from the list",
     "cancel": "Cancel",
-    "rfqConfirmTitle": "Save RFQ?",
+    "rfqConfirmTitleCreate": "Create RFQ?",
+    "rfqConfirmTitleUpdate": "Update RFQ?",
     "rfqConfirmSubtitle": "Once confirmed, you can share the request with suppliers",
-    "invalidForm": "Ensure that all form fields are filled out correctly"
+    "invalidForm": "Ensure that all form fields are filled out correctly",
+    "rfqUpdateWarrning": "Attention! If values in the columns 'Product,' 'Quantity,' 'Maximum price,' or 'Delivery date' are changed, if the request currency is modified, or if rows are added or removed in the product table, all previously received quotations for this request will be archived."
   },
   "ProductSelect": {
     "title": "Product selection",
@@ -513,7 +522,8 @@
     "endDate": "Deadline",
     "currency": "Currency",
     "main": "Main",
-    "quotations": "Quots",
+    "quotationsReceived": "Received quots",
+    "quotationsSent": "My quots",
     "items": "Products",
     "number": "SKU",
     "unit": "Unit",
@@ -528,13 +538,13 @@
     "deliveryAddress": "Delivery address",
     "edit": "Edit",
     "noDescription": "No description",
-    "rfqDeleteTitle": "Are you sure you want to delete RFQ #{number}?",
+    "rfqDeleteTitle": "Are you sure you want to delete RFQ?",
     "rfqDeleteSubtitle": "Once deleted, suppliers will no longer be able to see this request or send you any quotations related to it",
     "delete": "Delete",
     "cancel": "Cancel",
-    "rfqDeleted": "RFQ #{number} has been deleted",
+    "rfqDeleted": "RFQ has been deleted",
     "rfqDeletedHint": "Suppliers will no longer be able to see this request or submit quotations based on it",
-    "deleteError": "Failed to delete RFQ #{number}",
+    "deleteError": "Failed to delete RFQ",
     "daysLeft": "{daysLeft} days left",
     "completed": "Completed",
     "shareRfq": "Share RFQ",
@@ -552,8 +562,9 @@
     "quotationSubtitle": "Send a quotation to the client in response to the received RFQ",
     "compareQuotations": "Compare quotations",
     "aiAnalysis": "Analyze with AI",
-    "noQuotations": "There are no quotations for this request at the moment",
-    "confirmParticipation": "Confirm participation",
+    "noQuotationsReceived": "There are no quotations received for this request at the moment",
+    "noQuotationsSent": "You haven't submitted any quotations for this request yet",
+    "confirmParticipation": "Participate in the request",
     "participationTitle": "Do you want to confirm your participation in the RFQ?",
     "participationSubtitle": "Once participation is confirmed, you'll be able to prepare and submit your quotation",
     "participationConfirmed": "Participation confirmed",
@@ -561,7 +572,8 @@
     "confirm": "Confirm",
     "participationError": "Unable to confirm participation in the RFQ",
     "lineNumber": "#",
-    "product": "Product"
+    "product": "Product",
+    "viewItemsAsTable": "View all items in table"
   },
   "SupplierGuide": {
     "title": "Congratulations! You've accessed the private RFQ via the link",
@@ -585,8 +597,8 @@
     "subtitle": "List of all Teklifo companies"
   },
   "WelcomeScreen": {
-    "title": "Hello!",
-    "hintText": "We noticed that you are not currently a member of any company. All major activities on Teklifo are conducted through companies. Please reach out to an existing company to request membership or create your own!",
+    "title": "Hi there! 👋",
+    "hintText": "We noticed that you are not currently a member of any company. All key activities on Teklifo are carried out through companies. Please contact an existing company to request membership or create your own!",
     "createCompany": "Register a new company"
   },
   "Quotation": {
@@ -628,7 +640,7 @@
     "send": "Send",
     "cancel": "Cancel",
     "quotationConfirmTitle": "Send a quotation to the client?",
-    "quotationConfirmSubtitle": "After confirmation, the client will receive a notification about your quotation",
+    "quotationConfirmSubtitle": "Once approved, the client will be able to view your quotation",
     "skip": "Skip item",
     "skipHint": "Skip this item if you don't want to submit a quotation for it",
     "contactPerson": "Contact person",
@@ -723,7 +735,7 @@
   },
   "RFQSearch": {
     "title": "RFQ search",
-    "subtitle": "Find potential buyers",
+    "subtitle": "Search RFQs using specific filters",
     "noRFQ": "No RFQs",
     "noRFQHint": "Adjust your search filters",
     "endDate": "RFQ deadline",
@@ -959,6 +971,22 @@
     "notFoundSubitle": "Page not found"
   },
   "Dashboard": {
-    "dashboard": "Dashboard is under construction"
+    "welcome": "Hi there! 👋",
+    "betaDisclaimer": "Teklifo is currently in beta! If you have any suggestions or come across any bugs, please reach out to us. Your feedback is invaluable — thank you! 💓",
+    "contact": "Contact"
+  },
+  "Emails": {
+    "authEmailTitle": "🚀 Authorization",
+    "invitationEmailTitle": "💼 Invitation to join {companyName} company"
+  },
+  "CompanyRequired": {
+    "companyRequiredTitle": "💼 Not a member any company yet?",
+    "companyRequiredHint": "Create a new company to conduct your business activities, or reach out to an existing company to request membership",
+    "createCompany": "Register a new company"
+  },
+  "AuthRequired": {
+    "authRequiredTitle": "🚀 Join us now!",
+    "authRequiredHint": "Log in to unlock more features: create a company profile, post RFQs, send quotations, and much more",
+    "login": "Login"
   }
 }

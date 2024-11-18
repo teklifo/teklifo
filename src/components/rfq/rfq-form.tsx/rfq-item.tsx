@@ -49,7 +49,7 @@ interface TableInputProps extends React.ComponentPropsWithoutRef<"input"> {
 }
 
 const Cell = ({ children }: { children: React.ReactNode }) => {
-  return <TableCell className="p-0 border-none">{children}</TableCell>;
+  return <TableCell className="p-0 border-input border">{children}</TableCell>;
 };
 
 const CellField = ({ control, name, ...props }: CellFieldProps) => {
@@ -84,7 +84,7 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
             onFocus={(e) => e.target.select()}
             onWheel={(e) => e.currentTarget.blur()}
             className={cn(
-              "border rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0  focus-visible:ring-0 focus-visible:ring-offset-0",
+              "cursor-pointer border-none rounded-none focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:outline-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-green-50 hover:dark:bg-green-900",
               error && "bg-red-300"
             )}
           />
@@ -128,11 +128,11 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
   const productSelected = (form.watch(`items.${index}.productId`) ?? 0) !== 0;
 
   return (
-    <TableRow className="border-none">
+    <TableRow>
       <Cell>
         <div className="flex flex-row justify-start items-center">
           {productSelected ? (
-            <div className="h-10 w-full px-3 py-2 text-sm border-input border">
+            <div className="h-10 w-full px-3 py-2 text-sm">
               {form.getValues(`items.${index}.product`)?.name}
             </div>
           ) : (
@@ -151,7 +151,7 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="w-fit space-x-2 border-input border rounded-none"
+                      className="w-fit space-x-2 rounded-none"
                     >
                       <MoreHorizontal className="w-3 h-3" />
                     </Button>
@@ -169,7 +169,7 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
                   <Button
                     type="button"
                     variant="ghost"
-                    className="w-fit space-x-2 border-input border rounded-none"
+                    className="w-fit space-x-2 rounded-none"
                     onClick={onProductRemove}
                   >
                     <X className="w-3 h-3" />
@@ -212,7 +212,7 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-full pl-3 text-left font-normal",
+                        "border-none w-full pl-3 text-left font-normal hover:bg-green-50 hover:dark:bg-green-900",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -247,7 +247,7 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
       <Cell>
         <Tooltip delayDuration={0}>
           <TooltipTrigger asChild>
-            <div className="h-10 flex justify-center items-center border-input border">
+            <div className="h-10 flex justify-center items-center">
               <Button type="button" variant="ghost" onClick={removeProduct}>
                 <Trash className="w-3 h-3" />
               </Button>

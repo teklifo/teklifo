@@ -60,15 +60,22 @@ async function getRFQQuotations(rfqId: string, page: number) {
 const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
   const t = await getTranslations("RFQ");
 
+  const currentCompany = await getCurrentCompany();
+  const noQuotsLable =
+    currentCompany?.id === rfq.companyId
+      ? t("noQuotationsReceived")
+      : t("noQuotationsSent");
+
+  if (!currentCompany) {
+    return <NoQuotations label={noQuotsLable} />;
+  }
+
   const data = await getRFQQuotations(rfq.id, page);
   if (!data) return null;
 
   const { result, pagination } = data;
 
-  const currentCompany = await getCurrentCompany();
-  if (!currentCompany) return;
-
-  return result.length > 0 ? (
+  return currentCompany && result.length > 0 ? (
     <>
       <div className="flex flex-col space-y-3 mt-4">
         {result.map((quotation) => {
@@ -87,10 +94,16 @@ const SentQuotations = async ({ rfq, page }: SentQuotationsProps) => {
       <PaginationBar href={`/rfq/${rfq.id}?page=`} pagination={pagination} />
     </>
   ) : (
+    <NoQuotations label={noQuotsLable} />
+  );
+};
+
+const NoQuotations = ({ label }: { label: string }) => {
+  return (
     <div className="mt-10 flex flex-col justify-center items-center py-2 space-y-2">
       <BriefcaseBusiness className="w-24 h-24 text-foreground" />
-      <p className="leading-7 tracking-tight max-w-sm text-muted-foreground">
-        {t("noQuotations")}
+      <p className="leading-7 tracking-tight max-w-sm text-muted-foreground text-center">
+        {label}
       </p>
     </div>
   );

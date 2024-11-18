@@ -5,7 +5,7 @@ export const upsertProduct = async (
   productData: Prisma.ProductUncheckedCreateInput,
   searchByAttributes: boolean = true
 ) => {
-  let id = productData.id;
+  let id = productData.id ?? 0;
 
   if (!id && searchByAttributes) {
     const existingProduct = await db.product.findFirst({

@@ -1,11 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { useSession } from "next-auth/react";
 import { Company as CompanyType } from "@prisma/client";
 import {
   LayoutGrid,
-  UserCog,
   Users,
   Package,
   Warehouse,
@@ -14,6 +13,7 @@ import {
   BriefcaseBusiness,
   FileSearch,
   Import,
+  Building2,
 } from "lucide-react";
 import Nav from "./nav";
 import CompanySwitcher from "./company-switcher";
@@ -27,6 +27,9 @@ type MenuProps = {
 
 const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
   const t = useTranslations("Layout");
+
+  const { status } = useSession();
+  const authenticated = status === "authenticated";
 
   return defaultCompany ? (
     <div className="mt-2">
@@ -42,7 +45,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           userCompanies={userCompanies}
         />
       </div>
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -54,7 +56,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -66,7 +67,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -84,7 +84,6 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
@@ -114,10 +113,15 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
           },
         ]}
       />
-      <Separator />
       <Nav
         isCollapsed={isCollapsed}
         links={[
+          {
+            title: t("myCompany"),
+            label: "",
+            icon: Building2,
+            href: `/company/${defaultCompany.id}`,
+          },
           {
             title: t("members"),
             label: "",
@@ -129,6 +133,19 @@ const Menu = ({ isCollapsed, defaultCompany, userCompanies }: MenuProps) => {
     </div>
   ) : (
     <div className="mt-8">
+      {authenticated && (
+        <Nav
+          isCollapsed={isCollapsed}
+          links={[
+            {
+              title: t("dashboard"),
+              label: "",
+              icon: LayoutGrid,
+              href: `/dashboard`,
+            },
+          ]}
+        />
+      )}
       <Nav
         isCollapsed={isCollapsed}
         links={[

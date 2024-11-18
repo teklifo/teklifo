@@ -53,6 +53,7 @@ const RFQItemsSelect = ({ rfq }: RFQItemsSelectProps) => {
     }
 
     return initialState;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, rfq.items]);
 
   const setRfqItems = useQuotationsAIAnalysisStore(
@@ -92,6 +93,7 @@ const RFQItemsSelect = ({ rfq }: RFQItemsSelectProps) => {
           <RFQItemsTable
             items={rfq.items}
             scrollClass="h-[calc(100vh-15rem)] md:h-[calc(100vh-17rem)]"
+            selectRows={true}
             onSelectedRowsChange={onSelectedRowsChange}
             initialSelectState={initialSelectedItems}
           />

@@ -1,27 +1,33 @@
-import { useTranslations } from "next-intl";
-import { Link } from "@/navigation";
-import { ChevronLeft, FileInput } from "lucide-react";
-import { UrlObject } from "url";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+"use client";
+
+import { useRouter } from "@/navigation";
+import { ChevronLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type BackButtonProps = {
-  href: string | UrlObject;
+  defaultHref: string;
 };
 
-const BackButton = ({ href }: BackButtonProps) => {
-  const t = useTranslations("QuotationsCompare");
+const BackButton = ({ defaultHref }: BackButtonProps) => {
+  const router = useRouter();
+
+  function onClick() {
+    if (window.history?.length && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push(defaultHref);
+    }
+  }
 
   return (
-    <Link
-      href={href}
-      className={cn(
-        buttonVariants({ variant: "outline", size: "sm" }),
-        "space-x-2"
-      )}
+    <Button
+      onClick={onClick}
+      variant="outline"
+      size="icon"
+      className="space-x-2"
     >
       <ChevronLeft className="w-4 -h-4" />
-    </Link>
+    </Button>
   );
 };
 

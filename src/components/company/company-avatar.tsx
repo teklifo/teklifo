@@ -16,7 +16,11 @@ const CompanyAvatar = ({
   titleClass,
 }: CompanyAvatarProps) => {
   return (
-    <Link href={`/company/${company.id}`} className={cn(className, "group")}>
+    <Link
+      href={`/company/${company.id}`}
+      className={cn(className, "group")}
+      target="_blank"
+    >
       <Avatar className="md:h-20 md:w-20">
         <AvatarFallback>{getAvatarFallback(company.name)}</AvatarFallback>
       </Avatar>

@@ -77,7 +77,7 @@ const StockBalance = async ({ params: { id: productId } }: Props) => {
       <div className="flex flex-col space-y-4 md:space-x-4 md:flex-row md:justify-between md:space-y-0">
         <div className="space-y-2">
           <div className="flex justify-start items-center space-x-4">
-            <BackButton href={`/products/${productId}`} />
+            <BackButton defaultHref={`/products/${productId}`} />
             <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
               {t("stockBalanceTitle", {
                 productName: product.name,

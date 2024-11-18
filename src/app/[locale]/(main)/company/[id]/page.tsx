@@ -7,8 +7,7 @@ import { CircleHelp, Pencil } from "lucide-react";
 import { Link } from "@/navigation";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  getUserCompany,
+import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
 import request from "@/lib/request";
@@ -82,12 +81,13 @@ const getLocalizedProperties = (company: CompanyType, locale: string) => {
 const Company = async ({ params: { locale, id } }: Props) => {
   const t = await getTranslations("Company");
 
-  const userCompany = await getUserCompany(id);
+  const currentCompany = await getCurrentCompany();
 
   const company = await getCompany(id);
   if (!company) return notFound();
 
-  const isAdmin = userCompany !== null ? await isCompanyAdmin(id) : false;
+  const canEditCompany =
+    currentCompany?.id === id && (await isCompanyAdmin(id));
 
   let { description, slogan } = getLocalizedProperties(company, locale);
 
@@ -103,7 +103,7 @@ const Company = async ({ params: { locale, id } }: Props) => {
             company.tin
           }`}</p>
         </div>
-        {isAdmin && (
+        {canEditCompany && (
           <div className="flex space-x-2">
             <Link
               href={`/edit-company`}

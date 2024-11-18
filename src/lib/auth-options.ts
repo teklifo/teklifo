@@ -5,22 +5,14 @@ import EmailProvider, {
 } from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getTranslations } from "next-intl/server";
+import queryString from "query-string";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import db from "@/lib/db";
 import sendEmail from "@/lib/nodemailer/sendEmail";
 import { getCredentialsSchema } from "@/lib/schemas";
-
-const getEmailSubject = (locale: string) => {
-  switch (locale) {
-    case "ru":
-      return "Авторизация на Teklifo";
-    case "en":
-    default:
-      return "Authorization | Teklifo";
-  }
-};
 
 const sendVerificationRequest = async ({
   identifier,
@@ -29,15 +21,57 @@ const sendVerificationRequest = async ({
   const cookieStore = cookies();
   const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "en";
 
-  await sendEmail({
-    locale,
-    emailType: "email-verification",
-    receivers: identifier,
-    subject: getEmailSubject(locale),
-    context: {
-      url,
-    },
-  });
+  const urlObject = queryString.parseUrl(url);
+
+  const callbackUrl = urlObject.query.callbackUrl?.toString();
+  const isInvintation = callbackUrl?.includes("/invitation/");
+
+  const t = await getTranslations({ locale, namespace: "Emails" });
+
+  if (isInvintation && callbackUrl) {
+    const splittedUrl = callbackUrl.split("/");
+    const invitationId = splittedUrl[splittedUrl?.length - 1];
+
+    const invitation = await db.invitation.findUnique({
+      where: {
+        id: invitationId,
+      },
+      select: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!invitation) return;
+
+    await sendEmail({
+      locale,
+      emailType: "invitation",
+      receivers: identifier,
+      subject: t("invitationEmailTitle", {
+        companyName: invitation.company.name,
+      }),
+      context: {
+        companyId: invitation.company.id,
+        companyName: invitation.company.name,
+        url,
+      },
+    });
+  } else {
+    await sendEmail({
+      locale,
+      emailType: "email-verification",
+      receivers: identifier,
+      subject: t("authEmailTitle"),
+      context: {
+        url,
+      },
+    });
+  }
 };
 
 const authOptions: NextAuthOptions = {

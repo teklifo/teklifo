@@ -46,6 +46,7 @@ export async function DELETE(
     // Check that this member is not the last admin of that company
     const admin = await db.companyMembers.findFirst({
       where: {
+        companyId: company.id,
         NOT: {
           userId: memberId,
         },
@@ -54,6 +55,8 @@ export async function DELETE(
         },
       },
     });
+
+    console.log(admin);
 
     if (!admin) {
       return getErrorResponse(

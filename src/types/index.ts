@@ -1,7 +1,7 @@
 import { Prisma, Product } from "@prisma/client";
 import { ZodIssue } from "zod";
 
-export type EmailType = "email-verification";
+export type EmailType = "email-verification" | "invitation";
 
 export type EmailContextType = {
   [key: string]: string;

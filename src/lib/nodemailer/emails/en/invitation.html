@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Авторизация на Teklifo</title>
+    <title>Invitation to join {{companyName}} company"</title>
   </head>
   <body
     style="
@@ -41,11 +41,14 @@
 
       <!-- Email Body -->
       <div style="padding: 20px; text-align: center">
-        <h2>Добро пожаловать на Teklifo!</h2>
-        <p>
-          Чтобы начать работу, подтвердите свой адрес электронной почты, нажав
-          на кнопку ниже:
-        </p>
+        <h2>
+          You're invited to join
+          <a href="https://teklifo.com/company/{{companyId}}"
+            >{{companyName}}</a
+          >
+          on Teklifo
+        </h2>
+        <p>To accept the invitation, click the button below:</p>
         <p>
           <a
             href="{{url}}"
@@ -62,17 +65,17 @@
               cursor: pointer;
             "
           >
-            Войти
+            Accept invitation
           </a>
         </p>
-        <p>Если кнопка не работает, то перейдите по следующей ссылке:</p>
+        <p>If the button doesn’t work, you can also use the following link:</p>
         <a href="{{url}}">{{url}}</a>
         <p>
-          Если вы не проходили авторизацию на Teklifo, то проигнорируйте это
-          письмо.
+          If you want to decline the invitation, you can safely ignore this
+          email.
         </p>
         <p>
-          С наилучшими пожеланиями,<br />
+          Best regards,<br />
           Teklifo
         </p>
       </div>
