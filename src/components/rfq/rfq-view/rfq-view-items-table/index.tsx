@@ -1,10 +1,11 @@
 import { ClassValue } from "clsx";
-import { columns, RFQItemType } from "./columns";
+import { createColumns, RFQItemType } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
 
 type Props = {
   items: RFQItemType[];
   scrollClass?: ClassValue;
+  selectRows: boolean;
   onSelectedRowsChange?: (value: RFQItemType[]) => void;
   initialSelectState?: Record<string, boolean>;
 };
@@ -12,9 +13,12 @@ type Props = {
 const RFQItemsTable = ({
   items,
   scrollClass,
+  selectRows,
   onSelectedRowsChange,
   initialSelectState,
 }: Props) => {
+  const columns = createColumns(selectRows);
+
   return (
     <div className="mt-4">
       <DataTable

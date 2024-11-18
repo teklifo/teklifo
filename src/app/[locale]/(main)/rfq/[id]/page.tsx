@@ -1,9 +1,10 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { Briefcase, FileText, Package } from "lucide-react";
+import { Briefcase, Ellipsis, FileText, Package } from "lucide-react";
 import RFQActions from "./_components/rfq-actions";
 import RFQData from "./_components/rfq-data";
+import RFQItemsView from "./_components/rfq-items-view";
 import RFQItemCard from "./_components/rfq-item-card";
 import SentQuotations from "./_components/sent-quotations";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -13,6 +14,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import BackButton from "@/components/back-button";
+
+const MAX_ITEM_CARDS = 5;
 
 type Props = {
   params: { locale: string; id: string };
@@ -101,7 +104,7 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
             </TabsContent>
             <TabsContent value="items">
               <div className="space-y-4 mt-4">
-                {items.map((item, index) => (
+                {items.slice(0, MAX_ITEM_CARDS).map((item, index) => (
                   <RFQItemCard
                     key={index}
                     number={index + 1}
@@ -109,6 +112,12 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
                     item={item}
                   />
                 ))}
+                {rfq.items.length > MAX_ITEM_CARDS && (
+                  <div className="w-full flex justify-center">
+                    <Ellipsis />
+                  </div>
+                )}
+                <RFQItemsView rfqItems={items} />
               </div>
             </TabsContent>
             <TabsContent value="quotations">
