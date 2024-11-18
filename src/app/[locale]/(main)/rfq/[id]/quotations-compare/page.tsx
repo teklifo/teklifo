@@ -119,7 +119,7 @@ const QuotationsCompare = async ({ params: { id }, searchParams }: Props) => {
     <div className="mt-4 mx-2 space-y-8 md:mx-8">
       <div className="space-y-2">
         <div className="flex justify-start items-center space-x-4">
-          <BackButton href={`/rfq/${rfq.id}`} />
+          <BackButton defaultHref={`/rfq/${rfq.id}`} />
           <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
             {`${t("title")}: ${rfq.title}`}
           </h1>

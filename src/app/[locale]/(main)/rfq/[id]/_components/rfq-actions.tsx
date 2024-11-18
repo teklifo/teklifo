@@ -64,7 +64,7 @@ const RequestorActions = ({ rfq, currentCompany }: RequestorActionsProps) => {
       {isAdmin && (
         <>
           <div className="relative inline-flex group">
-            <div className="absolute transitiona-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] to-[#FF44EC] rounded-xl blur-md group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200"></div>
+            <div className="absolute transitiona-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] to-[#FF44EC] rounded-xl blur-sm group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200"></div>
             <Link
               href={`/rfq/${rfq.id}/ai-analysis`}
               className={cn(
@@ -79,7 +79,7 @@ const RequestorActions = ({ rfq, currentCompany }: RequestorActionsProps) => {
           <Link
             href={`/rfq/${rfq.id}/quotations-compare`}
             className={cn(
-              buttonVariants({ variant: "default" }),
+              buttonVariants({ variant: "outline" }),
               "text-center whitespace-normal h-auto space-x-2 lg:w-full"
             )}
           >
@@ -90,6 +90,7 @@ const RequestorActions = ({ rfq, currentCompany }: RequestorActionsProps) => {
       )}
       {!completed && (
         <>
+          <ShareRFQ />
           {isAdmin && (
             <>
               <Link
@@ -105,7 +106,6 @@ const RequestorActions = ({ rfq, currentCompany }: RequestorActionsProps) => {
               <DeleteRFQ rfq={rfq} />
             </>
           )}
-          <ShareRFQ />
         </>
       )}
     </>

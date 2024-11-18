@@ -12,6 +12,7 @@ import CompanyAvatar from "@/components/company/company-avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getRFQ from "@/app/actions/get-rfq";
 import getCurrentCompany from "@/app/actions/get-current-company";
+import BackButton from "@/components/back-button";
 
 type Props = {
   params: { locale: string; id: string };
@@ -58,9 +59,12 @@ const RFQ = async ({ params: { id }, searchParams: { page } }: Props) => {
   return (
     <MaxWidthWrapper className="mt-8 mb-20">
       <div className="space-y-2">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
-          {title}
-        </h1>
+        <div className="flex justify-start items-center space-x-4">
+          <BackButton defaultHref="/rfq" />
+          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+            {title}
+          </h1>
+        </div>
         <p className="text-sm text-muted-foreground">
           {`${t("rfqNumber")}: ${number}`}
         </p>

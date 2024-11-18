@@ -60,7 +60,7 @@ const NewProduct = async ({ params: { id } }: Props) => {
     <MaxWidthWrapper className="mt-8 mb-16">
       <div className="space-y-2">
         <div className="flex justify-start items-center space-x-4">
-          <BackButton href={`/products/${id}`} />
+          <BackButton defaultHref={`/products/${id}`} />
           <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
             {t("updateTitle")}
           </h1>
