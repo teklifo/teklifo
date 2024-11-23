@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     const result: UpsertResult[] = [];
 
-    await prisma.$transaction(async () => {
+    await db.$transaction(async () => {
       await Promise.all(
         test.data.map(async (productData, index) => {
           const {
