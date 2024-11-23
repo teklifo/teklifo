@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import getCurrentCompany, {
   isCompanyAdmin,
 } from "@/app/actions/get-current-company";
+import db from "@/lib/db";
 import { upsertPrices } from "@/lib/exchange/bulk-import";
 import { getPriceSchema } from "@/lib/schemas";
 import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     const result: UpsertResult[] = [];
 
-    await prisma.$transaction(async () => {
+    await db.$transaction(async () => {
       await Promise.all(
         test.data.prices.map(async (productData, index) => {
           const { productId, priceTypeId, price } = productData;
