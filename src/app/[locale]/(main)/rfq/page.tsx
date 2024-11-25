@@ -73,12 +73,9 @@ async function getDefaultFilters(searchParams: SearchParams) {
 
   return {
     company: companies,
-    endDate: {
-      from: searchParams.endDateFrom
-        ? new Date(searchParams.endDateFrom)
-        : undefined,
-      to: searchParams.endDateTo ? new Date(searchParams.endDateTo) : undefined,
-    },
+    endDate: searchParams.endDateTo
+      ? new Date(searchParams.endDateTo)
+      : undefined,
   };
 }
 

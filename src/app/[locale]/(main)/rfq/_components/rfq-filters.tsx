@@ -5,7 +5,6 @@ import { useFormatter, useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultValues, useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
-import { DateRange } from "react-day-picker";
 import { formatISO } from "date-fns";
 import queryString from "query-string";
 import { Company as CompanyType } from "@prisma/client";
@@ -18,19 +17,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import CompanyFilter from "@/components/filters/company-filter";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { getRFQFiltersSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
 const rfqFiltersSchema = getRFQFiltersSchema((_) => {
   return "";
 });
+
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 type RFQFiltersProps = {
   defaultFilters: DefaultValues<z.infer<typeof rfqFiltersSchema>>;
@@ -61,7 +57,7 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
   function resetFilters() {
     form.reset({
       company: [],
-      endDate: {},
+      endDate: undefined,
     });
     form.handleSubmit(onSubmit)();
   }
@@ -72,8 +68,7 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
         url: "/",
         query: {
           companyId: values.company.map((company) => company.id),
-          endDateFrom: values.endDate?.from && formatISO(values.endDate.from),
-          endDateTo: values.endDate?.to && formatISO(values.endDate.to),
+          endDate: values.endDate && formatISO(values.endDate),
         },
       },
       {
@@ -105,8 +100,11 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>{t("endDate")}</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
+                  <DateTimePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    timezone={timeZone}
+                    renderTrigger={({ value }) => (
                       <Button
                         id="endDate"
                         variant={"outline"}
@@ -116,38 +114,19 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value?.from ? (
-                          field.value.to ? (
-                            <>
-                              {format.dateTime(new Date(field.value.from), {
-                                dateStyle: "medium",
-                              })}{" "}
-                              -{" "}
-                              {format.dateTime(new Date(field.value.to), {
-                                dateStyle: "medium",
-                              })}
-                            </>
-                          ) : (
-                            format.dateTime(new Date(field.value.from), {
-                              dateStyle: "medium",
-                            })
-                          )
+                        {value ? (
+                          format.dateTime(new Date(value), {
+                            timeZone,
+                            dateStyle: "medium",
+                            timeStyle: "medium",
+                          })
                         ) : (
                           <span>{t("pickDate")}</span>
                         )}
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        initialFocus
-                        mode="range"
-                        defaultMonth={field?.value?.from}
-                        selected={field.value as DateRange}
-                        onSelect={field.onChange}
-                        numberOfMonths={2}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                    )}
+                  />
+
                   <FormMessage />
                 </FormItem>
               )}

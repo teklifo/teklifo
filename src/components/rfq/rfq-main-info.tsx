@@ -1,7 +1,6 @@
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { Prisma } from "@prisma/client";
-import { differenceInDays } from "date-fns";
-import { Calendar, Lock, Globe, HelpCircle, Banknote } from "lucide-react";
+import { Lock, Globe, HelpCircle, Banknote } from "lucide-react";
 import MainInfoItem from "@/components/main-info-item";
 import {
   Tooltip,
@@ -9,8 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { RFQDateInfo } from "./rfq-date-info";
 import { Separator } from "../ui/separator";
 
 type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
@@ -32,38 +30,6 @@ type RequestForQuotationType = Prisma.RequestForQuotationGetPayload<{
 
 type RFQMainInfoProps = {
   rfq: RequestForQuotationType;
-};
-
-export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
-  const t = useTranslations("RFQ");
-  const format = useFormatter();
-
-  const daysLeft = differenceInDays(endDate, new Date());
-
-  return (
-    <>
-      <div className="md:flex md:flex-row md:space-x-2">
-        <MainInfoItem
-          icon={<Calendar />}
-          title={t("endDate")}
-          content={
-            <div className="flex flex-row space-x-2">
-              <span>
-                {format.dateTime(new Date(endDate), {
-                  dateStyle: "long",
-                })}
-              </span>
-              {daysLeft > 0 ? (
-                <Badge variant="outline">{t("daysLeft", { daysLeft })}</Badge>
-              ) : (
-                <Badge variant="destructive">{t("completed")}</Badge>
-              )}
-            </div>
-          }
-        />
-      </div>
-    </>
-  );
 };
 
 export const RFQType = ({ privateRequest }: { privateRequest: boolean }) => {
