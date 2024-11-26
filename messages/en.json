@@ -144,7 +144,9 @@
     "createCompany": "Create company",
     "myCompany": "My company",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "timeZone": "Time zone",
+    "selectDateTime": "Done"
   },
   "Login": {
     "title": "Welcome aboard 👋",
@@ -545,7 +547,7 @@
     "rfqDeleted": "RFQ has been deleted",
     "rfqDeletedHint": "Suppliers will no longer be able to see this request or submit quotations based on it",
     "deleteError": "Failed to delete RFQ",
-    "daysLeft": "{daysLeft} days left",
+    "daysLeft": "{days} day(s) {hours} h. {minutes} m. left",
     "completed": "Completed",
     "shareRfq": "Share RFQ",
     "shareRfqTitle": "Share an RFQ",
@@ -615,7 +617,7 @@
     "price": "Price",
     "quantity": "Quantity",
     "deliveryDate": "Delivery date",
-    "pickDate": "Select date",
+    "pickDate": "Pick a date",
     "comment": "Comment",
     "number": "SKU",
     "unit": "Unit",
@@ -739,7 +741,7 @@
     "noRFQ": "No RFQs",
     "noRFQHint": "Adjust your search filters",
     "endDate": "RFQ deadline",
-    "pickDate": "Select period",
+    "pickDate": "Pick a date",
     "search": "Find",
     "clear": "Clear",
     "filters": "Filters"

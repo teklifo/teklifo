@@ -479,35 +479,13 @@ export const getRFQFiltersSchema = (t: TranslateFunction) => {
     company: z.array(
       z.object({ id: z.string(), name: z.string(), tin: z.string() })
     ),
-    endDate: z
-      .object(
-        {
-          from: z.coerce
-            .date({
-              errorMap: (issue, { defaultError }) => ({
-                message:
-                  issue.code === "invalid_date"
-                    ? t("invalidDate")
-                    : defaultError,
-              }),
-            })
-            .optional(),
-          to: z.coerce
-            .date({
-              errorMap: (issue, { defaultError }) => ({
-                message:
-                  issue.code === "invalid_date"
-                    ? t("invalidDate")
-                    : defaultError,
-              }),
-            })
-            .optional(),
-        },
-        {
-          required_error: t("invalidDate"),
-          invalid_type_error: t("invalidDate"),
-        }
-      )
+    endDate: z.coerce
+      .date({
+        errorMap: (issue, { defaultError }) => ({
+          message:
+            issue.code === "invalid_date" ? t("invalidDate") : defaultError,
+        }),
+      })
       .optional(),
   });
 };

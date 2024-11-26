@@ -1,7 +1,7 @@
 import { useFormatter, useTranslations } from "next-intl";
 import type { Company as CompanyType } from "@prisma/client";
 import { Link } from "@/navigation";
-import { RFQDateInfo } from "@/components/rfq/rfq-main-info";
+import { RFQDateInfo } from "@/components/rfq/rfq-date-info";
 import {
   Card,
   CardDescription,

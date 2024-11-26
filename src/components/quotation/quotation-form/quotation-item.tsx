@@ -6,6 +6,7 @@ import {
   UseFormSetValue,
   useWatch,
 } from "react-hook-form";
+import { TZDate } from "react-day-picker";
 import { CalendarIcon } from "lucide-react";
 import { RequestForQuotationItem, VatRates } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -30,13 +31,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { cn } from "@/lib/utils";
 import {
   calculateAmountWithVat,
@@ -59,6 +55,9 @@ interface CellFieldProps extends React.ComponentPropsWithoutRef<"input"> {
 interface TableInputProps extends React.ComponentPropsWithoutRef<"input"> {
   field: ControllerRenderProps<any, string>;
 }
+
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const minEndDate = new TZDate(new Date(), timeZone);
 
 const Cell = ({ children }: { children: React.ReactNode }) => {
   return <TableCell className="p-0 border-input border">{children}</TableCell>;
@@ -269,37 +268,32 @@ const QuotationItem = ({
             name={`items.${index}.deliveryDate`}
             render={({ field }) => (
               <FormItem>
-                <Popover>
-                  <PopoverTrigger asChild className="rounded-none">
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "border-none w-full pl-3 text-left font-normal hover:bg-green-50 hover:dark:bg-green-900",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          intlFormat.dateTime(new Date(field.value), {
-                            dateStyle: "medium",
-                          })
-                        ) : (
-                          <span>{t("pickDate")}</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <DateTimePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  timezone={timeZone}
+                  min={minEndDate}
+                  hideTime={true}
+                  renderTrigger={({ value }) => (
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "border-none w-full pl-3 text-left font-normal hover:bg-green-50 hover:dark:bg-green-900",
+                        !value && "text-muted-foreground"
+                      )}
+                    >
+                      {value ? (
+                        intlFormat.dateTime(new Date(value), {
+                          timeZone,
+                          dateStyle: "medium",
+                        })
+                      ) : (
+                        <span>{t("pickDate")}</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  )}
+                />
               </FormItem>
             )}
           />
