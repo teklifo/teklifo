@@ -31,10 +31,11 @@ export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
                 })}
               </span>
               {!completed ? (
-                <Badge variant="outline">
+                <Badge variant="outline" className="text-center">
                   {t("daysLeft", {
-                    days: duration.days,
-                    minutes: duration.minutes,
+                    days: duration.days ?? 0,
+                    hours: duration.hours ?? 0,
+                    minutes: duration.minutes ?? 0,
                   })}
                 </Badge>
               ) : (

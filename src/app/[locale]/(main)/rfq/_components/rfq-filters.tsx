@@ -81,7 +81,7 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
   }
 
   return (
-    <div className="mt-8 px-4 py-8">
+    <div className="mt-8 px-0 py-8 md:px-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">

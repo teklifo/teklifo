@@ -7,12 +7,12 @@
 
 import * as React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useLocale } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { CalendarIcon } from "lucide-react";
 import {
   endOfHour,
   endOfMinute,
-  format,
+  format as dateFNSFormat,
   parse,
   getMonth,
   getYear,
@@ -159,6 +159,12 @@ export function DateTimePicker({
   modal = false,
   ...props
 }: DateTimePickerProps & CalendarProps) {
+  const t = useTranslations("Layout");
+  const format = useFormatter();
+
+  const locale = useLocale();
+  const calendarLocale = dateFnsLocale(locale);
+
   const [open, setOpen] = useState(false);
   const [monthYearPicker, setMonthYearPicker] = useState<
     "month" | "year" | false
@@ -170,9 +176,6 @@ export function DateTimePicker({
 
   const [month, setMonth] = useState<Date>(initDate);
   const [date, setDate] = useState<Date>(initDate);
-
-  const locale = useLocale();
-  const calendarLocale = dateFnsLocale(locale);
 
   const endMonth = useMemo(() => {
     return setYear(month, getYear(month) + 1);
@@ -237,12 +240,12 @@ export function DateTimePicker({
 
   const dislayFormat = useMemo(() => {
     if (!displayValue) return "Pick a date";
-    return format(
-      displayValue,
-      `${!hideTime ? "MMM" : "MMMM"} d, yyyy${
-        !hideTime ? (use12HourFormat ? " hh:mm:ss a" : " HH:mm:ss") : ""
-      }`
-    );
+    return format.dateTime(displayValue, {
+      month: !hideTime ? "short" : "long",
+      year: "numeric",
+      timeStyle: !hideTime ? "full" : undefined,
+      hour12: use12HourFormat,
+    });
   }, [displayValue, hideTime, use12HourFormat]);
 
   return (
@@ -269,7 +272,7 @@ export function DateTimePicker({
             tabIndex={0}
           >
             <div className="flex-grow flex items-center">
-              <CalendarIcon className="mr-2 size-4" />
+              <CalendarIcon className="mr-2 h-4 w-4" />
               {dislayFormat}
             </div>
             {clearable && value && (
@@ -279,7 +282,7 @@ export function DateTimePicker({
                 size="sm"
                 role="button"
                 aria-label="Clear date"
-                className="size-6 p-1 ms-1"
+                className="w-6 h-6 p-1 ms-1"
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
@@ -287,7 +290,7 @@ export function DateTimePicker({
                   setOpen(false);
                 }}
               >
-                <XCircle className="size-4" />
+                <XCircle className="h-4 w-4" />
               </Button>
             )}
           </div>
@@ -304,7 +307,7 @@ export function DateTimePicker({
                   )
                 }
               >
-                {format(month, "MMMM")}
+                {format.dateTime(month, { month: "long" })}
               </span>
               <span
                 className="ms-1"
@@ -314,27 +317,36 @@ export function DateTimePicker({
                   )
                 }
               >
-                {format(month, "yyyy")}
+                {format.dateTime(month, { year: "numeric" })}
               </span>
             </div>
             <Button
               variant="ghost"
-              size="icon"
+              className="ml-2 text-foreground"
               onClick={() =>
                 setMonthYearPicker(monthYearPicker ? false : "year")
               }
             >
-              {monthYearPicker ? <ChevronUpIcon /> : <ChevronDownIcon />}
+              {monthYearPicker ? (
+                <ChevronUpIcon className="h-4 w-4" />
+              ) : (
+                <ChevronDownIcon className="h-4 w-4" />
+              )}
             </Button>
           </div>
           <div
-            className={cn("flex space-x-2", monthYearPicker ? "hidden" : "")}
+            className={cn("flex space-x-1", monthYearPicker ? "hidden" : "")}
           >
-            <Button variant="ghost" size="icon" onClick={onPrevMonth}>
-              <ChevronLeftIcon />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-foreground"
+              onClick={onPrevMonth}
+            >
+              <ChevronLeftIcon className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="icon" onClick={onNextMonth}>
-              <ChevronRightIcon />
+              <ChevronRightIcon className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -366,15 +378,15 @@ export function DateTimePicker({
               weekday:
                 "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
               week: "flex w-full justify-between mt-2",
-              day: "h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 rounded-1",
+              day: "h-9 w-9 rounded-md text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 hover:bg-accent hover:text-accent-foreground",
               day_button: cn(
-                buttonVariants({ variant: "ghost" }),
-                "size-9 rounded-md p-0 font-normal aria-selected:opacity-100"
+                "w-9 h-9 rounded-md p-0 font-normal aria-selected:opacity-100"
               ),
+
               range_end: "day-range-end",
               selected:
                 "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-l-md rounded-r-md",
-              today: "bg-accent text-accent-foreground",
+              today: "bg-accent text-accent-foreground rounded-md",
               outside:
                 "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
               disabled: "text-muted-foreground opacity-50",
@@ -403,7 +415,7 @@ export function DateTimePicker({
             )}
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="mt-2 flex flex-col gap-2">
           {!hideTime && (
             <TimePicker
               timePicker={timePicker}
@@ -415,12 +427,12 @@ export function DateTimePicker({
             />
           )}
           <div className="flex flex-row-reverse items-center justify-between">
-            <Button className="ms-2 h-7 px-2" onClick={onSubmit}>
-              Done
+            <Button size="sm" onClick={onSubmit}>
+              {t("selectDateTime")}
             </Button>
             {timezone && (
               <div className="text-sm">
-                <span>Timezone:</span>
+                <span>{t("timeZone")}:</span>
                 <span className="font-semibold ms-1">{timezone}</span>
               </div>
             )}
@@ -446,6 +458,8 @@ function MonthYearPicker({
   onChange: (value: Date, mode: "month" | "year") => void;
   className?: string;
 }) {
+  const format = useFormatter();
+
   const yearRef = useRef<HTMLDivElement>(null);
   const years = useMemo(() => {
     const years: TimeOption[] = [];
@@ -467,7 +481,11 @@ function MonthYearPicker({
       const endM = endOfMonth(setMonthFns(value, i));
       if (minDate && endM < minDate) disabled = true;
       if (maxDate && startM > maxDate) disabled = true;
-      months.push({ value: i, label: format(new Date(0, i), "MMM"), disabled });
+      months.push({
+        value: i,
+        label: format.dateTime(new Date(0, i), { month: "short" }),
+        disabled,
+      });
     }
     return months;
   }, [value]);
@@ -557,6 +575,8 @@ function TimePicker({
   max?: Date;
   timePicker?: DateTimePickerProps["timePicker"];
 }) {
+  const format = useFormatter();
+
   // hours24h = HH
   // hours12h = hh
   const formatStr = useMemo(
@@ -567,10 +587,10 @@ function TimePicker({
     [use12HourFormat]
   );
   const [ampm, setAmpm] = useState(
-    format(value, "a") === "AM" ? AM_VALUE : PM_VALUE
+    dateFNSFormat(value, "a") === "AM" ? AM_VALUE : PM_VALUE
   );
   const [hour, setHour] = useState(
-    use12HourFormat ? +format(value, "hh") : value.getHours()
+    use12HourFormat ? +dateFNSFormat(value, "hh") : value.getHours()
   );
   const [minute, setMinute] = useState(value.getMinutes());
   const [second, setSecond] = useState(value.getSeconds());
@@ -807,7 +827,7 @@ function TimePicker({
         }
       }
     }
-    return format(value, arr.join(":") + (use12HourFormat ? " a" : ""));
+    return dateFNSFormat(value, arr.join(":") + (use12HourFormat ? " a" : ""));
   }, [value, use12HourFormat, timePicker]);
 
   return (
@@ -819,16 +839,16 @@ function TimePicker({
           aria-expanded={open}
           className="justify-between"
         >
-          <Clock className="mr-2 size-4" />
+          <Clock className="mr-2 h-4 w-4" />
           {display}
-          <ChevronDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
+          <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0" side="top">
         <div className="flex-col gap-2 p-2">
           <div className="flex h-56 grow">
             {(!timePicker || timePicker.hour) && (
-              <ScrollArea className="h-full flex-grow">
+              <ScrollArea className="h-full w-full flex-grow">
                 <div className="flex grow flex-col items-stretch overflow-y-auto pe-2 pb-48">
                   {hours.map((v) => (
                     <div
@@ -848,7 +868,7 @@ function TimePicker({
               </ScrollArea>
             )}
             {(!timePicker || timePicker.minute) && (
-              <ScrollArea className="h-full flex-grow">
+              <ScrollArea className="h-56 w-full flex-grow">
                 <div className="flex grow flex-col items-stretch overflow-y-auto pe-2 pb-48">
                   {minutes.map((v) => (
                     <div
@@ -868,7 +888,7 @@ function TimePicker({
               </ScrollArea>
             )}
             {(!timePicker || timePicker.second) && (
-              <ScrollArea className="h-full flex-grow">
+              <ScrollArea className="h-56 w-full flex-grow">
                 <div className="flex grow flex-col items-stretch overflow-y-auto pe-2 pb-48">
                   {seconds.map((v) => (
                     <div
@@ -888,7 +908,7 @@ function TimePicker({
               </ScrollArea>
             )}
             {use12HourFormat && (
-              <ScrollArea className="h-full flex-grow">
+              <ScrollArea className="h-56 flex-grow">
                 <div className="flex grow flex-col items-stretch overflow-y-auto pe-2">
                   {ampmOptions.map((v) => (
                     <TimeItem
@@ -931,7 +951,7 @@ const TimeItem = ({
       disabled={disabled}
     >
       <div className="w-4">
-        {selected && <CheckIcon className="my-auto size-4" />}
+        {selected && <CheckIcon className="my-auto w-4 h-4" />}
       </div>
       <span className="ms-2">{option.label}</span>
     </Button>
@@ -953,7 +973,7 @@ function buildTime(options: BuildTimeOptions) {
     options;
   let date: Date;
   if (use12HourFormat) {
-    const dateStrRaw = format(value, formatStr);
+    const dateStrRaw = dateFNSFormat(value, formatStr);
     // yyyy-MM-dd hh:mm:ss.SSS a zzzz
     // 2024-10-14 01:20:07.524 AM GMT+00:00
     let dateStr =

@@ -144,7 +144,9 @@
     "createCompany": "Create company",
     "myCompany": "My company",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "timeZone": "Time zone",
+    "selectDateTime": "Done"
   },
   "Login": {
     "title": "Welcome aboard 👋",
@@ -545,7 +547,7 @@
     "rfqDeleted": "RFQ has been deleted",
     "rfqDeletedHint": "Suppliers will no longer be able to see this request or submit quotations based on it",
     "deleteError": "Failed to delete RFQ",
-    "daysLeft": "{days} days {minutes} minutes left",
+    "daysLeft": "{days} day(s) {hours} h. {minutes} m. left",
     "completed": "Completed",
     "shareRfq": "Share RFQ",
     "shareRfqTitle": "Share an RFQ",
