@@ -547,7 +547,7 @@
     "rfqDeleted": "RFQ has been deleted",
     "rfqDeletedHint": "Suppliers will no longer be able to see this request or submit quotations based on it",
     "deleteError": "Failed to delete RFQ",
-    "daysLeft": "{days} day(s) {hours} h. {minutes} m. left",
+    "deadline": "Deadline: {deadline}",
     "completed": "Completed",
     "shareRfq": "Share RFQ",
     "shareRfqTitle": "Share an RFQ",
