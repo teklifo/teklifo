@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getCookie } from "cookies-next";
 import { Sparkles } from "lucide-react";
@@ -45,6 +45,8 @@ const AIAnalysisSettings = ({ rfq }: AIAnalysisSettingsProps) => {
   const [aiAnalysisList, setAiAnalysisList] =
     useState<AIQuotationsAnalysisType[]>();
 
+  const resetState = useQuotationsAIAnalysisStore((state) => state.reset);
+
   const selectedQuotations = useQuotationsAIAnalysisStore(
     (state) => state.quotations
   );
@@ -52,6 +54,10 @@ const AIAnalysisSettings = ({ rfq }: AIAnalysisSettingsProps) => {
   const selectedRfqItems = useQuotationsAIAnalysisStore(
     (state) => state.rfqItems
   );
+
+  useEffect(() => {
+    resetState();
+  }, [resetState]);
 
   async function analyzeQuotationsUsingAI() {
     setLoading(true);

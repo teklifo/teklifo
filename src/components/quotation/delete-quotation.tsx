@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "@/navigation";
 import type { Prisma } from "@prisma/client";
 import { getCookie } from "cookies-next";
 import { Trash } from "lucide-react";
@@ -32,10 +33,13 @@ type QuotationType = Prisma.QuotationGetPayload<{
 
 type Props = {
   quotation: QuotationType;
+  closeDialog: () => void;
 };
 
-const DeleteQuotation = ({ quotation }: Props) => {
+const DeleteQuotation = ({ quotation, closeDialog }: Props) => {
   const t = useTranslations("Quotation");
+
+  const router = useRouter();
 
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -61,7 +65,9 @@ const DeleteQuotation = ({ quotation }: Props) => {
         description: t("quotationDeletedHint"),
       });
 
-      setOpen(false);
+      router.refresh();
+
+      closeDialog();
     } catch (error) {
       let message = "";
       if (error instanceof Error) message = error.message;
@@ -71,9 +77,9 @@ const DeleteQuotation = ({ quotation }: Props) => {
         description: message,
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

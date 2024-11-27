@@ -35,8 +35,8 @@ type QuotationType = Prisma.QuotationGetPayload<{
 }>;
 
 type ConfirmQuotationProps = {
-  closeDialog: () => void;
   quotation?: QuotationType;
+  closeDialog: () => void;
 };
 
 const ConfirmQuotation = ({
@@ -94,6 +94,8 @@ const ConfirmQuotation = ({
         });
       }
 
+      router.refresh();
+
       closeDialog();
     } catch (error) {
       let message = "";
@@ -104,11 +106,9 @@ const ConfirmQuotation = ({
         description: message,
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
-
-    router.refresh();
-
-    setLoading(false);
   };
 
   return (

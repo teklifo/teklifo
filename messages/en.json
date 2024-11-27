@@ -869,8 +869,7 @@
       "invalidNameLength": "Company name must be no longer than 50 characters",
       "invalidEmail": "Provide a valid company email address",
       "invalidPhone": "Provide a valid phone number",
-      "invalidTin": "TIN must be exactly 10 characters long",
-      "numericTin": "TIN must contain only numbers",
+      "invalidTin": "TIN is required",
       "invalidSloganLenght": "Slogan must not exceed 100 characters in length"
     },
     "stockSchema": {
