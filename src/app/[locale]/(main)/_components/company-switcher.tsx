@@ -75,7 +75,7 @@ const CompanySwitcher = ({
         ))}
         <Separator className="my-1" />
         <Link
-          href="/login"
+          href="/new-company"
           className={cn(
             buttonVariants({ variant: "ghost", size: "sm" }),
             "w-full space-x-2 font-normal flex justify-start items-center"
