@@ -8,15 +8,20 @@ interface QuotationsAIAnalysisState {
   addQuotation: (quotation: QuotationWithCompanyType) => void;
   removeQuotation: (quotation: QuotationWithCompanyType) => void;
   setRfqItems: (rfqItem: string[]) => void;
+  reset: () => void;
 }
 
 const MAX_QUOTS = 3;
 const MAX_ITEMS = 10;
 
+const initialState = {
+  quotations: [],
+  rfqItems: [],
+};
+
 export const useQuotationsAIAnalysisStore = create<QuotationsAIAnalysisState>(
   (set) => ({
-    quotations: [],
-    rfqItems: [],
+    ...initialState,
     addQuotation: (quotation: QuotationWithCompanyType) =>
       set((state) => ({
         quotations:
@@ -36,5 +41,8 @@ export const useQuotationsAIAnalysisStore = create<QuotationsAIAnalysisState>(
       set((state) => ({
         rfqItems: rfqItems.length <= MAX_ITEMS ? rfqItems : state.rfqItems,
       })),
+    reset: () => {
+      set(initialState);
+    },
   })
 );

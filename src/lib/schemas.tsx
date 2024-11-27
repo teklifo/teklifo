@@ -26,10 +26,7 @@ export const getCompanySchema = (t: TranslateFunction) => {
         required_error: t("invalidTin"),
         invalid_type_error: t("invalidTin"),
       })
-      .length(10, t("invalidTin"))
-      .refine((data) => /^\d+$/.test(data), {
-        message: t("numericTin"),
-      }),
+      .min(1, t("invalidTin")),
     email: z
       .string({
         required_error: t("invalidEmail"),

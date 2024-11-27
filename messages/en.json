@@ -445,13 +445,13 @@
     "title": "My RFQs",
     "subtitle": "List of your RFQs to suppliers",
     "new": "Create RFQ",
-    "noMyRFQ": "Your company has not yet requested any quotations from suppliers",
-    "noMyRFQHint": "Request quotations for the products you're interested in right now"
+    "noMyRFQ": "No RFQ found",
+    "noMyRFQHint": "Try to request quotations right now"
   },
   "MyQuotations": {
     "title": "My quotations",
     "subtitle": "List of your quotations to clients",
-    "noMyQuotations": "Your company has not yet participated in RFQs"
+    "noMyQuotations": "No quotations found"
   },
   "RFQForm": {
     "newTitle": "New request for quotations to suppliers",
@@ -547,7 +547,7 @@
     "rfqDeleted": "RFQ has been deleted",
     "rfqDeletedHint": "Suppliers will no longer be able to see this request or submit quotations based on it",
     "deleteError": "Failed to delete RFQ",
-    "daysLeft": "{days} day(s) {hours} h. {minutes} m. left",
+    "deadline": "Deadline: {deadline}",
     "completed": "Completed",
     "shareRfq": "Share RFQ",
     "shareRfqTitle": "Share an RFQ",
@@ -738,9 +738,9 @@
   "RFQSearch": {
     "title": "RFQ search",
     "subtitle": "Search RFQs using specific filters",
-    "noRFQ": "No RFQs",
+    "noRFQ": "No RFQ found",
     "noRFQHint": "Adjust your search filters",
-    "endDate": "RFQ deadline",
+    "endDate": "Deadline until",
     "pickDate": "Pick a date",
     "search": "Find",
     "clear": "Clear",
@@ -869,8 +869,7 @@
       "invalidNameLength": "Company name must be no longer than 50 characters",
       "invalidEmail": "Provide a valid company email address",
       "invalidPhone": "Provide a valid phone number",
-      "invalidTin": "TIN must be exactly 10 characters long",
-      "numericTin": "TIN must contain only numbers",
+      "invalidTin": "TIN is required",
       "invalidSloganLenght": "Slogan must not exceed 100 characters in length"
     },
     "stockSchema": {

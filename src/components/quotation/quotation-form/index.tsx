@@ -150,7 +150,9 @@ const QuotationForm = ({
       <DialogFooter className="flex !justify-between px-6">
         <QuotationTotalAmount />
         <div className="flex flex-col-reverse space-y-reverse space-y-2 mb-2 md:space-x-2 md:space-y-0 md:flex-row md:mb-0">
-          {quotation && <DeleteQuotation quotation={quotation} />}
+          {quotation && (
+            <DeleteQuotation quotation={quotation} closeDialog={closeDialog} />
+          )}
           <ConfirmQuotation quotation={quotation} closeDialog={closeDialog} />
         </div>
       </DialogFooter>

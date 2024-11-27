@@ -1,7 +1,6 @@
 "use client";
 
 import { useFormatter, useTranslations } from "next-intl";
-import { intervalToDuration } from "date-fns";
 import { Calendar } from "lucide-react";
 import MainInfoItem from "@/components/main-info-item";
 import { Badge } from "@/components/ui/badge";
@@ -12,8 +11,7 @@ export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
   const t = useTranslations("RFQ");
   const format = useFormatter();
 
-  const duration = intervalToDuration({ start: new Date(), end: endDate });
-  const completed = endDate < new Date();
+  const completed = new Date(endDate) < new Date();
 
   return (
     <>
@@ -32,10 +30,8 @@ export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
               </span>
               {!completed ? (
                 <Badge variant="outline" className="text-center">
-                  {t("daysLeft", {
-                    days: duration.days ?? 0,
-                    hours: duration.hours ?? 0,
-                    minutes: duration.minutes ?? 0,
+                  {t("deadline", {
+                    deadline: format.relativeTime(endDate),
                   })}
                 </Badge>
               ) : (
