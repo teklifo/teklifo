@@ -2,22 +2,19 @@
 
 <hr>
 
+![hero](readme-logo.png)
+
 <div align="center">
-  <a href="https://teklifo.com" target="_blank">
-    <img src="readme-logo.png" alt="Logo" width="800" height="300" style="object-fit: cover;">
-  </a>
-
   <h1 align="center">Teklifo</h1>
-
   <p align="center">
     Помогаем покупателям и поставщикам найти друг друга
     <br />
     <br />
-    <a href="https://infostart.ru/1c/articles/2241692/" target="_blank">Infostart</a>
+    <a href="https://infostart.ru/1c/articles/2241692/">Infostart</a>
     ·
-    <a href="https://teklifo.com" target="_blank">Веб-сайт</a>
+    <a href="https://teklifo.com">Веб-сайт</a>
     ·
-    <a href="https://github.com/teklifo/teklifo/issues/new" target="_blank">Запросить функционал</a>
+    <a href="https://github.com/teklifo/teklifo/issues/new">Запросить функционал</a>
   </p>
 </div>
 

@@ -2,20 +2,17 @@
 
 <hr>
 
+![hero](readme-logo.png)
+
 <div align="center">
-  <a href="https://teklifo.com" target="_blank">
-    <img src="readme-logo.png" alt="Logo" width="800" height="300" style="object-fit: cover;">
-  </a>
-
   <h1 align="center">Teklifo</h1>
-
   <p align="center">
     Let's bridge the gap between clients and suppliers
     <br />
     <br />
-    <a href="https://teklifo.com" target="_blank">Web-site</a>
+    <a href="https://teklifo.com">Web-site</a>
     ·
-    <a href="https://github.com/teklifo/teklifo/issues/new" target="_blank">Request feature</a>
+    <a href="https://github.com/teklifo/teklifo/issues/new">Request feature</a>
   </p>
 </div>
 
