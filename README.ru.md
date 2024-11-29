@@ -1,6 +1,4 @@
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/teklifo/teklifo/blob/main/README.md)
-
-<hr>
+[English version](https://github.com/teklifo/teklifo/blob/main/README.md)
 
 ![hero](readme-logo.png)
 

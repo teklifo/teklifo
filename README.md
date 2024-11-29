@@ -1,6 +1,4 @@
-[![ru](https://img.shields.io/badge/lang-ru-red.svg)](https://github.com/teklifo/teklifo/blob/main/README.ru.md)
-
-<hr>
+[Версия на русском](https://github.com/teklifo/teklifo/blob/main/README.ru.md)
 
 ![hero](readme-logo.png)
 
