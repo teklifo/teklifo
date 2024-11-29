@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+[Версия на русском](https://github.com/teklifo/teklifo/blob/main/README.ru.md)
 
-## Getting Started
+<hr/>
 
-First, run the development server:
+![hero](readme-logo.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<div align="center">
+  <h1 align="center">Teklifo</h1>
+  <p align="center">
+    Let's bridge the gap between clients and suppliers
+    <br />
+    <br />
+    <a href="https://teklifo.com">Web-site</a>
+    ·
+    <a href="https://github.com/teklifo/teklifo/issues/new">Request feature</a>
+  </p>
+</div>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## About The Project
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+With Teklifo, you can streamline your procurement process: publish RFQs, collect, and analyze quotations in a simple and user-friendly format. This reduces the workload on your procurement department, freeing it from routine tasks.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Features
 
-## Learn More
+**RFQ**
 
-To learn more about Next.js, take a look at the following resources:
+Publish RFQ for the products you need, specifying quantities, preferred prices, and desired delivery dates.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Quotations**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Send quotations to clients in response to their RFQs.
 
-## Deploy on Vercel
+**Comparison**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Compare received quotations across individual product items using a wide range of criteria.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**✨ AI-Powered Proposal Analysis**
+
+Leverage an LLM model for quick and efficient analysis of received quotations.
+
+**Reference Information**
+
+Add reference data to the system for more convenient operations, including product catalogs, pricing, and inventory levels.
+
+**Team Collaboration**
+
+Create a profile for your company and invite team members to collaborate effectively.
+
+## Technology Stack
+
+The project architecture is a monolith built on Next.js, using the following technologies:
+
+- TypeScript
+- React
+- Next.js
+- Node.js runtime
+- PostgreSQL
+- Prisma ORM
+- shadcn/ui
+- Tailwind CSS
+- BullMQ & Redis
