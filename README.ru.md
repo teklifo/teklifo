@@ -1,5 +1,7 @@
 [English version](https://github.com/teklifo/teklifo/blob/main/README.md)
 
+<hr/>
+
 ![hero](readme-logo.png)
 
 <div align="center">
