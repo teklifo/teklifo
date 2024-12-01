@@ -21,7 +21,6 @@ export default async function sendEmail(params: EmailParametersType) {
       user: process.env.EMAIL_SERVER_USER,
       pass: process.env.EMAIL_SERVER_PASSWORD,
     },
-    secure: true,
   });
 
   await transporter.sendMail({
