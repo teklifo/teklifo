@@ -65,9 +65,3 @@ The project architecture is a monolith built on Next.js, using the following tec
 - Mailgun
 - Gemini
 - Cloudinary
-
-<hr/>
-
-<br/>
-
-<iframe src="https://ghbtns.com/github-btn.html?user=teklifo&repo=teklifo&type=star&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
