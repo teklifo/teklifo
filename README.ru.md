@@ -65,3 +65,9 @@
 - shadcn/ui
 - Tailwind CSS
 - BullMQ & Redis
+
+## Сторонние сервисы
+
+- Mailgun
+- Gemini
+- Cloudinary

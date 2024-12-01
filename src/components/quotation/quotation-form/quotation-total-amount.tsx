@@ -17,10 +17,16 @@ const QuotationTotalAmount = () => {
   let totalAmount = 0;
   let totalVatAmount = 0;
 
-  items.map((item: any) => {
+  items.forEach((item: any) => {
+    if (item.skip) return;
+
     const { vatRatePercentage } = getVatRatePercentage(item.vatRate);
 
-    const vatAmount = calculateVatAmount(item.amount, vatRatePercentage);
+    const vatAmount = calculateVatAmount(
+      item.amount,
+      vatIncluded,
+      vatRatePercentage
+    );
 
     totalVatAmount = totalVatAmount + vatAmount;
 

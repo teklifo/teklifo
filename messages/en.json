@@ -145,8 +145,9 @@
     "myCompany": "My company",
     "previous": "Previous",
     "next": "Next",
-    "timeZone": "Time zone",
-    "selectDateTime": "Done"
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds"
   },
   "Login": {
     "title": "Welcome aboard 👋",
@@ -631,6 +632,7 @@
     "selectVatRate": "Select VAT rate",
     "NOVAT": "Excluding VAT",
     "VAT0": "0%",
+    "VAT10": "10%",
     "VAT18": "18%",
     "VAT20": "20%",
     "vatIncluded": "Amount includes VAT",
@@ -723,7 +725,8 @@
     "vatNotIncluded": "excl.",
     "NOVAT": "Excluding VAT",
     "VAT0": "VAT 0%",
-    "VAT18": "NSD 18%",
+    "VAT10": "VAT 10%",
+    "VAT18": "VAT 18%",
     "VAT20": "VAT 20%",
     "order": "Sort",
     "orderByAmountAsc": "Profitable first",

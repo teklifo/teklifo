@@ -419,7 +419,7 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
         required_error: t("invalidAmount"),
         invalid_type_error: t("invalidAmount"),
       }),
-      vatRate: z.enum(["NOVAT", "VAT0", "VAT18", "VAT20"], {
+      vatRate: z.enum(["NOVAT", "VAT0", "VAT10", "VAT18", "VAT20"], {
         required_error: t("invalidVatRate"),
         invalid_type_error: t("invalidVatRate"),
       }),
