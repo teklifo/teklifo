@@ -153,7 +153,11 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
           item.vatRate
         );
 
-        const vatAmount = calculateVatAmount(item.amount, vatRatePercentage);
+        const vatAmount = calculateVatAmount(
+          item.amount,
+          vatIncluded,
+          vatRatePercentage
+        );
 
         const amountWithVat = calculateAmountWithVat(
           item.amount,

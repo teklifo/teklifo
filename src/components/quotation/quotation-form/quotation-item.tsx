@@ -133,7 +133,7 @@ const QuotationItem = ({
 
   const vatRateInfo = getVatRatePercentage(vatRate);
   const vatAmount =
-    calculateVatAmount(amount, vatRateInfo.vatRatePercentage) ?? 0;
+    calculateVatAmount(amount, vatIncluded, vatRateInfo.vatRatePercentage) ?? 0;
   const amountWithVat =
     calculateAmountWithVat(amount, vatAmount, vatIncluded) ?? 0;
 
