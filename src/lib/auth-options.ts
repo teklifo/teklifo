@@ -11,7 +11,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import db from "@/lib/db";
-import { sendEmailWithFetch } from "@/lib/nodemailer/sendEmail";
+import sendEmail from "@/lib/nodemailer/sendEmail";
 import { getCredentialsSchema } from "@/lib/schemas";
 
 const sendVerificationRequest = async ({
@@ -48,7 +48,7 @@ const sendVerificationRequest = async ({
 
     if (!invitation) return;
 
-    await sendEmailWithFetch({
+    await sendEmail({
       locale,
       emailType: "invitation",
       receivers: identifier,
@@ -62,7 +62,7 @@ const sendVerificationRequest = async ({
       },
     });
   } else {
-    await sendEmailWithFetch({
+    await sendEmail({
       locale,
       emailType: "email-verification",
       receivers: identifier,
