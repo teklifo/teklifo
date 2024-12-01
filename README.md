@@ -34,7 +34,7 @@ Send quotations to clients in response to their RFQs.
 
 Compare received quotations across individual product items using a wide range of criteria.
 
-**✨ AI-Powered Proposal Analysis**
+**✨ AI-Powered Quotations Analysis**
 
 Leverage an LLM model for quick and efficient analysis of received quotations.
 
@@ -59,3 +59,15 @@ The project architecture is a monolith built on Next.js, using the following tec
 - shadcn/ui
 - Tailwind CSS
 - BullMQ & Redis
+
+## Services
+
+- Mailgun
+- Gemini
+- Cloudinary
+
+<hr/>
+
+<br/>
+
+<iframe src="https://ghbtns.com/github-btn.html?user=teklifo&repo=teklifo&type=star&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
