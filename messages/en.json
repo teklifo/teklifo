@@ -145,8 +145,9 @@
     "myCompany": "My company",
     "previous": "Previous",
     "next": "Next",
-    "timeZone": "Time zone",
-    "selectDateTime": "Done"
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds"
   },
   "Login": {
     "title": "Welcome aboard 👋",

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useTranslations, useFormatter } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import * as z from "zod";
-import { TZDate } from "react-day-picker";
 import { CalendarIcon, ChevronsUpDown } from "lucide-react";
 import {
   FormControl,
@@ -28,14 +27,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
+import { TimePicker } from "@/components/ui/time-picker";
 import { Switch } from "@/components/ui/switch";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import CURRENCIES from "@/lib/currencies";
-
-const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const minEndDate = new TZDate(new Date(), timeZone);
 
 const RFQFormMain = () => {
   const t = useTranslations("RFQForm");
@@ -64,7 +61,7 @@ const RFQFormMain = () => {
           </FormItem>
         )}
       />
-      {/* End date */}
+      {/* Deadline */}
       <div className="max-w-[240px]">
         <FormField
           control={form.control}
@@ -72,32 +69,42 @@ const RFQFormMain = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("endDate")}</FormLabel>
-              <DateTimePicker
-                value={field.value}
-                onChange={field.onChange}
-                timezone={timeZone}
-                min={minEndDate}
-                renderTrigger={({ value }) => (
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full pl-3 text-left font-normal",
-                      !field.value && "text-muted-foreground"
-                    )}
-                  >
-                    {value ? (
-                      format.dateTime(value, {
-                        timeZone,
-                        dateStyle: "medium",
-                        timeStyle: "medium",
-                      })
-                    ) : (
-                      <span>{t("pickDate")}</span>
-                    )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                )}
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format.dateTime(new Date(field.value), {
+                          timeZone:
+                            Intl.DateTimeFormat().resolvedOptions().timeZone,
+                          dateStyle: "medium",
+                          timeStyle: "medium",
+                        })
+                      ) : (
+                        <span>{t("pickDate")}</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) => date < new Date()}
+                  />
+                  <div className="p-3 border-t border-border">
+                    <TimePicker setDate={field.onChange} date={field.value} />
+                  </div>
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}

@@ -12,13 +12,20 @@ import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Calendar } from "@/components/ui/calendar";
+import { TimePicker } from "@/components/ui/time-picker";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import CompanyFilter from "@/components/filters/company-filter";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { getRFQFiltersSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
@@ -96,37 +103,49 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
           <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
             <FormField
               control={form.control}
-              name={`endDate`}
+              name="endDate"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem>
                   <FormLabel>{t("endDate")}</FormLabel>
-                  <DateTimePicker
-                    value={field.value}
-                    onChange={field.onChange}
-                    timezone={timeZone}
-                    renderTrigger={({ value }) => (
-                      <Button
-                        id="endDate"
-                        variant={"outline"}
-                        className={cn(
-                          "max-w-[300px] justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {value ? (
-                          format.dateTime(new Date(value), {
-                            timeZone,
-                            dateStyle: "medium",
-                            timeStyle: "medium",
-                          })
-                        ) : (
-                          <span>{t("pickDate")}</span>
-                        )}
-                      </Button>
-                    )}
-                  />
-
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format.dateTime(new Date(field.value), {
+                              timeZone:
+                                Intl.DateTimeFormat().resolvedOptions()
+                                  .timeZone,
+                              dateStyle: "medium",
+                              timeStyle: "medium",
+                            })
+                          ) : (
+                            <span>{t("pickDate")}</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                      />
+                      <div className="p-3 border-t border-border">
+                        <TimePicker
+                          setDate={field.onChange}
+                          date={field.value}
+                        />
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
