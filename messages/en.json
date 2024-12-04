@@ -576,7 +576,9 @@
     "participationError": "Unable to confirm participation in the RFQ",
     "lineNumber": "#",
     "product": "Product",
-    "viewItemsAsTable": "View all items in table"
+    "viewItemsAsTable": "View all items in table",
+    "rfqItems": "RFQ items",
+    "rfqItemsHint": "The following items were requested by the customer"
   },
   "SupplierGuide": {
     "title": "Congratulations! You've accessed the private RFQ via the link",
