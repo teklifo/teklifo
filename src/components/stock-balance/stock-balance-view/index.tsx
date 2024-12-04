@@ -7,7 +7,7 @@ type Props = {
 
 const StockBalance = ({ stock }: Props) => {
   return (
-    <div className="mx-auto">
+    <div className="relative mx-auto">
       <DataTable columns={columns} data={stock} />
     </div>
   );

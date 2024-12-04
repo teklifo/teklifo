@@ -7,7 +7,7 @@ type Props = {
 
 const PriceView = ({ prices }: Props) => {
   return (
-    <div className="mx-auto">
+    <div className="relative mx-auto">
       <DataTable columns={columns} data={prices} />
     </div>
   );
