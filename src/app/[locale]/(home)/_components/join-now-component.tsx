@@ -8,11 +8,12 @@ const JoinNowComponent = () => {
   const t = useTranslations("Home");
 
   return (
-    <div className="flex flex-col items-center text-center bg-primary rounded-2xl p-8 md:p-20 mx-auto space-y-5 mt-16 md:mb-24 md:mt-0 dark:bg-muted-foreground">
+    <div className="flex flex-col items-center text-center bg-primary rounded-2xl p-8 md:p-20 mx-auto space-y-5 mt-16 md:mb-24 md:mt-0 dark:bg-foreground">
       <h2 className="text-background scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
         {t("joinNowTitle")}
       </h2>
       <p className="text-xl text-background mt-4">{t("joinNowSubtitle")}</p>
+      <div className="text-4xl">💰</div>
       <Link
         href={`/dashboard`}
         className={cn(

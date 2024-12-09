@@ -11,7 +11,7 @@ const ClientHeroSection = () => {
   return (
     <div className="grid lg:grid-cols-2 place-items-center pt-16 pb-8 md:pt-12 md:pb-24">
       <div className="text-center md:text-left">
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
+        <h1 className="scroll-m-20 text-5xl font-bold tracking-tight">
           {t("title")}
         </h1>
         <p className="text-xl text-muted-foreground mt-4">{t("subtitle")}</p>

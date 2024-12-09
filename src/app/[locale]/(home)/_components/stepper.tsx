@@ -1,44 +1,70 @@
-import { Coins, Send, LineChart } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { BackgroundGradient } from "./background-gradient";
-
-type StepProps = {
-  label: string;
-  text: string;
-  icon: React.ComponentType<{ className?: string }>;
-};
-
-const Step = ({ label, text, icon: Icon }: StepProps) => {
-  return (
-    <BackgroundGradient>
-      <div className="rounded-3xl p-6 bg-card border flex gap-4 items-start">
-        <div className="flex justify-center items-center bg-primary rounded-full p-2 w-16 h-16 shrink-0">
-          <Icon className="text-background w-8 h-8" />
-        </div>
-        <div className="">
-          <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-            {label}
-          </h3>
-          <p className="text-xl text-muted-primary mt-2">{text}</p>
-        </div>
-      </div>
-    </BackgroundGradient>
-  );
-};
+import { Timeline } from "./timeline";
+import ThemedImage from "@/components/themed-image";
 
 const Stepper = () => {
   const t = useTranslations("Home");
 
+  const timelineData = [
+    {
+      title: t("stepLabel1"),
+      content: (
+        <div>
+          <p className="text-2xl font-semibold text-muted-foreground">
+            {t("stepText1")}
+          </p>
+          <div className="hidden md:flex">
+            <ThemedImage
+              src="/hero/light/rfq.png"
+              alt="RFQ"
+              width={1000}
+              height={1000}
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: t("stepLabel2"),
+      content: (
+        <div>
+          <p className="text-2xl font-semibold text-muted-foreground">
+            {t("stepText2")}
+          </p>
+          <div className="hidden md:flex">
+            <ThemedImage
+              src="/hero/light/quot.png"
+              alt="Quotation"
+              width={1000}
+              height={1000}
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: t("stepLabel3"),
+      content: (
+        <div>
+          <p className="text-2xl font-semibold text-muted-foreground">
+            {t("stepText3")}
+          </p>
+          <div className="hidden md:flex">
+            <ThemedImage
+              src="/hero/light/analysis.png"
+              alt="Quotation"
+              width={1000}
+              height={1000}
+            />
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="mt-16 md:mb-24 md:mt-0">
-      <h2 className="scroll-m-20 text-center text-3xl font-semibold tracking-tight mb-8">
-        {t("howItWorks")}
-      </h2>
-      <div className="space-y-3">
-        <Step icon={Coins} label={t("stepLabel1")} text={t("stepText1")} />
-        <Step icon={Send} label={t("stepLabel2")} text={t("stepText2")} />
-        <Step icon={LineChart} label={t("stepLabel3")} text={t("stepText3")} />
-      </div>
+      <Timeline data={timelineData} />
     </div>
   );
 };
