@@ -1,12 +1,7 @@
 "use client";
-import {
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-  motion,
-} from "framer-motion";
 import { useTranslations } from "next-intl";
 import React, { useEffect, useRef, useState } from "react";
+import { useScroll, useTransform, motion } from "framer-motion";
 
 interface TimelineEntry {
   title: string;
@@ -60,13 +55,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
                 {item.title}
               </h3>
             </div>
-
-            <div className="relative pl-20 pr-4 md:pl-4 w-full">
-              <h3 className="md:hidden block text-4xl mb-4 text-left font-bold">
-                {item.title}
-              </h3>
-              {item.content}{" "}
-            </div>
+            <TimelineContent item={item} />
           </div>
         ))}
         <div
@@ -85,5 +74,22 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
         </div>
       </div>
     </div>
+  );
+};
+
+const TimelineContent = ({ item }: { item: TimelineEntry }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
+      <div className="relative pl-20 pr-4 md:pl-4 w-full">
+        <h3 className="md:hidden block text-4xl mb-4 text-left font-bold">
+          {item.title}
+        </h3>
+        {item.content}{" "}
+      </div>
+    </motion.div>
   );
 };

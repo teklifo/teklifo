@@ -6,7 +6,7 @@ const ClientFeatures = () => {
   const t = useTranslations("Home");
 
   return (
-    <div className="mt-16 md:mb-32 md:mt-0">
+    <div className="mt-16 md:mb-48 md:mt-0">
       <h2 className="scroll-m-20 text-center text-4xl font-semibold tracking-tight">
         {t("featuresTitle")}
       </h2>
