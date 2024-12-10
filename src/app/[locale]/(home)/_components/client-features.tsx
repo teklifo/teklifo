@@ -6,11 +6,11 @@ const ClientFeatures = () => {
   const t = useTranslations("Home");
 
   return (
-    <div className="mt-16 md:mb-24 md:mt-0">
-      <h2 className="scroll-m-20 text-center text-3xl font-semibold tracking-tight">
+    <div className="mt-16 md:mb-32 md:mt-0">
+      <h2 className="scroll-m-20 text-center text-4xl font-semibold tracking-tight">
         {t("featuresTitle")}
       </h2>
-      <p className="text-xl text-center text-muted-foreground mt-4 flex">
+      <p className="text-2xl font-semibold text-center text-muted-foreground mt-4">
         {t("featuresSubtitle")}
       </p>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 mt-16 gap-8 md:mb-24">

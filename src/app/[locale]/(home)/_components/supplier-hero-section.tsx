@@ -29,7 +29,7 @@ const SupplierHeroSection = () => {
         <p className="text-xl text-muted-foreground mt-4">
           {t("suppliersSubitle")}
         </p>
-        <div className="space-x-2 mt-6">
+        <div className="mt-6">
           <Link
             href={`/rfq`}
             className={cn(
@@ -37,7 +37,7 @@ const SupplierHeroSection = () => {
               "space-x-2"
             )}
           >
-            <span>{t("getStarted")}</span>
+            <span className="text-lg font-semibold">{t("getStarted")}</span>
             <ArrowRight />
           </Link>
         </div>

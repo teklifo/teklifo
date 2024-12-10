@@ -4,6 +4,7 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Stepper from "./_components/stepper";
 import ClientHeroSection from "./_components/client-hero-section";
 import ClientFeatures from "./_components/client-features";
+import Documentation from "./_components/documentation";
 import SupplierHeroSection from "./_components/supplier-hero-section";
 import JoinNowComponent from "./_components/join-now-component";
 
@@ -34,6 +35,7 @@ const Home = async () => {
       <Stepper />
       <MaxWidthWrapper>
         <ClientFeatures />
+        <Documentation />
         <SupplierHeroSection />
         <JoinNowComponent />
       </MaxWidthWrapper>

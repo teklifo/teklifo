@@ -685,7 +685,7 @@
     "stepText2": "Send your RFQ to suppliers using your preferred method: via email or messaging apps",
     "stepLabel3": "3. Analyze received quotations",
     "stepText3": "Compare all received quotations based on prices, delivery times, and other parameters. Generate reports in real time",
-    "featuresTitle": "Reduce costs with efficient procurement",
+    "featuresTitle": "Reduce costs with efficient procurement 📈",
     "featuresSubtitle": "Automate routine bid collection tasks to streamline your procurement department's workflow, allowing you to focus on what truly matters",
     "featureLabel1": "Streamline",
     "featureText1": "Reduce quotations analysis time by consolidating them into a single format. Avoid the hassle of messy spreadsheets and minimize the risk of human errors",
@@ -700,7 +700,10 @@
     "joinNowTitle": "Price? What price?",
     "joinNowSubtitle": "Teklifo is completely free: no need to link bank cards or pay any commissions. Join us and see for yourself!",
     "join": "Streamline your business",
-    "footer": "Teklifo © 2024"
+    "footer": "Teklifo © 2024",
+    "documentationTitle": "What to know more? Check out the docs 📘",
+    "documentationSubtitle": "Let's explore all the advantages of Teklifo with a real-life example",
+    "documentationBtn": "Usage example - 10 minutes 🕙"
   },
   "QuotationsCompare": {
     "title": "Compare quotations",

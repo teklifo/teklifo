@@ -23,14 +23,14 @@ const ClientHeroSection = () => {
               "space-x-2"
             )}
           >
-            <span>{t("getStarted")}</span>
+            <span className="text-lg font-semibold">{t("getStarted")}</span>
             <ArrowRight />
           </Link>
           <Link
             href={`#suppliers-hero-section`}
             className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
           >
-            <span>{t("supplier")}</span>
+            <span className="text-lg font-semibold">{t("supplier")}</span>
           </Link>
         </div>
       </div>

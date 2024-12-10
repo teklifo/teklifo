@@ -21,7 +21,7 @@ const JoinNowComponent = () => {
           "bg-background text-primary hover:bg-background hover:text-primary space-x-2"
         )}
       >
-        <span>{t("join")}</span>
+        <span className="text-lg font-semibold">{t("join")}</span>
         <ArrowRight />
       </Link>
     </div>
