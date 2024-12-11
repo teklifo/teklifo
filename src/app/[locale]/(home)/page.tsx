@@ -7,6 +7,7 @@ import ClientFeatures from "./_components/client-features";
 import Documentation from "./_components/documentation";
 import SupplierHeroSection from "./_components/supplier-hero-section";
 import JoinNowComponent from "./_components/join-now-component";
+import AIFeature from "./_components/ai-feature";
 
 type Props = {
   params: { locale: string };
@@ -35,6 +36,7 @@ const Home = async () => {
       <Stepper />
       <MaxWidthWrapper>
         <ClientFeatures />
+        <AIFeature />
         <Documentation />
         <SupplierHeroSection />
         <JoinNowComponent />
