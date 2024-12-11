@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { Link } from "@/navigation";
 import { EllipsisVertical, Mail } from "lucide-react";
 import {
   DropdownMenu,
@@ -7,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import ThemedImage from "@/components/themed-image";
 
 const FooterMenu = () => {
   const t = useTranslations("Layout");
@@ -27,6 +29,24 @@ const FooterMenu = () => {
             <Mail className="w-4 -h-4" />
             <span>{t("contact")}</span>
           </a>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link
+            href="https://github.com/teklifo/teklifo"
+            target="_blank"
+            className="flex items-center w-full space-x-2"
+          >
+            <div>
+              <ThemedImage
+                src="/icons/light/github.svg"
+                alt="GitHub"
+                priority
+                width={16}
+                height={16}
+              />
+            </div>
+            <span>{t("github")}</span>
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

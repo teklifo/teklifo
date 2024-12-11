@@ -17,7 +17,7 @@ const ClientHeroSection = () => {
         <p className="text-xl text-muted-foreground mt-4">{t("subtitle")}</p>
         <div className="space-x-2 mt-6">
           <Link
-            href={`/rfq`}
+            href="/rfq"
             className={cn(
               buttonVariants({ variant: "default", size: "lg" }),
               "space-x-2"

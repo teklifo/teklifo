@@ -7,6 +7,7 @@ import ThemeToggle from "@/components/theme-toggle";
 import LanguageSwitch from "@/components/language-switch";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { cn } from "@/lib/utils";
+import RepositoryLink from "@/components/repository-link";
 
 const Navbar = () => {
   const t = useTranslations("Layout");
@@ -29,6 +30,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-2">
               <LanguageSwitch />
               <ThemeToggle />
+              <RepositoryLink />
             </div>
           </div>
         </MaxWidthWrapper>
