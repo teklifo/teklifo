@@ -9,8 +9,8 @@ const ClientHeroSection = () => {
   const t = useTranslations("Home");
 
   return (
-    <div className="h-[70vh] text-center py-40">
-      <h1 className="scroll-m-20 text-7xl font-bold tracking-tight">
+    <div className="flex flex-col justify-center items-center h-[70vh] text-center pb-20">
+      <h1 className="scroll-m-20 text-5xl md:text-7xl font-bold tracking-tight">
         {t("title")}
       </h1>
       <div className="mt-16 space-x-2">

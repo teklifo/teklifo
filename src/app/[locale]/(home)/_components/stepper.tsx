@@ -63,7 +63,7 @@ const Stepper = () => {
   ];
 
   return (
-    <div className="mt-16 md:mb-24 md:mt-0">
+    <div id="how-it-works" className="pt-16">
       <Timeline data={timelineData} />
     </div>
   );

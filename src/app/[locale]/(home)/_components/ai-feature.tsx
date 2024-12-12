@@ -1,47 +1,44 @@
+"use client";
+
 import { useTranslations } from "next-intl";
-import { ArrowRight } from "lucide-react";
-import { Link } from "@/navigation";
+import { motion } from "framer-motion";
 import ThemedImage from "@/components/themed-image";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 const AIFeature = () => {
   const t = useTranslations("Home");
 
   return (
-    <div className="grid lg:grid-cols-2 place-items-center mt-16 md:mb-48 md:mt-0">
-      <div className="text-center md:text-left">
-        <h1 className="scroll-m-20 text-5xl font-bold tracking-tight">
-          {t("title")}
-        </h1>
-        <p className="text-xl text-muted-foreground mt-4">{t("subtitle")}</p>
-        <div className="space-x-2 mt-6">
-          <Link
-            href={`/rfq`}
-            className={cn(
-              buttonVariants({ variant: "default", size: "lg" }),
-              "space-x-2"
-            )}
-          >
-            <span className="text-lg font-semibold">{t("getStarted")}</span>
-            <ArrowRight />
-          </Link>
-          <Link
-            href={`#suppliers-hero-section`}
-            className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
-          >
-            <span className="text-lg font-semibold">{t("supplier")}</span>
-          </Link>
+    <div
+      id="ai-feature"
+      className="pt-32 flex flex-col justify-center items-center"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1 }}
+        className="text-center"
+      >
+        <h2 className="scroll-m-20 text-5xl font-bold tracking-tight">
+          <span className="block">{t("aiTitleOne")}</span>
+          <span className="block">{t("aiTitleTwo")}</span>
+        </h2>
+        <p className="text-2xl font-semibold text-muted-foreground mt-8">
+          {t("aiSubtitle")}
+        </p>
+      </motion.div>
+      <div className="relative group min-h-[50vh] hidden justify-center items-center py-6 md:flex ">
+        <div className="absolute transition-all duration-1000 opacity-60 -inset-px bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-500 dark:to-purple-500 rounded-xl blur-3xl group-hover:opacity-80 group-hover:-inset-1 group-hover:duration-200"></div>
+        <div className="relative">
+          <ThemedImage
+            src={`/hero/light/ai.gif`}
+            alt="AI analysis"
+            priority
+            width={800}
+            height={800}
+            className="rounded-2xl border-8 border-foreground"
+          />
         </div>
-      </div>
-      <div className="min-h-[50vh] hidden justify-center items-center py-6 md:flex">
-        <ThemedImage
-          src={`/illustrations/light/hero.svg`}
-          alt="Main image"
-          priority
-          width={500}
-          height={500}
-        />
       </div>
     </div>
   );

@@ -108,7 +108,7 @@
     "productNotFound": "Product {id} not found",
     "productsDeleted": "Products are deleted",
     "invalidExchangeJobId": "Invalid exchange job ID",
-    "topQuotationsPromt": "Analyze and select best quotation"
+    "topQuotationsPromt": "Analyze and select best quotation in English language"
   },
   "Layout": {
     "login": "Log in",
@@ -704,7 +704,16 @@
     "footer": "Teklifo © 2024",
     "documentationTitle": "What to know more? Check out the docs 📘",
     "documentationSubtitle": "Let's explore all the advantages of Teklifo with a real-life example",
-    "documentationBtn": "Usage example - 10 minutes 🕙"
+    "documentationBtn": "Usage example - 10 minutes 🕙",
+    "aiTitleOne": "No time to analyze quots?",
+    "aiTitleTwo": "Let AI do the job!",
+    "aiSubtitle": "Harness the power of AI to transform the way you analyze quotations",
+    "links": {
+      "supplier": "For suppliers",
+      "howItWorks": "How it works?",
+      "clientFeatures": "Features",
+      "aiFeature": "AI"
+    }
   },
   "QuotationsCompare": {
     "title": "Compare quotations",

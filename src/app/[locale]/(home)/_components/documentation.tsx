@@ -1,5 +1,8 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
+import { motion } from "framer-motion";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -7,9 +10,14 @@ const Feature = () => {
   const t = useTranslations("Home");
 
   return (
-    <div className="relative group">
-      <div className="absolute transition-all duration-1000 opacity-60 -inset-px bg-gradient-to-r from-blue-300 to-purple-300 dark:from-blue-500 dark:to-purple-500 rounded-xl blur-3xl group-hover:opacity-80 group-hover:-inset-1 group-hover:duration-200"></div>
-      <div className="relative w-full p-20 mt-16 flex flex-col items-center bg-background rounded-2xl shadow-lg md:p-20 md:mb-24 md:mt-0 dark:bg-muted bg-opacity-80">
+    <motion.div
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1, delay: 0.4 }}
+      className="my-40"
+    >
+      <div className="w-full p-20 flex flex-col items-center backdrop-filter backdrop-blur-lg bg-background/50 rounded-2xl shadow-lg dark:bg-muted/50 bg-opacity-80">
         <h2 className="scroll-m-20 text-center text-4xl font-semibold tracking-tight">
           {t("documentationTitle")}
         </h2>
@@ -31,7 +39,7 @@ const Feature = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

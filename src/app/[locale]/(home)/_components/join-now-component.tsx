@@ -8,7 +8,7 @@ const JoinNowComponent = () => {
   const t = useTranslations("Home");
 
   return (
-    <div className="flex flex-col items-center text-center bg-primary rounded-2xl p-8 md:p-20 mx-auto space-y-5 mt-16 md:mb-24 md:mt-0 dark:bg-foreground">
+    <div className="flex flex-col items-center text-center bg-primary rounded-2xl p-8 mt-16 mx-auto space-y-5 dark:bg-foreground">
       <h2 className="text-background scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
         {t("joinNowTitle")}
       </h2>

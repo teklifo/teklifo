@@ -11,7 +11,7 @@ const SupplierHeroSection = () => {
   return (
     <div
       id="suppliers-hero-section"
-      className="grid lg:grid-cols-2 place-items-center mt-16 md:mb-24 md:mt-0"
+      className="grid place-items-center pt-16 lg:grid-cols-2"
     >
       <div className="min-h-[50vh] hidden justify-center items-center py-6 md:flex">
         <ThemedImage

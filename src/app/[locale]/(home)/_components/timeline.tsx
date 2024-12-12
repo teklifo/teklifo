@@ -35,7 +35,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
       className="w-full bg-transparent font-sans md:px-10"
       ref={containerRef}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-10">
+      <div className="max-w-5xl mx-auto px-4 md:max-w-7xl md:px-8 lg:px-10">
         <h2 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl text-center">
           {t("howItWorks")}
         </h2>
@@ -80,8 +80,9 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 const TimelineContent = ({ item }: { item: TimelineEntry }) => {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{ duration: 1 }}
     >
       <div className="relative pl-20 pr-4 md:pl-4 w-full">
