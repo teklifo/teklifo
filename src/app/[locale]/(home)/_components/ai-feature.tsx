@@ -27,8 +27,8 @@ const AIFeature = () => {
           {t("aiSubtitle")}
         </p>
       </motion.div>
-      <div className="relative group min-h-[50vh] hidden justify-center items-center py-6 md:flex ">
-        <div className="absolute transition-all duration-1000 opacity-60 -inset-px bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-500 dark:to-purple-500 rounded-xl blur-3xl group-hover:opacity-80 group-hover:-inset-1 group-hover:duration-200"></div>
+      <div className="relative group justify-center items-center py-12">
+        <div className="absolute transition-all duration-1000 opacity-60 inset-y-10 -inset-x-4 dark:-inset-px bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-500 dark:to-purple-500 rounded-xl blur-2xl dark:blur-3xl group-hover:opacity-80 group-hover:dark:-inset-1 group-hover:duration-200"></div>
         <div className="relative">
           <ThemedImage
             src={`/hero/light/ai.gif`}

@@ -695,7 +695,7 @@
     "featureLabel3": "Synchronize",
     "featureText3": "Connect a free extension for 1C:Enterprise to create RFQs and quotations directly from 1C",
     "suppliersTitle": "Customers are waiting for your quotations",
-    "suppliersSubitle": "As a supplier, you gain access to RFQs from a diverse range of buyers. Open new sales markets, foster strong and mutually beneficial relationships with customers, and enhance trust in your company",
+    "suppliersSubitle": "Be the first to respond to customer RFQs",
     "startSelling": "Start selling",
     "supplier": "I am a supplier",
     "joinNowTitle": "Price? What price?",
@@ -713,7 +713,15 @@
       "howItWorks": "How it works?",
       "clientFeatures": "Features",
       "aiFeature": "AI"
-    }
+    },
+    "supplierFeaturesTitle": "Don't wait for clients to find you – take the lead and get ahead",
+    "supplierFeaturesSubtitle": "Stay one step ahead of the competition",
+    "supplierFeatureLabel1": "Unlock new markets for your products",
+    "supplierFeatureText1": "Access new orders with ease. Connect with customers who are already looking for your products",
+    "supplierFeatureLabel2": "Sell without unnecessary expenses",
+    "supplierFeatureText2": "Save on marketing costs. Simply post your offer, and customers will find you",
+    "supplierFeatureLabel3": "Fair competition",
+    "supplierFeatureText3": "It’s not about budgets or connections – it’s about offering the best conditions for customers. This is your chance to stand out"
   },
   "QuotationsCompare": {
     "title": "Compare quotations",

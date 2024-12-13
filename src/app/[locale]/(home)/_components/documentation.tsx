@@ -15,7 +15,7 @@ const Feature = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 1, delay: 0.4 }}
-      className="my-40"
+      className="mt-40 pb-20"
     >
       <div className="w-full p-20 flex flex-col items-center backdrop-filter backdrop-blur-lg bg-background/50 rounded-2xl shadow-lg dark:bg-muted/50 bg-opacity-80">
         <h2 className="scroll-m-20 text-center text-4xl font-semibold tracking-tight">
