@@ -692,8 +692,8 @@
     "featureText1": "Reduce quotations analysis time by consolidating them into a single format. Avoid the hassle of messy spreadsheets and minimize the risk of human errors",
     "featureLabel2": "Save money",
     "featureText2": "By selecting the most advantageous offers, you can reduce purchasing costs and increase your company's profits",
-    "featureLabel3": "Synchronize",
-    "featureText3": "Connect a free extension for 1C:Enterprise to create RFQs and quotations directly from 1C",
+    "featureLabel3": "Organize competition",
+    "featureText3": "Make the supplier selection process more transparent and competitive, allowing you to save and get the best value",
     "suppliersTitle": "Customers are waiting for your quotations",
     "suppliersSubitle": "Be the first to respond to customer RFQs",
     "startSelling": "Start selling",
@@ -712,7 +712,9 @@
       "supplier": "For suppliers",
       "howItWorks": "How it works?",
       "clientFeatures": "Features",
-      "aiFeature": "AI"
+      "aiFeature": "AI",
+      "docs": "Docs",
+      "price": "Price"
     },
     "supplierFeaturesTitle": "Don't wait for clients to find you – take the lead and get ahead",
     "supplierFeaturesSubtitle": "Stay one step ahead of the competition",

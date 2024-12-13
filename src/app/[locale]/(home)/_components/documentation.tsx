@@ -11,11 +11,12 @@ const Feature = () => {
 
   return (
     <motion.div
+      id="docs"
       initial={{ opacity: 0, y: 100 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 1, delay: 0.4 }}
-      className="mt-40 pb-20"
+      className="pt-20 md:pt-40 pb-20"
     >
       <div className="w-full p-20 flex flex-col items-center backdrop-filter backdrop-blur-lg bg-background/50 rounded-2xl shadow-lg dark:bg-muted/50 bg-opacity-80">
         <h2 className="scroll-m-20 text-center text-4xl font-semibold tracking-tight">

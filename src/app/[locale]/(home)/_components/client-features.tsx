@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LineChart, RefreshCcw, HandCoins } from "lucide-react";
+import { LineChart, HandCoins, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import Feature from "./feature";
 
@@ -57,7 +57,7 @@ const ClientFeatures = () => {
           <Feature
             label={t("featureLabel3")}
             text={t("featureText3")}
-            icon={RefreshCcw}
+            icon={Trophy}
           />
         </motion.div>
       </div>

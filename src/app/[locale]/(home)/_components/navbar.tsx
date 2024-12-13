@@ -30,8 +30,16 @@ const Navbar = () => {
       label: t("links.aiFeature"),
     },
     {
+      href: "#docs",
+      label: t("links.docs"),
+    },
+    {
       href: "#suppliers-hero-section",
       label: t("links.supplier"),
+    },
+    {
+      href: "#price",
+      label: t("links.price"),
     },
   ];
 
@@ -45,7 +53,7 @@ const Navbar = () => {
       )}
     >
       <header className="relative">
-        <MaxWidthWrapper>
+        <MaxWidthWrapper className="md:!px-0 lg:px-20">
           <div className="flex h-16 justify-between items-center">
             <Logo />
             <div className="space-x-4 hidden md:block">
