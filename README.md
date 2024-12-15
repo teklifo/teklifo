@@ -10,6 +10,8 @@
     Let's bridge the gap between clients and suppliers
     <br />
     <br />
+    <a href="https://teklifo.github.io/documentation/">Docs</a>
+    ·
     <a href="https://teklifo.com">Web-site</a>
     ·
     <a href="https://github.com/teklifo/teklifo/issues/new">Request feature</a>

@@ -10,7 +10,7 @@
     Помогаем покупателям и поставщикам найти друг друга
     <br />
     <br />
-    <a href="https://infostart.ru/1c/articles/2241692/">Infostart</a>
+    <a href="https://teklifo.github.io/documentation/">Документация</a>
     ·
     <a href="https://teklifo.com">Веб-сайт</a>
     ·
