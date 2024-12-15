@@ -48,7 +48,7 @@ const Login = async () => {
           width="400"
           height="400"
         />
-        <div className="max-w-2xl space-y-4 text-center">
+        <div className="max-w-xl space-y-4 text-center">
           <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
             {t("slogan")}
           </h1>

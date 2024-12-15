@@ -9,6 +9,7 @@ import SupplierHeroSection from "./_components/supplier-hero-section";
 import JoinNowComponent from "./_components/join-now-component";
 import AIFeature from "./_components/ai-feature";
 import SupplierFeatures from "./_components/supplier-features";
+import IntegrationFeature from "./_components/integration-feature";
 
 type Props = {
   params: { locale: string };
@@ -39,6 +40,7 @@ const Home = async () => {
         <MaxWidthWrapper>
           <ClientFeatures />
           <AIFeature />
+          <IntegrationFeature />
           <Documentation />
         </MaxWidthWrapper>
       </div>

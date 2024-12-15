@@ -723,7 +723,10 @@
     "supplierFeatureLabel2": "Sell without unnecessary expenses",
     "supplierFeatureText2": "Save on marketing costs. Simply post your offer, and customers will find you",
     "supplierFeatureLabel3": "Fair competition",
-    "supplierFeatureText3": "It’s not about budgets or connections – it’s about offering the best conditions for customers. This is your chance to stand out"
+    "supplierFeatureText3": "It’s not about budgets or connections – it’s about offering the best conditions for customers. This is your chance to stand out",
+    "integrationTitle": "Integrate with your system",
+    "integrationSubtitle": "Integrate RFQ and quotation tracking into your system using API and custom extensions",
+    "integrationMore": "More"
   },
   "QuotationsCompare": {
     "title": "Compare quotations",

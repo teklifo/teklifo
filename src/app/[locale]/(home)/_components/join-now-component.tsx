@@ -15,7 +15,7 @@ const JoinNowComponent = () => {
         <h2 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
           {t("joinNowTitle")}
         </h2>
-        <p className="text-xl mt-4">{t("joinNowSubtitle")}</p>
+        <p className="max-w-3xl text-xl mt-4">{t("joinNowSubtitle")}</p>
         <Link
           href={`/dashboard`}
           className={cn(
