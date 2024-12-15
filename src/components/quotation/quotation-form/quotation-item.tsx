@@ -3,9 +3,11 @@ import { useFormatter, useTranslations } from "next-intl";
 import {
   Control,
   ControllerRenderProps,
+  useFormContext,
   UseFormSetValue,
   useWatch,
 } from "react-hook-form";
+import { z } from "zod";
 import { CalendarIcon } from "lucide-react";
 import { RequestForQuotationItem, VatRates } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -37,16 +39,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { getQuotationSchema } from "@/lib/schemas";
 import {
   calculateAmountWithVat,
   calculateVatAmount,
   getVatRatePercentage,
 } from "@/lib/calculations";
+import { cn } from "@/lib/utils";
 
 type QuotationItemProps = {
   index: number;
-  control: Control<any>;
   rfqItem: RequestForQuotationItem;
   setValue: UseFormSetValue<any>;
 };
@@ -115,13 +117,13 @@ const EmptyCell = () => {
   return <p className="h-10 w-full px-3 py-2 text-center ">-</p>;
 };
 
-const QuotationItem = ({
-  index,
-  control,
-  rfqItem,
-  setValue,
-}: QuotationItemProps) => {
+const QuotationItem = ({ index, rfqItem, setValue }: QuotationItemProps) => {
   const t = useTranslations("Quotation");
+
+  const st = useTranslations("Schemas.quotationSchema");
+  const formSchema = getQuotationSchema(st);
+  const form = useFormContext<z.infer<typeof formSchema>>();
+
   const intlFormat = useFormatter();
 
   const productName = useWatch({ name: `items.${index}.productName` });
@@ -131,6 +133,8 @@ const QuotationItem = ({
   const vatIncluded = useWatch({ name: `vatIncluded` });
   const vatRate = useWatch({ name: `items.${index}.vatRate` });
   const skip = useWatch({ name: `items.${index}.skip` });
+
+  const dateError = form.getFieldState(`items.${index}.deliveryDate`).error;
 
   const vatRateInfo = getVatRatePercentage(vatRate);
   const vatAmount =
@@ -161,7 +165,7 @@ const QuotationItem = ({
           <EmptyCell />
         ) : (
           <CellField
-            control={control}
+            control={form.control}
             name={`items.${index}.quantity`}
             type="number"
           />
@@ -180,7 +184,7 @@ const QuotationItem = ({
           <EmptyCell />
         ) : (
           <CellField
-            control={control}
+            control={form.control}
             name={`items.${index}.price`}
             type="number"
           />
@@ -203,7 +207,7 @@ const QuotationItem = ({
           <EmptyCell />
         ) : (
           <FormField
-            control={control}
+            control={form.control}
             name={`items.${index}.vatRate`}
             render={({ field }) => (
               <FormItem>
@@ -265,7 +269,7 @@ const QuotationItem = ({
           <EmptyCell />
         ) : (
           <FormField
-            control={control}
+            control={form.control}
             name={`items.${index}.deliveryDate`}
             render={({ field }) => (
               <FormItem>
@@ -276,7 +280,8 @@ const QuotationItem = ({
                         variant={"outline"}
                         className={cn(
                           "border-none w-full pl-3 text-left font-normal hover:bg-green-50 hover:dark:bg-green-900",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
+                          dateError && "!bg-red-300"
                         )}
                       >
                         {field.value ? (
@@ -312,12 +317,12 @@ const QuotationItem = ({
         </div>
       </Cell>
       <Cell>
-        <CellField control={control} name={`items.${index}.comment`} />
+        <CellField control={form.control} name={`items.${index}.comment`} />
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm ">
           <FormField
-            control={control}
+            control={form.control}
             name={`items.${index}.skip`}
             render={({ field }) => (
               <FormItem className="flex flex-row items-end text-muted-foreground space-x-3 space-y-0">

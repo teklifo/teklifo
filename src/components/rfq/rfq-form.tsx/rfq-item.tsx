@@ -101,11 +101,11 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
 
 const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
   const t = useTranslations("RFQForm");
+
   const format = useFormatter();
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
-
   const form = useFormContext<z.infer<typeof formSchema>>();
 
   const [openProducts, setOpenProducts] = useState(false);
@@ -126,6 +126,8 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
   }
 
   const productSelected = (form.watch(`items.${index}.productId`) ?? 0) !== 0;
+
+  const dateError = form.getFieldState(`items.${index}.deliveryDate`).error;
 
   return (
     <TableRow>
@@ -213,7 +215,8 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
                       variant={"outline"}
                       className={cn(
                         "border-none w-full pl-3 text-left font-normal hover:bg-green-50 hover:dark:bg-green-900",
-                        !field.value && "text-muted-foreground"
+                        !field.value && "text-muted-foreground",
+                        dateError && "!bg-red-300"
                       )}
                     >
                       {field.value ? (

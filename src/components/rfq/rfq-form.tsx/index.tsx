@@ -47,7 +47,7 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
       title: rfq?.title ?? "",
       privateRequest: rfq?.privateRequest ?? false,
       currency: rfq?.currency ?? "",
-      endDate: rfq?.endDate,
+      endDate: rfq ? new Date(rfq.endDate) : undefined,
       contactPerson: rfq?.contactPerson ?? "",
       email: "",
       phone: "",
@@ -63,7 +63,7 @@ const RFQForm = ({ rfq, currentCompany }: RFQFormProps) => {
           product: rfqItem.product || undefined,
           quantity: Number(rfqItem.quantity),
           price: Number(rfqItem.price),
-          deliveryDate: rfqItem.deliveryDate,
+          deliveryDate: new Date(rfqItem.deliveryDate),
           comment: rfqItem.comment,
         };
       }),
