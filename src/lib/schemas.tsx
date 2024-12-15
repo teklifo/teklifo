@@ -407,14 +407,18 @@ export const getQuotationItemSchema = (t: TranslateFunction) => {
         return "";
       }).optional(),
       skip: z.boolean().default(false),
-      quantity: z.coerce.number({
-        required_error: t("invalidQuantity"),
-        invalid_type_error: t("invalidQuantity"),
-      }),
-      price: z.coerce.number({
-        required_error: t("invalidPrice"),
-        invalid_type_error: t("invalidPrice"),
-      }),
+      quantity: z.coerce
+        .number({
+          required_error: t("invalidQuantity"),
+          invalid_type_error: t("invalidQuantity"),
+        })
+        .min(0.001, t("invalidQuantity")),
+      price: z.coerce
+        .number({
+          required_error: t("invalidPrice"),
+          invalid_type_error: t("invalidPrice"),
+        })
+        .min(0.001, t("invalidPrice")),
       amount: z.coerce.number({
         required_error: t("invalidAmount"),
         invalid_type_error: t("invalidAmount"),

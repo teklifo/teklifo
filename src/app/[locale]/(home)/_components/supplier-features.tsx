@@ -1,15 +1,15 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LineChart, HandCoins, Trophy } from "lucide-react";
+import { Network, ShoppingBag, Scale } from "lucide-react";
 import { motion } from "framer-motion";
 import Feature from "./feature";
 
-const ClientFeatures = () => {
+const SupplierFeatures = () => {
   const t = useTranslations("Home");
 
   return (
-    <div id="client-features" className="pt-16">
+    <div className="py-20">
       <motion.div
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -17,10 +17,10 @@ const ClientFeatures = () => {
         transition={{ duration: 1, delay: 0 }}
       >
         <h2 className="scroll-m-20 text-center text-4xl font-semibold tracking-tight">
-          {t("featuresTitle")}
+          {t("supplierFeaturesTitle")}
         </h2>
         <p className="text-2xl font-semibold text-center text-muted-foreground mt-4">
-          {t("featuresSubtitle")}
+          {t("supplierFeaturesSubtitle")}
         </p>
       </motion.div>
       <div className="grid gap-8 mt-16 md:grid-cols-2 lg:grid-cols-3">
@@ -31,9 +31,9 @@ const ClientFeatures = () => {
           transition={{ duration: 1, delay: 0.2 }}
         >
           <Feature
-            label={t("featureLabel1")}
-            text={t("featureText1")}
-            icon={LineChart}
+            label={t("supplierFeatureLabel1")}
+            text={t("supplierFeatureText1")}
+            icon={Network}
           />
         </motion.div>
         <motion.div
@@ -43,9 +43,9 @@ const ClientFeatures = () => {
           transition={{ duration: 1, delay: 0.4 }}
         >
           <Feature
-            label={t("featureLabel2")}
-            text={t("featureText2")}
-            icon={HandCoins}
+            label={t("supplierFeatureLabel2")}
+            text={t("supplierFeatureText2")}
+            icon={ShoppingBag}
           />
         </motion.div>
         <motion.div
@@ -55,9 +55,9 @@ const ClientFeatures = () => {
           transition={{ duration: 1, delay: 0.6 }}
         >
           <Feature
-            label={t("featureLabel3")}
-            text={t("featureText3")}
-            icon={Trophy}
+            label={t("supplierFeatureLabel3")}
+            text={t("supplierFeatureText3")}
+            icon={Scale}
           />
         </motion.div>
       </div>
@@ -65,4 +65,4 @@ const ClientFeatures = () => {
   );
 };
 
-export default ClientFeatures;
+export default SupplierFeatures;

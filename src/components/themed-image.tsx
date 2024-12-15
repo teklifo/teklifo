@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const ThemedImage = ({ ...props }) => {
   return (
@@ -7,13 +8,13 @@ const ThemedImage = ({ ...props }) => {
         {...props}
         src={props.src}
         alt={props.alt}
-        className="block dark:hidden"
+        className={cn("block dark:hidden", props.className)}
       />
       <Image
         {...props}
         src={props.src.replace("light", "dark")}
         alt={props.alt}
-        className="hidden dark:block"
+        className={cn("hidden dark:block", props.className)}
       />
     </>
   );

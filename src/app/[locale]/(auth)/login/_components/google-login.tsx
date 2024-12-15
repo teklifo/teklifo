@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 const GoogleLogin = () => {
   const t = useTranslations("Login");
@@ -22,7 +22,7 @@ const GoogleLogin = () => {
       onClick={loginWithGoogle}
       className="w-full space-x-4"
     >
-      <div className="">
+      <div>
         <Image
           src="/icons/google.svg"
           alt="Google"

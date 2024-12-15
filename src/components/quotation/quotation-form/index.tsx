@@ -90,7 +90,9 @@ const QuotationForm = ({
           price: Number(quotationItem?.price ?? 0),
           amount: Number(quotationItem?.amount ?? 0),
           vatRate: quotationItem?.vatRate ?? "NOVAT",
-          deliveryDate: quotationItem?.deliveryDate ?? rfqItem.deliveryDate,
+          deliveryDate: quotationItem
+            ? new Date(quotationItem.deliveryDate)
+            : undefined,
           comment: quotationItem?.comment ?? "",
           skip: quotationItem?.skip ?? false,
         };

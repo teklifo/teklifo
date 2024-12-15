@@ -10,6 +10,8 @@
     Let's bridge the gap between clients and suppliers
     <br />
     <br />
+    <a href="https://teklifo.github.io/documentation/">Docs</a>
+    ·
     <a href="https://teklifo.com">Web-site</a>
     ·
     <a href="https://github.com/teklifo/teklifo/issues/new">Request feature</a>
@@ -19,6 +21,10 @@
 ## About The Project
 
 With Teklifo, you can streamline your procurement process: publish RFQs, collect, and analyze quotations in a simple and user-friendly format. This reduces the workload on your procurement department, freeing it from routine tasks.
+
+## Documentation
+
+Documentation can be found 👉 [here](https://teklifo.github.io/documentation/)
 
 ## Features
 
