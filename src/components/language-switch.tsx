@@ -10,11 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { locales } from "@/navigation";
 
 function LanguageSwitch() {
   const locale = useLocale();
-
-  const locales = ["ru", "en"];
 
   const router = useRouter();
   const [isPending, startTransition] = useTransition();

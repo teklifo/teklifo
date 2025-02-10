@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import NextAuthProvider from "@/components/next-auth-provider";
 import { Toaster } from "@/components/ui/toaster";
 import authOptions from "@/lib/auth-options";
+import { locales } from "@/navigation";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -16,8 +17,6 @@ type RootLayoutProps = {
 };
 
 const inter = Inter({ subsets: ["latin"] });
-
-const locales = ["en", "ru"];
 
 export default async function RootLayout({
   children,

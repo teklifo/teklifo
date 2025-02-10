@@ -9,6 +9,7 @@ export default async function emailTemplate(
 ) {
   let localeFolder = "en";
   if (locale.toLocaleLowerCase().startsWith("ru")) localeFolder = "ru";
+  if (locale.toLocaleLowerCase().startsWith("az")) localeFolder = "az";
 
   const filePath = path.join(
     process.cwd(),
