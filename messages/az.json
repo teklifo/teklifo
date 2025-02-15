@@ -67,8 +67,8 @@
     "stockBalanceDescription": "Məhsulun anbarlardakı qalıqlarını yeniləyin",
     "exchangeJobTitle": "mübadilə tapşırığı",
     "exchangeJobDescription": "Mübadilə tapşırığının loqları",
-    "quotationsAIAnalysisTitle": "İİ ilə kommersiya təkliflərinin təhlili | {title}",
-    "quotationsAIAnalysisDescription": "Kommersiya təkliflərinin təhlili və müqayisəsi üçün İİ-dən istifadə edin"
+    "quotationsAIAnalysisTitle": "Süni intellekt tərəfindən təkliflərin təhlili | {title}",
+    "quotationsAIAnalysisDescription": "Kommersiya təkliflərinin təhlili və müqayisəsi üçün süni intellektdən istifadə edin"
   },
   "API": {
     "notAuthorized": "Autorizasiya tələb olunur",
@@ -108,7 +108,7 @@
     "productNotFound": "Məhsul {id} tapılmadı",
     "productsDeleted": "Məhsullar silindi",
     "invalidExchangeJobId": "Mübadilə tapşırığı tapılmadı",
-    "topQuotationsPromt": "Təhlil et və ən yaxşı kommersiya təklifini seç"
+    "topQuotationsPromt": "Azərbaycan dilində təhlil et və ən yaxşı kommersiya təklifini seç"
   },
   "Layout": {
     "login": "Daxil ol",
@@ -126,7 +126,7 @@
     "myQuotations": "Təkliflərim",
     "myRFQ": "Sorğularım",
     "toggleTheme": "Temanı dəyiş",
-    "lightTheme": "Açıq",
+    "lightTheme": "İşıqlı",
     "darkTheme": "Qaranlıq",
     "systemTheme": "Sistem",
     "rfqSearch": "Qiymət sorğularının axtarışı",
@@ -139,7 +139,7 @@
     "goToNextPage": "Növbəti səhifəyə",
     "goToLastPage": "Son səhifəyə",
     "join": "🚀 Qoşulun",
-    "joinHint": "Qiymət sorğuları göndərmək və kommersiya təklifləri göndərmək üçün daxil olun",
+    "joinHint": "Qiymət sorğuları yaratmaq və kommersiya təklifləri göndərmək üçün daxil olun",
     "contact": "Dəstəklə əlaqə",
     "github": "GitHub",
     "createCompany": "Təşkilat yaradın",
@@ -565,7 +565,7 @@
     "quotationTitle": "Müştəriyə kommersiya təklifi",
     "quotationSubtitle": "Alınan qiymət sorğusuna cavab olaraq müştəriyə kommersiya təklifi göndərin",
     "compareQuotations": "Təklifləri müqayisə et",
-    "aiAnalysis": "İİ ilə təhlil et",
+    "aiAnalysis": "Süni intellekt ilə təhlil et",
     "noQuotationsReceived": "Bu sorğu üzrə hələ heç bir təklif yoxdur",
     "noQuotationsSent": "Bu sorğu üzrə hələ heç bir təklif göndərməmisiniz",
     "confirmParticipation": "Sorğuda iştirakı təsdiqlə",
@@ -604,7 +604,7 @@
   },
   "WelcomeScreen": {
     "title": "Salam! 👋",
-    "hintText": "Qeyd etdik ki, hələ heç bir təşkilata qoşulmamısınız. Teklifo-dakı əsas fəaliyyət məhz təşkilatlar vasitəsilə həyata keçirilir. Mövcud təşkilatlardan birinə qoşulmaq üçün müraciət edin və ya öz təşkilatınızı yaradın!",
+    "hintText": "Qeyd etdik ki, siz hələ heç bir təşkilata qoşulmamısınız. Teklifo-dakı əsas fəaliyyət məhz təşkilatlar vasitəsilə həyata keçirilir. Mövcud təşkilatlardan birinə qoşulmaq üçün müraciət edin və ya öz təşkilatınızı yaradın!",
     "createCompany": "Yeni təşkilat qeydiyyatı"
   },
   "Quotation": {
@@ -681,13 +681,13 @@
     "more": "Ətraflı",
     "howItWorks": "Bu necə işləyir?",
     "stepLabel1": "1. Qiymət sorğusu yaradın",
-    "stepText1": "Lazımi analitikanı göstərərək qiymət sorğusunu dəqiqələr ərzində hazırlayın: məhsul adları, miqdar, valyuta, gözlənilən qiymətlər və çatdırılma müddətləri",
+    "stepText1": "Qiymət sorğusunu cəmi bir neçə dəqiqə ərzində hazırlayın. Bütün lazım analitikanı qeyd edin: məhsulların adları, miqdarı, valyutanı, gözlənilən qiymətləri və çatdırılma müddətləri",
     "stepLabel2": "2. Kommersiya təkliflərini toplayın",
-    "stepText2": "Qiymət sorğusunu təchizatçılara e-poçt və ya mesajlaşma vasitələri ilə göndərin",
+    "stepText2": "Qiymət sorğusunu təchizatçılara e-poçt və ya messengerlərin vasitələri ilə göndərin",
     "stepLabel3": "3. Alınan təklifləri təhlil edin",
-    "stepText3": "Bütün alınan təklifləri qiymət, çatdırılma müddəti və digər parametrlər üzrə müqayisə edin. Real vaxtda hesabatlar yaradın",
+    "stepText3": "Bütün alınan təklifləri qiymət, çatdırılma müddəti və digər parametrlər üzrə müqayisə edin. Real vaxtda hesabatları yaradın",
     "featuresTitle": "Effektiv satınalmalar ilə xərclərinizi azaldın 📈",
-    "featuresSubtitle": "Satınalma şöbəsinin işini asanlaşdırmaq və həqiqətən vacib şeylərə diqqət yetirmək üçün kommersiya təkliflərinin toplanması ilə bağlı rutin tapşırıqları avtomatlaşdırın",
+    "featuresSubtitle": "Satınalma şöbəsinin işini asanlaşdırmaq və həqiqətən vacib işlərə diqqət yetirmək üçün kommersiya təkliflərinin toplanması ilə bağlı rutin tapşırıqları avtomatlaşdırın",
     "featureLabel1": "Optimallaşdırma",
     "featureText1": "Təkliflərin vahid formatda birləşdirilməsi ilə təhlil vaxtını azaldın. Qarışıq cədvəllərin emalına vaxt sərf etməyin və insan səhvləri riskini azaldın",
     "featureLabel2": "Qənaət",
@@ -698,21 +698,20 @@
     "suppliersSubitle": "Müştərilərin sorğularına ilk cavab verənlərdən olun",
     "startSelling": "Satmağa başla",
     "supplier": "Mən təchizatçıyam",
-    "joinNowTitle": "Qiymət? Hansı qiymət?",
+    "joinNowTitle": "Qiymət? Pulsuzdur!",
     "joinNowSubtitle": "Teklifo tamamilə pulsuzdur: bank kartlarını bağlamaq və ya komissiya ödəmək lazım deyil. Qoşulun və özünüz baxın.",
     "join": "Biznesinizi optimallaşdırın",
-    "footer": "Teklifo © 2024",
     "documentationTitle": "Daha çox öyrənmək istəyirsiniz? Sənədləşməyə baxın 📘",
     "documentationSubtitle": "Teklifo-nun üstünlüklərini real nümunə ilə nəzərdən keçirək",
     "documentationBtn": "İstifadə nümunəsi - 10 dəqiqə 🕙",
     "aiTitleOne": "Təklifləri təhlil etmək üçün vaxtınız yoxdur?",
-    "aiTitleTwo": "Bunu İİ-yə həvalə edin!",
+    "aiTitleTwo": "Süni intellektə etibar edin!",
     "aiSubtitle": "Süni intellektdən istifadə edərək satınalmaların təhlilinə müasir yanaşmanı kəşf edin",
     "links": {
       "supplier": "Təchizatçılar",
       "howItWorks": "Bu necə işləyir?",
       "clientFeatures": "Üstünlüklər",
-      "aiFeature": "İİ",
+      "aiFeature": "Süni intellekt",
       "docs": "Sənədləşmə",
       "price": "Qiymət"
     },
@@ -872,7 +871,7 @@
     "message": "Mesaj"
   },
   "QuotationsAIAnalysis": {
-    "title": "AI ilə təhlil",
+    "title": "Süni intellekt tərəfindən təhlil",
     "subtitle": "Kommersiya təkliflərini təhlil etmək və müqayisə etmək üçün süni intellektdən istifadə edin",
     "disclaimer": "Unutmayın ki, süni intellekt səhvlər edə bilər və natamam məlumatlara əsaslana bilər",
     "noQuotations": "Təhlil üçün kommersiya təklifləri yoxdur",
@@ -882,7 +881,7 @@
     "analysisError": "Kommersiya təkliflərini təhlil etmək mümkün olmadı",
     "selectQuotations": "Təklifləri seçin",
     "quotations": "Kommersiya təklifləri",
-    "quotationsHint": "AI təhlili üçün 3 kommersiya təklifini seçin",
+    "quotationsHint": "Sİ təhlili üçün 3 kommersiya təklifini seçin",
     "query": "Axtarış",
     "queryHint": "Təşkilatın adını daxil edin...",
     "noResults": "Nəticə yoxdur",
@@ -1008,7 +1007,7 @@
   "Dashboard": {
     "welcome": "Salam! 👋",
     "betaDisclaimer": "Teklifo beta test mərhələsindədir! Əgər səhvlər tapdınızsa və ya inkişaf üçün təklifləriniz varsa, zəhmət olmasa, bizimlə elektron poçt vasitəsilə əlaqə saxlayın. Bizimlə olduğunuz üçün təşəkkürlər 💓",
-    "contact": "Məktub yazın"
+    "contact": "Məktub yazmaq"
   },
   "Emails": {
     "authEmailTitle": "🚀 Avtorizasiya",

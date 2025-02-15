@@ -5,9 +5,10 @@ import { QuotationsByRFQItemType } from "@/types";
 
 type ProductCellProps = {
   row: QuotationsByRFQItemType;
+  currency: string;
 };
 
-const ProductCell = ({ row }: ProductCellProps) => {
+const ProductCell = ({ row, currency }: ProductCellProps) => {
   const t = useTranslations("QuotationsCompare");
   const intlFormat = useFormatter();
 
@@ -35,8 +36,9 @@ const ProductCell = ({ row }: ProductCellProps) => {
       </p>
       <p className="text-sm text-muted-foreground">
         {`${t("rfqPrice")}: ${intlFormat.number(Number(price), {
-          style: "currency",
-          currency: "AZN",
+          // style: "currency",
+          style: "decimal",
+          currency,
         })}`}
       </p>
       <p className="text-sm text-muted-foreground">

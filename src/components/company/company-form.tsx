@@ -225,7 +225,7 @@ const CompanyForm = ({ company }: CompanyFormProps) => {
           )}
         />
         <Tabs defaultValue="english">
-          <TabsList>
+          <TabsList className="hidden">
             <TabsTrigger value="english">{t("english")}</TabsTrigger>
             <TabsTrigger value="russian">{t("russian")}</TabsTrigger>
           </TabsList>

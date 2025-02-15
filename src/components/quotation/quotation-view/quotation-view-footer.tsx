@@ -32,7 +32,8 @@ const QuotationViewFooter = ({ quotation }: QuotationViewFooterProps) => {
         <span>{`${t("totalAmount")}:`}</span>
         <span className="font-semibold">
           {format.number(Number(totalAmount), {
-            style: "currency",
+            // style: "currency",
+            style: "decimal",
             currency: currency,
           })}
         </span>
@@ -41,7 +42,8 @@ const QuotationViewFooter = ({ quotation }: QuotationViewFooterProps) => {
         <span>{`${vatIncluded ? t("totalVatIncluded") : t("totalVat")}:`}</span>
         <span className="font-semibold">
           {format.number(totalVatAmount, {
-            style: "currency",
+            // style: "currency",
+            style: "decimal",
             currency: currency,
           })}
         </span>

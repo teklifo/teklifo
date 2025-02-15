@@ -131,6 +131,7 @@ const QuotationsCompare = async ({ params: { id }, searchParams }: Props) => {
         <RFQQuotationsTable
           rfqQuotations={result}
           topQuotations={topQuotations}
+          currency={rfq.currency}
         />
       ) : (
         <div className="mb-8 mt-24 flex flex-col justify-center items-center space-y-4 text-center">

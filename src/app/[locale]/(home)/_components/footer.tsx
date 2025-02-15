@@ -1,11 +1,12 @@
-import { getTranslations } from "next-intl/server";
+import { format } from "date-fns";
 
 const Footer = async () => {
-  const t = await getTranslations("Home");
-
   return (
     <div className="my-20">
-      <p className="text-center text-sm text-muted-foreground">{t("footer")}</p>
+      <p className="text-center text-sm text-muted-foreground">{`© Teklifo ${format(
+        new Date(),
+        "yyyy"
+      )}`}</p>
     </div>
   );
 };

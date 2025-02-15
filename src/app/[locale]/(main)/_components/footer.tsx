@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
+import { format } from "date-fns";
 import { Link } from "@/navigation";
 import { LogIn } from "lucide-react";
 import FooterMenu from "./footer-menu";
@@ -79,7 +80,10 @@ const Footer = ({ isCollapsed }: FooterProps) => {
 
       <Separator className="w-full" />
       <div className="p-3 flex justify-between items-center">
-        <p className="text-sm text-muted-foreground">2024 Teklifo</p>
+        <p className="text-sm text-muted-foreground">{`${format(
+          new Date(),
+          "yyyy"
+        )} Teklifo`}</p>
         <FooterMenu />
       </div>
     </div>

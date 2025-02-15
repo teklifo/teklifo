@@ -64,7 +64,8 @@ const RFQItemCard = ({
             <span className="text-muted-foreground">{`${t("price")}`}</span>
             <span className="font-semibold">
               {intlFormat.number(Number(price), {
-                style: "currency",
+                // style: "currency",
+                style: "decimal",
                 currency,
               })}
             </span>

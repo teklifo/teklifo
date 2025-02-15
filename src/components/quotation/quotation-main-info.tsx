@@ -21,7 +21,8 @@ export const QuotationTotal = ({
       icon={<CircleDollarSign />}
       title={t("totalAmount")}
       content={`${format.number(Number(totalAmount), {
-        style: "currency",
+        // style: "currency",
+        style: "decimal",
         currency,
       })}`}
     />

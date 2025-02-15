@@ -8,20 +8,27 @@ import { QuotationsByRFQItemType } from "@/types";
 type Props = {
   rfqQuotations: QuotationsByRFQItemType[];
   topQuotations: getTopQuotationItemsPerRFQ.Result[];
+  currency: string;
 };
 
-const RFQQuotationsTable = ({ rfqQuotations, topQuotations }: Props) => {
-  const quotationItems =
-    rfqQuotations.length > 0 ? rfqQuotations[0].quotationItems : [];
-  const columns = createColumns(quotationItems, topQuotations);
+const RFQQuotationsTable = ({
+  rfqQuotations,
+  topQuotations,
+  currency,
+}: Props) => {
+  const quotation = rfqQuotations.length > 0 ? rfqQuotations[0] : null;
+
+  if (!quotation) return null;
+
+  const columns = createColumns(
+    quotation.quotationItems,
+    topQuotations,
+    currency
+  );
 
   return (
     <div className="relative">
-      <DataTable
-        columns={columns}
-        data={rfqQuotations}
-        scrollClass="h-[70vh]"
-      />
+      <DataTable columns={columns} data={rfqQuotations} />
     </div>
   );
 };
