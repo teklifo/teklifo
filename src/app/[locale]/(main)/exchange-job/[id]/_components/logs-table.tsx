@@ -1,4 +1,4 @@
-import { useTranslations, useFormatter } from "next-intl";
+import { useTranslations } from "next-intl";
 import { ExchangeLog as ExchangeLogType } from "@prisma/client";
 import {
   Table,
@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import ClientDate from "@/components/client-date";
 
 type ExchangeLogsTableProps = {
   exchangeLogs: ExchangeLogType[];
@@ -15,7 +16,6 @@ type ExchangeLogsTableProps = {
 
 const ExchangeLogsTable = ({ exchangeLogs }: ExchangeLogsTableProps) => {
   const t = useTranslations("ExchangeJob");
-  const format = useFormatter();
 
   return (
     <Table className="w-full">
@@ -30,10 +30,10 @@ const ExchangeLogsTable = ({ exchangeLogs }: ExchangeLogsTableProps) => {
         {exchangeLogs.map((exchangeLog) => (
           <TableRow key={exchangeLog.id}>
             <TableCell>
-              {format.dateTime(new Date(exchangeLog.createdAt), {
-                dateStyle: "medium",
-                timeStyle: "medium",
-              })}
+              <ClientDate
+                date={exchangeLog.createdAt}
+                format="dd.MM.yyyy HH:mm"
+              />
             </TableCell>
             <TableCell>{exchangeLog.status}</TableCell>
             <TableCell>{exchangeLog.message}</TableCell>

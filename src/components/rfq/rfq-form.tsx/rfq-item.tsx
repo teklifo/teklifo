@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Product as ProductType } from "@prisma/client";
-import { useTranslations, useFormatter } from "next-intl";
+import { useTranslations } from "next-intl";
 import {
   Control,
   ControllerRenderProps,
@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import ClientDate from "@/components/client-date";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
@@ -101,8 +102,6 @@ const TableInput = ({ field, ...props }: TableInputProps) => {
 
 const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
   const t = useTranslations("RFQForm");
-
-  const format = useFormatter();
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -220,11 +219,7 @@ const RFQItem = ({ index, removeProduct }: RFQItemProps) => {
                       )}
                     >
                       {field.value ? (
-                        format.dateTime(new Date(field.value), {
-                          timeZone:
-                            Intl.DateTimeFormat().resolvedOptions().timeZone,
-                          dateStyle: "medium",
-                        })
+                        <ClientDate date={field.value} format="dd.MM.yyyy" />
                       ) : (
                         <span>{t("pickDate")}</span>
                       )}

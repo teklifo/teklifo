@@ -1,4 +1,4 @@
-import { useTranslations, useFormatter } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
 import type { ExchangeJob as ExchangeJobType } from "@prisma/client";
 import {
@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { buttonVariants } from "@/components/ui/button";
+import ClientDate from "@/components/client-date";
 import { cn } from "@/lib/utils";
 
 type ImportDataTableProps = {
@@ -18,7 +19,6 @@ type ImportDataTableProps = {
 
 const ImportDataTable = ({ exchangeJobs }: ImportDataTableProps) => {
   const t = useTranslations("ImportData");
-  const format = useFormatter();
 
   return (
     <Table className="w-full">
@@ -35,10 +35,10 @@ const ImportDataTable = ({ exchangeJobs }: ImportDataTableProps) => {
         {exchangeJobs.map((exchangeJob) => (
           <TableRow key={exchangeJob.id}>
             <TableCell>
-              {format.dateTime(new Date(exchangeJob.updatedAt), {
-                dateStyle: "medium",
-                timeStyle: "medium",
-              })}
+              <ClientDate
+                date={exchangeJob.updatedAt}
+                format="dd.MM.yyyy HH:mm"
+              />
             </TableCell>
             <TableCell>{exchangeJob.type}</TableCell>
             <TableCell className="hidden md:table-cell">

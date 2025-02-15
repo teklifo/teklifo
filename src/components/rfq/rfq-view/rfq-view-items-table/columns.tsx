@@ -6,6 +6,7 @@ import { ColumnDef, HeaderContext } from "@tanstack/react-table";
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import ClientDate from "@/components/client-date";
 import { Link } from "@/navigation";
 import { cn } from "@/lib/utils";
 
@@ -50,8 +51,11 @@ function getMoneyCell(number: number) {
 
 function getDateCell(date: Date) {
   const MoneyCell = () => {
-    const format = useFormatter();
-    return <span>{format.dateTime(date, { dateStyle: "medium" })}</span>;
+    return (
+      <span>
+        <ClientDate date={date} format="dd.MM.yyyy" />
+      </span>
+    );
   };
 
   return MoneyCell;

@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardFooter,
 } from "@/components/ui/card";
+import ClientDate from "@/components/client-date";
 
 type RequestForQuotationItemType = Prisma.RequestForQuotationItemGetPayload<{
   include: { product: true };
@@ -73,9 +74,7 @@ const RFQItemCard = ({
               "deliveryDate"
             )}`}</span>
             <span className="font-semibold">
-              {intlFormat.dateTime(new Date(deliveryDate), {
-                dateStyle: "medium",
-              })}
+              <ClientDate date={deliveryDate} format="dd.MM.yyyy" />
             </span>
           </div>
         </div>

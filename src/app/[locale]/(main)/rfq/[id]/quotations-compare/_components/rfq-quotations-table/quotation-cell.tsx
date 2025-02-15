@@ -8,6 +8,7 @@ import DeliveryDateBadge from "../delivery-date-badge";
 import QuantityBadge from "../quantity-badge";
 import QuotationModal from "@/components/quotation/quotation-modal";
 import { buttonVariants } from "@/components/ui/button";
+import ClientDate from "@/components/client-date";
 import { cn } from "@/lib/utils";
 import { QuotationsByRFQItemType } from "@/types";
 
@@ -150,12 +151,8 @@ const QuotationCell = ({ row, quotationId, position }: QuotationCellProps) => {
           </div>
           <div className="flex flex-row items-center space-x-2">
             <p className="text-sm text-muted-foreground">
-              {`${t("deliveryDate")}: ${intlFormat.dateTime(
-                new Date(deliveryDate),
-                {
-                  dateStyle: "medium",
-                }
-              )}`}
+              <span>{`${t("deliveryDate")}: `}</span>
+              <ClientDate date={deliveryDate} format="dd.MM.yyyy" />
             </p>
             <DeliveryDateBadge daysDifference={daysDifference} />
           </div>

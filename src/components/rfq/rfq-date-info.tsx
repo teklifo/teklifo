@@ -4,8 +4,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Calendar } from "lucide-react";
 import MainInfoItem from "@/components/main-info-item";
 import { Badge } from "@/components/ui/badge";
-
-const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+import ClientDate from "@/components/client-date";
 
 export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
   const t = useTranslations("RFQ");
@@ -22,11 +21,7 @@ export const RFQDateInfo = ({ endDate }: { endDate: Date }) => {
           content={
             <div className="flex flex-row space-x-2">
               <span>
-                {format.dateTime(new Date(endDate), {
-                  timeZone,
-                  dateStyle: "long",
-                  timeStyle: "medium",
-                })}
+                <ClientDate date={endDate} format="dd MMMM yyyy HH:mm" />
               </span>
               {!completed ? (
                 <Badge variant="outline" className="text-center">
