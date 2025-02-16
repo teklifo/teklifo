@@ -62,7 +62,8 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
   function resetFilters() {
     form.reset({
       company: [],
-      endDate: undefined,
+      endDateFrom: new Date(),
+      endDateTo: undefined,
     });
     form.handleSubmit(onSubmit)();
   }
@@ -73,7 +74,8 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
         url: "/",
         query: {
           companyId: values.company.map((company) => company.id),
-          endDate: values.endDate && formatISO(values.endDate),
+          endDateFrom: values.endDateFrom && formatISO(values.endDateFrom),
+          endDateTo: values.endDateTo && formatISO(values.endDateTo),
         },
       },
       {
@@ -101,7 +103,7 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
           <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
             <FormField
               control={form.control}
-              name="endDate"
+              name="endDateTo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("endDate")}</FormLabel>

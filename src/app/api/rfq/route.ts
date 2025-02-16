@@ -146,10 +146,31 @@ export async function GET(request: NextRequest) {
         in: searchParams.get("companyId")?.split(",") ?? [],
       };
 
-    if (searchParams.get("endDate")) {
-      filters.endDate = {
-        lte: searchParams.get("endDate") || undefined,
-      };
+    if (searchParams.get("endDateFrom") && searchParams.get("endDateTo")) {
+      filters.AND = [
+        {
+          endDate: {
+            gte: searchParams.get("endDateFrom") || undefined,
+          },
+        },
+        {
+          endDate: {
+            lte: searchParams.get("endDateTo") || undefined,
+          },
+        },
+      ];
+    } else {
+      if (searchParams.get("endDateFrom")) {
+        filters.endDate = {
+          gte: searchParams.get("endDateFrom") || undefined,
+        };
+      }
+
+      if (searchParams.get("endDateTo")) {
+        filters.endDate = {
+          lte: searchParams.get("endDateTo") || undefined,
+        };
+      }
     }
 
     if (searchParams.get("participantId"))

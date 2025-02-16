@@ -479,7 +479,15 @@ export const getRFQFiltersSchema = (t: TranslateFunction) => {
     company: z.array(
       z.object({ id: z.string(), name: z.string(), tin: z.string() })
     ),
-    endDate: z.coerce
+    endDateFrom: z.coerce
+      .date({
+        errorMap: (issue, { defaultError }) => ({
+          message:
+            issue.code === "invalid_date" ? t("invalidDate") : defaultError,
+        }),
+      })
+      .optional(),
+    endDateTo: z.coerce
       .date({
         errorMap: (issue, { defaultError }) => ({
           message:
