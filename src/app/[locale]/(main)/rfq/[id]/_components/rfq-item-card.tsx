@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardFooter,
 } from "@/components/ui/card";
+import ClientDate from "@/components/client-date";
 
 type RequestForQuotationItemType = Prisma.RequestForQuotationItemGetPayload<{
   include: { product: true };
@@ -63,7 +64,8 @@ const RFQItemCard = ({
             <span className="text-muted-foreground">{`${t("price")}`}</span>
             <span className="font-semibold">
               {intlFormat.number(Number(price), {
-                style: "currency",
+                // style: "currency",
+                style: "decimal",
                 currency,
               })}
             </span>
@@ -73,9 +75,7 @@ const RFQItemCard = ({
               "deliveryDate"
             )}`}</span>
             <span className="font-semibold">
-              {intlFormat.dateTime(new Date(deliveryDate), {
-                dateStyle: "medium",
-              })}
+              <ClientDate date={deliveryDate} format="dd.MM.yyyy" />
             </span>
           </div>
         </div>

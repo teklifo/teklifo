@@ -71,7 +71,8 @@ function getQuotationCompanyHeader(quotation: QuotationType) {
           <span>{`${t("totalAmount")}:`}</span>
           <span>
             {format.number(Number(quotation.totalAmount), {
-              style: "currency",
+              // style: "currency",
+              style: "decimal",
               currency: quotation.currency,
             })}
           </span>
@@ -85,7 +86,8 @@ function getQuotationCompanyHeader(quotation: QuotationType) {
 
 export function createColumns(
   quotationItems: QuotationsItemType[],
-  topQuotations: getTopQuotationItemsPerRFQ.Result[]
+  topQuotations: getTopQuotationItemsPerRFQ.Result[],
+  currency: string
 ): ColumnDef<QuotationsByRFQItemType>[] {
   const quotationsColumns: ColumnDef<QuotationsByRFQItemType>[] = [];
 
@@ -128,7 +130,7 @@ export function createColumns(
       accessorKey: "product",
       header: getTableHeader("product"),
       cell: ({ row }) => {
-        return <ProductCell row={row.original} />;
+        return <ProductCell row={row.original} currency={currency} />;
       },
       size: 500,
     },

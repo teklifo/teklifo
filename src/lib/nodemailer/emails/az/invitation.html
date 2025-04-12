@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="az">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Авторизация на Teklifo</title>
+    <title>{{companyName}} təşkilatına dəvət</title>
   </head>
   <body
     style="
@@ -41,11 +41,14 @@
 
       <!-- Email Body -->
       <div style="padding: 20px; text-align: center">
-        <h2>Добро пожаловать на Teklifo!</h2>
-        <p>
-          Чтобы начать работу, подтвердите свой адрес электронной почты, нажав
-          на кнопку ниже:
-        </p>
+        <h2>
+          Siz
+          <a href="https://teklifo.com/company/{{companyId}}"
+            >{{companyName}}</a
+          >
+          təşkilatına qoşulmaq üçün dəvət almısınız
+        </h2>
+        <p>Dəvəti qəbul etmək üçün aşağıdakı düyməyə basın:</p>
         <p>
           <a
             href="{{url}}"
@@ -62,17 +65,16 @@
               cursor: pointer;
             "
           >
-            Войти
+            Dəvəti qəbul et
           </a>
         </p>
-        <p>Если кнопка не работает, то перейдите по следующей ссылке:</p>
+        <p>Əgər düymə işləmir, aşağıdakı linkə keçid edin:</p>
         <a href="{{url}}">{{url}}</a>
         <p>
-          Если вы не проходили авторизацию на Teklifo, то проигнорируйте это
-          письмо.
+          Əgər təklifi rədd etmək istəyirsinizsə, bu e-məktubu nəzərə almayın.
         </p>
         <p>
-          С наилучшими пожеланиями,<br />
+          Hörmətlə,<br />
           Teklifo
         </p>
       </div>

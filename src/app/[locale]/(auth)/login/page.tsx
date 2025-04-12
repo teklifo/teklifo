@@ -35,7 +35,7 @@ const Login = async () => {
             </h3>
             <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
           </div>
-          <div className="mt-4">
+          <div className="mt-4 md:min-w-[400px]">
             <LoginForm />
           </div>
         </div>

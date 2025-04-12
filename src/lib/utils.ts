@@ -2,7 +2,6 @@ import fs from "fs";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import * as loc from "date-fns/locale";
-import { formatRelative } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -36,5 +35,6 @@ export function getAvatarFallback(text: string) {
 export function dateFnsLocale(locale: string) {
   let datefns = loc.enUS;
   if (locale === "ru") datefns = loc.ru;
+  if (locale === "az") datefns = loc.az;
   return datefns;
 }

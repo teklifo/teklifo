@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTranslations, useFormatter } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { CalendarIcon, ChevronsUpDown } from "lucide-react";
@@ -30,13 +30,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { TimePicker } from "@/components/ui/time-picker";
 import { Switch } from "@/components/ui/switch";
+import ClientDate from "@/components/client-date";
 import { getRFQSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import CURRENCIES from "@/lib/currencies";
 
 const RFQFormMain = () => {
   const t = useTranslations("RFQForm");
-  const format = useFormatter();
 
   const st = useTranslations("Schemas.rfqSchema");
   const formSchema = getRFQSchema(st);
@@ -80,12 +80,10 @@ const RFQFormMain = () => {
                       )}
                     >
                       {field.value ? (
-                        format.dateTime(new Date(field.value), {
-                          timeZone:
-                            Intl.DateTimeFormat().resolvedOptions().timeZone,
-                          dateStyle: "medium",
-                          timeStyle: "medium",
-                        })
+                        <ClientDate
+                          date={field.value}
+                          format="dd.MM.yyyy HH:mm"
+                        />
                       ) : (
                         <span>{t("pickDate")}</span>
                       )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "@/navigation";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultValues, useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
@@ -26,6 +26,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import CompanyFilter from "@/components/filters/company-filter";
+import ClientDate from "@/components/client-date";
 import { getRFQFiltersSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
@@ -33,15 +34,12 @@ const rfqFiltersSchema = getRFQFiltersSchema((_) => {
   return "";
 });
 
-const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 type RFQFiltersProps = {
   defaultFilters: DefaultValues<z.infer<typeof rfqFiltersSchema>>;
 };
 
 const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
   const t = useTranslations("RFQSearch");
-  const format = useFormatter();
 
   const router = useRouter();
 
@@ -64,7 +62,8 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
   function resetFilters() {
     form.reset({
       company: [],
-      endDate: undefined,
+      endDateFrom: new Date(),
+      endDateTo: undefined,
     });
     form.handleSubmit(onSubmit)();
   }
@@ -75,7 +74,8 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
         url: "/",
         query: {
           companyId: values.company.map((company) => company.id),
-          endDate: values.endDate && formatISO(values.endDate),
+          endDateFrom: values.endDateFrom && formatISO(values.endDateFrom),
+          endDateTo: values.endDateTo && formatISO(values.endDateTo),
         },
       },
       {
@@ -103,7 +103,7 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
           <div className="flex flex-col space-y-2 md:flex-row md:items-end md:justify-start md:space-x-8">
             <FormField
               control={form.control}
-              name="endDate"
+              name="endDateTo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("endDate")}</FormLabel>
@@ -118,13 +118,10 @@ const RFQFilters = ({ defaultFilters }: RFQFiltersProps) => {
                           )}
                         >
                           {field.value ? (
-                            format.dateTime(new Date(field.value), {
-                              timeZone:
-                                Intl.DateTimeFormat().resolvedOptions()
-                                  .timeZone,
-                              dateStyle: "medium",
-                              timeStyle: "medium",
-                            })
+                            <ClientDate
+                              date={field.value}
+                              format="dd.MM.yyyy HH:mm"
+                            />
                           ) : (
                             <span>{t("pickDate")}</span>
                           )}

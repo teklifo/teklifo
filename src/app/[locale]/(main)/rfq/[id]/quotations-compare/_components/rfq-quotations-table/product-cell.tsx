@@ -1,12 +1,14 @@
 import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/navigation";
+import ClientDate from "@/components/client-date";
 import { QuotationsByRFQItemType } from "@/types";
 
 type ProductCellProps = {
   row: QuotationsByRFQItemType;
+  currency: string;
 };
 
-const ProductCell = ({ row }: ProductCellProps) => {
+const ProductCell = ({ row, currency }: ProductCellProps) => {
   const t = useTranslations("QuotationsCompare");
   const intlFormat = useFormatter();
 
@@ -34,8 +36,9 @@ const ProductCell = ({ row }: ProductCellProps) => {
       </p>
       <p className="text-sm text-muted-foreground">
         {`${t("rfqPrice")}: ${intlFormat.number(Number(price), {
-          style: "currency",
-          currency: "AZN",
+          // style: "currency",
+          style: "decimal",
+          currency,
         })}`}
       </p>
       <p className="text-sm text-muted-foreground">
@@ -45,9 +48,8 @@ const ProductCell = ({ row }: ProductCellProps) => {
         })}`}
       </p>
       <p className="text-sm text-muted-foreground">
-        {`${t("deliveryDate")}: ${intlFormat.dateTime(new Date(deliveryDate), {
-          dateStyle: "medium",
-        })}`}
+        <span>{`${t("deliveryDate")}: `}</span>
+        <ClientDate date={deliveryDate} format="dd.MM.yyyy" />
       </p>
     </div>
   );

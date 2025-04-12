@@ -39,6 +39,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import ClientDate from "@/components/client-date";
 import { getQuotationSchema } from "@/lib/schemas";
 import {
   calculateAmountWithVat,
@@ -259,9 +260,7 @@ const QuotationItem = ({ index, rfqItem, setValue }: QuotationItemProps) => {
       </Cell>
       <Cell>
         <div className="h-10 w-full px-3 py-2 text-sm bg-muted">
-          {intlFormat.dateTime(new Date(rfqItem.deliveryDate), {
-            dateStyle: "medium",
-          })}
+          <ClientDate date={rfqItem.deliveryDate} format="dd.MM.yyyy" />
         </div>
       </Cell>
       <Cell>
@@ -285,11 +284,7 @@ const QuotationItem = ({ index, rfqItem, setValue }: QuotationItemProps) => {
                         )}
                       >
                         {field.value ? (
-                          intlFormat.dateTime(new Date(field.value), {
-                            timeZone:
-                              Intl.DateTimeFormat().resolvedOptions().timeZone,
-                            dateStyle: "medium",
-                          })
+                          <ClientDate date={field.value} format="dd.MM.yyyy" />
                         ) : (
                           <span>{t("pickDate")}</span>
                         )}

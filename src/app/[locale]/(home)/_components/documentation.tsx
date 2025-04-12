@@ -18,7 +18,7 @@ const Feature = () => {
       transition={{ duration: 1, delay: 0.4 }}
       className="py-32"
     >
-      <div className="w-full p-20 flex flex-col items-center backdrop-filter backdrop-blur-lg bg-background/50 rounded-2xl shadow-lg dark:bg-muted/50 bg-opacity-80">
+      <div className="w-full p-10 flex flex-col items-center backdrop-filter backdrop-blur-lg bg-background/50 rounded-2xl shadow-lg dark:bg-muted/50 bg-opacity-80 md:p-20">
         <h2 className="scroll-m-20 text-center text-4xl font-semibold tracking-tight">
           {t("documentationTitle")}
         </h2>
@@ -34,7 +34,7 @@ const Feature = () => {
               "space-x-2"
             )}
           >
-            <span className="text-lg font-semibold">
+            <span className="text-sm font-semibold md:text-lg">
               {t("documentationBtn")}
             </span>
           </Link>

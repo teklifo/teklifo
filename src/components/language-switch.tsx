@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "@/navigation";
+import { useRouter, usePathname, locales } from "@/navigation";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,15 +14,16 @@ import {
 function LanguageSwitch() {
   const locale = useLocale();
 
-  const locales = ["ru", "en"];
-
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
 
   function onSelectChange(nextLocale: string) {
+    type LocaleValue = (typeof locales)[number];
+    const currentLocale: LocaleValue = nextLocale as LocaleValue;
+
     startTransition(() => {
-      router.replace(pathname, { locale: nextLocale });
+      router.replace(pathname, { locale: currentLocale });
     });
   }
 

@@ -13,7 +13,7 @@ const ClientHeroSection = () => {
       <h1 className="scroll-m-20 text-5xl md:text-7xl font-bold tracking-tight">
         {t("title")}
       </h1>
-      <div className="mt-16 space-x-2">
+      <div className="flex flex-col justify-center items-center space-y-2 mt-16 md:flex-row md:space-y-0 space-x-2">
         <Link
           href="/rfq"
           className={cn(

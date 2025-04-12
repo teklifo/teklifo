@@ -45,7 +45,8 @@ const QuotationTotalAmount = () => {
         <span>{`${t("totalAmount")}:`}</span>
         <span className="font-semibold">
           {format.number(totalAmount, {
-            style: "currency",
+            // style: "currency",
+            style: "decimal",
             currency,
           })}
         </span>
@@ -54,7 +55,8 @@ const QuotationTotalAmount = () => {
         <span>{`${vatIncluded ? t("totalVatIncluded") : t("totalVat")}:`}</span>
         <span className="font-semibold">
           {format.number(totalVatAmount, {
-            style: "currency",
+            // style: "currency",
+            style: "decimal",
             currency,
           })}
         </span>

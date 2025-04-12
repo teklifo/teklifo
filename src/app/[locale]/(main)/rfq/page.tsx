@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { formatISO } from "date-fns";
 import { FileInput, ListFilter } from "lucide-react";
 import queryString from "query-string";
 import RFQFilters from "./_components/rfq-filters";
@@ -73,18 +74,28 @@ async function getDefaultFilters(searchParams: SearchParams) {
 
   return {
     company: companies,
-    endDate: searchParams.endDateTo
+    endDateFrom: searchParams.endDateFrom
+      ? new Date(searchParams.endDateFrom)
+      : new Date(),
+    endDateTo: searchParams.endDateTo
       ? new Date(searchParams.endDateTo)
       : undefined,
   };
 }
 
 const RFQSearch = async ({ searchParams }: Props) => {
+  let params = searchParams;
+
+  if (!searchParams.endDateFrom) {
+    params = { ...searchParams, endDateFrom: formatISO(new Date()) };
+  }
+
   const data = await getRFQs({
-    ...searchParams,
+    ...params,
     limit: "10",
     page: searchParams.page ?? "1",
   });
+
   if (!data) return notFound();
 
   const t = await getTranslations("RFQSearch");
