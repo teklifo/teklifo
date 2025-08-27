@@ -698,9 +698,6 @@
     "suppliersSubitle": "Müştərilərin sorğularına ilk cavab verənlərdən olun",
     "startSelling": "Satmağa başla",
     "supplier": "Mən təchizatçıyam",
-    "joinNowTitle": "Qiymət? Pulsuzdur!",
-    "joinNowSubtitle": "Teklifo tamamilə pulsuzdur: bank kartlarını bağlamaq və ya komissiya ödəmək lazım deyil. Qoşulun və özünüz baxın.",
-    "join": "Biznesinizi optimallaşdırın",
     "documentationTitle": "Daha çox öyrənmək istəyirsiniz? Sənədləşməyə baxın 📘",
     "documentationSubtitle": "Teklifo-nun üstünlüklərini real nümunə ilə nəzərdən keçirək",
     "documentationBtn": "İstifadə nümunəsi - 10 dəqiqə 🕙",
@@ -712,8 +709,7 @@
       "howItWorks": "Bu necə işləyir?",
       "clientFeatures": "Üstünlüklər",
       "aiFeature": "Süni intellekt",
-      "docs": "Sənədləşmə",
-      "price": "Qiymət"
+      "docs": "Sənədləşmə"
     },
     "supplierFeaturesTitle": "Müştərilərin sizi tapmasını gözləməyin - irəlidə olun",
     "supplierFeaturesSubtitle": "Rəqiblərinizdən bir addım irəlidə olun",

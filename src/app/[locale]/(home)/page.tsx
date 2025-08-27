@@ -6,7 +6,6 @@ import ClientHeroSection from "./_components/client-hero-section";
 import ClientFeatures from "./_components/client-features";
 import Documentation from "./_components/documentation";
 import SupplierHeroSection from "./_components/supplier-hero-section";
-import JoinNowComponent from "./_components/join-now-component";
 import AIFeature from "./_components/ai-feature";
 import SupplierFeatures from "./_components/supplier-features";
 import IntegrationFeature from "./_components/integration-feature";
@@ -48,7 +47,6 @@ const Home = async () => {
         <MaxWidthWrapper>
           <SupplierHeroSection />
           <SupplierFeatures />
-          <JoinNowComponent />
         </MaxWidthWrapper>
       </div>
     </>

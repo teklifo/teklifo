@@ -37,10 +37,6 @@ const Navbar = () => {
       href: "#suppliers-hero-section",
       label: t("links.supplier"),
     },
-    {
-      href: "#price",
-      label: t("links.price"),
-    },
   ];
 
   return (
