@@ -698,9 +698,6 @@
     "suppliersSubitle": "Be the first to respond to customer RFQs",
     "startSelling": "Start selling",
     "supplier": "I am a supplier",
-    "joinNowTitle": "Price? Free!",
-    "joinNowSubtitle": "Teklifo is completely free: no need to link bank cards or pay any commissions. Join us and see for yourself!",
-    "join": "Streamline your business",
     "documentationTitle": "What to know more? Check out the docs 📘",
     "documentationSubtitle": "Let's explore all the advantages of Teklifo with a real-life example",
     "documentationBtn": "Usage example - 10 minutes 🕙",
@@ -712,8 +709,7 @@
       "howItWorks": "How it works?",
       "clientFeatures": "Features",
       "aiFeature": "AI",
-      "docs": "Docs",
-      "price": "Price"
+      "docs": "Docs"
     },
     "supplierFeaturesTitle": "Don't wait for clients to find you – take the lead and get ahead",
     "supplierFeaturesSubtitle": "Stay one step ahead of the competition",
