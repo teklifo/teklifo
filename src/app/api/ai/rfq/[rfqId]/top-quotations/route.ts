@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 import getCurrentCompany from "@/app/actions/get-current-company";
 import db from "@/lib/db";
-import geminiModel from "@/lib/gemini";
+import ai from "@/lib/gemini";
 import { getTranslationsFromHeader, getErrorResponse } from "@/lib/api-utils";
 import { getQuotsAIAnalysisSchema } from "@/lib/schemas";
 
@@ -110,14 +110,14 @@ export async function POST(request: NextRequest, { params: { rfqId } }: Props) {
       },
     });
 
-    const result = await geminiModel.generateContent([
-      t("topQuotationsPromt"),
-      JSON.stringify(rfqAndTopQuotations),
-    ]);
+    const result = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: [t("topQuotationsPromt"), JSON.stringify(rfqAndTopQuotations)],
+    });
 
     const aiAnalysis = await db.aIQuotationsAnalysis.create({
       data: {
-        message: result.response.text(),
+        message: result.text || "",
         rfqVersionId: rfq.versionId,
         rfqId: rfq.id,
       },
